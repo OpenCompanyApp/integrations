@@ -1,6 +1,6 @@
-# AI Tool Mermaid
+# Integration: Mermaid
 
-> Mermaid diagram rendering AI tool for the [Laravel AI SDK](https://github.com/laravel/ai). Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Mermaid diagram rendering integration for the [Laravel AI SDK](https://github.com/laravel/ai). Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
 Generates PNG images from Mermaid diagram syntax. Supports flowcharts, sequence diagrams, class diagrams, state diagrams, ER diagrams, Gantt charts, pie charts, git graphs, and more.
 
@@ -21,7 +21,7 @@ npm install @mermaid-js/mermaid-cli
 ## Installation
 
 ```console
-composer require opencompanyapp/ai-tool-mermaid
+composer require opencompanyapp/integration-mermaid
 ```
 
 Laravel auto-discovers the service provider. No manual registration needed.
@@ -36,8 +36,8 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ```php
 use Laravel\Ai\Facades\Ai;
-use OpenCompany\AiToolMermaid\Tools\RenderMermaid;
-use OpenCompany\AiToolMermaid\MermaidService;
+use OpenCompany\Integrations\Mermaid\Tools\RenderMermaid;
+use OpenCompany\Integrations\Mermaid\MermaidService;
 
 $tool = new RenderMermaid(app(MermaidService::class));
 

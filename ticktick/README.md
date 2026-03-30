@@ -1,6 +1,6 @@
-# AI Tool TickTick
+# Integration: TickTick
 
-> Task management AI tool for the [Laravel AI SDK](https://github.com/laravel/ai) — manage projects, create tasks, set priorities, track completion. Part of the [OpenCompany](https://github.com/OpenCompanyApp) AI tool ecosystem.
+> Task management integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage projects, create tasks, set priorities, track completion. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
 Give your AI agents the ability to manage TickTick tasks and projects. Supports both direct access token and OAuth authentication, plus the Dida365 variant.
 
@@ -15,7 +15,7 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 ## Installation
 
 ```console
-composer require opencompanyapp/ai-tool-ticktick
+composer require opencompanyapp/integration-ticktick
 ```
 
 Laravel auto-discovers the service provider. No manual registration needed.

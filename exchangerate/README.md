@@ -1,6 +1,6 @@
-# Exchange Rate AI Tool
+# Exchange Rate Integration
 
-Currency exchange rate integration for the OpenCompany AI tool ecosystem. Provides access to 340 fiat currencies, cryptocurrencies, and precious metals via the fawazahmed0/exchange-api.
+Currency exchange rate integration for the OpenCompany integration ecosystem. Provides access to 340 fiat currencies, cryptocurrencies, and precious metals via the fawazahmed0/exchange-api.
 
 No API key required.
 

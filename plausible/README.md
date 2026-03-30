@@ -1,6 +1,6 @@
-# AI Tool Plausible
+# Integration: Plausible
 
-> Plausible Analytics AI tool for the [Laravel AI SDK](https://github.com/laravel/ai) — query stats, realtime visitors, manage sites and goals. Part of the [OpenCompany](https://github.com/OpenCompanyApp) AI tool ecosystem.
+> Plausible Analytics integration for the [Laravel AI SDK](https://github.com/laravel/ai) — query stats, realtime visitors, manage sites and goals. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
 Give your AI agents access to privacy-friendly web analytics. Query traffic data, track realtime visitors, and manage sites and conversion goals — all through the [Plausible Analytics](https://plausible.io) API.
 
@@ -15,7 +15,7 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 ## Installation
 
 ```console
-composer require opencompanyapp/ai-tool-plausible
+composer require opencompanyapp/integration-plausible
 ```
 
 Laravel auto-discovers the service provider. No manual registration needed.
@@ -74,10 +74,10 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `ai-tool-core` installed, all 8 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 8 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
-use OpenCompany\AiToolCore\Support\ToolProviderRegistry;
+use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 $registry = app(ToolProviderRegistry::class);
 $provider = $registry->get('plausible');
@@ -117,7 +117,7 @@ $service->createGoal('example.com', ['goal_type' => 'event', 'event_name' => 'Si
 
 | Package | Purpose |
 |---------|---------|
-| [opencompanyapp/ai-tool-core](https://github.com/OpenCompanyApp/ai-tool-core) | ToolProvider contract and registry |
+| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
 | [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
 
 ## Requirements

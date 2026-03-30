@@ -1,8 +1,8 @@
-# AI Tool: CoinGecko
+# Integration: CoinGecko
 
 Cryptocurrency market data for AI agents — search coins, get prices, market rankings, trending coins, and historical chart data.
 
-> Part of the **OpenCompany** AI tool ecosystem. These packages extend AI agents with real-world capabilities through the Laravel AI SDK.
+> Part of the **OpenCompany** integration ecosystem. These packages extend AI agents with real-world capabilities through the Laravel AI SDK.
 
 ## Available Tools
 
@@ -15,7 +15,7 @@ Cryptocurrency market data for AI agents — search coins, get prices, market ra
 ## Installation
 
 ```bash
-composer require opencompanyapp/ai-tool-coingecko
+composer require opencompanyapp/integration-coingecko
 ```
 
 ## Configuration

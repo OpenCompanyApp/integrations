@@ -1,6 +1,6 @@
-# AI Tool: TrustMRR
+# Integration: TrustMRR
 
-Verified startup revenue data for the [OpenCompany](https://github.com/OpenCompanyApp) AI tool ecosystem. Browse startups, filter by revenue, MRR, asking price, growth, and more — all backed by real payment provider data.
+Verified startup revenue data for the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem. Browse startups, filter by revenue, MRR, asking price, growth, and more — all backed by real payment provider data.
 
 ## Available Tools
 
@@ -12,7 +12,7 @@ Verified startup revenue data for the [OpenCompany](https://github.com/OpenCompa
 ## Installation
 
 ```bash
-composer require opencompanyapp/ai-tool-trustmrr
+composer require opencompanyapp/integration-trustmrr
 ```
 
 The service provider is auto-discovered by Laravel.
@@ -28,7 +28,7 @@ Add your TrustMRR API key via the Integrations settings page, or configure it di
 ## Quick Start
 
 ```php
-use OpenCompany\AiToolTrustMrr\TrustMrrService;
+use OpenCompany\Integrations\TrustMrr\TrustMrrService;
 
 $service = app(TrustMrrService::class);
 

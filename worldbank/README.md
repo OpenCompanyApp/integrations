@@ -1,6 +1,6 @@
-# World Bank AI Tool
+# World Bank Integration
 
-World Bank economic indicators integration for the OpenCompany AI tool ecosystem. Provides access to 29,000+ economic indicators for 200+ countries via the World Bank Open Data API.
+World Bank economic indicators integration for the OpenCompany integration ecosystem. Provides access to 29,000+ economic indicators for 200+ countries via the World Bank Open Data API.
 
 No API key required.
 

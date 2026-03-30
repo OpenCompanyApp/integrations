@@ -1,6 +1,6 @@
-# ClickUp AI Tool
+# ClickUp Integration
 
-ClickUp project management integration for the Laravel AI SDK. Part of the **OpenCompany** AI tool ecosystem — an open platform where AI agents collaborate with humans to run organizations.
+ClickUp project management integration for the Laravel AI SDK. Part of the **OpenCompany** integration ecosystem — an open platform where AI agents collaborate with humans to run organizations.
 
 ## Available Tools (17)
 
@@ -27,7 +27,7 @@ ClickUp project management integration for the Laravel AI SDK. Part of the **Ope
 ## Installation
 
 ```bash
-composer require opencompanyapp/ai-tool-clickup
+composer require opencompanyapp/integration-clickup
 ```
 
 The service provider is auto-discovered by Laravel.

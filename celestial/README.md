@@ -1,8 +1,8 @@
-# AI Tool Celestial
+# Integration: Celestial
 
-> Astronomy AI tool for the [Laravel AI SDK](https://github.com/laravel/ai) — moon phases, sunrise/sunset, planet positions, eclipses, night sky reports. Part of the [OpenCompany](https://github.com/OpenCompanyApp) AI tool ecosystem.
+> Astronomy integration for the [Laravel AI SDK](https://github.com/laravel/ai) — moon phases, sunrise/sunset, planet positions, eclipses, night sky reports. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents the ability to perform real-time astronomical calculations. Built on [astronomy-bundle-php](https://github.com/OpenCompanyApp/astronomy-bundle-php) (Jean Meeus' *Astronomical Algorithms*) and the [AI Tool Core](https://github.com/OpenCompanyApp/ai-tool-core) framework.
+Give your AI agents the ability to perform real-time astronomical calculations. Built on [astronomy-bundle-php](https://github.com/OpenCompanyApp/astronomy-bundle-php) (Jean Meeus' *Astronomical Algorithms*) and the [Integration Core](https://github.com/OpenCompanyApp/integration-core) framework.
 
 ## About OpenCompany
 
@@ -15,7 +15,7 @@ OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.
 ## Installation
 
 ```console
-composer require opencompanyapp/ai-tool-celestial
+composer require opencompanyapp/integration-celestial
 ```
 
 Laravel auto-discovers the service provider. No manual registration needed.
@@ -40,8 +40,8 @@ All actions accept optional `date` (ISO format, defaults to now) and `timezone` 
 
 ```php
 use Laravel\Ai\Facades\Ai;
-use OpenCompany\AiToolCelestial\Tools\QueryCelestial;
-use OpenCompany\AiToolCelestial\CelestialService;
+use OpenCompany\Integrations\Celestial\Tools\QueryCelestial;
+use OpenCompany\Integrations\Celestial\CelestialService;
 
 // Create the tool
 $tool = new QueryCelestial(
@@ -57,27 +57,27 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `ai-tool-core` installed, the tool auto-registers with the `ToolProviderRegistry`:
+If you have `integration-core` installed, the tool auto-registers with the `ToolProviderRegistry`:
 
 ```php
-use OpenCompany\AiToolCore\Support\ToolProviderRegistry;
+use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 $registry = app(ToolProviderRegistry::class);
 $provider = $registry->get('celestial');
 
 // Create tool with context
 $tool = $provider->createTool(
-    \OpenCompany\AiToolCelestial\Tools\QueryCelestial::class,
+    \OpenCompany\Integrations\Celestial\Tools\QueryCelestial::class,
     ['timezone' => 'America/New_York']
 );
 ```
 
 ## Standalone Service Usage
 
-You can use `CelestialService` directly without the AI tool wrapper:
+You can use `CelestialService` directly without the integration wrapper:
 
 ```php
-use OpenCompany\AiToolCelestial\CelestialService;
+use OpenCompany\Integrations\Celestial\CelestialService;
 
 $service = app(CelestialService::class);
 
@@ -104,7 +104,7 @@ echo $service->lunarEclipse('2025-09-07');
 
 | Package | Purpose |
 |---------|---------|
-| [opencompanyapp/ai-tool-core](https://github.com/OpenCompanyApp/ai-tool-core) | ToolProvider contract and registry |
+| [opencompanyapp/integration-core](https://github.com/OpenCompanyApp/integration-core) | ToolProvider contract and registry |
 | [opencompanyapp/astronomy-bundle](https://github.com/OpenCompanyApp/astronomy-bundle-php) | Astronomical calculation engine (Meeus algorithms, VSOP87) |
 | [laravel/ai](https://github.com/laravel/ai) | Laravel AI SDK Tool contract |
 

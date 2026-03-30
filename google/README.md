@@ -1,6 +1,6 @@
-# Google AI Tools
+# Google Integration
 
-Google Calendar, Gmail, Google Drive, Google Contacts, Google Sheets, Google Search Console, Google Tasks, Google Analytics, Google Docs, and Google Forms integration for the Laravel AI SDK. Part of the **OpenCompany** AI tool ecosystem — an open platform where AI agents collaborate with humans to run organizations.
+Google Calendar, Gmail, Google Drive, Google Contacts, Google Sheets, Google Search Console, Google Tasks, Google Analytics, Google Docs, and Google Forms integration for the Laravel AI SDK. Part of the **OpenCompany** integration ecosystem — an open platform where AI agents collaborate with humans to run organizations.
 
 ## Integrations
 
@@ -83,7 +83,7 @@ This package registers **ten separate integrations**, each appearing independent
 ## Installation
 
 ```bash
-composer require opencompanyapp/ai-tool-google
+composer require opencompanyapp/integration-google
 ```
 
 The service provider is auto-discovered by Laravel.

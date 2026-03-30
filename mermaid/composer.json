@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-mermaid",
+    "description": "Mermaid diagram rendering integration — flowcharts, sequence diagrams, ER diagrams, and more as PNG images.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["integrations", "tools", "mermaid", "diagrams", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev",
+        "illuminate/support": "^11.0 || ^12.0"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-mermaid": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Mermaid\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Mermaid\\MermaidServiceProvider"
+            ]
+        }
+    }
+}

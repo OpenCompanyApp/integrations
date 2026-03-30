@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-clickup",
+    "description": "ClickUp integration for OpenCompany — tasks, docs, time tracking, chat, and workspace management.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "clickup", "project-management", "tasks", "opencompany"],
+    "replace": {
+        "opencompanyapp/ai-tool-clickup": "self.version"
+    },
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\ClickUp\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\ClickUp\\ClickUpServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

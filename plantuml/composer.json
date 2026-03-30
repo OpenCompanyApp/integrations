@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-plantuml",
+    "description": "PlantUML diagram rendering integration for OpenCompany — class, sequence, activity, component, state, and more as PNG images.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "plantuml", "uml", "diagrams", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev",
+        "illuminate/support": "^11.0 || ^12.0"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-plantuml": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\PlantUml\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\PlantUml\\PlantUmlServiceProvider"
+            ]
+        }
+    }
+}

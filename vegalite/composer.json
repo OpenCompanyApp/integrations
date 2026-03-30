@@ -1,0 +1,28 @@
+{
+    "name": "opencompanyapp/integration-vegalite",
+    "description": "Vega-Lite data visualization integration for OpenCompany",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev",
+        "illuminate/support": "^11.0 || ^12.0"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-vegalite": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\VegaLite\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\VegaLite\\VegaLiteServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

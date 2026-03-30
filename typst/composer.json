@@ -1,0 +1,32 @@
+{
+    "name": "opencompanyapp/integration-typst",
+    "description": "Typst document rendering integration for OpenCompany — generate PDF reports, invoices, proposals, and formatted documents.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "typst", "pdf", "documents", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev",
+        "illuminate/support": "^11.0 || ^12.0"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-typst": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Typst\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Typst\\TypstServiceProvider"
+            ]
+        }
+    }
+}

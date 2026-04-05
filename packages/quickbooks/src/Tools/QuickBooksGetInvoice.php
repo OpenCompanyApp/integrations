@@ -1,0 +1,80 @@
+<?php
+
+namespace OpenCompany\Integrations\QuickBooks\Tools;
+
+use OpenCompany\Integrations\QuickBooks\QuickBooksService;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
+
+/**
+ * Retrieve a QuickBooks invoice by ID.
+ *
+ * Returns full invoice details including line items, totals, balance, and status.
+ */
+class QuickBooksGetInvoice implements Tool
+{
+    /**
+     * @param  QuickBooksService  $service  The QuickBooks API client
+     */
+    public function __construct(
+        private QuickBooksService $service,
+    ) {}
+
+    public function name(): string
+    {
+        return 'quickbooks_get_invoice';
+    }
+
+    public function description(): string
+    {
+        return <<<'MD'
+        Retrieve a QuickBooks invoice by ID.
+        Returns full invoice details including line items, totals, balance, and status.
+        MD;
+    }
+
+    public function parameters(): array
+    {
+        return [
+            'invoice_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks invoice ID.'],
+        ];
+    }
+
+    /**
+     * Retrieve a QuickBooks invoice by ID with full details.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (invoice_id)
+     */
+    public function execute(array $args): ToolResult
+    {
+        try {
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('QuickBooks integration is not configured.');
+            }
+
+            $invoiceId = $args['invoice_id'] ?? '';
+            if (empty($invoiceId)) {
+                return ToolResult::error('invoice_id is required.');
+            }
+
+            $result = $this->service->getInvoice($invoiceId);
+            $invoice = $result['Invoice'] ?? $result;
+
+            return ToolResult::success([
+                'id' => $invoice['Id'] ?? '',
+                'sync_token' => $invoice['SyncToken'] ?? '0',
+                'doc_number' => $invoice['DocNumber'] ?? null,
+                'customer_id' => $invoice['CustomerRef']['value'] ?? '',
+                'customer_name' => $invoice['CustomerRef']['name'] ?? null,
+                'total' => $invoice['TotalAmt'] ?? 0,
+                'balance' => $invoice['Balance'] ?? 0,
+                'due_date' => $invoice['DueDate'] ?? null,
+                'txn_date' => $invoice['TxnDate'] ?? null,
+                'private_note' => $invoice['PrivateNote'] ?? null,
+                'line_items' => $invoice['Line'] ?? [],
+            ]);
+        } catch (\Throwable $e) {
+            return ToolResult::error($e->getMessage());
+        }
+    }
+}

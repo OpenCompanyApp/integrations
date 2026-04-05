@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-zoom",
+    "description": "Zoom integration for OpenCompany — meetings, webinars, users, recordings, and account management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "zoom", "video", "meetings", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Zoom\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Zoom\\ZoomServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

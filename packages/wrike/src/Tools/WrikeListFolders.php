@@ -1,0 +1,71 @@
+<?php
+
+namespace OpenCompany\Integrations\Wrike\Tools;
+
+use OpenCompany\Integrations\Wrike\WrikeService;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
+
+/**
+ * List folders in Wrike with optional filters.
+ */
+class WrikeListFolders implements Tool
+{
+    /**
+     * @param  WrikeService  $service  The Wrike API client
+     */
+    public function __construct(
+        private WrikeService $service,
+    ) {}
+
+    public function name(): string
+    {
+        return 'wrike_list_folders';
+    }
+
+    public function description(): string
+    {
+        return 'List folders in Wrike with optional filters.';
+    }
+
+    public function parameters(): array
+    {
+        return [
+            'space_id'    => ['type' => 'string',  'description' => 'Space ID to filter folders by.'],
+            'limit'       => ['type' => 'integer', 'description' => 'Max number of folders to return.'],
+            'page_token'  => ['type' => 'string',  'description' => 'Token for pagination from a previous response.'],
+        ];
+    }
+
+    /**
+     * Retrieve a list of folders with optional filters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (space_id, limit, page_token)
+     */
+    public function execute(array $args): ToolResult
+    {
+        try {
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Wrike integration is not configured.');
+            }
+
+            $params = [];
+
+            if (isset($args['space_id'])) {
+                $params['spaceId'] = $args['space_id'];
+            }
+            if (isset($args['limit'])) {
+                $params['limit'] = (int) $args['limit'];
+            }
+            if (isset($args['page_token'])) {
+                $params['pageToken'] = $args['page_token'];
+            }
+
+            $folders = $this->service->listFolders($params);
+
+            return ToolResult::success($folders);
+        } catch (\Throwable $e) {
+            return ToolResult::error($e->getMessage());
+        }
+    }
+}

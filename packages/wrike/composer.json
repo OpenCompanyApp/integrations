@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-wrike",
+    "description": "Wrike integration for OpenCompany — tasks, folders, spaces, contacts, and comments.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "wrike", "tasks", "project-management", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Wrike\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Wrike\\WrikeServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

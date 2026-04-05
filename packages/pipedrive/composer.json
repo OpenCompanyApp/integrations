@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-pipedrive",
+    "description": "Pipedrive CRM integration for OpenCompany — persons, organizations, deals, notes, pipelines, and stages.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "pipedrive", "crm", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Pipedrive\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Pipedrive\\PipedriveServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

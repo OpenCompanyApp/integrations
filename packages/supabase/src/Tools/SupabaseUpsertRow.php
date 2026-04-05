@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Upsert a row into a Supabase table — insert or merge on conflict.
- *
- * Sends a POST request with the Prefer: resolution=merge-duplicates header
- * and optionally specifies the conflict columns via the on_conflict query param.
  */
 class SupabaseUpsertRow implements Tool
 {
@@ -29,9 +26,9 @@ class SupabaseUpsertRow implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Insert a row or update it on conflict (upsert). If a row with matching
-        conflict columns already exists, it will be merged with the provided data.
-        Specify on_conflict to define which columns determine uniqueness.
+        Upsert a row into a Supabase table. If a row with the same unique key exists,
+        it will be merged (updated); otherwise a new row is inserted.
+        Specify the on_conflict columns to define the unique constraint.
         MD;
     }
 
@@ -39,15 +36,16 @@ class SupabaseUpsertRow implements Tool
     {
         return [
             'table' => ['type' => 'string', 'required' => true, 'description' => 'Table name.'],
-            'data' => ['type' => 'string', 'required' => true, 'description' => 'JSON object of column name → value pairs (e.g., {"id":1,"name":"Alice"}).'],
-            'on_conflict' => ['type' => 'string', 'description' => 'Comma-separated column names that define the unique constraint (e.g., "email").'],
+            'data' => ['type' => 'string', 'required' => true, 'description' => 'JSON object of column name → value pairs.'],
+            'on_conflict' => ['type' => 'string', 'description' => 'Comma-separated column names that define the unique constraint (e.g., "email,id").'],
+            'returning' => ['type' => 'string', 'description' => 'Return mode: "representation" (default) or "minimal".'],
         ];
     }
 
     /**
-     * Upsert a row with the given column values.
+     * Upsert a row — insert or update on conflict.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (table, data, on_conflict)
+     * @param  array<string, mixed>  $args  Tool arguments (table, data, on_conflict, returning)
      */
     public function execute(array $args): ToolResult
     {
@@ -57,24 +55,28 @@ class SupabaseUpsertRow implements Tool
             }
 
             $table = $args['table'] ?? '';
-            $data = $args['data'] ?? '';
-
             if (empty($table)) {
                 return ToolResult::error('table is required.');
             }
-            if (empty($data)) {
+
+            $rawData = $args['data'] ?? '';
+            if (empty($rawData)) {
                 return ToolResult::error('data is required.');
             }
 
-            $dataArray = is_string($data) ? json_decode($data, true) : $data;
-
-            if (! is_array($dataArray)) {
-                return ToolResult::error('data must be a valid JSON object.');
+            if (is_string($rawData)) {
+                $data = json_decode($rawData, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return ToolResult::error('Invalid JSON in data: ' . json_last_error_msg());
+                }
+            } else {
+                $data = $rawData;
             }
 
             $onConflict = $args['on_conflict'] ?? '';
+            $returning = $args['returning'] ?? 'representation';
 
-            $result = $this->service->upsertRow($table, $dataArray, $onConflict);
+            $result = $this->service->upsertRow($table, $data, $onConflict, $returning);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

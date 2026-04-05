@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List QuickBooks accounts using a SQL-like query.
+ * List QuickBooks accounts using a query.
  *
- * Supports filtering by account type and pagination via limit.
- * Returns an array of account summaries.
+ * Runs a SELECT query against the QuickBooks query API to retrieve accounts
+ * (chart of accounts) with optional pagination.
  */
 class QuickBooksListAccounts implements Tool
 {
@@ -29,23 +29,23 @@ class QuickBooksListAccounts implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List QuickBooks accounts using a SQL-like query.
-        Supports filtering by account type (e.g., "Asset", "Liability", "Income", "Expense") and pagination via limit.
+        List QuickBooks accounts (chart of accounts).
+        Returns a list of accounts with key fields including name, type, and balance.
+        Use the limit parameter to control page size.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'account_type' => ['type' => 'string', 'description' => 'Filter by account type (e.g., "Asset", "Liability", "Income", "Expense", "Equity").'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of accounts to return (1–1000, default 100).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of accounts to return (default 10, max 1000).'],
         ];
     }
 
     /**
-     * List QuickBooks accounts with optional type filter and pagination.
+     * List QuickBooks accounts with optional limit.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (account_type, limit)
+     * @param  array<string, mixed>  $args  Tool arguments (limit)
      */
     public function execute(array $args): ToolResult
     {
@@ -54,36 +54,31 @@ class QuickBooksListAccounts implements Tool
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $accountType = $args['account_type'] ?? '';
-
-            if (! empty($accountType)) {
-                $escapedType = addslashes($accountType);
-                $query = "SELECT * FROM Account WHERE AccountType = '{$escapedType}' MAXRESULTS {$limit}";
-            } else {
-                $query = "SELECT * FROM Account MAXRESULTS {$limit}";
-            }
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
+            $query = "SELECT * FROM Account STARTPOSITION 0 MAXRESULTS {$limit}";
 
             $result = $this->service->query($query);
             $queryResponse = $result['QueryResponse'] ?? [];
             $accounts = $queryResponse['Account'] ?? [];
 
-            $mapped = array_map(function (array $a) {
+            $mapped = array_map(function (array $acct) {
                 return [
-                    'id' => $a['Id'] ?? '',
-                    'name' => $a['Name'] ?? '',
-                    'account_type' => $a['AccountType'] ?? null,
-                    'account_sub_type' => $a['AccountSubType'] ?? null,
-                    'classification' => $a['Classification'] ?? null,
-                    'current_balance' => $a['CurrentBalance'] ?? 0,
-                    'currency' => $a['CurrencyRef']['value'] ?? null,
-                    'active' => $a['Active'] ?? true,
+                    'id' => $acct['Id'] ?? '',
+                    'sync_token' => $acct['SyncToken'] ?? '',
+                    'name' => $acct['Name'] ?? '',
+                    'fully_qualified_name' => $acct['FullyQualifiedName'] ?? '',
+                    'account_type' => $acct['AccountType'] ?? '',
+                    'account_sub_type' => $acct['AccountSubType'] ?? '',
+                    'classification' => $acct['Classification'] ?? '',
+                    'current_balance' => $acct['CurrentBalance'] ?? 0,
+                    'active' => $acct['Active'] ?? true,
                 ];
             }, $accounts);
 
             return ToolResult::success([
                 'accounts' => $mapped,
                 'total_count' => $queryResponse['totalCount'] ?? count($mapped),
+                'start_position' => $queryResponse['startPosition'] ?? 0,
                 'max_results' => $queryResponse['maxResults'] ?? $limit,
             ]);
         } catch (\Throwable $e) {

@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List QuickBooks customers using a SQL-like query.
+ * List QuickBooks customers using a query.
  *
- * Supports pagination via limit and start_position. Returns an array of customer summaries.
+ * Runs a SELECT query against the QuickBooks query API to retrieve customers
+ * with optional pagination via STARTPOSITION and MAXRESULTS.
  */
 class QuickBooksListCustomers implements Tool
 {
@@ -28,23 +29,22 @@ class QuickBooksListCustomers implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List QuickBooks customers using a SQL-like query.
-        Supports pagination via limit and start_position. Returns customer summaries.
+        List QuickBooks customers.
+        Returns a list of customers with key fields. Use the limit parameter to control page size.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of customers to return (1–1000, default 100).'],
-            'start_position' => ['type' => 'integer', 'description' => '1-based offset for pagination (default 1).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of customers to return (default 10, max 1000).'],
         ];
     }
 
     /**
-     * List QuickBooks customers with optional pagination.
+     * List QuickBooks customers with optional limit.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, start_position)
+     * @param  array<string, mixed>  $args  Tool arguments (limit)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,32 +53,30 @@ class QuickBooksListCustomers implements Tool
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $startPosition = isset($args['start_position']) ? (int) $args['start_position'] : 1;
-
-            $query = "SELECT * FROM Customer STARTPOSITION {$startPosition} MAXRESULTS {$limit}";
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
+            $query = "SELECT * FROM Customer STARTPOSITION 0 MAXRESULTS {$limit}";
 
             $result = $this->service->query($query);
             $queryResponse = $result['QueryResponse'] ?? [];
             $customers = $queryResponse['Customer'] ?? [];
 
-            $mapped = array_map(function (array $c) {
+            $mapped = array_map(function (array $cust) {
                 return [
-                    'id' => $c['Id'] ?? '',
-                    'sync_token' => $c['SyncToken'] ?? '0',
-                    'display_name' => $c['DisplayName'] ?? '',
-                    'company_name' => $c['CompanyName'] ?? null,
-                    'email' => $c['PrimaryEmailAddr']['Address'] ?? null,
-                    'phone' => $c['PrimaryPhone']['FreeFormNumber'] ?? null,
-                    'balance' => $c['Balance'] ?? 0,
-                    'active' => $c['Active'] ?? true,
+                    'id' => $cust['Id'] ?? '',
+                    'sync_token' => $cust['SyncToken'] ?? '',
+                    'display_name' => $cust['DisplayName'] ?? '',
+                    'first_name' => $cust['GivenName'] ?? '',
+                    'last_name' => $cust['FamilyName'] ?? '',
+                    'email' => $cust['PrimaryEmailAddr']['Address'] ?? '',
+                    'balance' => $cust['Balance'] ?? 0,
+                    'active' => $cust['Active'] ?? true,
                 ];
             }, $customers);
 
             return ToolResult::success([
                 'customers' => $mapped,
                 'total_count' => $queryResponse['totalCount'] ?? count($mapped),
-                'start_position' => $queryResponse['startPosition'] ?? $startPosition,
+                'start_position' => $queryResponse['startPosition'] ?? 0,
                 'max_results' => $queryResponse['maxResults'] ?? $limit,
             ]);
         } catch (\Throwable $e) {

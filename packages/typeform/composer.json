@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-typeform",
+    "description": "Typeform integration for OpenCompany — forms, responses, workspaces, and webhooks.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "typeform", "forms", "surveys", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Typeform\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Typeform\\TypeformServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

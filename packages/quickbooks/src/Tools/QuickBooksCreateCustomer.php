@@ -9,7 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Create a new QuickBooks customer.
  *
- * Supports display name, first/last name, email, phone, and company name.
+ * Sends customer details including display name, name parts, email, and phone
+ * to the QuickBooks customer endpoint. Returns the created customer with ID.
  */
 class QuickBooksCreateCustomer implements Tool
 {
@@ -29,7 +30,8 @@ class QuickBooksCreateCustomer implements Tool
     {
         return <<<'MD'
         Create a new QuickBooks customer.
-        Supports display name, first/last name, email, phone, and company name.
+        Provide at minimum a display_name. Optionally include first_name, last_name, email, and phone.
+        Returns the created customer with ID and sync token.
         MD;
     }
 
@@ -39,16 +41,15 @@ class QuickBooksCreateCustomer implements Tool
             'display_name' => ['type' => 'string', 'required' => true, 'description' => 'Display name for the customer (must be unique).'],
             'first_name' => ['type' => 'string', 'description' => 'Customer first name.'],
             'last_name' => ['type' => 'string', 'description' => 'Customer last name.'],
-            'email' => ['type' => 'string', 'description' => 'Primary email address.'],
-            'phone' => ['type' => 'string', 'description' => 'Primary phone number.'],
-            'company_name' => ['type' => 'string', 'description' => 'Company name for a business customer.'],
+            'email' => ['type' => 'string', 'description' => 'Primary email address for the customer.'],
+            'phone' => ['type' => 'string', 'description' => 'Primary phone number for the customer.'],
         ];
     }
 
     /**
-     * Create a new QuickBooks customer with contact details.
+     * Create a new QuickBooks customer.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (display_name, first_name, last_name, email, phone, company_name)
+     * @param  array<string, mixed>  $args  Tool arguments (display_name, first_name, last_name, email, phone)
      */
     public function execute(array $args): ToolResult
     {
@@ -66,20 +67,17 @@ class QuickBooksCreateCustomer implements Tool
                 'DisplayName' => $displayName,
             ];
 
-            if (isset($args['first_name'])) {
+            if (! empty($args['first_name'])) {
                 $data['GivenName'] = $args['first_name'];
             }
-            if (isset($args['last_name'])) {
+            if (! empty($args['last_name'])) {
                 $data['FamilyName'] = $args['last_name'];
             }
-            if (isset($args['company_name'])) {
-                $data['CompanyName'] = $args['company_name'];
-            }
-            if (isset($args['phone'])) {
-                $data['PrimaryPhone'] = ['FreeFormNumber' => $args['phone']];
-            }
-            if (isset($args['email'])) {
+            if (! empty($args['email'])) {
                 $data['PrimaryEmailAddr'] = ['Address' => $args['email']];
+            }
+            if (! empty($args['phone'])) {
+                $data['PrimaryPhone'] = ['FreeFormNumber' => $args['phone']];
             }
 
             $result = $this->service->createCustomer($data);
@@ -87,11 +85,13 @@ class QuickBooksCreateCustomer implements Tool
 
             return ToolResult::success([
                 'id' => $customer['Id'] ?? '',
-                'sync_token' => $customer['SyncToken'] ?? '0',
-                'display_name' => $customer['DisplayName'] ?? $displayName,
-                'company_name' => $customer['CompanyName'] ?? null,
-                'email' => $customer['PrimaryEmailAddr']['Address'] ?? null,
-                'phone' => $customer['PrimaryPhone']['FreeFormNumber'] ?? null,
+                'sync_token' => $customer['SyncToken'] ?? '',
+                'display_name' => $customer['DisplayName'] ?? '',
+                'first_name' => $customer['GivenName'] ?? '',
+                'last_name' => $customer['FamilyName'] ?? '',
+                'email' => $customer['PrimaryEmailAddr']['Address'] ?? '',
+                'phone' => $customer['PrimaryPhone']['FreeFormNumber'] ?? '',
+                'active' => $customer['Active'] ?? true,
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

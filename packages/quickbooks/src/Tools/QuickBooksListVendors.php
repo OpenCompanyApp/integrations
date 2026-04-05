@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List QuickBooks vendors using a SQL-like query.
+ * List QuickBooks vendors using a query.
  *
- * Supports pagination via limit. Returns an array of vendor summaries.
+ * Runs a SELECT query against the QuickBooks query API to retrieve vendors
+ * with optional pagination via STARTPOSITION and MAXRESULTS.
  */
 class QuickBooksListVendors implements Tool
 {
@@ -28,20 +29,21 @@ class QuickBooksListVendors implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List QuickBooks vendors using a SQL-like query.
-        Supports pagination via limit. Returns vendor summaries.
+        List QuickBooks vendors.
+        Returns a list of vendors with key fields including name, email, and balance.
+        Use the limit parameter to control page size.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of vendors to return (1–1000, default 100).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of vendors to return (default 10, max 1000).'],
         ];
     }
 
     /**
-     * List QuickBooks vendors with optional pagination.
+     * List QuickBooks vendors with optional limit.
      *
      * @param  array<string, mixed>  $args  Tool arguments (limit)
      */
@@ -52,30 +54,30 @@ class QuickBooksListVendors implements Tool
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-
-            $query = "SELECT * FROM Vendor MAXRESULTS {$limit}";
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
+            $query = "SELECT * FROM Vendor STARTPOSITION 0 MAXRESULTS {$limit}";
 
             $result = $this->service->query($query);
             $queryResponse = $result['QueryResponse'] ?? [];
             $vendors = $queryResponse['Vendor'] ?? [];
 
-            $mapped = array_map(function (array $v) {
+            $mapped = array_map(function (array $vend) {
                 return [
-                    'id' => $v['Id'] ?? '',
-                    'sync_token' => $v['SyncToken'] ?? '0',
-                    'display_name' => $v['DisplayName'] ?? '',
-                    'company_name' => $v['CompanyName'] ?? null,
-                    'email' => $v['PrimaryEmailAddr']['Address'] ?? null,
-                    'phone' => $v['PrimaryPhone']['FreeFormNumber'] ?? null,
-                    'balance' => $v['Balance'] ?? 0,
-                    'active' => $v['Active'] ?? true,
+                    'id' => $vend['Id'] ?? '',
+                    'sync_token' => $vend['SyncToken'] ?? '',
+                    'display_name' => $vend['DisplayName'] ?? '',
+                    'first_name' => $vend['GivenName'] ?? '',
+                    'last_name' => $vend['FamilyName'] ?? '',
+                    'email' => $vend['PrimaryEmailAddr']['Address'] ?? '',
+                    'balance' => $vend['Balance'] ?? 0,
+                    'active' => $vend['Active'] ?? true,
                 ];
             }, $vendors);
 
             return ToolResult::success([
                 'vendors' => $mapped,
                 'total_count' => $queryResponse['totalCount'] ?? count($mapped),
+                'start_position' => $queryResponse['startPosition'] ?? 0,
                 'max_results' => $queryResponse['maxResults'] ?? $limit,
             ]);
         } catch (\Throwable $e) {

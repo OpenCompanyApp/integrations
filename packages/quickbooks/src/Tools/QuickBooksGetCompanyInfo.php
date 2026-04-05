@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve QuickBooks company information for the connected realm.
+ * Get QuickBooks company information.
  *
- * Returns company name, legal name, address, and other company details.
+ * Retrieves company details for the connected QuickBooks realm, including
+ * company name, address, and legal name.
  */
 class QuickBooksGetCompanyInfo implements Tool
 {
@@ -28,8 +29,8 @@ class QuickBooksGetCompanyInfo implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Retrieve QuickBooks company information for the connected realm.
-        Returns company name, legal name, address, and fiscal year details.
+        Get QuickBooks company information for the connected realm.
+        Returns company name, legal name, address, and other company details.
         MD;
     }
 
@@ -39,7 +40,7 @@ class QuickBooksGetCompanyInfo implements Tool
     }
 
     /**
-     * Retrieve QuickBooks company information.
+     * Get QuickBooks company information.
      *
      * @param  array<string, mixed>  $args  Tool arguments (none)
      */
@@ -56,18 +57,13 @@ class QuickBooksGetCompanyInfo implements Tool
             return ToolResult::success([
                 'id' => $company['Id'] ?? '',
                 'company_name' => $company['CompanyName'] ?? '',
-                'legal_name' => $company['LegalName'] ?? null,
-                'fiscal_year_start_month' => $company['FiscalYearStartMonth'] ?? null,
-                'country' => $company['Country'] ?? null,
-                'email' => $company['Email']['Address'] ?? null,
-                'phone' => $company['PrimaryPhone']['FreeFormNumber'] ?? null,
-                'address' => [
-                    'line1' => $company['CompanyAddr']['Line1'] ?? null,
-                    'city' => $company['CompanyAddr']['City'] ?? null,
-                    'state' => $company['CompanyAddr']['CountrySubDivisionCode'] ?? null,
-                    'postal_code' => $company['CompanyAddr']['PostalCode'] ?? null,
-                    'country' => $company['CompanyAddr']['Country'] ?? null,
-                ],
+                'legal_name' => $company['LegalName'] ?? '',
+                'country' => $company['Country'] ?? '',
+                'email' => $company['Email'] ?? [],
+                'address' => $company['CompanyAddr'] ?? [],
+                'phone' => $company['PrimaryPhone'] ?? [],
+                'fiscal_year_start' => $company['FiscalYearStartMonth'] ?? '',
+                'tax_year_start' => $company['TaxFormInfo'] ?? [],
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

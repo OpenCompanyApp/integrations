@@ -9,8 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Create a QuickBooks invoice for a customer.
  *
- * Requires a customer ID and at least one line item. Supports due date,
- * transaction date, and a private note.
+ * Sends a POST request to the QuickBooks invoice endpoint with customer reference,
+ * line items, and optional due date. Returns the created invoice details.
  */
 class QuickBooksCreateInvoice implements Tool
 {
@@ -29,9 +29,9 @@ class QuickBooksCreateInvoice implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Create a QuickBooks invoice for a customer.
-        Requires a customer ID and at least one line item. Supports due date, transaction date, and a private note.
-        Line items should include Amount, DetailType ("SalesItemLineDetail"), and SalesItemLineDetail with ItemRef, Qty, and UnitPrice.
+        Create a new QuickBooks invoice for a customer.
+        Provide customer_id, line_items (array of items with DetailType, Amount, and SalesItemLineDetail),
+        and an optional due_date. Returns the created invoice with its ID and sync token.
         MD;
     }
 
@@ -39,17 +39,15 @@ class QuickBooksCreateInvoice implements Tool
     {
         return [
             'customer_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks customer ID to bill.'],
-            'line_items' => ['type' => 'array', 'required' => true, 'description' => 'Array of line items. Each item: {"Amount": 100, "DetailType": "SalesItemLineDetail", "SalesItemLineDetail": {"ItemRef": {"value": "1"}, "Qty": 1, "UnitPrice": 100}}.'],
-            'due_date' => ['type' => 'string', 'description' => 'Due date in YYYY-MM-DD format.'],
-            'txn_date' => ['type' => 'string', 'description' => 'Transaction (invoice) date in YYYY-MM-DD format.'],
-            'private_note' => ['type' => 'string', 'description' => 'Internal note (not visible to customer).'],
+            'line_items' => ['type' => 'object', 'required' => true, 'description' => 'Array of line items. Each item should include DetailType, Amount, and SalesItemLineDetail with ItemRef.'],
+            'due_date' => ['type' => 'string', 'description' => 'Due date for the invoice in YYYY-MM-DD format.'],
         ];
     }
 
     /**
-     * Create a QuickBooks invoice for a customer.
+     * Create a QuickBooks invoice.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (customer_id, line_items, due_date, txn_date, private_note)
+     * @param  array<string, mixed>  $args  Tool arguments (customer_id, line_items, due_date)
      */
     public function execute(array $args): ToolResult
     {
@@ -59,11 +57,11 @@ class QuickBooksCreateInvoice implements Tool
             }
 
             $customerId = $args['customer_id'] ?? '';
-            $lineItems = $args['line_items'] ?? [];
-
             if (empty($customerId)) {
                 return ToolResult::error('customer_id is required.');
             }
+
+            $lineItems = $args['line_items'] ?? [];
             if (empty($lineItems) || ! is_array($lineItems)) {
                 return ToolResult::error('line_items is required and must be a non-empty array.');
             }
@@ -73,14 +71,8 @@ class QuickBooksCreateInvoice implements Tool
                 'Line' => $lineItems,
             ];
 
-            if (isset($args['due_date'])) {
+            if (! empty($args['due_date'])) {
                 $data['DueDate'] = $args['due_date'];
-            }
-            if (isset($args['txn_date'])) {
-                $data['TxnDate'] = $args['txn_date'];
-            }
-            if (isset($args['private_note'])) {
-                $data['PrivateNote'] = $args['private_note'];
             }
 
             $result = $this->service->createInvoice($data);
@@ -88,14 +80,14 @@ class QuickBooksCreateInvoice implements Tool
 
             return ToolResult::success([
                 'id' => $invoice['Id'] ?? '',
-                'sync_token' => $invoice['SyncToken'] ?? '0',
-                'doc_number' => $invoice['DocNumber'] ?? null,
-                'customer_id' => $invoice['CustomerRef']['value'] ?? $customerId,
-                'total' => $invoice['TotalAmt'] ?? 0,
+                'sync_token' => $invoice['SyncToken'] ?? '',
+                'doc_number' => $invoice['DocNumber'] ?? '',
+                'customer_ref' => $invoice['CustomerRef'] ?? [],
+                'total_amt' => $invoice['TotalAmt'] ?? 0,
                 'balance' => $invoice['Balance'] ?? 0,
-                'due_date' => $invoice['DueDate'] ?? null,
-                'txn_date' => $invoice['TxnDate'] ?? null,
-                'status' => $invoice['EmailStatus'] ?? null,
+                'due_date' => $invoice['DueDate'] ?? '',
+                'status' => $invoice['EmailStatus'] ?? '',
+                'line_items' => $invoice['Line'] ?? [],
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

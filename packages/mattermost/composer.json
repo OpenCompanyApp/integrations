@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-mattermost",
+    "description": "Mattermost integration for OpenCompany — posts, channels, teams, users, and file uploads.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "mattermost", "messaging", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Mattermost\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Mattermost\\MattermostServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

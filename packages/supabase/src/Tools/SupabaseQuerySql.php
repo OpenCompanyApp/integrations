@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the current authenticated user from the Supabase Auth API.
+ * Execute a raw SQL query via the Supabase exec_sql RPC function.
  */
-class SupabaseGetCurrentUser implements Tool
+class SupabaseQuerySql implements Tool
 {
     /**
      * @param  SupabaseService  $service  The Supabase API client
@@ -20,27 +20,29 @@ class SupabaseGetCurrentUser implements Tool
 
     public function name(): string
     {
-        return 'supabase_get_current_user';
+        return 'supabase_query_sql';
     }
 
     public function description(): string
     {
         return <<<'MD'
-        Get the current authenticated user from the Supabase Auth API.
-        Requires a valid service_role key or a valid user JWT token.
-        Returns user details including id, email, and metadata.
+        Execute a raw SQL query on the Supabase database via the exec_sql RPC function.
+        Note: This requires the exec_sql function to be defined in the Supabase database.
+        Use for advanced queries that cannot be expressed through standard PostgREST filters.
         MD;
     }
 
     public function parameters(): array
     {
-        return [];
+        return [
+            'query' => ['type' => 'string', 'required' => true, 'description' => 'SQL query string to execute.'],
+        ];
     }
 
     /**
-     * Retrieve the current authenticated user from the Supabase Auth endpoint.
+     * Execute a raw SQL query via the exec_sql RPC function.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
+     * @param  array<string, mixed>  $args  Tool arguments (query)
      */
     public function execute(array $args): ToolResult
     {
@@ -49,7 +51,12 @@ class SupabaseGetCurrentUser implements Tool
                 return ToolResult::error('Supabase integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
+            $query = $args['query'] ?? '';
+            if (empty($query)) {
+                return ToolResult::error('query is required.');
+            }
+
+            $result = $this->service->querySql($query);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

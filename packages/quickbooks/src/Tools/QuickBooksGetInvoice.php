@@ -41,7 +41,7 @@ class QuickBooksGetInvoice implements Tool
     }
 
     /**
-     * Retrieve a QuickBooks invoice by ID with full details.
+     * Retrieve a QuickBooks invoice by ID.
      *
      * @param  array<string, mixed>  $args  Tool arguments (invoice_id)
      */
@@ -62,15 +62,14 @@ class QuickBooksGetInvoice implements Tool
 
             return ToolResult::success([
                 'id' => $invoice['Id'] ?? '',
-                'sync_token' => $invoice['SyncToken'] ?? '0',
-                'doc_number' => $invoice['DocNumber'] ?? null,
-                'customer_id' => $invoice['CustomerRef']['value'] ?? '',
-                'customer_name' => $invoice['CustomerRef']['name'] ?? null,
-                'total' => $invoice['TotalAmt'] ?? 0,
+                'sync_token' => $invoice['SyncToken'] ?? '',
+                'doc_number' => $invoice['DocNumber'] ?? '',
+                'customer_ref' => $invoice['CustomerRef'] ?? [],
+                'total_amt' => $invoice['TotalAmt'] ?? 0,
                 'balance' => $invoice['Balance'] ?? 0,
-                'due_date' => $invoice['DueDate'] ?? null,
-                'txn_date' => $invoice['TxnDate'] ?? null,
-                'private_note' => $invoice['PrivateNote'] ?? null,
+                'due_date' => $invoice['DueDate'] ?? '',
+                'txn_date' => $invoice['TxnDate'] ?? '',
+                'status' => $invoice['EmailStatus'] ?? '',
                 'line_items' => $invoice['Line'] ?? [],
             ]);
         } catch (\Throwable $e) {

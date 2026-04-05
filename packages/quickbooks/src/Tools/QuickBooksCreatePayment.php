@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create a QuickBooks payment and optionally link it to invoices.
+ * Create a QuickBooks payment for a customer.
  *
- * Requires a customer ID and total amount. Line items can link the payment
- * to specific invoices.
+ * Records a payment against a customer account. Can optionally link
+ * the payment to specific invoices via line items.
  */
 class QuickBooksCreatePayment implements Tool
 {
@@ -30,8 +30,8 @@ class QuickBooksCreatePayment implements Tool
     {
         return <<<'MD'
         Create a QuickBooks payment for a customer.
-        Requires a customer ID and total amount. Optionally link to specific invoices via line items.
-        Line items format: [{"Amount": 100, "LinkedTxn": [{"TxnId": "123", "TxnType": "Invoice"}]}]
+        Provide customer_id and total_amount. Optionally include line items to link the payment to specific invoices.
+        Returns the created payment with its ID.
         MD;
     }
 
@@ -39,15 +39,14 @@ class QuickBooksCreatePayment implements Tool
     {
         return [
             'customer_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks customer ID receiving the payment.'],
-            'total_amount' => ['type' => 'number', 'required' => true, 'description' => 'Total payment amount.'],
-            'line_items' => ['type' => 'array', 'description' => 'Array of linked invoice line items. Each: {"Amount": 100, "LinkedTxn": [{"TxnId": "123", "TxnType": "Invoice"}]}.'],
+            'total_amount' => ['type' => 'string', 'required' => true, 'description' => 'Total payment amount as a decimal string (e.g., "150.00").'],
         ];
     }
 
     /**
-     * Create a QuickBooks payment and optionally link it to invoices.
+     * Create a QuickBooks payment.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (customer_id, total_amount, line_items)
+     * @param  array<string, mixed>  $args  Tool arguments (customer_id, total_amount)
      */
     public function execute(array $args): ToolResult
     {
@@ -57,34 +56,30 @@ class QuickBooksCreatePayment implements Tool
             }
 
             $customerId = $args['customer_id'] ?? '';
-            $totalAmount = $args['total_amount'] ?? null;
-
             if (empty($customerId)) {
                 return ToolResult::error('customer_id is required.');
             }
-            if ($totalAmount === null) {
+
+            $totalAmount = $args['total_amount'] ?? '';
+            if (empty($totalAmount)) {
                 return ToolResult::error('total_amount is required.');
             }
 
             $data = [
                 'CustomerRef' => ['value' => $customerId],
-                'TotalAmt' => (float) $totalAmount,
+                'TotalAmt' => $totalAmount,
             ];
-
-            if (isset($args['line_items']) && is_array($args['line_items'])) {
-                $data['Line'] = $args['line_items'];
-            }
 
             $result = $this->service->createPayment($data);
             $payment = $result['Payment'] ?? $result;
 
             return ToolResult::success([
                 'id' => $payment['Id'] ?? '',
-                'sync_token' => $payment['SyncToken'] ?? '0',
-                'customer_id' => $payment['CustomerRef']['value'] ?? $customerId,
-                'total_amount' => $payment['TotalAmt'] ?? 0,
-                'unapplied_amount' => $payment['UnappliedAmt'] ?? 0,
-                'txn_date' => $payment['TxnDate'] ?? null,
+                'sync_token' => $payment['SyncToken'] ?? '',
+                'customer_ref' => $payment['CustomerRef'] ?? [],
+                'total_amt' => $payment['TotalAmt'] ?? 0,
+                'unapplied_amt' => $payment['UnappliedAmt'] ?? 0,
+                'txn_date' => $payment['TxnDate'] ?? '',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

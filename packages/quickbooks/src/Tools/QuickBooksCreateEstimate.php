@@ -9,8 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Create a QuickBooks estimate for a customer.
  *
- * Requires a customer ID and at least one line item. Supports transaction
- * date and expiration date.
+ * Sends an estimate with customer reference and line items to the
+ * QuickBooks estimate endpoint. Returns the created estimate with ID.
  */
 class QuickBooksCreateEstimate implements Tool
 {
@@ -30,25 +30,23 @@ class QuickBooksCreateEstimate implements Tool
     {
         return <<<'MD'
         Create a QuickBooks estimate for a customer.
-        Requires a customer ID and at least one line item. Supports transaction date and expiration date.
-        Line items should include Amount, DetailType ("SalesItemLineDetail"), and SalesItemLineDetail with ItemRef, Qty, and UnitPrice.
+        Provide customer_id and line_items (array of items with DetailType, Amount, and SalesItemLineDetail).
+        Returns the created estimate with its ID and sync token.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'customer_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks customer ID.'],
-            'line_items' => ['type' => 'array', 'required' => true, 'description' => 'Array of line items. Each: {"Amount": 100, "DetailType": "SalesItemLineDetail", "SalesItemLineDetail": {"ItemRef": {"value": "1"}, "Qty": 1, "UnitPrice": 100}}.'],
-            'txn_date' => ['type' => 'string', 'description' => 'Transaction date in YYYY-MM-DD format.'],
-            'expiration_date' => ['type' => 'string', 'description' => 'Expiration date in YYYY-MM-DD format.'],
+            'customer_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks customer ID for the estimate.'],
+            'line_items' => ['type' => 'object', 'required' => true, 'description' => 'Array of line items. Each item should include DetailType, Amount, and SalesItemLineDetail with ItemRef.'],
         ];
     }
 
     /**
-     * Create a QuickBooks estimate for a customer.
+     * Create a QuickBooks estimate.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (customer_id, line_items, txn_date, expiration_date)
+     * @param  array<string, mixed>  $args  Tool arguments (customer_id, line_items)
      */
     public function execute(array $args): ToolResult
     {
@@ -58,11 +56,11 @@ class QuickBooksCreateEstimate implements Tool
             }
 
             $customerId = $args['customer_id'] ?? '';
-            $lineItems = $args['line_items'] ?? [];
-
             if (empty($customerId)) {
                 return ToolResult::error('customer_id is required.');
             }
+
+            $lineItems = $args['line_items'] ?? [];
             if (empty($lineItems) || ! is_array($lineItems)) {
                 return ToolResult::error('line_items is required and must be a non-empty array.');
             }
@@ -72,25 +70,18 @@ class QuickBooksCreateEstimate implements Tool
                 'Line' => $lineItems,
             ];
 
-            if (isset($args['txn_date'])) {
-                $data['TxnDate'] = $args['txn_date'];
-            }
-            if (isset($args['expiration_date'])) {
-                $data['ExpirationDate'] = $args['expiration_date'];
-            }
-
             $result = $this->service->createEstimate($data);
             $estimate = $result['Estimate'] ?? $result;
 
             return ToolResult::success([
                 'id' => $estimate['Id'] ?? '',
-                'sync_token' => $estimate['SyncToken'] ?? '0',
-                'doc_number' => $estimate['DocNumber'] ?? null,
-                'customer_id' => $estimate['CustomerRef']['value'] ?? $customerId,
-                'total' => $estimate['TotalAmt'] ?? 0,
-                'txn_date' => $estimate['TxnDate'] ?? null,
-                'expiration_date' => $estimate['ExpirationDate'] ?? null,
-                'status' => $estimate['TxnStatus'] ?? null,
+                'sync_token' => $estimate['SyncToken'] ?? '',
+                'doc_number' => $estimate['DocNumber'] ?? '',
+                'customer_ref' => $estimate['CustomerRef'] ?? [],
+                'total_amt' => $estimate['TotalAmt'] ?? 0,
+                'txn_date' => $estimate['TxnDate'] ?? '',
+                'status' => $estimate['EmailStatus'] ?? '',
+                'line_items' => $estimate['Line'] ?? [],
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

@@ -9,8 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Update an existing QuickBooks invoice.
  *
- * Requires the invoice ID and sync token for optimistic concurrency.
- * Supports updating line items and private note.
+ * Performs a full update using the sync token pattern. Requires the invoice ID,
+ * current sync token, and updated line items. Sends a POST with operation=update.
  */
 class QuickBooksUpdateInvoice implements Tool
 {
@@ -30,9 +30,8 @@ class QuickBooksUpdateInvoice implements Tool
     {
         return <<<'MD'
         Update an existing QuickBooks invoice.
-        Requires the invoice ID and sync token for optimistic concurrency.
-        Supports updating line items and private note.
-        Line items should include Amount, DetailType ("SalesItemLineDetail"), and SalesItemLineDetail with ItemRef, Qty, and UnitPrice.
+        Requires the invoice ID, current sync token, and updated line items.
+        Uses the QuickBooks sparse update operation (POST /invoice?operation=update).
         MD;
     }
 
@@ -40,16 +39,15 @@ class QuickBooksUpdateInvoice implements Tool
     {
         return [
             'invoice_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks invoice ID to update.'],
-            'sync_token' => ['type' => 'string', 'required' => true, 'description' => 'Current sync token for optimistic concurrency.'],
-            'line_items' => ['type' => 'array', 'description' => 'Updated array of line items.'],
-            'private_note' => ['type' => 'string', 'description' => 'Updated internal note (not visible to customer).'],
+            'sync_token' => ['type' => 'string', 'required' => true, 'description' => 'Current sync token of the invoice (incremented on each update).'],
+            'line_items' => ['type' => 'object', 'required' => true, 'description' => 'Updated array of line items. Each item should include DetailType, Amount, and SalesItemLineDetail with ItemRef.'],
         ];
     }
 
     /**
-     * Update an existing QuickBooks invoice with new line items or notes.
+     * Update an existing QuickBooks invoice.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (invoice_id, sync_token, line_items, private_note)
+     * @param  array<string, mixed>  $args  Tool arguments (invoice_id, sync_token, line_items)
      */
     public function execute(array $args): ToolResult
     {
@@ -59,26 +57,25 @@ class QuickBooksUpdateInvoice implements Tool
             }
 
             $invoiceId = $args['invoice_id'] ?? '';
-            $syncToken = $args['sync_token'] ?? '';
-
             if (empty($invoiceId)) {
                 return ToolResult::error('invoice_id is required.');
             }
+
+            $syncToken = $args['sync_token'] ?? '';
             if ($syncToken === '') {
-                return ToolResult::error('sync_token is required for optimistic concurrency.');
+                return ToolResult::error('sync_token is required.');
+            }
+
+            $lineItems = $args['line_items'] ?? [];
+            if (empty($lineItems) || ! is_array($lineItems)) {
+                return ToolResult::error('line_items is required and must be a non-empty array.');
             }
 
             $data = [
                 'Id' => $invoiceId,
                 'SyncToken' => $syncToken,
+                'Line' => $lineItems,
             ];
-
-            if (isset($args['line_items']) && is_array($args['line_items'])) {
-                $data['Line'] = $args['line_items'];
-            }
-            if (isset($args['private_note'])) {
-                $data['PrivateNote'] = $args['private_note'];
-            }
 
             $result = $this->service->updateInvoice($data);
             $invoice = $result['Invoice'] ?? $result;
@@ -86,10 +83,12 @@ class QuickBooksUpdateInvoice implements Tool
             return ToolResult::success([
                 'id' => $invoice['Id'] ?? '',
                 'sync_token' => $invoice['SyncToken'] ?? '',
-                'doc_number' => $invoice['DocNumber'] ?? null,
-                'total' => $invoice['TotalAmt'] ?? 0,
+                'doc_number' => $invoice['DocNumber'] ?? '',
+                'customer_ref' => $invoice['CustomerRef'] ?? [],
+                'total_amt' => $invoice['TotalAmt'] ?? 0,
                 'balance' => $invoice['Balance'] ?? 0,
-                'due_date' => $invoice['DueDate'] ?? null,
+                'due_date' => $invoice['DueDate'] ?? '',
+                'line_items' => $invoice['Line'] ?? [],
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

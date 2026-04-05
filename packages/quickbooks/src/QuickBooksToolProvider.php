@@ -80,7 +80,7 @@ class QuickBooksToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'OAuth2 Access Token',
-                'placeholder' => 'eyJlbmMiOiJB...",
+                'placeholder' => 'eyJlbmMiOiJB...',
                 'hint' => 'OAuth2 access token obtained from the QuickBooks OAuth flow. Refresh before expiry.',
                 'required' => true,
             ],

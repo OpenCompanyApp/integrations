@@ -9,8 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Update an existing QuickBooks customer.
  *
- * Requires the customer ID and sync token for optimistic concurrency.
- * Supports updating display name, email, and phone.
+ * Performs a full update using the sync token pattern. Requires the customer ID,
+ * current sync token, and optionally updated display_name and email.
  */
 class QuickBooksUpdateCustomer implements Tool
 {
@@ -30,8 +30,8 @@ class QuickBooksUpdateCustomer implements Tool
     {
         return <<<'MD'
         Update an existing QuickBooks customer.
-        Requires the customer ID and sync token for optimistic concurrency.
-        Supports updating display name, email, and phone.
+        Requires the customer ID and current sync token. Optionally update display_name and email.
+        Uses the QuickBooks update operation (POST /customer?operation=update).
         MD;
     }
 
@@ -39,17 +39,16 @@ class QuickBooksUpdateCustomer implements Tool
     {
         return [
             'customer_id' => ['type' => 'string', 'required' => true, 'description' => 'QuickBooks customer ID to update.'],
-            'sync_token' => ['type' => 'string', 'required' => true, 'description' => 'Current sync token for optimistic concurrency.'],
-            'display_name' => ['type' => 'string', 'description' => 'Updated display name.'],
-            'email' => ['type' => 'string', 'description' => 'Updated primary email address.'],
-            'phone' => ['type' => 'string', 'description' => 'Updated primary phone number.'],
+            'sync_token' => ['type' => 'string', 'required' => true, 'description' => 'Current sync token of the customer (incremented on each update).'],
+            'display_name' => ['type' => 'string', 'description' => 'Updated display name for the customer.'],
+            'email' => ['type' => 'string', 'description' => 'Updated primary email address for the customer.'],
         ];
     }
 
     /**
-     * Update an existing QuickBooks customer's details.
+     * Update an existing QuickBooks customer.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (customer_id, sync_token, display_name, email, phone)
+     * @param  array<string, mixed>  $args  Tool arguments (customer_id, sync_token, display_name, email)
      */
     public function execute(array $args): ToolResult
     {
@@ -59,13 +58,13 @@ class QuickBooksUpdateCustomer implements Tool
             }
 
             $customerId = $args['customer_id'] ?? '';
-            $syncToken = $args['sync_token'] ?? '';
-
             if (empty($customerId)) {
                 return ToolResult::error('customer_id is required.');
             }
+
+            $syncToken = $args['sync_token'] ?? '';
             if ($syncToken === '') {
-                return ToolResult::error('sync_token is required for optimistic concurrency.');
+                return ToolResult::error('sync_token is required.');
             }
 
             $data = [
@@ -79,9 +78,6 @@ class QuickBooksUpdateCustomer implements Tool
             if (isset($args['email'])) {
                 $data['PrimaryEmailAddr'] = ['Address' => $args['email']];
             }
-            if (isset($args['phone'])) {
-                $data['PrimaryPhone'] = ['FreeFormNumber' => $args['phone']];
-            }
 
             $result = $this->service->updateCustomer($data);
             $customer = $result['Customer'] ?? $result;
@@ -89,9 +85,9 @@ class QuickBooksUpdateCustomer implements Tool
             return ToolResult::success([
                 'id' => $customer['Id'] ?? '',
                 'sync_token' => $customer['SyncToken'] ?? '',
-                'display_name' => $customer['DisplayName'] ?? null,
-                'email' => $customer['PrimaryEmailAddr']['Address'] ?? null,
-                'phone' => $customer['PrimaryPhone']['FreeFormNumber'] ?? null,
+                'display_name' => $customer['DisplayName'] ?? '',
+                'email' => $customer['PrimaryEmailAddr']['Address'] ?? '',
+                'active' => $customer['Active'] ?? true,
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

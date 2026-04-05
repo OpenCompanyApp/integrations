@@ -9,7 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Retrieve a QuickBooks customer by ID.
  *
- * Returns full customer details including contact info, company name, and balance.
+ * Returns full customer details including name, email, phone, and balance.
  */
 class QuickBooksGetCustomer implements Tool
 {
@@ -29,7 +29,7 @@ class QuickBooksGetCustomer implements Tool
     {
         return <<<'MD'
         Retrieve a QuickBooks customer by ID.
-        Returns full customer details including contact info, company name, and balance.
+        Returns full customer details including name, email, phone, and balance.
         MD;
     }
 
@@ -41,7 +41,7 @@ class QuickBooksGetCustomer implements Tool
     }
 
     /**
-     * Retrieve a QuickBooks customer by ID with full details.
+     * Retrieve a QuickBooks customer by ID.
      *
      * @param  array<string, mixed>  $args  Tool arguments (customer_id)
      */
@@ -62,13 +62,13 @@ class QuickBooksGetCustomer implements Tool
 
             return ToolResult::success([
                 'id' => $customer['Id'] ?? '',
-                'sync_token' => $customer['SyncToken'] ?? '0',
+                'sync_token' => $customer['SyncToken'] ?? '',
                 'display_name' => $customer['DisplayName'] ?? '',
-                'first_name' => $customer['GivenName'] ?? null,
-                'last_name' => $customer['FamilyName'] ?? null,
-                'company_name' => $customer['CompanyName'] ?? null,
-                'email' => $customer['PrimaryEmailAddr']['Address'] ?? null,
-                'phone' => $customer['PrimaryPhone']['FreeFormNumber'] ?? null,
+                'first_name' => $customer['GivenName'] ?? '',
+                'last_name' => $customer['FamilyName'] ?? '',
+                'fully_qualified_name' => $customer['FullyQualifiedName'] ?? '',
+                'email' => $customer['PrimaryEmailAddr']['Address'] ?? '',
+                'phone' => $customer['PrimaryPhone']['FreeFormNumber'] ?? '',
                 'balance' => $customer['Balance'] ?? 0,
                 'active' => $customer['Active'] ?? true,
             ]);

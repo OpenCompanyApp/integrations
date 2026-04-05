@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List QuickBooks invoices using a SQL-like query.
+ * List QuickBooks invoices using a query.
  *
- * Supports pagination via limit and start_position. Returns an array of invoice summaries.
+ * Runs a SELECT query against the QuickBooks query API to retrieve invoices
+ * with optional pagination via STARTPOSITION and MAXRESULTS.
  */
 class QuickBooksListInvoices implements Tool
 {
@@ -28,23 +29,22 @@ class QuickBooksListInvoices implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List QuickBooks invoices using a SQL-like query.
-        Supports pagination via limit and start_position. Returns invoice summaries.
+        List QuickBooks invoices.
+        Returns a list of invoices with key fields. Use the limit parameter to control page size.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of invoices to return (1–1000, default 100).'],
-            'start_position' => ['type' => 'integer', 'description' => '1-based offset for pagination (default 1).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of invoices to return (default 10, max 1000).'],
         ];
     }
 
     /**
-     * List QuickBooks invoices with optional pagination.
+     * List QuickBooks invoices with optional limit.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, start_position)
+     * @param  array<string, mixed>  $args  Tool arguments (limit)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,10 +53,8 @@ class QuickBooksListInvoices implements Tool
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $startPosition = isset($args['start_position']) ? (int) $args['start_position'] : 1;
-
-            $query = "SELECT * FROM Invoice STARTPOSITION {$startPosition} MAXRESULTS {$limit}";
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
+            $query = "SELECT * FROM Invoice STARTPOSITION 0 MAXRESULTS {$limit}";
 
             $result = $this->service->query($query);
             $queryResponse = $result['QueryResponse'] ?? [];
@@ -65,21 +63,21 @@ class QuickBooksListInvoices implements Tool
             $mapped = array_map(function (array $inv) {
                 return [
                     'id' => $inv['Id'] ?? '',
-                    'sync_token' => $inv['SyncToken'] ?? '0',
-                    'doc_number' => $inv['DocNumber'] ?? null,
-                    'customer_id' => $inv['CustomerRef']['value'] ?? '',
-                    'customer_name' => $inv['CustomerRef']['name'] ?? null,
-                    'total' => $inv['TotalAmt'] ?? 0,
+                    'sync_token' => $inv['SyncToken'] ?? '',
+                    'doc_number' => $inv['DocNumber'] ?? '',
+                    'customer_ref' => $inv['CustomerRef'] ?? [],
+                    'total_amt' => $inv['TotalAmt'] ?? 0,
                     'balance' => $inv['Balance'] ?? 0,
-                    'due_date' => $inv['DueDate'] ?? null,
-                    'txn_date' => $inv['TxnDate'] ?? null,
+                    'due_date' => $inv['DueDate'] ?? '',
+                    'txn_date' => $inv['TxnDate'] ?? '',
+                    'status' => $inv['EmailStatus'] ?? '',
                 ];
             }, $invoices);
 
             return ToolResult::success([
                 'invoices' => $mapped,
                 'total_count' => $queryResponse['totalCount'] ?? count($mapped),
-                'start_position' => $queryResponse['startPosition'] ?? $startPosition,
+                'start_position' => $queryResponse['startPosition'] ?? 0,
                 'max_results' => $queryResponse['maxResults'] ?? $limit,
             ]);
         } catch (\Throwable $e) {

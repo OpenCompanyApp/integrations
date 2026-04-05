@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-clicksend",
+    "description": "ClickSend integration for OpenCompany — SMS, email, voice, post letters, contacts, and account management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "clicksend", "sms", "messaging", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\ClickSend\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\ClickSend\\ClickSendServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

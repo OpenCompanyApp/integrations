@@ -1,0 +1,26 @@
+{
+    "name": "opencompanyapp/integration-intercom",
+    "description": "Intercom integration for OpenCompany – contacts, conversations, admins, tags, notes, and companies.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Intercom\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Intercom\\IntercomServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

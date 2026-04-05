@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-sendgrid",
+    "description": "SendGrid integration for OpenCompany — email delivery, contacts, lists, templates, and stats.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "sendgrid", "email", "marketing", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\SendGrid\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\SendGrid\\SendGridServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

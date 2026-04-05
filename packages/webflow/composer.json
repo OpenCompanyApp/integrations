@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-webflow",
+    "description": "Webflow integration for OpenCompany — sites, collections, items, webhooks, and assets.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "webflow", "cms", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Webflow\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Webflow\\WebflowServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

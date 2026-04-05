@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-openai",
+    "description": "OpenAI integration for OpenCompany — chat, embeddings, images, audio, assistants, and files.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "openai", "gpt", "chatgpt", "ai", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\OpenAI\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\OpenAI\\OpenAIServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

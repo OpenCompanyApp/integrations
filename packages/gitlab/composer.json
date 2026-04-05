@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-gitlab",
+    "description": "GitLab integration for OpenCompany — projects, issues, merge requests, epics, and pipelines.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "gitlab", "git", "issues", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\GitLab\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\GitLab\\GitLabServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

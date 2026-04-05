@@ -1,0 +1,21 @@
+{
+    "name": "opencompanyapp/integration-dropbox",
+    "description": "Dropbox integration for OpenCompany — files, folders, sharing, and search.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "dropbox", "files", "storage", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {"OpenCompany\\Integrations\\Dropbox\\": "src/"}
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["OpenCompany\\Integrations\\Dropbox\\DropboxServiceProvider"]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-zendesk",
+    "description": "Zendesk integration for OpenCompany — tickets, users, help center articles, and macros.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "zendesk", "support", "tickets", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Zendesk\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Zendesk\\ZendeskServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -17,8 +17,9 @@ interface LuaToolInvoker
      * before dispatching.
      *
      * @param  array<string, mixed>  $args
+     * @param  string|null  $account  Account alias for multi-account integrations (null = default)
      */
-    public function invoke(string $toolSlug, array $args): mixed;
+    public function invoke(string $toolSlug, array $args, ?string $account = null): mixed;
 
     /**
      * Tool metadata for bridge call logging and UI decoration.

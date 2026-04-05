@@ -21,4 +21,14 @@ interface CredentialResolver
      * @param string|null  $account  Account alias. Null checks the default/only account.
      */
     public function isConfigured(string $integration, ?string $account = null): bool;
+
+    /**
+     * List configured account aliases for an integration.
+     *
+     * Returns only non-default aliases (e.g., ['work', 'personal']).
+     * Returns an empty array when only the default (un-aliased) account exists.
+     *
+     * @return list<string>
+     */
+    public function getAccounts(string $integration): array;
 }

@@ -12,20 +12,26 @@ class LuaBridge
     /** @var array<string, list<string>> */
     private array $parameterMap;
 
+    /** @var array<string, string>  Function path → account alias for multi-account integrations */
+    private array $accountMap;
+
     /** @var list<array{path: string, durationMs: float, status: string, error?: string, icon?: string, name?: string, group?: string}> */
     private array $callLog = [];
 
     /**
      * @param  array<string, string>  $functionMap
      * @param  array<string, list<string>>  $parameterMap
+     * @param  array<string, string>  $accountMap  Function path → account alias
      */
     public function __construct(
         array $functionMap,
         array $parameterMap,
         private LuaToolInvoker $invoker,
+        array $accountMap = [],
     ) {
         $this->functionMap = $functionMap;
         $this->parameterMap = $parameterMap;
+        $this->accountMap = $accountMap;
     }
 
     public function call(string $path, mixed ...$args): mixed
@@ -74,8 +80,10 @@ class LuaBridge
 
         $start = microtime(true);
 
+        $account = $this->accountMap[$path] ?? null;
+
         try {
-            $result = $this->invoker->invoke($toolSlug, $params);
+            $result = $this->invoker->invoke($toolSlug, $params, $account);
 
             $this->callLog[] = [
                 'path' => $path,

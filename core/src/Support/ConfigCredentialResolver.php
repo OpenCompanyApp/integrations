@@ -28,4 +28,20 @@ class ConfigCredentialResolver implements CredentialResolver
     {
         return ! empty($this->get($integration, 'api_key', null, $account));
     }
+
+    public function getAccounts(string $integration): array
+    {
+        $config = config("ai-tools.{$integration}", []);
+
+        if (! is_array($config)) {
+            return [];
+        }
+
+        // Account keys are sub-arrays (e.g., 'work' => ['api_key' => '...'])
+        // Flat keys like 'api_key' => '...' are the default account, not aliases
+        return array_values(array_filter(
+            array_keys($config),
+            fn (string $key) => is_array($config[$key]),
+        ));
+    }
 }

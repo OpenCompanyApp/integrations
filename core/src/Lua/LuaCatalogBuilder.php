@@ -22,9 +22,16 @@ class LuaCatalogBuilder
                 continue;
             }
 
-            $baseNamespace = ! empty($app['isIntegration'])
+            $isIntegration = ! empty($app['isIntegration']);
+            $baseNamespace = $isIntegration
                 ? "integrations.{$appName}"
                 : $appName;
+
+            $description = (string) ($app['description'] ?? '');
+            $accounts = $app['accounts'] ?? [];
+            $isMcp = false;
+            $functions = [];
+            $mcpNamespaceFunctions = []; // mcpNamespace => [functions]
 
             foreach ($app['tools'] ?? [] as $tool) {
                 $slug = (string) ($tool['slug'] ?? '');
@@ -32,25 +39,70 @@ class LuaCatalogBuilder
                     continue;
                 }
 
-                $namespaceName = $baseNamespace;
                 if (str_starts_with($slug, 'mcp_')) {
-                    $namespaceName = $this->mcpNamespace($slug);
-                    $functionName = $this->mcpFunctionName($slug);
-                } else {
-                    $functionName = $this->deriveFunctionName(
-                        (string) ($tool['name'] ?? $slug),
-                        $appName,
-                    );
+                    $isMcp = true;
+                    $ns = $this->mcpNamespace($slug);
+                    $fn = $this->mcpFunctionName($slug);
+                    $mcpNamespaceFunctions[$ns][] = $this->buildFunction($fn, $tool, $slug);
+
+                    continue;
                 }
 
-                if (! isset($namespaces[$namespaceName])) {
-                    $namespaces[$namespaceName] = [
-                        'description' => (string) ($app['description'] ?? ''),
-                        'functions' => [],
+                $functionName = $this->deriveFunctionName(
+                    (string) ($tool['name'] ?? $slug),
+                    $appName,
+                );
+
+                $functions[] = $this->buildFunction($functionName, $tool, $slug);
+            }
+
+            // Handle MCP tool namespaces
+            foreach ($mcpNamespaceFunctions as $mcpNs => $mcpFns) {
+                // Flat namespace (default)
+                $namespaces[$mcpNs] = [
+                    'description' => $description,
+                    'functions' => $mcpFns,
+                ];
+
+                // Explicit "default" alias — portable across users
+                $namespaces[$mcpNs . '.default'] = [
+                    'description' => $description,
+                    'functions' => $mcpFns,
+                ];
+
+                // Per-account sub-namespaces
+                foreach ($accounts as $account) {
+                    $namespaces[$mcpNs . '.' . $account] = [
+                        'description' => $description,
+                        'functions' => $mcpFns,
+                        'account' => $account,
                     ];
                 }
+            }
 
-                $namespaces[$namespaceName]['functions'][] = $this->buildFunction($functionName, $tool, $slug);
+            // Handle regular (non-MCP) tool namespaces
+            if ($functions !== []) {
+                // Flat namespace (default)
+                $namespaces[$baseNamespace] = [
+                    'description' => $description,
+                    'functions' => $functions,
+                ];
+
+                // For integrations: add "default" alias and per-account sub-namespaces
+                if ($isIntegration) {
+                    $namespaces[$baseNamespace . '.default'] = [
+                        'description' => $description,
+                        'functions' => $functions,
+                    ];
+
+                    foreach ($accounts as $account) {
+                        $namespaces[$baseNamespace . '.' . $account] = [
+                            'description' => $description,
+                            'functions' => $functions,
+                            'account' => $account,
+                        ];
+                    }
+                }
             }
         }
 
@@ -95,6 +147,33 @@ class LuaCatalogBuilder
                     fn (array $param) => (string) ($param['name'] ?? ''),
                     $function['parameters'],
                 );
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * Build a map of function paths to account aliases for multi-account integrations.
+     *
+     * Paths without an account (flat/default namespace) are NOT included — they
+     * resolve to null in the bridge, which means "use the default account".
+     *
+     * @param  array<string, array{description: string, functions: array, account?: string}>  $namespaces
+     * @return array<string, string>  Function path → account alias
+     */
+    public function buildAccountMap(array $namespaces): array
+    {
+        $map = [];
+
+        foreach ($namespaces as $namespaceName => $namespace) {
+            $account = $namespace['account'] ?? null;
+            if ($account === null) {
+                continue;
+            }
+
+            foreach ($namespace['functions'] as $function) {
+                $map[$namespaceName . '.' . $function['name']] = $account;
             }
         }
 

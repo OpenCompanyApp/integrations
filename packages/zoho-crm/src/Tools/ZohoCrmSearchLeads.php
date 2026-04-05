@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Search Zoho CRM leads by criteria, email, phone, or keyword.
+ * Search Zoho CRM leads by criteria or email.
  *
- * Supports Zoho CRM's criteria expression syntax (e.g. `(First_Name:equals:John)`)
- * as well as direct email, phone, and word searches.
+ * Supports Zoho CRM search criteria syntax such as {@code (Email:equals:john@example.com)}
+ * or simple email-based lookup via the {@code email} parameter.
  */
 class ZohoCrmSearchLeads implements Tool
 {
@@ -29,26 +29,25 @@ class ZohoCrmSearchLeads implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Search leads in Zoho CRM using criteria, email, phone, or a keyword.
-        Use criteria for structured queries like "(First_Name:equals:John)" or "(Last_Name:starts_with:Sm)".
-        Email, phone, and word parameters provide simpler search alternatives.
+        Search Zoho CRM leads by criteria or email.
+        Use "criteria" for structured queries like (Email:equals:john@example.com).
+        Use "email" as a shortcut to search by email address.
+        Returns matching lead records.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'criteria' => ['type' => 'string', 'description' => 'Search criteria expression, e.g. "(First_Name:equals:John)" or "(Company:starts_with:Acme)".'],
-            'email' => ['type' => 'string', 'description' => 'Email address to search for.'],
-            'phone' => ['type' => 'string', 'description' => 'Phone number to search for.'],
-            'word' => ['type' => 'string', 'description' => 'Keyword to search across lead fields.'],
+            'criteria' => ['type' => 'string', 'description' => 'Search criteria expression, e.g. (Email:equals:john@example.com).'],
+            'email' => ['type' => 'string', 'description' => 'Email address to search for (shortcut for criteria).'],
         ];
     }
 
     /**
-     * Search Zoho CRM leads.
+     * Search Zoho CRM leads using criteria or email.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (criteria, email, phone, word)
+     * @param  array<string, mixed>  $args  Tool arguments (criteria, email)
      */
     public function execute(array $args): ToolResult
     {
@@ -57,27 +56,24 @@ class ZohoCrmSearchLeads implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $criteria = $args['criteria'] ?? null;
-            $email = $args['email'] ?? null;
-            $phone = $args['phone'] ?? null;
-            $word = $args['word'] ?? null;
+            $params = [];
 
-            if ($criteria === null && $email === null && $phone === null && $word === null) {
-                return ToolResult::error('At least one search parameter is required (criteria, email, phone, or word).');
+            if (! empty($args['criteria'])) {
+                $params['criteria'] = $args['criteria'];
+            } elseif (! empty($args['email'])) {
+                $params['criteria'] = '(Email:equals:' . $args['email'] . ')';
             }
 
-            $result = $this->service->searchLeads(
-                is_string($criteria) && $criteria !== '' ? $criteria : null,
-                is_string($email) && $email !== '' ? $email : null,
-                is_string($phone) && $phone !== '' ? $phone : null,
-                is_string($word) && $word !== '' ? $word : null,
-            );
+            if (empty($params)) {
+                return ToolResult::error('Provide either criteria or email to search.');
+            }
 
+            $result = $this->service->searchLeads($params);
             $data = $result['data'] ?? [];
 
             return ToolResult::success([
-                'data' => $data,
-                'count' => count($data),
+                'results' => $data,
+                'total' => count($data),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

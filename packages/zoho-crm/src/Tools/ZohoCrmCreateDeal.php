@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create one or more deals in Zoho CRM.
+ * Create a new deal in Zoho CRM.
  *
- * Accepts an array of deal records wrapped in a data payload.
+ * Maps deal fields (deal_name, amount, stage, closing_date, account_id) to Zoho CRM API
+ * field names and wraps them in the Zoho data envelope.
  */
 class ZohoCrmCreateDeal implements Tool
 {
@@ -28,23 +29,27 @@ class ZohoCrmCreateDeal implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Create one or more deals in Zoho CRM.
-        Each deal record should include fields like Deal_Name, Amount, Stage, Closing_Date, Account_Name, etc.
-        Returns the created deal records with their IDs.
+        Create a new deal (opportunity) in Zoho CRM.
+        Provide at least a deal name and stage. Other fields (amount, closing_date, account_id) are optional.
+        Returns the created deal with its Zoho CRM ID.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'data' => ['type' => 'array', 'description' => 'Array of deal records. Each record is an object with Zoho CRM field names as keys (e.g. {"Deal_Name": "New Deal", "Amount": 50000, "Stage": "Qualification"}).'],
+            'deal_name' => ['type' => 'string', 'description' => 'Deal name.'],
+            'amount' => ['type' => 'number', 'description' => 'Deal amount.'],
+            'stage' => ['type' => 'string', 'description' => 'Deal stage (e.g. Qualification, Negotiation, Closed Won).'],
+            'closing_date' => ['type' => 'string', 'description' => 'Expected closing date (YYYY-MM-DD).'],
+            'account_id' => ['type' => 'string', 'description' => 'Zoho CRM account ID to associate with the deal.'],
         ];
     }
 
     /**
-     * Create deal(s) in Zoho CRM.
+     * Create a new Zoho CRM deal with the provided details.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (data)
+     * @param  array<string, mixed>  $args  Tool arguments (deal_name, amount, stage, closing_date, account_id)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,18 +58,38 @@ class ZohoCrmCreateDeal implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $data = $args['data'] ?? [];
-            if (empty($data)) {
-                return ToolResult::error('data is required and must be a non-empty array of deal records.');
+            $fields = [];
+
+            if (! empty($args['deal_name'])) {
+                $fields['Deal_Name'] = $args['deal_name'];
+            }
+            if (isset($args['amount'])) {
+                $fields['Amount'] = $args['amount'];
+            }
+            if (! empty($args['stage'])) {
+                $fields['Stage'] = $args['stage'];
+            }
+            if (! empty($args['closing_date'])) {
+                $fields['Closing_Date'] = $args['closing_date'];
+            }
+            if (! empty($args['account_id'])) {
+                $fields['Account_Name'] = ['id' => $args['account_id']];
             }
 
-            $result = $this->service->createDeal($data);
+            if (empty($fields)) {
+                return ToolResult::error('At least one deal field is required.');
+            }
 
-            $records = $result['data'] ?? [];
+            $result = $this->service->createDeal($fields);
+            $data = $result['data'][0] ?? [];
+
+            if (isset($data['code']) && $data['code'] !== 'SUCCESS') {
+                return ToolResult::error($data['message'] ?? 'Failed to create deal.');
+            }
 
             return ToolResult::success([
-                'data' => $records,
-                'count' => count($records),
+                'id' => $data['details']['id'] ?? '',
+                'code' => $data['code'] ?? 'SUCCESS',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a Zoho CRM account by ID.
+ * Retrieve a Zoho CRM account by its ID.
  *
- * Returns the account's fields.
+ * Returns the account's full record including all populated fields.
  */
 class ZohoCrmGetAccount implements Tool
 {
@@ -29,7 +29,7 @@ class ZohoCrmGetAccount implements Tool
     {
         return <<<'MD'
         Retrieve a Zoho CRM account by its ID.
-        Returns all account fields.
+        Returns the account record with all populated fields.
         MD;
     }
 
@@ -52,18 +52,15 @@ class ZohoCrmGetAccount implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $accountId = $args['account_id'] ?? '';
-            if (empty($accountId)) {
+            $id = $args['account_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('account_id is required.');
             }
 
-            $result = $this->service->getAccount($accountId);
-
+            $result = $this->service->getAccount($id);
             $data = $result['data'] ?? [];
 
-            return ToolResult::success([
-                'data' => $data,
-            ]);
+            return ToolResult::success($data);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

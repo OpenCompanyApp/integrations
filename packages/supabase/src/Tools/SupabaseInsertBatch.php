@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Insert multiple rows into a Supabase table in a single batch request.
- *
- * Sends a POST request with an array of row objects. Optionally performs
- * an upsert (merge on conflict) for all rows in the batch.
  */
 class SupabaseInsertBatch implements Tool
 {
@@ -30,8 +27,7 @@ class SupabaseInsertBatch implements Tool
     {
         return <<<'MD'
         Insert multiple rows into a Supabase table in a single batch request.
-        Provide a JSON array of row objects. Optionally enable upsert to merge
-        on conflict instead of failing.
+        Provide an array of row objects. Optionally enable upsert mode to merge duplicates.
         MD;
     }
 
@@ -39,15 +35,16 @@ class SupabaseInsertBatch implements Tool
     {
         return [
             'table' => ['type' => 'string', 'required' => true, 'description' => 'Table name.'],
-            'records' => ['type' => 'string', 'required' => true, 'description' => 'JSON array of row objects (e.g., [{"name":"Alice"},{"name":"Bob"}]).'],
-            'upsert' => ['type' => 'boolean', 'description' => 'Whether to upsert (merge on conflict) instead of inserting. Default false.'],
+            'records' => ['type' => 'string', 'required' => true, 'description' => 'JSON array of row objects, each containing column name → value pairs.'],
+            'returning' => ['type' => 'string', 'description' => 'Return mode: "representation" (default) or "minimal".'],
+            'upsert' => ['type' => 'boolean', 'description' => 'Set to true to merge duplicates on conflict.'],
         ];
     }
 
     /**
-     * Insert multiple rows in a batch request.
+     * Insert multiple rows as a batch into the specified table.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (table, records, upsert)
+     * @param  array<string, mixed>  $args  Tool arguments (table, records, returning, upsert)
      */
     public function execute(array $args): ToolResult
     {
@@ -57,24 +54,32 @@ class SupabaseInsertBatch implements Tool
             }
 
             $table = $args['table'] ?? '';
-            $records = $args['records'] ?? '';
-
             if (empty($table)) {
                 return ToolResult::error('table is required.');
             }
-            if (empty($records)) {
+
+            $rawRecords = $args['records'] ?? '';
+            if (empty($rawRecords)) {
                 return ToolResult::error('records is required.');
             }
 
-            $recordsArray = is_string($records) ? json_decode($records, true) : $records;
-
-            if (! is_array($recordsArray)) {
-                return ToolResult::error('records must be a valid JSON array.');
+            if (is_string($rawRecords)) {
+                $records = json_decode($rawRecords, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return ToolResult::error('Invalid JSON in records: ' . json_last_error_msg());
+                }
+            } else {
+                $records = $rawRecords;
             }
 
-            $upsert = ! empty($args['upsert']) && filter_var($args['upsert'], FILTER_VALIDATE_BOOLEAN);
+            if (! is_array($records) || ! array_is_list($records)) {
+                return ToolResult::error('records must be a JSON array of row objects.');
+            }
 
-            $result = $this->service->insertBatch($table, $recordsArray, 'representation', $upsert);
+            $returning = $args['returning'] ?? 'representation';
+            $upsert = ($args['upsert'] ?? false) === true || $args['upsert'] === 'true';
+
+            $result = $this->service->insertBatch($table, $records, $returning, $upsert);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

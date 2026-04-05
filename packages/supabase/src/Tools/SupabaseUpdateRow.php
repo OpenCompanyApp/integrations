@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Update an existing row in a Supabase table by its primary key id.
- *
- * Sends a PATCH request with the updated column values and returns the
- * updated row when returning is set to "representation".
  */
 class SupabaseUpdateRow implements Tool
 {
@@ -30,8 +27,7 @@ class SupabaseUpdateRow implements Tool
     {
         return <<<'MD'
         Update an existing row in a Supabase table by its primary key id.
-        Provide the columns to update as a JSON object. By default, the
-        updated row is returned.
+        Provide the columns to update as a JSON object.
         MD;
     }
 
@@ -40,14 +36,15 @@ class SupabaseUpdateRow implements Tool
         return [
             'table' => ['type' => 'string', 'required' => true, 'description' => 'Table name.'],
             'id' => ['type' => 'string', 'required' => true, 'description' => 'Primary key value of the row to update.'],
-            'data' => ['type' => 'string', 'required' => true, 'description' => 'JSON object of column name → value pairs to update (e.g., {"name":"Jane"}).'],
+            'data' => ['type' => 'string', 'required' => true, 'description' => 'JSON object of column name → value pairs to update.'],
+            'returning' => ['type' => 'string', 'description' => 'Return mode: "representation" (default) or "minimal".'],
         ];
     }
 
     /**
-     * Update a row by its primary key with the given column values.
+     * Update a row identified by its primary key.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (table, id, data)
+     * @param  array<string, mixed>  $args  Tool arguments (table, id, data, returning)
      */
     public function execute(array $args): ToolResult
     {
@@ -58,7 +55,6 @@ class SupabaseUpdateRow implements Tool
 
             $table = $args['table'] ?? '';
             $id = $args['id'] ?? '';
-            $data = $args['data'] ?? '';
 
             if (empty($table)) {
                 return ToolResult::error('table is required.');
@@ -66,17 +62,24 @@ class SupabaseUpdateRow implements Tool
             if (empty($id)) {
                 return ToolResult::error('id is required.');
             }
-            if (empty($data)) {
+
+            $rawData = $args['data'] ?? '';
+            if (empty($rawData)) {
                 return ToolResult::error('data is required.');
             }
 
-            $dataArray = is_string($data) ? json_decode($data, true) : $data;
-
-            if (! is_array($dataArray)) {
-                return ToolResult::error('data must be a valid JSON object.');
+            if (is_string($rawData)) {
+                $data = json_decode($rawData, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return ToolResult::error('Invalid JSON in data: ' . json_last_error_msg());
+                }
+            } else {
+                $data = $rawData;
             }
 
-            $result = $this->service->updateRow($table, $id, $dataArray);
+            $returning = $args['returning'] ?? 'representation';
+
+            $result = $this->service->updateRow($table, $id, $data, $returning);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

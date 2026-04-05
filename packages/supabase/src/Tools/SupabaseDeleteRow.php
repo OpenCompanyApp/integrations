@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Delete a row from a Supabase table by its primary key id.
- *
- * Sends a DELETE request and optionally returns the deleted row
- * when Prefer: return=representation is used.
  */
 class SupabaseDeleteRow implements Tool
 {
@@ -30,7 +27,7 @@ class SupabaseDeleteRow implements Tool
     {
         return <<<'MD'
         Delete a row from a Supabase table by its primary key id.
-        The deleted row data is returned by default.
+        Optionally return the deleted row data.
         MD;
     }
 
@@ -39,13 +36,14 @@ class SupabaseDeleteRow implements Tool
         return [
             'table' => ['type' => 'string', 'required' => true, 'description' => 'Table name.'],
             'id' => ['type' => 'string', 'required' => true, 'description' => 'Primary key value of the row to delete.'],
+            'returning' => ['type' => 'string', 'description' => 'Return mode: "representation" (default) or "minimal".'],
         ];
     }
 
     /**
-     * Delete a row by its primary key.
+     * Delete a row identified by its primary key.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (table, id)
+     * @param  array<string, mixed>  $args  Tool arguments (table, id, returning)
      */
     public function execute(array $args): ToolResult
     {
@@ -64,7 +62,13 @@ class SupabaseDeleteRow implements Tool
                 return ToolResult::error('id is required.');
             }
 
-            $result = $this->service->deleteRow($table, $id);
+            $returning = $args['returning'] ?? 'representation';
+
+            $result = $this->service->deleteRow($table, $id, $returning);
+
+            if (empty($result)) {
+                return ToolResult::success("Row with id {$id} deleted from {$table}.");
+            }
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

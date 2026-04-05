@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Count rows in a Supabase table with optional filtering.
- *
- * Uses the PostgREST Prefer: count=exact header and select=count
- * to retrieve the total number of matching rows.
  */
 class SupabaseCountRows implements Tool
 {
@@ -29,9 +26,8 @@ class SupabaseCountRows implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Count rows in a Supabase table, optionally filtered by PostgREST filter
-        syntax. Returns the total count of matching rows. Example filter:
-        {"status": "eq.active", "created_at": "gte.2024-01-01"}.
+        Count rows in a Supabase table, optionally filtered. Uses PostgREST count=exact
+        with a select=count query. Filters use PostgREST syntax, e.g. {"status": "eq.active"}.
         MD;
     }
 
@@ -56,7 +52,6 @@ class SupabaseCountRows implements Tool
             }
 
             $table = $args['table'] ?? '';
-
             if (empty($table)) {
                 return ToolResult::error('table is required.');
             }

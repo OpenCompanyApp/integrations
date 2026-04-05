@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Call a Supabase remote procedure (RPC function).
- *
- * Sends a POST request to the /rpc/{function} endpoint with the
- * provided parameters and returns the function result.
  */
 class SupabaseRpc implements Tool
 {
@@ -29,9 +26,8 @@ class SupabaseRpc implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Call a Supabase remote procedure (RPC function) with parameters.
-        The function must be defined in the Supabase database. Provide
-        the function name and a JSON object of parameters.
+        Call a remote procedure (RPC function) defined in the Supabase database.
+        Provide the function name and a JSON object of parameters.
         MD;
     }
 
@@ -39,12 +35,12 @@ class SupabaseRpc implements Tool
     {
         return [
             'function_name' => ['type' => 'string', 'required' => true, 'description' => 'Name of the RPC function to call.'],
-            'params' => ['type' => 'string', 'description' => 'JSON object of parameters to pass to the function (e.g., {"arg1":"value1"}).'],
+            'params' => ['type' => 'string', 'description' => 'JSON object of parameters to pass to the function.'],
         ];
     }
 
     /**
-     * Call an RPC function with the given parameters.
+     * Call a remote procedure with the given parameters.
      *
      * @param  array<string, mixed>  $args  Tool arguments (function_name, params)
      */
@@ -56,7 +52,6 @@ class SupabaseRpc implements Tool
             }
 
             $functionName = $args['function_name'] ?? '';
-
             if (empty($functionName)) {
                 return ToolResult::error('function_name is required.');
             }
@@ -69,7 +64,7 @@ class SupabaseRpc implements Tool
                     if (json_last_error() !== JSON_ERROR_NONE) {
                         return ToolResult::error('Invalid JSON in params: ' . json_last_error_msg());
                     }
-                    $params = $decoded ?? [];
+                    $params = $decoded;
                 } elseif (is_array($raw)) {
                     $params = $raw;
                 }

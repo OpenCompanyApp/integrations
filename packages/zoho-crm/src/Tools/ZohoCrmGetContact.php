@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a Zoho CRM contact by ID.
+ * Retrieve a Zoho CRM contact by its ID.
  *
- * Returns the contact's fields and optionally limits the response to specific fields.
+ * Returns the contact's full record including all populated fields.
  */
 class ZohoCrmGetContact implements Tool
 {
@@ -29,7 +29,7 @@ class ZohoCrmGetContact implements Tool
     {
         return <<<'MD'
         Retrieve a Zoho CRM contact by its ID.
-        Returns all contact fields by default, or specify a list of field API names to include.
+        Returns the contact record with all populated fields.
         MD;
     }
 
@@ -37,14 +37,13 @@ class ZohoCrmGetContact implements Tool
     {
         return [
             'contact_id' => ['type' => 'string', 'required' => true, 'description' => 'Zoho CRM contact ID.'],
-            'fields' => ['type' => 'array', 'description' => 'List of field API names to include in the response.'],
         ];
     }
 
     /**
      * Retrieve a Zoho CRM contact by ID.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (contact_id, fields)
+     * @param  array<string, mixed>  $args  Tool arguments (contact_id)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,19 +52,15 @@ class ZohoCrmGetContact implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $contactId = $args['contact_id'] ?? '';
-            if (empty($contactId)) {
+            $id = $args['contact_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('contact_id is required.');
             }
 
-            $fields = $args['fields'] ?? null;
-            $result = $this->service->getContact($contactId, is_array($fields) ? $fields : null);
-
+            $result = $this->service->getContact($id);
             $data = $result['data'] ?? [];
 
-            return ToolResult::success([
-                'data' => $data,
-            ]);
+            return ToolResult::success($data);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

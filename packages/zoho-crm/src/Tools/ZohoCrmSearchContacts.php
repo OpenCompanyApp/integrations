@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Search Zoho CRM contacts by criteria, email, or phone.
+ * Search Zoho CRM contacts by criteria or email.
  *
- * Supports Zoho CRM's criteria expression syntax (e.g. `(Last_Name:equals:Smith)`)
- * as well as direct email and phone searches.
+ * Supports Zoho CRM search criteria syntax such as {@code (Email:equals:john@example.com)}
+ * or simple email-based lookup via the {@code email} parameter.
  */
 class ZohoCrmSearchContacts implements Tool
 {
@@ -29,25 +29,25 @@ class ZohoCrmSearchContacts implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Search contacts in Zoho CRM using criteria, email, or phone.
-        Use criteria for structured queries like "(Last_Name:equals:Smith)" or "(Email:contains:example.com)".
-        Email and phone parameters provide simpler search alternatives.
+        Search Zoho CRM contacts by criteria or email.
+        Use "criteria" for structured queries like (Email:equals:john@example.com).
+        Use "email" as a shortcut to search by email address.
+        Returns matching contact records.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'criteria' => ['type' => 'string', 'description' => 'Search criteria expression, e.g. "(Last_Name:equals:Smith)" or "(Email:contains:acme)".'],
-            'email' => ['type' => 'string', 'description' => 'Email address to search for.'],
-            'phone' => ['type' => 'string', 'description' => 'Phone number to search for.'],
+            'criteria' => ['type' => 'string', 'description' => 'Search criteria expression, e.g. (Email:equals:john@example.com).'],
+            'email' => ['type' => 'string', 'description' => 'Email address to search for (shortcut for criteria).'],
         ];
     }
 
     /**
-     * Search Zoho CRM contacts.
+     * Search Zoho CRM contacts using criteria or email.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (criteria, email, phone)
+     * @param  array<string, mixed>  $args  Tool arguments (criteria, email)
      */
     public function execute(array $args): ToolResult
     {
@@ -56,25 +56,24 @@ class ZohoCrmSearchContacts implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $criteria = $args['criteria'] ?? null;
-            $email = $args['email'] ?? null;
-            $phone = $args['phone'] ?? null;
+            $params = [];
 
-            if ($criteria === null && $email === null && $phone === null) {
-                return ToolResult::error('At least one search parameter is required (criteria, email, or phone).');
+            if (! empty($args['criteria'])) {
+                $params['criteria'] = $args['criteria'];
+            } elseif (! empty($args['email'])) {
+                $params['criteria'] = '(Email:equals:' . $args['email'] . ')';
             }
 
-            $result = $this->service->searchContacts(
-                is_string($criteria) && $criteria !== '' ? $criteria : null,
-                is_string($email) && $email !== '' ? $email : null,
-                is_string($phone) && $phone !== '' ? $phone : null,
-            );
+            if (empty($params)) {
+                return ToolResult::error('Provide either criteria or email to search.');
+            }
 
+            $result = $this->service->searchContacts($params);
             $data = $result['data'] ?? [];
 
             return ToolResult::success([
-                'data' => $data,
-                'count' => count($data),
+                'results' => $data,
+                'total' => count($data),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

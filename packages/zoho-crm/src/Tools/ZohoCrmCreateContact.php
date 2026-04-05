@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create one or more contacts in Zoho CRM.
+ * Create a new contact in Zoho CRM.
  *
- * Accepts an array of contact records wrapped in a data payload.
+ * Maps standard contact fields (first_name, last_name, email, phone) to Zoho CRM API
+ * field names and wraps them in the Zoho data envelope.
  */
 class ZohoCrmCreateContact implements Tool
 {
@@ -28,23 +29,26 @@ class ZohoCrmCreateContact implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Create one or more contacts in Zoho CRM.
-        Each contact record should include fields like First_Name, Last_Name, Email, Phone, Mailing_Country, etc.
-        Returns the created contact records with their IDs.
+        Create a new contact in Zoho CRM.
+        Provide at least a last name. Other fields (first name, email, phone) are optional.
+        Returns the created contact with its Zoho CRM ID.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'data' => ['type' => 'array', 'description' => 'Array of contact records. Each record is an object with Zoho CRM field names as keys (e.g. {"First_Name": "Jane", "Last_Name": "Smith", "Email": "jane@example.com"}).'],
+            'first_name' => ['type' => 'string', 'description' => 'Contact first name.'],
+            'last_name' => ['type' => 'string', 'description' => 'Contact last name.'],
+            'email' => ['type' => 'string', 'description' => 'Contact email address.'],
+            'phone' => ['type' => 'string', 'description' => 'Contact phone number.'],
         ];
     }
 
     /**
-     * Create contact(s) in Zoho CRM.
+     * Create a new Zoho CRM contact with the provided details.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (data)
+     * @param  array<string, mixed>  $args  Tool arguments (first_name, last_name, email, phone)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,18 +57,35 @@ class ZohoCrmCreateContact implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $data = $args['data'] ?? [];
-            if (empty($data)) {
-                return ToolResult::error('data is required and must be a non-empty array of contact records.');
+            $fields = [];
+
+            if (! empty($args['last_name'])) {
+                $fields['Last_Name'] = $args['last_name'];
+            }
+            if (! empty($args['first_name'])) {
+                $fields['First_Name'] = $args['first_name'];
+            }
+            if (! empty($args['email'])) {
+                $fields['Email'] = $args['email'];
+            }
+            if (! empty($args['phone'])) {
+                $fields['Phone'] = $args['phone'];
             }
 
-            $result = $this->service->createContact($data);
+            if (empty($fields)) {
+                return ToolResult::error('At least one contact field is required.');
+            }
 
-            $records = $result['data'] ?? [];
+            $result = $this->service->createContact($fields);
+            $data = $result['data'][0] ?? [];
+
+            if (isset($data['code']) && $data['code'] !== 'SUCCESS') {
+                return ToolResult::error($data['message'] ?? 'Failed to create contact.');
+            }
 
             return ToolResult::success([
-                'data' => $records,
-                'count' => count($records),
+                'id' => $data['details']['id'] ?? '',
+                'code' => $data['code'] ?? 'SUCCESS',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

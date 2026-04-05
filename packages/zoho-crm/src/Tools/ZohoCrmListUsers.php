@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List users in the Zoho CRM organization.
+ * List users from Zoho CRM with optional type filtering and pagination.
  *
- * Returns a paginated list of users with optional type filtering.
+ * Supports filtering by user type (e.g. ActiveUsers, Admins, ActiveConfirmedAdmins)
+ * and page-based pagination.
  */
 class ZohoCrmListUsers implements Tool
 {
@@ -28,24 +29,23 @@ class ZohoCrmListUsers implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List users in the Zoho CRM organization.
-        Optionally filter by user type (ActiveUsers, DeactivatedUsers, ConfirmedUsers, NotConfirmedUsers, DeletedUsers, ActiveConfirmedUsers, AdminUsers, ActiveConfirmedAdminUsers, CurrentUser) and control pagination.
+        List users from Zoho CRM.
+        Optionally filter by user type (e.g. ActiveUsers, Admins) and paginate results.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'type' => ['type' => 'string', 'description' => 'User type filter. Possible values: ActiveUsers, DeactivatedUsers, ConfirmedUsers, NotConfirmedUsers, DeletedUsers, ActiveConfirmedUsers, AdminUsers, ActiveConfirmedAdminUsers, CurrentUser.'],
-            'page' => ['type' => 'integer', 'description' => 'Page number.'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of records per page.'],
+            'type' => ['type' => 'string', 'description' => 'User type filter (e.g. ActiveUsers, Admins, ActiveConfirmedAdmins).'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (default 1).'],
         ];
     }
 
     /**
-     * List Zoho CRM users.
+     * List Zoho CRM users with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (type, page, per_page)
+     * @param  array<string, mixed>  $args  Tool arguments (type, page)
      */
     public function execute(array $args): ToolResult
     {
@@ -54,21 +54,21 @@ class ZohoCrmListUsers implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $type = $args['type'] ?? null;
-            $page = $args['page'] ?? null;
-            $perPage = $args['per_page'] ?? null;
+            $params = [];
 
-            $result = $this->service->listUsers(
-                is_string($type) && $type !== '' ? $type : null,
-                is_numeric($page) ? (int) $page : null,
-                is_numeric($perPage) ? (int) $perPage : null,
-            );
+            if (! empty($args['type'])) {
+                $params['type'] = $args['type'];
+            }
+            if (isset($args['page'])) {
+                $params['page'] = (int) $args['page'];
+            }
 
+            $result = $this->service->listUsers($params);
             $users = $result['users'] ?? [];
 
             return ToolResult::success([
-                'users' => $users,
-                'count' => count($users),
+                'results' => $users,
+                'total' => count($users),
                 'info' => $result['info'] ?? [],
             ]);
         } catch (\Throwable $e) {

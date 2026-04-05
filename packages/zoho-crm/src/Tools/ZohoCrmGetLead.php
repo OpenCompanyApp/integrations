@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a Zoho CRM lead by ID.
+ * Retrieve a Zoho CRM lead by its ID.
  *
- * Returns the lead's fields and optionally limits the response to specific fields.
+ * Returns the lead's full record including all populated fields.
  */
 class ZohoCrmGetLead implements Tool
 {
@@ -29,7 +29,7 @@ class ZohoCrmGetLead implements Tool
     {
         return <<<'MD'
         Retrieve a Zoho CRM lead by its ID.
-        Returns all lead fields by default, or specify a list of field API names to include.
+        Returns the lead record with all populated fields.
         MD;
     }
 
@@ -37,14 +37,13 @@ class ZohoCrmGetLead implements Tool
     {
         return [
             'lead_id' => ['type' => 'string', 'required' => true, 'description' => 'Zoho CRM lead ID.'],
-            'fields' => ['type' => 'array', 'description' => 'List of field API names to include in the response.'],
         ];
     }
 
     /**
      * Retrieve a Zoho CRM lead by ID.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (lead_id, fields)
+     * @param  array<string, mixed>  $args  Tool arguments (lead_id)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,19 +52,15 @@ class ZohoCrmGetLead implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $leadId = $args['lead_id'] ?? '';
-            if (empty($leadId)) {
+            $id = $args['lead_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('lead_id is required.');
             }
 
-            $fields = $args['fields'] ?? null;
-            $result = $this->service->getLead($leadId, is_array($fields) ? $fields : null);
-
+            $result = $this->service->getLead($id);
             $data = $result['data'] ?? [];
 
-            return ToolResult::success([
-                'data' => $data,
-            ]);
+            return ToolResult::success($data);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

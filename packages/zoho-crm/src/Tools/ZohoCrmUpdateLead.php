@@ -9,7 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Update an existing lead in Zoho CRM.
  *
- * Accepts lead field data and optional trigger execution.
+ * Maps standard fields (first_name, last_name, company, email, phone) to Zoho CRM API
+ * field names and sends a PUT request wrapped in the Zoho data envelope.
  */
 class ZohoCrmUpdateLead implements Tool
 {
@@ -28,9 +29,9 @@ class ZohoCrmUpdateLead implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Update an existing lead in Zoho CRM by its ID.
-        Provide the fields to update as a data array with Zoho CRM field names as keys.
-        Optionally specify triggers to execute (approval, workflow, blueprint).
+        Update an existing lead in Zoho CRM.
+        Provide the lead ID and the fields to update (first_name, last_name, company, email, phone).
+        Returns the update status and modified lead details.
         MD;
     }
 
@@ -38,15 +39,18 @@ class ZohoCrmUpdateLead implements Tool
     {
         return [
             'lead_id' => ['type' => 'string', 'required' => true, 'description' => 'Zoho CRM lead ID.'],
-            'data' => ['type' => 'array', 'description' => 'Lead record fields to update. An array containing an object with Zoho CRM field names as keys (e.g. [{"First_Name": "Jane"}]).'],
-            'trigger' => ['type' => 'array', 'description' => 'Triggers to execute. Possible values: "approval", "workflow", "blueprint".'],
+            'first_name' => ['type' => 'string', 'description' => 'Updated first name.'],
+            'last_name' => ['type' => 'string', 'description' => 'Updated last name.'],
+            'company' => ['type' => 'string', 'description' => 'Updated company name.'],
+            'email' => ['type' => 'string', 'description' => 'Updated email address.'],
+            'phone' => ['type' => 'string', 'description' => 'Updated phone number.'],
         ];
     }
 
     /**
-     * Update a Zoho CRM lead.
+     * Update a Zoho CRM lead with the provided fields.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (lead_id, data, trigger)
+     * @param  array<string, mixed>  $args  Tool arguments (lead_id, first_name, last_name, company, email, phone)
      */
     public function execute(array $args): ToolResult
     {
@@ -55,28 +59,43 @@ class ZohoCrmUpdateLead implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $leadId = $args['lead_id'] ?? '';
-            if (empty($leadId)) {
+            $id = $args['lead_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('lead_id is required.');
             }
 
-            $data = $args['data'] ?? [];
-            if (empty($data)) {
-                return ToolResult::error('data is required.');
+            $fields = [];
+
+            if (array_key_exists('first_name', $args)) {
+                $fields['First_Name'] = $args['first_name'];
+            }
+            if (array_key_exists('last_name', $args)) {
+                $fields['Last_Name'] = $args['last_name'];
+            }
+            if (array_key_exists('company', $args)) {
+                $fields['Company'] = $args['company'];
+            }
+            if (array_key_exists('email', $args)) {
+                $fields['Email'] = $args['email'];
+            }
+            if (array_key_exists('phone', $args)) {
+                $fields['Phone'] = $args['phone'];
             }
 
-            $trigger = $args['trigger'] ?? null;
+            if (empty($fields)) {
+                return ToolResult::error('At least one field to update is required.');
+            }
 
-            $result = $this->service->updateLead(
-                $leadId,
-                $data,
-                is_array($trigger) ? $trigger : null,
-            );
+            $result = $this->service->updateLead($id, $fields);
+            $data = $result['data'][0] ?? [];
 
-            $records = $result['data'] ?? [];
+            if (isset($data['code']) && $data['code'] !== 'SUCCESS') {
+                return ToolResult::error($data['message'] ?? 'Failed to update lead.');
+            }
 
             return ToolResult::success([
-                'data' => $records,
+                'id' => $data['details']['id'] ?? $id,
+                'code' => $data['code'] ?? 'SUCCESS',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

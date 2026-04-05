@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a Zoho CRM deal by ID.
+ * Retrieve a Zoho CRM deal by its ID.
  *
- * Returns the deal's fields.
+ * Returns the deal's full record including all populated fields.
  */
 class ZohoCrmGetDeal implements Tool
 {
@@ -29,7 +29,7 @@ class ZohoCrmGetDeal implements Tool
     {
         return <<<'MD'
         Retrieve a Zoho CRM deal by its ID.
-        Returns all deal fields.
+        Returns the deal record with all populated fields.
         MD;
     }
 
@@ -52,18 +52,15 @@ class ZohoCrmGetDeal implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $dealId = $args['deal_id'] ?? '';
-            if (empty($dealId)) {
+            $id = $args['deal_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('deal_id is required.');
             }
 
-            $result = $this->service->getDeal($dealId);
-
+            $result = $this->service->getDeal($id);
             $data = $result['data'] ?? [];
 
-            return ToolResult::success([
-                'data' => $data,
-            ]);
+            return ToolResult::success($data);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

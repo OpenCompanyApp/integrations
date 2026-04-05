@@ -9,7 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Update an existing contact in Zoho CRM.
  *
- * Accepts contact field data for updating an existing record.
+ * Maps standard fields (first_name, last_name, email, phone) to Zoho CRM API field names
+ * and sends a PUT request wrapped in the Zoho data envelope.
  */
 class ZohoCrmUpdateContact implements Tool
 {
@@ -28,8 +29,9 @@ class ZohoCrmUpdateContact implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Update an existing contact in Zoho CRM by its ID.
-        Provide the fields to update as a data array with Zoho CRM field names as keys.
+        Update an existing contact in Zoho CRM.
+        Provide the contact ID and the fields to update (first_name, last_name, email, phone).
+        Returns the update status and modified contact details.
         MD;
     }
 
@@ -37,14 +39,17 @@ class ZohoCrmUpdateContact implements Tool
     {
         return [
             'contact_id' => ['type' => 'string', 'required' => true, 'description' => 'Zoho CRM contact ID.'],
-            'data' => ['type' => 'array', 'description' => 'Contact record fields to update. An array containing an object with Zoho CRM field names as keys (e.g. [{"First_Name": "Jane", "Email": "jane.new@example.com"}]).'],
+            'first_name' => ['type' => 'string', 'description' => 'Updated first name.'],
+            'last_name' => ['type' => 'string', 'description' => 'Updated last name.'],
+            'email' => ['type' => 'string', 'description' => 'Updated email address.'],
+            'phone' => ['type' => 'string', 'description' => 'Updated phone number.'],
         ];
     }
 
     /**
-     * Update a Zoho CRM contact.
+     * Update a Zoho CRM contact with the provided fields.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (contact_id, data)
+     * @param  array<string, mixed>  $args  Tool arguments (contact_id, first_name, last_name, email, phone)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,22 +58,40 @@ class ZohoCrmUpdateContact implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $contactId = $args['contact_id'] ?? '';
-            if (empty($contactId)) {
+            $id = $args['contact_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('contact_id is required.');
             }
 
-            $data = $args['data'] ?? [];
-            if (empty($data)) {
-                return ToolResult::error('data is required.');
+            $fields = [];
+
+            if (array_key_exists('first_name', $args)) {
+                $fields['First_Name'] = $args['first_name'];
+            }
+            if (array_key_exists('last_name', $args)) {
+                $fields['Last_Name'] = $args['last_name'];
+            }
+            if (array_key_exists('email', $args)) {
+                $fields['Email'] = $args['email'];
+            }
+            if (array_key_exists('phone', $args)) {
+                $fields['Phone'] = $args['phone'];
             }
 
-            $result = $this->service->updateContact($contactId, $data);
+            if (empty($fields)) {
+                return ToolResult::error('At least one field to update is required.');
+            }
 
-            $records = $result['data'] ?? [];
+            $result = $this->service->updateContact($id, $fields);
+            $data = $result['data'][0] ?? [];
+
+            if (isset($data['code']) && $data['code'] !== 'SUCCESS') {
+                return ToolResult::error($data['message'] ?? 'Failed to update contact.');
+            }
 
             return ToolResult::success([
-                'data' => $records,
+                'id' => $data['details']['id'] ?? $id,
+                'code' => $data['code'] ?? 'SUCCESS',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

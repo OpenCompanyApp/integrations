@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-mailgun",
+    "description": "Mailgun integration for OpenCompany — email delivery, domains, events, mailing lists, and suppressions.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "mailgun", "email", "marketing", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Mailgun\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Mailgun\\MailgunServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

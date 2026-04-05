@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List deals in Zoho CRM with pagination, field selection, and sorting.
+ * List deals from Zoho CRM with optional pagination.
  *
- * Returns a paginated list of deal records with their fields.
+ * Supports page and per_page parameters for paginating through deal records.
  */
 class ZohoCrmListDeals implements Tool
 {
@@ -28,26 +28,23 @@ class ZohoCrmListDeals implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List deals in Zoho CRM with pagination, field selection, and sorting.
-        Control page number, page size, which fields to return, and sort order.
+        List deals from Zoho CRM with optional pagination.
+        Use page and per_page to control pagination. Returns deal records.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'fields' => ['type' => 'array', 'description' => 'List of field API names to include in results.'],
             'page' => ['type' => 'integer', 'description' => 'Page number (default 1).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of records per page (default 200).'],
-            'sort_by' => ['type' => 'string', 'description' => 'Field API name to sort by (e.g. "Created_Time").'],
-            'sort_order' => ['type' => 'string', 'description' => 'Sort direction: "asc" or "desc".'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of records per page (default 20, max 200).'],
         ];
     }
 
     /**
-     * List Zoho CRM deals with pagination and sorting.
+     * List Zoho CRM deals with pagination.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (fields, page, per_page, sort_by, sort_order)
+     * @param  array<string, mixed>  $args  Tool arguments (page, per_page)
      */
     public function execute(array $args): ToolResult
     {
@@ -56,25 +53,21 @@ class ZohoCrmListDeals implements Tool
                 return ToolResult::error('Zoho CRM integration is not configured.');
             }
 
-            $fields = $args['fields'] ?? null;
-            $page = $args['page'] ?? null;
-            $perPage = $args['per_page'] ?? null;
-            $sortBy = $args['sort_by'] ?? null;
-            $sortOrder = $args['sort_order'] ?? null;
+            $params = [];
 
-            $result = $this->service->listDeals(
-                is_array($fields) ? $fields : null,
-                is_numeric($page) ? (int) $page : null,
-                is_numeric($perPage) ? (int) $perPage : null,
-                is_string($sortBy) && $sortBy !== '' ? $sortBy : null,
-                is_string($sortOrder) && $sortOrder !== '' ? $sortOrder : null,
-            );
+            if (isset($args['page'])) {
+                $params['page'] = (int) $args['page'];
+            }
+            if (isset($args['per_page'])) {
+                $params['per_page'] = (int) $args['per_page'];
+            }
 
+            $result = $this->service->listDeals($params);
             $data = $result['data'] ?? [];
 
             return ToolResult::success([
-                'data' => $data,
-                'count' => count($data),
+                'results' => $data,
+                'total' => count($data),
                 'info' => $result['info'] ?? [],
             ]);
         } catch (\Throwable $e) {

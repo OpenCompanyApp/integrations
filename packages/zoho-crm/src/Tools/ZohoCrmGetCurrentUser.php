@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the currently authenticated Zoho CRM user.
+ * Retrieve the currently authenticated Zoho CRM user's profile.
  *
- * Returns the current user's profile information.
+ * Returns the user's full profile including name, email, role, and other details.
  */
 class ZohoCrmGetCurrentUser implements Tool
 {
@@ -28,8 +28,8 @@ class ZohoCrmGetCurrentUser implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Get the currently authenticated Zoho CRM user.
-        Returns the user's profile information including name, email, role, and other details.
+        Retrieve the currently authenticated Zoho CRM user's profile.
+        Returns user details including name, email, role, and other profile information.
         MD;
     }
 
@@ -39,7 +39,7 @@ class ZohoCrmGetCurrentUser implements Tool
     }
 
     /**
-     * Get the current Zoho CRM user.
+     * Retrieve the currently authenticated Zoho CRM user.
      *
      * @param  array<string, mixed>  $args  Tool arguments (none)
      */
@@ -51,13 +51,9 @@ class ZohoCrmGetCurrentUser implements Tool
             }
 
             $result = $this->service->getCurrentUser();
-
             $users = $result['users'] ?? [];
-            $user = $users[0] ?? [];
 
-            return ToolResult::success([
-                'user' => $user,
-            ]);
+            return ToolResult::success($users);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

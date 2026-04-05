@@ -1,0 +1,88 @@
+<?php
+
+namespace OpenCompany\Integrations\Calendly\Tools;
+
+use OpenCompany\Integrations\Calendly\CalendlyService;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
+
+/**
+ * List scheduled Calendly events.
+ *
+ * Supports filtering by user, status, and time range, as well as pagination.
+ */
+class CalendlyListEvents implements Tool
+{
+    /**
+     * @param  CalendlyService  $service  The Calendly API client
+     */
+    public function __construct(
+        private CalendlyService $service,
+    ) {}
+
+    public function name(): string
+    {
+        return 'calendly_list_events';
+    }
+
+    public function description(): string
+    {
+        return 'List scheduled Calendly events.';
+    }
+
+    public function parameters(): array
+    {
+        return [
+            'user' => ['type' => 'string', 'description' => 'The user URI to filter events by (e.g. https://api.calendly.com/users/...).'],
+            'status' => ['type' => 'string', 'description' => 'Filter by event status: "active" or "canceled".', 'enum' => ['active', 'canceled']],
+            'min_start_time' => ['type' => 'string', 'description' => 'Include events starting on or after this ISO 8601 timestamp (e.g. 2024-01-01T00:00:00Z).'],
+            'max_start_time' => ['type' => 'string', 'description' => 'Include events starting before this ISO 8601 timestamp.'],
+            'page_token' => ['type' => 'string', 'description' => 'Pagination token from a previous response.'],
+            'count' => ['type' => 'integer', 'description' => 'Number of events to return per page (default 20, max 100).'],
+        ];
+    }
+
+    /**
+     * List scheduled events with optional filtering and pagination.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (user, status, min_start_time, max_start_time, page_token, count)
+     */
+    public function execute(array $args): ToolResult
+    {
+        try {
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Calendly integration is not configured.');
+            }
+
+            $params = [];
+
+            if (isset($args['user'])) {
+                $params['user'] = $args['user'];
+            }
+            if (isset($args['status'])) {
+                $params['status'] = $args['status'];
+            }
+            if (isset($args['min_start_time'])) {
+                $params['min_start_time'] = $args['min_start_time'];
+            }
+            if (isset($args['max_start_time'])) {
+                $params['max_start_time'] = $args['max_start_time'];
+            }
+            if (isset($args['page_token'])) {
+                $params['page_token'] = $args['page_token'];
+            }
+            if (isset($args['count'])) {
+                $params['count'] = (int) $args['count'];
+            }
+
+            $result = $this->service->listEvents($params);
+
+            return ToolResult::success([
+                'collection' => $result['collection'] ?? [],
+                'pagination' => $result['pagination'] ?? [],
+            ]);
+        } catch (\Throwable $e) {
+            return ToolResult::error($e->getMessage());
+        }
+    }
+}

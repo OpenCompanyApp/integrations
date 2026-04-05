@@ -353,7 +353,7 @@ class GitHubToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/github.md';
     }
 
     public function credentialFields(): array

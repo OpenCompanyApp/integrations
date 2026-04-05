@@ -221,7 +221,7 @@ class SmartsheetToolProvider implements ToolProvider
      */
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/smartsheet.md';
     }
 
     /**

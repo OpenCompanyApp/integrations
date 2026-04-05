@@ -238,6 +238,21 @@ class SmartsheetService
         return $this->request('GET', '/users/me');
     }
 
+    // ── Connection Test ──────────────────────────────────────
+
+    /**
+     * Test the API connection by fetching the current user profile.
+     *
+     * Used by the integration framework to verify that the configured
+     * access token is valid and the Smartsheet API is reachable.
+     *
+     * @return array<string, mixed> The current user's profile data.
+     */
+    public function testConnection(): array
+    {
+        return $this->getCurrentUser();
+    }
+
     // ── HTTP ─────────────────────────────────────────────────
 
     /**

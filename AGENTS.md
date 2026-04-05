@@ -25,8 +25,10 @@ packages/{name}/
     {Name}ToolProvider.php        # Tool catalog + ConfigurableIntegration + multi-account
     Tools/
       {Name}{Action}.php          # One class per tool
+    Triggers/                     # Only if the service supports webhooks
+      {Name}WebhookTrigger.php
   lua-docs/
-    {name}.md                     # Supplementary docs for the AI agent
+    {name}.md                     # MANDATORY — supplementary docs for the AI agent
 ```
 
 ## PHPDoc Conventions
@@ -212,13 +214,27 @@ private function resolveService(array $context = []): GitHubService
 
 ## Checklist
 
-- [ ] `composer.json` with correct namespace, PSR-4, Laravel auto-discovery
-- [ ] Service class with `isConfigured()` and methods grouped by resource
-- [ ] ServiceProvider with singleton + registry registration
-- [ ] ToolProvider with `ConfigurableIntegration` + multi-account `resolveService()`
-- [ ] Tool classes: `name()`, `description()`, `parameters()`, `execute()` with try-catch
-- [ ] PHPDoc on every class, constructor, `execute()`, and service methods
+Every integration MUST have ALL applicable items checked. An integration is NOT complete without lua-docs, PHPDoc, and all 4 core files.
+
+### Mandatory (every integration)
+
+- [ ] `composer.json` with correct namespace (`opencompanyapp/integration-{name}`), PSR-4, Laravel auto-discovery
+- [ ] `src/{Name}Service.php` with `isConfigured()` and methods grouped by resource
+- [ ] `src/{Name}ServiceProvider.php` with singleton + registry registration
+- [ ] `src/{Name}ToolProvider.php` with `ConfigurableIntegration` + multi-account `resolveService()`
+- [ ] `src/Tools/{Name}{Action}.php` — one file per tool, each with `name()`, `description()`, `parameters()`, `execute()` with try-catch
+- [ ] `lua-docs/{name}.md` — **MANDATORY for every integration, not optional**
+- [ ] PHPDoc on every class (class docblock), constructor (`@param`), `execute()` (`@param array<string, mixed> $args`), and service methods (`@param` + `@return`)
 - [ ] `credentialFields()` for credential-based integrations
 - [ ] `testConnection()` for credential-based integrations
-- [ ] `lua-docs/{name}.md` for complex workflows
 - [ ] All PHP files pass `php -l` syntax checks
+
+### Common Mistakes to Avoid
+
+1. **Forgetting lua-docs** — Every integration needs `lua-docs/{name}.md`. This is not optional.
+2. **Forgetting PHPDoc** — Every class needs a docblock. Every constructor needs `@param`. Every `execute()` needs `@param array<string, mixed> $args`.
+3. **Partial completions** — Do not submit with only Service + ServiceProvider but no ToolProvider or Tools.
+4. **Missing ToolProvider** — Without it the integration won't appear in the registry.
+5. **Missing ServiceProvider** — Without it Laravel won't register the integration.
+6. **Forgetting triggers** — Services like GitHub, Slack, Stripe, Jira support webhooks. Add triggers for webhook-capable services.
+7. **Not running syntax checks** — Always `php -l` all files before finishing.

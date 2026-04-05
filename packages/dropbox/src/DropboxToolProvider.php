@@ -249,7 +249,7 @@ class DropboxToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/dropbox.md';
     }
 
     public function credentialFields(): array

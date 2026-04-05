@@ -44,7 +44,7 @@ class TypstToolProvider implements ToolProvider
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/typst.md';
     }
 
     public function credentialFields(): array

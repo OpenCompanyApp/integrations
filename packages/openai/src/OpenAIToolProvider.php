@@ -245,7 +245,7 @@ class OpenAIToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/openai.md';
     }
 
     public function credentialFields(): array

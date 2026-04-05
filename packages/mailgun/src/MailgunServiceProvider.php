@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider that registers the MailgunService singleton and bootstraps Mailgun tools.
+ * Laravel service provider for the Mailgun integration.
+ *
+ * Registers the MailgunService singleton and bootstraps the Mailgun tool provider.
  */
 class MailgunServiceProvider extends ServiceProvider
 {

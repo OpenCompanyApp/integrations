@@ -239,7 +239,7 @@ class BitbucketToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/bitbucket.md';
     }
 
     public function credentialFields(): array

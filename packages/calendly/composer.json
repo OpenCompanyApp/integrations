@@ -1,0 +1,23 @@
+{
+    "name": "opencompanyapp/integration-calendly",
+    "description": "Calendly integration for OpenCompany — event types, scheduled events, invitees, and organizations.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "calendly", "scheduling", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Calendly\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["OpenCompany\\Integrations\\Calendly\\CalendlyServiceProvider"]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

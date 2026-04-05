@@ -7,9 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Supabase integration.
- *
- * Registers the SupabaseService singleton and bootstraps the Supabase tool provider.
+ * Laravel service provider that registers the SupabaseService singleton and bootstraps Supabase tools.
  */
 class SupabaseServiceProvider extends ServiceProvider
 {

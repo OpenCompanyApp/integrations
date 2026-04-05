@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-supabase",
+    "description": "Supabase integration for OpenCompany — tables, rows, RPC, SQL, and auth.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "supabase", "database", "postgres", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Supabase\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Supabase\\SupabaseServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-salesforce",
+    "description": "Salesforce CRM integration for OpenCompany — leads, contacts, accounts, opportunities, tasks, cases, and queries.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "salesforce", "crm", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Salesforce\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Salesforce\\SalesforceServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

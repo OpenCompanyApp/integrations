@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-mailchimp",
+    "description": "Mailchimp integration for OpenCompany — campaigns, lists, subscribers, and segments.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "mailchimp", "email", "marketing", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Mailchimp\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Mailchimp\\MailchimpServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

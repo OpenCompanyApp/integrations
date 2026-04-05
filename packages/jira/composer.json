@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-jira",
+    "description": "Jira integration for OpenCompany — issues, projects, boards, sprints, and workflows.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "jira", "issues", "project-management", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Jira\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Jira\\JiraServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -7,22 +7,22 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the current user account summary from Constant Contact.
+ * Tool: Get Current User
  *
- * Returns account details including the user's name, email,
- * company information, and plan details.
+ * Retrieves the authenticated user's Constant Contact account information.
+ * Useful for verifying the connection and checking account details.
  */
 class ConstantContactGetCurrentUser implements Tool
 {
     /**
-     * Create a new ConstantContactGetCurrentUser tool instance.
+     * @param  ConstantContactService  $service  The Constant Contact API service.
      */
     public function __construct(
         private ConstantContactService $service,
     ) {}
 
     /**
-     * Return the tool name used for routing.
+     * The unique tool slug.
      */
     public function name(): string
     {
@@ -30,17 +30,17 @@ class ConstantContactGetCurrentUser implements Tool
     }
 
     /**
-     * Return a human-readable description of what this tool does.
+     * Human-readable description shown in tool catalogs and generated docs.
      */
     public function description(): string
     {
-        return 'Get the current user account summary from Constant Contact, including name and plan details.';
+        return 'Get the authenticated user\'s Constant Contact account information, including name, email, and organization details.';
     }
 
     /**
-     * Define the parameters this tool accepts.
+     * Parameter definitions for the tool.
      *
-     * @return array<string, array<string, mixed>> Parameter definitions
+     * @return array<string, mixed>
      */
     public function parameters(): array
     {
@@ -48,9 +48,10 @@ class ConstantContactGetCurrentUser implements Tool
     }
 
     /**
-     * Execute the tool: get the current user account summary.
+     * Execute the get current user tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments
+     * @param  array<string, mixed>  $args  Tool arguments (none).
+     * @return ToolResult
      */
     public function execute(array $args): ToolResult
     {

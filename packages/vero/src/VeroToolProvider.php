@@ -3,15 +3,22 @@
 namespace OpenCompany\Integrations\Vero;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Vero\Tools\VeroGetCurrentUser;
 use OpenCompany\Integrations\Vero\Tools\VeroIdentifyUser;
+use OpenCompany\Integrations\Vero\Tools\VeroResubscribe;
 use OpenCompany\Integrations\Vero\Tools\VeroTrackEvent;
+use OpenCompany\Integrations\Vero\Tools\VeroUnsubscribe;
 use OpenCompany\Integrations\Vero\Tools\VeroUpdateUser;
-use OpenCompany\Integrations\Vero\Tools\VeroAddTag;
-use OpenCompany\Integrations\Vero\Tools\VeroRemoveTag;
 
+/**
+ * Tool provider for the Vero email marketing integration.
+ *
+ * Registers six tools for user identity management, event tracking,
+ * and subscription control. Supports multi-account credential resolution.
+ */
 class VeroToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -22,21 +29,23 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'users, events, tags',
-            'description' => 'Customer engagement platform',
+            'label' => 'identify, track, subscribe, unsubscribe',
+            'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:vero',
         ];
     }
 
+    // ── ConfigurableIntegration ───────────────────────────
+
     public function integrationMeta(): array
     {
         return [
             'name' => 'Vero',
-            'description' => 'Customer engagement and email marketing platform',
+            'description' => 'Email marketing — user identity, event tracking, and subscription management',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:vero',
-            'category' => 'email_marketing',
+            'category' => 'email',
             'badge' => 'verified',
             'docs_url' => 'https://developers.getvero.com/rest-api/',
         ];
@@ -50,7 +59,7 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'secret',
                 'label' => 'Auth Token',
                 'placeholder' => 'Enter your Vero auth token',
-                'hint' => 'Find your auth token in your Vero account settings under "Account > API Credentials"',
+                'hint' => 'Find your auth token in Vero under Settings → API Credentials',
                 'required' => true,
             ],
             [
@@ -58,7 +67,7 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.getvero.com/api/v2',
-                'hint' => 'Override only if using a custom Vero endpoint',
+                'hint' => 'Use the default Vero API URL, or a custom endpoint for proxying',
                 'default' => 'https://api.getvero.com/api/v2',
             ],
         ];
@@ -70,35 +79,34 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
         $baseUrl = rtrim($config['url'] ?? 'https://api.getvero.com/api/v2', '/');
 
         if (empty($authToken)) {
-            return ['success' => false, 'error' => 'No auth token provided'];
+            return ['success' => false, 'error' => 'No auth token provided.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => $authToken,
+                'Authorization' => 'Bearer ' . $authToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->post($baseUrl . '/users/track', [
-                'identity' => ['id' => '__connection_test__'],
-            ]);
+            ])->timeout(10)->get($baseUrl . '/users/me');
 
-            $json = $response->json();
-
-            if ($json === null) {
+            if ($response->successful()) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach Vero API at {$baseUrl}. Check the URL and auth token.",
+                    'success' => true,
+                    'message' => "Connected to Vero API at {$baseUrl}.",
                 ];
             }
 
+            $error = $response->json('error') ?? $response->json('message') ?? $response->body();
+
             return [
-                'success' => true,
-                'message' => "Connected to Vero API at {$baseUrl}.",
+                'success' => false,
+                'error' => 'Vero API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
+    /** @return array<string, string|array<int, string>> */
     public function validationRules(): array
     {
         return [
@@ -107,6 +115,8 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
+    // ── Tools ─────────────────────────────────────────────
+
     public function tools(): array
     {
         return [
@@ -114,39 +124,48 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => VeroIdentifyUser::class,
                 'type' => 'write',
                 'name' => 'Identify User',
-                'description' => 'Identify or create a user in Vero with their profile attributes.',
+                'description' => 'Identify (create or update) a user in Vero with email, name, and custom attributes.',
                 'icon' => 'ph:user-plus',
             ],
             'vero_track_event' => [
                 'class' => VeroTrackEvent::class,
                 'type' => 'write',
                 'name' => 'Track Event',
-                'description' => 'Track a custom event for a user in Vero.',
-                'icon' => 'ph:cursor-click',
+                'description' => 'Track a behavioral event for a user in Vero.',
+                'icon' => 'ph:lightning',
             ],
             'vero_update_user' => [
                 'class' => VeroUpdateUser::class,
                 'type' => 'write',
                 'name' => 'Update User',
-                'description' => 'Update a user\'s profile attributes in Vero.',
+                'description' => 'Update a user\'s profile data and email in Vero.',
                 'icon' => 'ph:pencil-simple',
             ],
-            'vero_add_tag' => [
-                'class' => VeroAddTag::class,
+            'vero_unsubscribe' => [
+                'class' => VeroUnsubscribe::class,
                 'type' => 'write',
-                'name' => 'Add Tag',
-                'description' => 'Add one or more tags to a user in Vero.',
-                'icon' => 'ph:tag',
+                'name' => 'Unsubscribe',
+                'description' => 'Unsubscribe a user from all Vero email campaigns.',
+                'icon' => 'ph:envelope-simple',
             ],
-            'vero_remove_tag' => [
-                'class' => VeroRemoveTag::class,
+            'vero_resubscribe' => [
+                'class' => VeroResubscribe::class,
                 'type' => 'write',
-                'name' => 'Remove Tag',
-                'description' => 'Remove one or more tags from a user in Vero.',
-                'icon' => 'ph:tag-x',
+                'name' => 'Resubscribe',
+                'description' => 'Resubscribe a user to Vero email campaigns.',
+                'icon' => 'ph:envelope-open',
+            ],
+            'vero_get_current_user' => [
+                'class' => VeroGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the profile of the currently authenticated Vero user.',
+                'icon' => 'ph:user-circle',
             ],
         ];
     }
+
+    // ── Shared ────────────────────────────────────────────
 
     public function luaDocsPath(): ?string
     {
@@ -157,7 +176,7 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'auth_token', 'type' => 'secret', 'label' => 'Auth Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Vero API URL', 'required' => false, 'default' => 'https://api.getvero.com/api/v2'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.getvero.com/api/v2'],
         ];
     }
 
@@ -166,6 +185,12 @@ class VeroToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
+    /**
+     * Create a tool instance with optional multi-account credential resolution.
+     *
+     * @param  class-string<Tool>  $class  Tool class to instantiate.
+     * @param  array<string, mixed>  $context  Runtime context (may contain 'account' key).
+     */
     public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;

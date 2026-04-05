@@ -10,14 +10,19 @@ use OpenCompany\Integrations\Wufoo\Tools\WufooListForms;
 use OpenCompany\Integrations\Wufoo\Tools\WufooGetForm;
 use OpenCompany\Integrations\Wufoo\Tools\WufooListEntries;
 use OpenCompany\Integrations\Wufoo\Tools\WufooGetEntry;
-use OpenCompany\Integrations\Wufoo\Tools\WufooSubmitEntry;
-use OpenCompany\Integrations\Wufoo\Tools\WufooListFields;
 use OpenCompany\Integrations\Wufoo\Tools\WufooListReports;
+use OpenCompany\Integrations\Wufoo\Tools\WufooGetCurrentUser;
 
+/**
+ * Tool provider for the Wufoo forms integration.
+ *
+ * Implements ConfigurableIntegration for multi-account support and
+ * provides 6 tools for interacting with Wufoo forms, entries, reports, and users.
+ */
 class WufooToolProvider implements ToolProvider, ConfigurableIntegration
 {
     /**
-     * Get the machine name of this integration.
+     * Get the application name identifier.
      */
     public function appName(): string
     {
@@ -25,12 +30,12 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Get metadata for the app selector UI.
+     * Get application metadata for display and categorization.
      */
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, entries, fields, reports',
+            'label' => 'forms, entries, reports',
             'description' => 'Online form builder',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:wufoo',
@@ -38,7 +43,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Get integration metadata for the integrations catalog.
+     * Get integration metadata including category and documentation links.
      */
     public function integrationMeta(): array
     {
@@ -49,14 +54,16 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
             'logo' => 'simple-icons:wufoo',
             'category' => 'forms',
             'badge' => 'verified',
-            'docs_url' => 'https://wufoo.com/docs/api/v3/',
+            'docs_url' => 'https://wufoo.com/docs/api-v3/',
         ];
     }
 
     /**
-     * Get the configuration schema for this integration.
+     * Get the configuration schema for the Wufoo integration.
      *
-     * @return array<int, array<string, mixed>>
+     * Defines the fields needed to connect to the Wufoo API:
+     * - api_key: The Wufoo API key for authentication.
+     * - base_url: The subdomain-specific API base URL.
      */
     public function configSchema(): array
     {
@@ -66,56 +73,55 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your Wufoo API key',
-                'hint' => 'Find your API key in Wufoo under <strong>Account &rarr; Integration &rarr; Wufoo API</strong>',
+                'hint' => 'Find your API key at Wufoo → Your Name → Account → API Information',
                 'required' => true,
             ],
             [
-                'key' => 'subdomain',
-                'type' => 'string',
-                'label' => 'Subdomain',
-                'placeholder' => 'mycompany',
-                'hint' => 'Your Wufoo subdomain (the part before <code>.wufoo.com</code>)',
-                'required' => true,
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://yoursubdomain.wufoo.com/api/v3',
+                'hint' => 'Your Wufoo subdomain API URL. Format: <code>https://{subdomain}.wufoo.com/api/v3</code>',
+                'default' => 'https://example.wufoo.com/api/v3',
             ],
         ];
     }
 
     /**
-     * Test the connection to the Wufoo API with the given configuration.
+     * Test the connection to the Wufoo API using the provided configuration.
      *
-     * @param  array<string, mixed>  $config
-     * @return array{success: bool, message?: string, error?: string}
+     * @param  array<string, mixed>  $config  The configuration containing api_key and base_url.
+     * @return array{success: bool, message?: string, error?: string} The connection test result.
      */
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
-        $subdomain = $config['subdomain'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://example.wufoo.com/api/v3', '/');
 
-        if (empty($apiKey) || empty($subdomain)) {
-            return ['success' => false, 'error' => 'API key and subdomain are required'];
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No API key provided.'];
         }
 
         try {
-            $baseUrl = 'https://' . $subdomain . '.wufoo.com/api/v3';
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->withBasicAuth($apiKey, 'footastic')->timeout(10)->get($baseUrl . '/users.json');
 
-            $response = Http::withBasicAuth($apiKey, 'foot')
-                ->timeout(10)
-                ->get($baseUrl . '/forms.json');
+            if ($response->successful()) {
+                $json = $response->json();
+                $users = $json['Users'] ?? [];
 
-            $json = $response->json();
-
-            if ($json === null) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach Wufoo API at {$baseUrl}. Check the subdomain and API key.",
+                    'success' => true,
+                    'message' => 'Connected to Wufoo API.' . (count($users) > 0 ? ' Found user: ' . ($users[0]['FirstName'] ?? 'Unknown') : ''),
                 ];
             }
 
-            $formCount = count($json['Forms'] ?? []);
+            $error = $response->json('error') ?? $response->body();
 
             return [
-                'success' => true,
-                'message' => "Connected to Wufoo ({$subdomain}.wufoo.com). Found {$formCount} form(s).",
+                'success' => false,
+                'error' => 'Wufoo API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -123,22 +129,22 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Get Laravel validation rules for the configuration fields.
+     * Get the validation rules for the Wufoo configuration fields.
      *
-     * @return array<string, string|array<int, string>>
+     * @return array<string, string> Laravel validation rules.
      */
     public function validationRules(): array
     {
         return [
-            'api_key' => 'required|string',
-            'subdomain' => 'required|string',
+            'api_key' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
     /**
-     * Get the list of tools provided by this integration.
+     * Get all available Wufoo tools with their metadata.
      *
-     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
      */
     public function tools(): array
     {
@@ -147,8 +153,8 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => WufooListForms::class,
                 'type' => 'read',
                 'name' => 'List Forms',
-                'description' => 'List all forms in the Wufoo account.',
-                'icon' => 'ph:clipboard-text',
+                'description' => 'List all forms in your Wufoo account.',
+                'icon' => 'ph:list',
             ],
             'wufoo_get_form' => [
                 'class' => WufooGetForm::class,
@@ -161,42 +167,35 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => WufooListEntries::class,
                 'type' => 'read',
                 'name' => 'List Entries',
-                'description' => 'List entries submitted to a form.',
-                'icon' => 'ph:list-dashes',
+                'description' => 'List entries for a form with pagination and filters.',
+                'icon' => 'ph:table',
             ],
             'wufoo_get_entry' => [
                 'class' => WufooGetEntry::class,
                 'type' => 'read',
                 'name' => 'Get Entry',
-                'description' => 'Get a single form entry by its ID.',
+                'description' => 'Get a single entry by its ID.',
                 'icon' => 'ph:file-text',
-            ],
-            'wufoo_submit_entry' => [
-                'class' => WufooSubmitEntry::class,
-                'type' => 'write',
-                'name' => 'Submit Entry',
-                'description' => 'Submit a new entry to a Wufoo form.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'wufoo_list_fields' => [
-                'class' => WufooListFields::class,
-                'type' => 'read',
-                'name' => 'List Fields',
-                'description' => 'List all fields for a specific form.',
-                'icon' => 'ph:grid-four',
             ],
             'wufoo_list_reports' => [
                 'class' => WufooListReports::class,
                 'type' => 'read',
                 'name' => 'List Reports',
-                'description' => 'List all reports in the Wufoo account.',
+                'description' => 'List all reports in your Wufoo account.',
                 'icon' => 'ph:chart-bar',
+            ],
+            'wufoo_get_current_user' => [
+                'class' => WufooGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated user\'s profile.',
+                'icon' => 'ph:user',
             ],
         ];
     }
 
     /**
-     * Get the path to the Lua documentation file.
+     * Get the path to the Lua documentation file for Wufoo tools.
      */
     public function luaDocsPath(): ?string
     {
@@ -204,20 +203,18 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Get the credential fields for account setup.
-     *
-     * @return array<int, array{key: string, type: string, label: string, required?: bool, default?: string}>
+     * Get the credential fields required for the Wufoo integration.
      */
     public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'subdomain', 'type' => 'string', 'label' => 'Subdomain', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://example.wufoo.com/api/v3'],
         ];
     }
 
     /**
-     * Confirm this class represents an integration.
+     * Confirm this class represents an integration provider.
      */
     public function isIntegration(): bool
     {
@@ -225,26 +222,39 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Create a tool instance, optionally using credentials from a specific account.
+     * Create a tool instance, with optional account-specific credentials for multi-account support.
      *
-     * @param  class-string<Tool>  $class  The tool class to instantiate.
-     * @param  array{account?: mixed}  $context  Optional context with account override.
+     * @param  string  $class  The fully-qualified tool class name.
+     * @param  array<string, mixed>  $context  Optional context containing an 'account' key for multi-account resolution.
+     * @return Tool The instantiated tool with the appropriate service.
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the WufooService, with optional account-specific credentials.
+     *
+     * When an account is provided in the context, creates a new service instance
+     * with that account's credentials. Otherwise, resolves the default singleton.
+     *
+     * @param  array<string, mixed>  $context  Optional context with 'account' key.
+     * @return WufooService The resolved service instance.
+     */
+    private function resolveService(array $context = []): WufooService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new WufooService(
+            return new WufooService(
                 apiKey: $creds->get('wufoo', 'api_key', '', $account),
-                subdomain: $creds->get('wufoo', 'subdomain', '', $account),
+                baseUrl: $creds->get('wufoo', 'base_url', 'https://example.wufoo.com/api/v3', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(WufooService::class));
+        return app(WufooService::class);
     }
 }

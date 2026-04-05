@@ -7,10 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to retrieve details for a specific Workable job.
- *
- * Returns full job details including title, description, requirements,
- * benefits, location, employment type, and application URL.
+ * Tool to get details for a specific Workable job by shortcode.
  */
 class WorkableGetJob implements Tool
 {
@@ -22,7 +19,7 @@ class WorkableGetJob implements Tool
     ) {}
 
     /**
-     * The tool identifier.
+     * Get the tool name.
      */
     public function name(): string
     {
@@ -30,27 +27,27 @@ class WorkableGetJob implements Tool
     }
 
     /**
-     * Human-readable description of what this tool does.
+     * Get the tool description.
      */
     public function description(): string
     {
-        return 'Get full details for a specific job in Workable by its shortcode. Returns title, description, requirements, location, employment type, salary, and application URL.';
+        return 'Get full details for a specific Workable job by its shortcode. Returns title, description, department, location, employment type, salary, and application counts.';
     }
 
     /**
-     * Parameter schema for the tool.
+     * Get the tool parameter definitions.
      *
      * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
         return [
-            'shortcode' => ['type' => 'string', 'required' => true, 'description' => 'The job shortcode (e.g., "GRO-001"). Find shortcodes using the list_jobs tool.'],
+            'shortcode' => ['type' => 'string', 'required' => true, 'description' => 'The job shortcode identifier (e.g., "GROVF002").'],
         ];
     }
 
     /**
-     * Execute the get job request.
+     * Execute the tool and return the job details.
      *
      * @param  array<string, mixed>  $args
      */
@@ -61,11 +58,13 @@ class WorkableGetJob implements Tool
                 return ToolResult::error('Workable integration is not configured.');
             }
 
-            if (empty($args['shortcode'])) {
-                return ToolResult::error('The shortcode parameter is required.');
+            $shortcode = $args['shortcode'] ?? '';
+
+            if (empty($shortcode)) {
+                return ToolResult::error('The "shortcode" parameter is required.');
             }
 
-            $result = $this->service->getJob($args['shortcode']);
+            $result = $this->service->getJob($shortcode);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

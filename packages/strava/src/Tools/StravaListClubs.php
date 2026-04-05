@@ -8,20 +8,34 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 class StravaListClubs implements Tool
 {
+    /**
+     * @param  StravaService  $service  The Strava service instance.
+     */
     public function __construct(
         private StravaService $service,
     ) {}
 
+    /**
+     * The tool name used for registration and invocation.
+     */
     public function name(): string
     {
         return 'strava_list_clubs';
     }
 
+    /**
+     * A description of what this tool does, shown to AI agents.
+     */
     public function description(): string
     {
         return 'List clubs the authenticated Strava athlete belongs to. Returns club names, member counts, and sport types.';
     }
 
+    /**
+     * Parameter schema for this tool.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function parameters(): array
     {
         return [
@@ -30,6 +44,11 @@ class StravaListClubs implements Tool
         ];
     }
 
+    /**
+     * Execute the tool with the given arguments.
+     *
+     * @param  array<string, mixed>  $args
+     */
     public function execute(array $args): ToolResult
     {
         try {

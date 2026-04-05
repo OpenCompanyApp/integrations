@@ -7,10 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to list team members in the Workable account.
- *
- * Returns a paginated list of members including names, emails,
- * and roles within the Workable account.
+ * Tool to list team members (recruiters and hiring managers) from Workable.
  */
 class WorkableListMembers implements Tool
 {
@@ -22,7 +19,7 @@ class WorkableListMembers implements Tool
     ) {}
 
     /**
-     * The tool identifier.
+     * Get the tool name.
      */
     public function name(): string
     {
@@ -30,27 +27,25 @@ class WorkableListMembers implements Tool
     }
 
     /**
-     * Human-readable description of what this tool does.
+     * Get the tool description.
      */
     public function description(): string
     {
-        return 'List team members in your Workable account. Returns member names, emails, and roles.';
+        return 'List all team members in your Workable account, including recruiters and hiring managers. Returns names, emails, and roles.';
     }
 
     /**
-     * Parameter schema for the tool.
+     * Get the tool parameter definitions.
      *
      * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
-        return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of members to return (default: 50).'],
-        ];
+        return [];
     }
 
     /**
-     * Execute the list members request.
+     * Execute the tool and return the list of members.
      *
      * @param  array<string, mixed>  $args
      */
@@ -61,9 +56,7 @@ class WorkableListMembers implements Tool
                 return ToolResult::error('Workable integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
-
-            $result = $this->service->listMembers($limit);
+            $result = $this->service->listMembers();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

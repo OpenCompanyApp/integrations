@@ -3,59 +3,40 @@
 namespace OpenCompany\Integrations\ZohoDesk;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskCreateTicket;
-use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskGetCurrentUser;
-use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskGetTicket;
-use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListArticles;
-use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListContacts;
-use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListDepartments;
 use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListTickets;
+use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskGetTicket;
+use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskCreateTicket;
 use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskUpdateTicket;
+use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListContacts;
+use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListArticles;
+use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskListDepartments;
+use OpenCompany\Integrations\ZohoDesk\Tools\ZohoDeskGetCurrentUser;
 
-/**
- * Tool provider for the Zoho Desk integration.
- *
- * Implements ConfigurableIntegration for dynamic config schema,
- * connection testing, and multi-account credential resolution.
- */
 class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
 {
-    /**
-     * The integration app name used as a key in credential and registry lookups.
-     */
     public function appName(): string
     {
         return 'zoho-desk';
     }
 
-    /**
-     * Metadata shown in the OpenCompany app integration panel.
-     *
-     * @return array<string, string>
-     */
     public function appMeta(): array
     {
         return [
             'label' => 'tickets, contacts, articles, departments',
-            'description' => 'Help desk & customer support',
+            'description' => 'Customer support helpdesk',
             'icon' => 'ph:headset',
             'logo' => 'simple-icons:zoho',
         ];
     }
 
-    /**
-     * Integration metadata displayed during setup and in docs.
-     *
-     * @return array<string, string>
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Zoho Desk',
-            'description' => 'Customer support help desk — tickets, contacts, knowledge base, and departments',
+            'description' => 'Customer support and helpdesk management',
             'icon' => 'ph:headset',
             'logo' => 'simple-icons:zoho',
             'category' => 'support',
@@ -64,11 +45,6 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Configuration schema for the integration settings UI.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function configSchema(): array
     {
         return [
@@ -76,96 +52,82 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Enter your Zoho Desk OAuth2 access token',
-                'hint' => 'Generate an OAuth2 access token in your Zoho Desk admin console under "Developer Space" → "Connections". Use the <code>ZohoDesk.tickets.ALL</code> scope.',
+                'placeholder' => 'Enter your Zoho Desk OAuth access token',
+                'hint' => 'Generate an OAuth access token from the Zoho API Console with Desk scope',
                 'required' => true,
             ],
             [
-                'key' => 'base_url',
+                'key' => 'url',
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://desk.zoho.com/api/v1',
-                'hint' => 'The base URL for the Zoho Desk REST API. Defaults to <code>https://desk.zoho.com/api/v1</code>. Change if using a regional endpoint (e.g., <code>https://desk.zoho.eu/api/v1</code>).',
+                'hint' => 'Use the default or your regional URL (e.g., <code>https://desk.zoho.eu/api/v1</code>)',
                 'default' => 'https://desk.zoho.com/api/v1',
             ],
             [
                 'key' => 'org_id',
-                'type' => 'text',
+                'type' => 'string',
                 'label' => 'Organization ID',
-                'placeholder' => 'e.g., 12345678901',
-                'hint' => 'Your Zoho Desk organization ID. Find it in Settings → Organization Profile. Required for most API calls.',
+                'placeholder' => 'e.g., 1234567890',
+                'hint' => 'Find your Organization ID in Zoho Desk under Setup → Organization → Organization Profile',
                 'required' => true,
             ],
         ];
     }
 
-    /**
-     * Test the connection to the Zoho Desk API using the provided config.
-     *
-     * @param  array<string, mixed>  $config
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['base_url'] ?? 'https://desk.zoho.com/api/v1', '/');
+        $baseUrl = rtrim($config['url'] ?? 'https://desk.zoho.com/api/v1', '/');
         $orgId = $config['org_id'] ?? '';
 
         if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided.'];
+            return ['success' => false, 'error' => 'No access token provided'];
+        }
+
+        if (empty($orgId)) {
+            return ['success' => false, 'error' => 'No organization ID provided'];
         }
 
         try {
-            $response = Http::withHeaders(array_filter([
+            $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-                'orgId' => $orgId ?: null,
-            ]))->timeout(10)->get($baseUrl . '/users/me');
+                'orgId' => $orgId,
+            ])->timeout(10)->get($baseUrl . '/users/me');
 
-            if ($response->successful()) {
-                $user = $response->json('response') ?? $response->json();
-                $name = is_array($user)
-                    ? ($user['firstName'] ?? $user['name'] ?? 'Unknown')
-                    : 'Unknown';
+            $json = $response->json();
 
+            if ($response->successful() && $json !== null) {
+                $userName = $json['firstName'] ?? 'Unknown';
                 return [
                     'success' => true,
-                    'message' => "Connected to Zoho Desk as {$name}.",
+                    'message' => "Connected to Zoho Desk as {$userName}.",
                 ];
             }
 
-            $error = $response->json('errors.0.message')
-                ?? $response->json('message')
-                ?? $response->body();
+            if ($response->status() === 401) {
+                return ['success' => false, 'error' => 'Invalid access token. Please check your OAuth credentials.'];
+            }
 
             return [
                 'success' => false,
-                'error' => 'Zoho Desk API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'error' => "Zoho Desk API returned HTTP {$response->status()}. Check your configuration.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Validation rules for integration config values.
-     *
-     * @return array<string, string|array<int, string>>
-     */
     public function validationRules(): array
     {
         return [
             'access_token' => 'nullable|string',
-            'base_url' => 'nullable|url',
+            'url' => 'nullable|url',
             'org_id' => 'nullable|string',
         ];
     }
 
-    /**
-     * Return the map of tool keys to their class, type, name, description, and icon.
-     *
-     * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
-     */
     public function tools(): array
     {
         return [
@@ -173,14 +135,14 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ZohoDeskListTickets::class,
                 'type' => 'read',
                 'name' => 'List Tickets',
-                'description' => 'List support tickets with optional filtering.',
+                'description' => 'List support tickets with optional filters.',
                 'icon' => 'ph:ticket',
             ],
             'zohodesk_get_ticket' => [
                 'class' => ZohoDeskGetTicket::class,
                 'type' => 'read',
                 'name' => 'Get Ticket',
-                'description' => 'Get a single ticket by ID with full details.',
+                'description' => 'Get details of a specific support ticket.',
                 'icon' => 'ph:ticket',
             ],
             'zohodesk_create_ticket' => [
@@ -194,14 +156,14 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ZohoDeskUpdateTicket::class,
                 'type' => 'write',
                 'name' => 'Update Ticket',
-                'description' => 'Update an existing ticket (status, priority, assignee, etc.).',
+                'description' => 'Update an existing support ticket.',
                 'icon' => 'ph:pencil-simple',
             ],
             'zohodesk_list_contacts' => [
                 'class' => ZohoDeskListContacts::class,
                 'type' => 'read',
                 'name' => 'List Contacts',
-                'description' => 'List customer contacts.',
+                'description' => 'List contacts from Zoho Desk.',
                 'icon' => 'ph:address-book',
             ],
             'zohodesk_list_articles' => [
@@ -215,7 +177,7 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ZohoDeskListDepartments::class,
                 'type' => 'read',
                 'name' => 'List Departments',
-                'description' => 'List all departments in the organization.',
+                'description' => 'List support departments.',
                 'icon' => 'ph:buildings',
             ],
             'zohodesk_get_current_user' => [
@@ -228,66 +190,41 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Path to the Lua API reference documentation for agent tool usage.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/zoho-desk.md';
     }
 
-    /**
-     * Credential field definitions for the integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://desk.zoho.com/api/v1'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://desk.zoho.com/api/v1'],
             ['key' => 'org_id', 'type' => 'string', 'label' => 'Organization ID', 'required' => true],
         ];
     }
 
-    /**
-     * Confirm this class represents an integration (not a standalone tool).
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance, optionally with account-specific credentials.
-     *
-     * @param  class-string<Tool>  $class  The tool class to instantiate.
-     * @param  array<string, mixed>  $context  Context with optional 'account' key for multi-account support.
-     */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the ZohoDeskService, with optional account-specific credentials.
-     *
-     * @param  array<string, mixed>  $context  Context containing an optional 'account' key.
-     */
-    private function resolveService(array $context = []): ZohoDeskService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new ZohoDeskService(
+            $service = new ZohoDeskService(
                 accessToken: $creds->get('zoho-desk', 'access_token', '', $account),
-                baseUrl: $creds->get('zoho-desk', 'base_url', 'https://desk.zoho.com/api/v1', $account),
+                baseUrl: $creds->get('zoho-desk', 'url', 'https://desk.zoho.com/api/v1', $account),
                 orgId: $creds->get('zoho-desk', 'org_id', '', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(ZohoDeskService::class);
+        return new $class(app(ZohoDeskService::class));
     }
 }

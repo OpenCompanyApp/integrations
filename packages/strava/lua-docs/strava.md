@@ -2,97 +2,111 @@
 
 ## list_activities
 
-List recent activities for the authenticated athlete.
+List recent activities for the authenticated Strava athlete. Supports pagination and date filtering.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `page` | integer | no | Page number (default: 1) |
-| `per_page` | integer | no | Items per page (default: 30, max: 200) |
+| `per_page` | integer | no | Activities per page (default: 30, max: 200) |
+| `before` | integer | no | Unix timestamp — return activities before this time |
+| `after` | integer | no | Unix timestamp — return activities after this time |
 
 ### Examples
 
+#### List recent activities
+
 ```lua
 local result = app.integrations.strava.list_activities({
-  page = 1,
-  per_page = 10
+  per_page = 5
 })
 
 for _, activity in ipairs(result) do
-  print(activity.name .. " - " .. activity.type .. " - " .. activity.start_date)
+  print(activity.name .. " — " .. activity.type .. " — " .. activity.start_date)
 end
+```
+
+#### Filter activities by date range
+
+```lua
+local result = app.integrations.strava.list_activities({
+  after = 1704067200,   -- 2024-01-01
+  before = 1706745600,  -- 2024-02-01
+  per_page = 50
+})
 ```
 
 ---
 
 ## get_activity
 
-Get detailed information about a specific activity.
+Get detailed information about a specific Strava activity.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | integer | yes | The activity ID |
+| `activity_id` | integer | yes | The ID of the activity to retrieve |
 
-### Examples
+### Example
 
 ```lua
 local result = app.integrations.strava.get_activity({
-  id = 12345678
+  activity_id = 1234567890
 })
 
 print(result.name)
-print("Distance: " .. result.distance .. "m")
-print("Moving time: " .. result.moving_time .. "s")
+print("Distance: " .. (result.distance / 1000) .. " km")
+print("Moving time: " .. result.moving_time .. " seconds")
+print("Elevation gain: " .. result.total_elevation_gain .. " m")
 ```
 
 ---
 
 ## create_activity
 
-Create a manual activity entry.
+Create a manual activity on Strava.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `name` | string | yes | The name of the activity |
-| `type` | string | yes | Activity type: "Run", "Ride", "Swim", "Hike", "Walk", "WeightTraining", etc. |
-| `start_date_local` | string | yes | Local start date/time (ISO 8601, e.g. `"2026-04-05T10:00:00"`) |
-| `elapsed_time` | integer | yes | Total elapsed time in seconds |
+| `name` | string | yes | Name of the activity (e.g., "Morning Run") |
+| `type` | string | yes | Activity type: Run, Ride, Swim, Hike, Walk, Workout, WeightTraining, Yoga, etc. |
+| `start_date_local` | string | yes | ISO 8601 local start date/time (e.g., "2025-01-15T09:30:00") |
+| `elapsed_time` | integer | yes | Elapsed time in seconds |
 | `description` | string | no | Description of the activity |
 | `distance` | number | no | Distance in meters |
-| `trainer` | integer | no | Set to 1 for trainer activity |
-| `commute` | integer | no | Set to 1 for commute |
+| `trainer` | integer | no | Set to 1 if trainer/trainer ride |
+| `commute` | integer | no | Set to 1 if commute |
 
-### Examples
+### Example
 
 ```lua
 local result = app.integrations.strava.create_activity({
   name = "Morning Run",
   type = "Run",
-  start_date_local = "2026-04-05T08:00:00",
+  start_date_local = "2025-01-15T09:30:00",
   elapsed_time = 1800,
-  description = "Easy 5K around the park",
-  distance = 5000
+  distance = 5000,
+  description = "Easy 5K run in the park"
 })
 
-print("Created activity: " .. result.id .. " - " .. result.name)
+print("Created activity: " .. result.id .. " — " .. result.name)
 ```
 
 ---
 
 ## get_athlete
 
-Get the authenticated athlete's profile.
+Get the authenticated athlete's Strava profile.
 
 ### Parameters
 
 None.
 
-### Examples
+### Example
 
 ```lua
 local result = app.integrations.strava.get_athlete({})
@@ -100,33 +114,8 @@ local result = app.integrations.strava.get_athlete({})
 print(result.firstname .. " " .. result.lastname)
 print("Followers: " .. result.follower_count)
 print("Following: " .. result.friend_count)
-```
-
----
-
-## list_routes
-
-List routes for a specific athlete.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `athlete_id` | integer | yes | The athlete ID |
-| `page` | integer | no | Page number (default: 1) |
-| `per_page` | integer | no | Items per page (default: 30) |
-
-### Examples
-
-```lua
-local result = app.integrations.strava.list_routes({
-  athlete_id = 12345,
-  per_page = 10
-})
-
-for _, route in ipairs(result) do
-  print(route.name .. " - " .. route.distance .. "m - " .. route.estimated_moving_time .. "s")
-end
+print("City: " .. (result.city or "N/A"))
+print("Country: " .. (result.country or "N/A"))
 ```
 
 ---
@@ -140,9 +129,9 @@ List clubs the authenticated athlete belongs to.
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `page` | integer | no | Page number (default: 1) |
-| `per_page` | integer | no | Items per page (default: 30) |
+| `per_page` | integer | no | Clubs per page (default: 30) |
 
-### Examples
+### Example
 
 ```lua
 local result = app.integrations.strava.list_clubs({
@@ -150,52 +139,26 @@ local result = app.integrations.strava.list_clubs({
 })
 
 for _, club in ipairs(result) do
-  print(club.name .. " - " .. club.member_count .. " members")
+  print(club.name .. " — " .. club.sport_type .. " — " .. club.member_count .. " members")
 end
-```
-
----
-
-## get_club
-
-Get details about a specific club.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `club_id` | integer | yes | The club ID |
-
-### Examples
-
-```lua
-local result = app.integrations.strava.get_club({
-  club_id = 12345
-})
-
-print(result.name)
-print("Members: " .. result.member_count)
-print("Sport type: " .. result.sport_type)
 ```
 
 ---
 
 ## get_current_user
 
-Get the currently authenticated athlete's profile.
+Get the current authenticated user's Strava profile. This is an alias for `get_athlete`.
 
 ### Parameters
 
 None.
 
-### Examples
+### Example
 
 ```lua
 local result = app.integrations.strava.get_current_user({})
 
-print("Athlete: " .. result.firstname .. " " .. result.lastname)
-print("City: " .. (result.city or "N/A"))
-print("Country: " .. (result.country or "N/A"))
+print("Logged in as: " .. result.firstname .. " " .. result.lastname)
 ```
 
 ---
@@ -206,14 +169,14 @@ If you have multiple Strava accounts configured, use account-specific namespaces
 
 ```lua
 -- Default account (always works)
-app.integrations.strava.function_name({...})
+app.integrations.strava.list_activities({})
 
 -- Explicit default (portable across setups)
-app.integrations.strava.default.function_name({...})
+app.integrations.strava.default.list_activities({})
 
 -- Named accounts
-app.integrations.strava.personal.function_name({...})
-app.integrations.strava.work.function_name({...})
+app.integrations.strava.personal.list_activities({})
+app.integrations.strava.team.list_activities({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

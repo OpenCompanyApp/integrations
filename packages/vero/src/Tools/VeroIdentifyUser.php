@@ -2,12 +2,21 @@
 
 namespace OpenCompany\Integrations\Vero\Tools;
 
-use OpenCompany\Integrations\Vero\VeroService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Vero\VeroService;
 
+/**
+ * Identify (create or update) a user in Vero.
+ *
+ * Creates a new user profile or updates an existing one identified
+ * by their unique ID. Supports setting email, name, and custom attributes.
+ */
 class VeroIdentifyUser implements Tool
 {
+    /**
+     * @param  VeroService  $service  The Vero API service instance.
+     */
     public function __construct(
         private VeroService $service,
     ) {}
@@ -19,40 +28,51 @@ class VeroIdentifyUser implements Tool
 
     public function description(): string
     {
-        return 'Identify or create a user in Vero. Provide a unique identity (user ID or email), along with optional profile attributes like email and name. If the user does not exist, they are created. If they already exist, their profile is updated.';
+        return 'Identify (create or update) a user in Vero. Pass a unique user ID, email, optional name, and any custom attributes in the data object. This creates the user if they don\'t exist, or updates their profile if they do.';
     }
 
     public function parameters(): array
     {
         return [
-            'identity' => ['type' => 'string', 'required' => true, 'description' => 'Unique user identifier — typically a user ID or email address.'],
-            'email' => ['type' => 'string', 'description' => 'The user\'s email address.'],
-            'name' => ['type' => 'string', 'description' => 'The user\'s full name.'],
-            'extra' => ['type' => 'object', 'description' => 'Additional user traits as key-value pairs (e.g., {"plan": "pro", "country": "US"}).'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'Unique user identifier (e.g., database ID or UUID).'],
+            'email' => ['type' => 'string', 'required' => true, 'description' => 'User email address.'],
+            'name' => ['type' => 'string', 'description' => 'Display name for the user.'],
+            'data' => ['type' => 'object', 'description' => 'Custom user attributes as key-value pairs (e.g., {"plan": "premium", "signup_date": "2025-01-15"}).'],
         ];
     }
 
+    /**
+     * Execute the identify user tool.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Vero integration is not configured.');
             }
 
-            $identity = $args['identity'];
-            $email = $args['email'] ?? null;
-            $name = $args['name'] ?? null;
-            $extra = $args['extra'] ?? [];
+            $id = $args['id'] ?? '';
+            $email = $args['email'] ?? '';
 
-            if (is_string($extra)) {
-                $extra = json_decode($extra, true) ?? [];
+            if (empty($id)) {
+                return ToolResult::error('User ID is required.');
             }
 
-            $result = $this->service->identifyUser($identity, $email, $name, $extra);
+            if (empty($email)) {
+                return ToolResult::error('Email is required.');
+            }
+
+            $name = $args['name'] ?? '';
+            $data = $args['data'] ?? [];
+
+            $result = $this->service->identifyUser($id, $email, $name, $data);
 
             return ToolResult::success([
-                'message' => "User '{$identity}' identified successfully.",
-                'data' => $result,
+                'id' => $id,
+                'email' => $email,
+                'status' => $result['status'] ?? 'identified',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

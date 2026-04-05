@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-wufoo",
-    "description": "Wufoo integration for Laravel — manage forms, entries, fields and reports.",
+    "description": "Wufoo forms integration for Laravel — list forms, retrieve entries, manage reports.",
     "license": "MIT",
     "authors": [
         {

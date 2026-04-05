@@ -6,26 +6,26 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Laravel service provider for the Tally forms integration.
+ *
+ * Registers the TallyService singleton with resolved credentials
+ * and boots the TallyToolProvider into the ToolProviderRegistry.
+ */
 class TallyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the Tally service into the container.
-     */
     public function register(): void
     {
         $this->app->singleton(TallyService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
             return new TallyService(
-                apiKey: $creds->get('tally', 'api_key', ''),
+                accessToken: $creds->get('tally', 'access_token', ''),
                 baseUrl: $creds->get('tally', 'url', 'https://api.tally.so'),
             );
         });
     }
 
-    /**
-     * Boot the Tally service provider — register the tool provider.
-     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

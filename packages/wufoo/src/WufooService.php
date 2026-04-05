@@ -5,41 +5,41 @@ namespace OpenCompany\Integrations\Wufoo;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Wufoo API service for interacting with the Wufoo forms platform.
+ *
+ * Handles HTTP Basic authentication (API key as username, "footastic" as password)
+ * and provides methods for forms, entries, reports, and user operations.
+ */
 class WufooService
 {
     /**
-     * Create a new Wufoo service instance.
+     * Create a new WufooService instance.
      *
-     * @param  string  $apiKey  The Wufoo API key used for HTTP Basic Auth (username).
-     * @param  string  $subdomain  The Wufoo account subdomain (e.g., "mycompany" for mycompany.wufoo.com).
+     * @param  string  $apiKey  The Wufoo API key used as the HTTP Basic Auth username.
+     * @param  string  $baseUrl  The base URL for the Wufoo API (e.g., https://{subdomain}.wufoo.com/api/v3).
      */
     public function __construct(
         private string $apiKey = '',
-        private string $subdomain = '',
-    ) {}
+        private string $baseUrl = 'https://example.wufoo.com/api/v3',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the service is properly configured with credentials.
+     * Check whether the service is properly configured with an API key.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->subdomain);
+        return !empty($this->apiKey);
     }
 
-    /**
-     * Build the base URL for the Wufoo API v3.
-     *
-     * @return string The fully-qualified base URL, e.g. "https://mycompany.wufoo.com/api/v3"
-     */
-    public function getBaseUrl(): string
-    {
-        return 'https://' . $this->subdomain . '.wufoo.com/api/v3';
-    }
+    // ── Forms ──────────────────────────────────────────────
 
     /**
-     * List all forms in the Wufoo account.
+     * List all forms accessible to the authenticated user.
      *
-     * @return array<string, mixed> The parsed JSON response containing the Forms array.
+     * @return array<string, mixed> The list of forms from the Wufoo API.
      */
     public function listForms(): array
     {
@@ -47,34 +47,36 @@ class WufooService
     }
 
     /**
-     * Get details for a single form by its hash identifier.
+     * Get details for a specific form by its identifier.
      *
-     * @param  string  $formId  The form hash or unique identifier.
-     * @return array<string, mixed> The parsed JSON response containing the form details.
+     * @param  string  $formId  The form hash or identifier.
+     * @return array<string, mixed> The form details from the Wufoo API.
      */
     public function getForm(string $formId): array
     {
         return $this->request('GET', '/forms/' . urlencode($formId) . '.json');
     }
 
+    // ── Entries ────────────────────────────────────────────
+
     /**
-     * List entries for a specific form.
+     * List entries for a specific form with optional pagination and filters.
      *
-     * @param  string  $formId  The form hash or unique identifier.
-     * @param  int  $pageSize  Number of entries per page (default 100, max 100).
-     * @param  int  $pageStart  The entry index to start from (0-based).
-     * @param  string|null  $sort  Sort direction: "ASC" or "DESC" (by EntryId).
-     * @return array<string, mixed> The parsed JSON response containing entries.
+     * @param  string  $formId  The form hash or identifier.
+     * @param  int  $page  The page number (0-based).
+     * @param  int  $pageSize  Number of entries per page (default 25, max 100).
+     * @param  array<string, mixed>  $filters  Optional field filters to apply.
+     * @return array<string, mixed> The paginated list of entries.
      */
-    public function listEntries(string $formId, int $pageSize = 100, int $pageStart = 0, ?string $sort = null): array
+    public function listEntries(string $formId, int $page = 0, int $pageSize = 25, array $filters = []): array
     {
         $params = [
+            'pageStart' => $page,
             'pageSize' => min($pageSize, 100),
-            'pageStart' => $pageStart,
         ];
 
-        if ($sort !== null) {
-            $params['sort'] = $sort;
+        foreach ($filters as $key => $value) {
+            $params[$key] = $value;
         }
 
         return $this->request('GET', '/forms/' . urlencode($formId) . '/entries.json', $params);
@@ -83,115 +85,101 @@ class WufooService
     /**
      * Get a single entry by its identifier.
      *
-     * @param  string  $entryId  The unique entry identifier.
-     * @return array<string, mixed> The parsed JSON response containing the entry data.
+     * @param  string  $entryId  The entry identifier.
+     * @return array<string, mixed> The entry data.
      */
     public function getEntry(string $entryId): array
     {
         return $this->request('GET', '/entries/' . urlencode($entryId) . '.json');
     }
 
-    /**
-     * Submit a new entry to a form.
-     *
-     * @param  string  $formId  The form hash or unique identifier.
-     * @param  array<string, mixed>  $fields  Associative array of field values keyed by field API IDs (e.g., ["Field1" => "value"]).
-     * @return array<string, mixed> The parsed JSON response with success status and entry ID.
-     */
-    public function submitEntry(string $formId, array $fields): array
-    {
-        return $this->request('POST', '/forms/' . urlencode($formId) . '/entries.json', [], $fields);
-    }
+    // ── Reports ────────────────────────────────────────────
 
     /**
-     * List all fields for a specific form.
+     * List all reports accessible to the authenticated user.
      *
-     * @param  string  $formId  The form hash or unique identifier.
-     * @return array<string, mixed> The parsed JSON response containing the Fields array.
-     */
-    public function listFields(string $formId): array
-    {
-        return $this->request('GET', '/forms/' . urlencode($formId) . '/fields.json');
-    }
-
-    /**
-     * List all reports in the Wufoo account.
-     *
-     * @return array<string, mixed> The parsed JSON response containing the Reports array.
+     * @return array<string, mixed> The list of reports from the Wufoo API.
      */
     public function listReports(): array
     {
         return $this->request('GET', '/reports.json');
     }
 
+    // ── Users ──────────────────────────────────────────────
+
     /**
-     * Make an API request and return parsed JSON.
+     * Get the current authenticated user's profile.
+     *
+     * @return array<string, mixed> The user profile data.
+     */
+    public function getCurrentUser(): array
+    {
+        return $this->request('GET', '/users.json');
+    }
+
+    // ── HTTP ───────────────────────────────────────────────
+
+    /**
+     * Make an authenticated API request and return parsed JSON.
      *
      * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  The API endpoint path (e.g., "/forms.json").
-     * @param  array<string, mixed>  $query  Query parameters for GET requests.
-     * @param  array<string, mixed>  $body  Form data for POST requests (URL-encoded).
-     * @return array<string, mixed> The parsed JSON response body.
+     * @param  string  $path  The API path (e.g., /forms.json).
+     * @param  array<string, mixed>  $params  Query parameters or request body.
+     * @return array<string, mixed> The parsed JSON response.
+     *
+     * @throws \RuntimeException If the API key is not configured or the request fails.
      */
-    private function request(string $method, string $path, array $query = [], array $body = []): array
+    private function request(string $method, string $path, array $params = []): array
     {
-        $response = $this->rawRequest($method, $path, $query, $body);
+        $response = $this->rawRequest($method, $path, $params);
         return $response->json() ?? [];
     }
 
     /**
-     * Make a raw HTTP request to the Wufoo API using HTTP Basic Auth.
+     * Make a raw HTTP request to the Wufoo API with HTTP Basic authentication.
      *
-     * Wufoo uses HTTP Basic Auth where the API key is the username and the password is "foot".
+     * Uses the API key as the username and "footastic" as the password,
+     * following Wufoo's authentication convention.
      *
      * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  The API endpoint path.
-     * @param  array<string, mixed>  $query  Query parameters.
-     * @param  array<string, mixed>  $body  POST body data.
+     * @param  string  $path  The API path.
+     * @param  array<string, mixed>  $params  Query parameters for GET requests.
      * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
-     * @throws \RuntimeException If the service is not configured or the request fails.
+     * @throws \RuntimeException If the API key is missing or the request fails.
      */
-    private function rawRequest(string $method, string $path, array $query = [], array $body = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $params = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->apiKey || !$this->subdomain) {
-            throw new \RuntimeException('Wufoo integration is not configured. API key and subdomain are required.');
+        if (!$this->apiKey) {
+            throw new \RuntimeException('Wufoo API key is not configured.');
         }
 
-        $url = $this->getBaseUrl() . $path;
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withBasicAuth($this->apiKey, 'foot')
-                ->withHeaders([
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                ])
-                ->timeout(30);
+            $http = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->withBasicAuth($this->apiKey, 'footastic')->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $query),
-                'POST' => $http->asForm()->post($url, $body),
-                'PUT' => $http->asForm()->put($url, $body),
-                'DELETE' => $http->delete($url, $query),
+                'GET' => $http->get($url, $params),
+                'POST' => $http->post($url, $params),
+                'PUT' => $http->put($url, $params),
+                'DELETE' => $http->delete($url, $params),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $responseBody = $response->body();
+                $body = $response->body();
+                $json = $response->json();
+                $error = $json['error'] ?? $json['Text'] ?? $body;
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($responseBody), '<!DOCTYPE')) {
-                    Log::warning("Wufoo API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Wufoo API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the account may lack permissions.");
-                }
-
-                $error = $response->json('Error') ?? $response->json('error') ?? $responseBody;
                 Log::error("Wufoo API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException("Wufoo API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException('Wufoo API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;

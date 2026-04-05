@@ -2,154 +2,179 @@
 
 ## list_jobs
 
-List jobs in your Workable account, optionally filtered by state.
+List jobs from your Workable account with optional state filtering and pagination.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `state` | string | no | Filter by state: `"published"`, `"draft"`, `"archived"`, `"closed"` |
-| `limit` | integer | no | Max results (default: 50) |
+| `state` | string | no | Filter by job state: `"published"`, `"draft"`, `"closed"`, or `"archived"`. Omit to list all jobs. |
+| `limit` | integer | no | Number of results per page (default: 50, max: 100). |
+| `offset` | integer | no | Offset for pagination — pass the value from a previous response to get the next page. |
 
-### Example
+### Examples
 
 ```lua
+-- List all published jobs
 local result = app.integrations.workable.list_jobs({
-  state = "published",
-  limit = 20
+  state = "published"
 })
 
 for _, job in ipairs(result.jobs) do
-  print(job.title .. " (" .. job.shortcode .. ") - " .. job.location.city)
+  print(job.title .. " (" .. job.shortcode .. ")")
 end
+
+-- Paginate through all jobs
+local offset = 0
+repeat
+  local page = app.integrations.workable.list_jobs({
+    limit = 50,
+    offset = offset
+  })
+  for _, job in ipairs(page.jobs or {}) do
+    print(job.title .. " - " .. job.state)
+  end
+  offset = offset + 50
+until #page.jobs < 50
 ```
 
 ---
 
 ## get_job
 
-Get full details for a specific job by its shortcode.
+Get full details for a specific Workable job by its shortcode.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `shortcode` | string | yes | Job shortcode, e.g. `"GRO-001"` |
+| `shortcode` | string | yes | The job shortcode identifier (e.g., `"GROVF002"`). |
 
-### Example
+### Examples
 
 ```lua
 local result = app.integrations.workable.get_job({
-  shortcode = "GRO-001"
+  shortcode = "GROVF002"
 })
 
 print(result.title)
-print(result.description)
+print(result.department)
 print(result.employment_type)
-print(result.url)
+print(result.location.city .. ", " .. result.location.country)
+```
+
+---
+
+## create_job
+
+Create a new job posting in Workable.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `title` | string | yes | Job title (e.g., `"Senior Backend Engineer"`). |
+| `description` | string | yes | Full job description in HTML or plain text. |
+| `department` | string | no | Department name (e.g., `"Engineering"`). |
+| `employment_type` | string | no | Employment type: `"full-time"`, `"part-time"`, `"contract"`, `"temporary"`, `"intern"`. |
+
+### Examples
+
+```lua
+local result = app.integrations.workable.create_job({
+  title = "Senior Backend Engineer",
+  description = "<p>We are looking for an experienced backend engineer...</p>",
+  department = "Engineering",
+  employment_type = "full-time"
+})
+
+print("Created job: " .. result.shortcode)
 ```
 
 ---
 
 ## list_candidates
 
-List candidates for a specific job.
+List candidates for a specific Workable job, with pagination support.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `shortcode` | string | yes | Job shortcode, e.g. `"GRO-001"` |
-| `limit` | integer | no | Max results (default: 50) |
+| `shortcode` | string | yes | The job shortcode to list candidates for (e.g., `"GROVF002"`). |
+| `limit` | integer | no | Number of results per page (default: 50, max: 100). |
+| `offset` | integer | no | Offset for pagination — pass the value from a previous response to get the next page. |
 
-### Example
+### Examples
 
 ```lua
+-- List candidates for a job
 local result = app.integrations.workable.list_candidates({
-  shortcode = "GRO-001"
+  shortcode = "GROVF002"
 })
 
-for _, candidate in ipairs(result.candidates) do
-  print(candidate.name .. " <" .. candidate.email .. "> — stage: " .. candidate.stage)
+for _, candidate in ipairs(result.candidates or {}) do
+  print(candidate.name .. " - Stage: " .. candidate.stage)
 end
+
+-- Paginate through all candidates
+local offset = 0
+repeat
+  local page = app.integrations.workable.list_candidates({
+    shortcode = "GROVF002",
+    limit = 50,
+    offset = offset
+  })
+  for _, candidate in ipairs(page.candidates or {}) do
+    print(candidate.name .. " <" .. candidate.email .. ">")
+  end
+  offset = offset + 50
+until #(page.candidates or {}) < 50
 ```
 
 ---
 
 ## get_candidate
 
-Get full details for a specific candidate by ID.
+Get full details for a specific Workable candidate by ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | Candidate ID |
+| `id` | string | yes | The candidate ID (e.g., `"abc123def456"`). |
 
-### Example
+### Examples
 
 ```lua
 local result = app.integrations.workable.get_candidate({
-  id = "abc123"
+  id = "abc123def456"
 })
 
 print(result.name)
 print(result.email)
 print(result.stage)
-```
-
----
-
-## create_candidate
-
-Create a new candidate for a specific job.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `shortcode` | string | yes | Job shortcode to apply candidate to |
-| `name` | string | yes | Candidate's full name |
-| `email` | string | yes | Candidate's email address |
-| `phone` | string | no | Phone number |
-| `headline` | string | no | Brief headline or title |
-| `cover_letter` | string | no | Cover letter text |
-
-### Example
-
-```lua
-local result = app.integrations.workable.create_candidate({
-  shortcode = "GRO-001",
-  name = "Jane Smith",
-  email = "jane@example.com",
-  phone = "+1-555-0123",
-  cover_letter = "I am very interested in this position."
-})
-
-print("Created candidate: " .. result.id)
+print("Applied: " .. result.applied_at)
+print("Phone: " .. (result.phone or "N/A"))
 ```
 
 ---
 
 ## list_members
 
-List team members in your Workable account.
+List all team members in your Workable account.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 50) |
+This function takes no parameters.
 
-### Example
+### Examples
 
 ```lua
-local result = app.integrations.workable.list_members({
-  limit = 20
-})
+local result = app.integrations.workable.list_members()
 
-for _, member in ipairs(result.members) do
-  print(member.name .. " — " .. member.role)
+for _, member in ipairs(result.members or {}) do
+  print(member.name .. " - " .. member.email .. " (" .. (member.role or "member") .. ")")
 end
 ```
 
@@ -157,18 +182,20 @@ end
 
 ## get_current_user
 
-Get the currently authenticated user's profile. Useful for verifying the connection.
+Get the profile of the currently authenticated Workable user.
 
 ### Parameters
 
-None.
+This function takes no parameters.
 
-### Example
+### Examples
 
 ```lua
-local result = app.integrations.workable.get_current_user({})
+local result = app.integrations.workable.get_current_user()
 
-print("Connected as: " .. result.name .. " (" .. result.email .. ")")
+print("Logged in as: " .. result.name)
+print("Email: " .. result.email)
+print("Role: " .. (result.role or "unknown"))
 ```
 
 ---
@@ -185,8 +212,8 @@ app.integrations.workable.list_jobs({})
 app.integrations.workable.default.list_jobs({})
 
 -- Named accounts
-app.integrations.workable.acme.list_jobs({})
-app.integrations.workable.startup_co.list_jobs({})
+app.integrations.workable.us_office.list_jobs({})
+app.integrations.workable.eu_office.list_jobs({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

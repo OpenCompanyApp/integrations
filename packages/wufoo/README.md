@@ -1,14 +1,14 @@
 # Integration: Wufoo
 
-> Wufoo integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage forms, entries, fields and reports. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Wufoo forms integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list forms, retrieve entries, manage reports. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to online forms and collected data. List and inspect forms, retrieve entries, discover field definitions, submit new entries, and browse reports — all through the [Wufoo](https://wufoo.com) API.
+Give your AI agents access to online form data. List forms, retrieve entries with pagination and filters, view reports, and get user profile information — all through the [Wufoo](https://wufoo.com) API.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Wufoo tool lets AI agents interact with online forms — collecting submissions, reviewing entries, and understanding form structure — giving agents the ability to process and act on form data.
+This Wufoo tool lets AI agents query form structures, retrieve submitted entries, and manage reports — giving agents data-driven awareness of form submissions and responses.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This tool requires a Wufoo API key and your account subdomain.
+This tool requires a Wufoo API key and your subdomain-specific base URL.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -31,23 +31,29 @@ This tool requires a Wufoo API key and your account subdomain.
 ```php
 return [
     'wufoo' => [
-        'api_key'   => env('WUFOO_API_KEY'),
-        'subdomain' => env('WUFOO_SUBDOMAIN'), // e.g., "mycompany" for mycompany.wufoo.com
+        'api_key'  => env('WUFOO_API_KEY'),
+        'base_url' => env('WUFOO_BASE_URL', 'https://yoursubdomain.wufoo.com/api/v3'),
     ],
 ];
 ```
+
+### Getting Your Wufoo API Key
+
+1. Log in to your Wufoo account.
+2. Navigate to **Your Name → Account → API Information**.
+3. Copy the API key.
+4. Use your subdomain in the base URL: `https://{subdomain}.wufoo.com/api/v3`.
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `wufoo_list_forms` | read | List all forms in the Wufoo account |
-| `wufoo_get_form` | read | Get details for a specific form |
-| `wufoo_list_entries` | read | List entries submitted to a form (paginated) |
-| `wufoo_get_entry` | read | Get a single form entry by ID |
-| `wufoo_submit_entry` | write | Submit a new entry to a form |
-| `wufoo_list_fields` | read | List all fields for a specific form |
-| `wufoo_list_reports` | read | List all reports in the Wufoo account |
+| `wufoo_list_forms` | read | List all forms in your Wufoo account |
+| `wufoo_get_form` | read | Get details for a specific form by ID |
+| `wufoo_list_entries` | read | List entries for a form (paginated, filterable) |
+| `wufoo_get_entry` | read | Get a single entry by its ID |
+| `wufoo_list_reports` | read | List all reports in your Wufoo account |
+| `wufoo_get_current_user` | read | Get the authenticated user's profile |
 
 ## Quick Start
 
@@ -66,12 +72,12 @@ $tools = [
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('Show me the latest entries from our contact form');
+    ->prompt('Show me all forms and their latest 5 entries');
 ```
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -81,7 +87,7 @@ $provider = $registry->get('wufoo');
 
 // Create any tool via the provider
 $tool = $provider->createTool(
-    \OpenCompany\Integrations\Wufoo\Tools\WufooListEntries::class
+    \OpenCompany\Integrations\Wufoo\Tools\WufooListForms::class
 );
 ```
 
@@ -96,27 +102,29 @@ $service = app(WufooService::class);
 $forms = $service->listForms();
 
 // Get a specific form
-$form = $service->getForm('z1k08xw1ubbvkt');
+$form = $service->getForm('q1w2e3r4t5y6');
 
-// List entries (paginated, newest first)
-$entries = $service->listEntries('z1k08xw1ubbvkt', pageSize: 50, sort: 'DESC');
+// List entries with pagination
+$entries = $service->listEntries('q1w2e3r4t5y6', page: 0, pageSize: 50);
+
+// List entries with filters
+$entries = $service->listEntries('q1w2e3r4t5y6', filters: [
+    'Filter1' => 'Field1+Is+equal_to+value',
+]);
 
 // Get a single entry
-$entry = $service->getEntry('42');
-
-// List fields for a form
-$fields = $service->listFields('z1k08xw1ubbvkt');
-
-// Submit a new entry
-$result = $service->submitEntry('z1k08xw1ubbvkt', [
-    'Field1' => 'John Doe',
-    'Field2' => 'john@example.com',
-    'Field3' => 'Hello!',
-]);
+$entry = $service->getEntry('12345');
 
 // List reports
 $reports = $service->listReports();
+
+// Get current user
+$user = $service->getCurrentUser();
 ```
+
+## Authentication
+
+Wufoo uses HTTP Basic Authentication. The API key is sent as the username, and the password is always set to `"footastic"`. This is handled automatically by the `WufooService`.
 
 ## Dependencies
 

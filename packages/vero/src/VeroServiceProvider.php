@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Laravel service provider for the Vero email marketing integration.
+ *
+ * Registers the VeroService singleton and boots the ToolProvider
+ * into the ToolProviderRegistry.
+ */
 class VeroServiceProvider extends ServiceProvider
 {
     public function register(): void

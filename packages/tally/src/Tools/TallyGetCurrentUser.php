@@ -2,51 +2,41 @@
 
 namespace OpenCompany\Integrations\Tally\Tools;
 
-use OpenCompany\Integrations\Tally\TallyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Tally\TallyService;
 
 /**
- * Get profile information for the currently authenticated Tally user.
- *
- * Returns the user's name, email, and account details.
+ * Get the currently authenticated Tally user's profile information.
  */
 class TallyGetCurrentUser implements Tool
 {
+    /**
+     * @param  TallyService  $service  The Tally API service instance.
+     */
     public function __construct(
         private TallyService $service,
     ) {}
 
-    /**
-     * Unique tool identifier.
-     */
     public function name(): string
     {
         return 'tally_get_current_user';
     }
 
-    /**
-     * Human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'Get profile information for the currently authenticated Tally user. Returns name, email, and account details. Useful for verifying the connection and identifying which account is in use.';
+        return 'Get the authenticated user\'s profile information, including name, email, and account details.';
     }
 
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array<string, string>>
-     */
     public function parameters(): array
     {
         return [];
     }
 
     /**
-     * Execute the get_current_user tool.
+     * Execute the get current user request.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (unused).
+     * @param  array<string, mixed>  $args  Tool arguments (none required).
      */
     public function execute(array $args): ToolResult
     {

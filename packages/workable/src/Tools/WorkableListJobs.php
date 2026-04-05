@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to list jobs in the Workable ATS.
+ * Tool to list jobs from the Workable ATS.
  *
- * Returns a paginated list of jobs, optionally filtered by state
- * (e.g., published, draft, archived, closed).
+ * Supports pagination and optional filtering by job state
+ * (published, draft, closed, archived).
  */
 class WorkableListJobs implements Tool
 {
@@ -22,7 +22,7 @@ class WorkableListJobs implements Tool
     ) {}
 
     /**
-     * The tool identifier.
+     * Get the tool name.
      */
     public function name(): string
     {
@@ -30,28 +30,29 @@ class WorkableListJobs implements Tool
     }
 
     /**
-     * Human-readable description of what this tool does.
+     * Get the tool description.
      */
     public function description(): string
     {
-        return 'List jobs in your Workable account. Optionally filter by state (published, draft, archived, closed). Returns job titles, shortcodes, states, and locations.';
+        return 'List jobs from your Workable account. Optionally filter by state (published, draft, closed, archived). Returns paginated results with job titles, shortcodes, and statuses.';
     }
 
     /**
-     * Parameter schema for the tool.
+     * Get the tool parameter definitions.
      *
      * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
         return [
-            'state' => ['type' => 'string', 'description' => 'Filter by job state: "published", "draft", "archived", or "closed". Omit to list all jobs.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of jobs to return (default: 50).'],
+            'state' => ['type' => 'string', 'description' => 'Filter by job state: "published", "draft", "closed", or "archived". Omit to list all jobs.'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of results per page (default: 50, max: 100).'],
+            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination — pass the value from a previous response to get the next page.'],
         ];
     }
 
     /**
-     * Execute the list jobs request.
+     * Execute the tool and return the list of jobs.
      *
      * @param  array<string, mixed>  $args
      */
@@ -62,10 +63,11 @@ class WorkableListJobs implements Tool
                 return ToolResult::error('Workable integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
             $state = $args['state'] ?? null;
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : null;
 
-            $result = $this->service->listJobs($state, $limit);
+            $result = $this->service->listJobs($state, $limit, $offset);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

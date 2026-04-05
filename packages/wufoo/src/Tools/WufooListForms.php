@@ -6,17 +6,25 @@ use OpenCompany\Integrations\Wufoo\WufooService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Tool to list all forms in the authenticated Wufoo account.
+ *
+ * Calls GET /forms.json on the Wufoo API and returns an array of form objects
+ * including form identifiers, names, descriptions, and metadata.
+ */
 class WufooListForms implements Tool
 {
     /**
      * Create a new WufooListForms tool instance.
+     *
+     * @param  WufooService  $service  The Wufoo API service instance.
      */
     public function __construct(
         private WufooService $service,
     ) {}
 
     /**
-     * Get the tool's machine name.
+     * Get the tool name identifier.
      */
     public function name(): string
     {
@@ -24,17 +32,17 @@ class WufooListForms implements Tool
     }
 
     /**
-     * Get a description of what this tool does.
+     * Get the human-readable description of what this tool does.
      */
     public function description(): string
     {
-        return 'List all forms in the Wufoo account. Returns form hashes, names, descriptions, entry counts, and URLs.';
+        return 'List all forms in your Wufoo account. Returns form identifiers, names, descriptions, and metadata that can be used with other Wufoo tools.';
     }
 
     /**
-     * Get the parameter schema for this tool.
+     * Get the parameters this tool accepts.
      *
-     * @return array<string, array<string, mixed>>
+     * @return array<string, array<string, mixed>> The parameter definitions.
      */
     public function parameters(): array
     {
@@ -42,9 +50,10 @@ class WufooListForms implements Tool
     }
 
     /**
-     * Execute the tool and return a result.
+     * Execute the list forms operation.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (none required).
+     * @param  array<string, mixed>  $args  The tool arguments (none required).
+     * @return ToolResult The result containing the list of forms or an error message.
      */
     public function execute(array $args): ToolResult
     {
@@ -54,12 +63,8 @@ class WufooListForms implements Tool
             }
 
             $result = $this->service->listForms();
-            $forms = $result['Forms'] ?? [];
 
-            return ToolResult::success([
-                'forms' => $forms,
-                'total' => count($forms),
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

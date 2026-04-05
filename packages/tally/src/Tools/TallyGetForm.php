@@ -2,54 +2,47 @@
 
 namespace OpenCompany\Integrations\Tally\Tools;
 
-use OpenCompany\Integrations\Tally\TallyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Tally\TallyService;
 
 /**
- * Get full details for a specific Tally form by its ID.
- *
- * Returns the complete form structure including all fields, settings,
- * and configuration.
+ * Get details of a specific Tally form by its ID.
  */
 class TallyGetForm implements Tool
 {
+    /**
+     * @param  TallyService  $service  The Tally API service instance.
+     */
     public function __construct(
         private TallyService $service,
     ) {}
 
-    /**
-     * Unique tool identifier.
-     */
     public function name(): string
     {
         return 'tally_get_form';
     }
 
-    /**
-     * Human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'Get full details for a specific Tally form, including all fields, structure, and settings. Use this to understand a form\'s layout before querying submissions.';
+        return 'Get full details of a specific Tally form by its ID, including form structure, fields, and settings.';
     }
 
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array{type: string, description?: string, required?: bool}>
-     */
     public function parameters(): array
     {
         return [
-            'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The Tally form ID (e.g., "mVlDK4").'],
+            'form_id' => [
+                'type' => 'string',
+                'required' => true,
+                'description' => 'The Tally form ID (e.g., "mVlBRN").',
+            ],
         ];
     }
 
     /**
-     * Execute the get_form tool.
+     * Execute the get form request.
      *
-     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments (form_id).
      */
     public function execute(array $args): ToolResult
     {
@@ -58,7 +51,12 @@ class TallyGetForm implements Tool
                 return ToolResult::error('Tally integration is not configured.');
             }
 
-            $result = $this->service->getForm($args['form_id']);
+            $formId = $args['form_id'] ?? '';
+            if (empty($formId)) {
+                return ToolResult::error('Form ID is required.');
+            }
+
+            $result = $this->service->getForm($formId);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

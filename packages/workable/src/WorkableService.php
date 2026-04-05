@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Workable API service for interacting with the Workable ATS.
+ * Workable API service for interacting with the Workable ATS REST API (v3/spi).
  *
- * Handles authentication and HTTP communication with the Workable SPI v3 API.
- * Base URL pattern: https://www.workable.com/spi/v3/accounts/{subdomain}
+ * Handles authentication via Bearer token and provides methods for all
+ * supported Workable endpoints: jobs, candidates, members, and users.
  */
 class WorkableService
 {
@@ -18,14 +18,18 @@ class WorkableService
      *
      * @param  string  $accessToken  Workable API access token.
      * @param  string  $subdomain    Workable account subdomain.
+     * @param  string  $baseUrl      Base URL for the Workable SPI API.
      */
     public function __construct(
         private string $accessToken = '',
         private string $subdomain = '',
-    ) {}
+        private string $baseUrl = 'https://www.workable.com/spi/v3/accounts',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the service is properly configured with credentials.
+     * Check whether the service is properly configured with an access token and subdomain.
      */
     public function isConfigured(): bool
     {
@@ -41,24 +45,36 @@ class WorkableService
     }
 
     /**
+     * Get the full account base URL used for API requests.
+     */
+    public function getAccountUrl(): string
+    {
+        return $this->baseUrl . '/' . $this->subdomain;
+    }
+
+    /**
      * List jobs for the account.
      *
-     * @param  string|null  $state  Filter by job state (e.g., "published", "draft", "archived", "closed").
-     * @param  int  $limit   Maximum number of jobs to return.
+     * @param  string|null  $state  Filter by job state: "published", "draft", "closed", "archived".
+     * @param  int  $limit  Number of results per page (max 100).
+     * @param  int|null  $offset  Offset for pagination.
      * @return array<string, mixed>
      */
-    public function listJobs(?string $state = null, int $limit = 50): array
+    public function listJobs(?string $state = null, int $limit = 50, ?int $offset = null): array
     {
         $params = ['limit' => $limit];
         if ($state !== null) {
             $params['state'] = $state;
+        }
+        if ($offset !== null) {
+            $params['offset'] = $offset;
         }
 
         return $this->request('GET', '/jobs', $params);
     }
 
     /**
-     * Get details for a specific job.
+     * Get details for a specific job by shortcode.
      *
      * @param  string  $shortcode  The job shortcode identifier.
      * @return array<string, mixed>
@@ -69,23 +85,38 @@ class WorkableService
     }
 
     /**
+     * Create a new job.
+     *
+     * @param  array<string, mixed>  $data  Job creation payload.
+     * @return array<string, mixed>
+     */
+    public function createJob(array $data): array
+    {
+        return $this->request('POST', '/jobs', $data);
+    }
+
+    /**
      * List candidates for a specific job.
      *
      * @param  string  $shortcode  The job shortcode identifier.
-     * @param  int     $limit      Maximum number of candidates to return.
+     * @param  int  $limit  Number of results per page (max 100).
+     * @param  int|null  $offset  Offset for pagination.
      * @return array<string, mixed>
      */
-    public function listCandidates(string $shortcode, int $limit = 50): array
+    public function listCandidates(string $shortcode, int $limit = 50, ?int $offset = null): array
     {
-        return $this->request('GET', '/jobs/' . urlencode($shortcode) . '/candidates', [
-            'limit' => $limit,
-        ]);
+        $params = ['limit' => $limit];
+        if ($offset !== null) {
+            $params['offset'] = $offset;
+        }
+
+        return $this->request('GET', '/jobs/' . urlencode($shortcode) . '/candidates', $params);
     }
 
     /**
      * Get details for a specific candidate.
      *
-     * @param  string  $id  The candidate identifier.
+     * @param  string  $id  The candidate ID.
      * @return array<string, mixed>
      */
     public function getCandidate(string $id): array
@@ -94,35 +125,13 @@ class WorkableService
     }
 
     /**
-     * Create a new candidate for a specific job.
+     * List team members (recruiters and hiring managers) for the account.
      *
-     * @param  string  $shortcode  The job shortcode to apply the candidate to.
-     * @param  string  $name       The candidate's full name.
-     * @param  string  $email      The candidate's email address.
-     * @param  array   $additional  Additional candidate fields (e.g., phone, headline, address, cover_letter).
      * @return array<string, mixed>
      */
-    public function createCandidate(string $shortcode, string $name, string $email, array $additional = []): array
+    public function listMembers(): array
     {
-        $data = array_merge([
-            'name' => $name,
-            'email' => $email,
-        ], $additional);
-
-        return $this->request('POST', '/jobs/' . urlencode($shortcode) . '/candidates', $data);
-    }
-
-    /**
-     * List members (team members) for the account.
-     *
-     * @param  int  $limit  Maximum number of members to return.
-     * @return array<string, mixed>
-     */
-    public function listMembers(int $limit = 50): array
-    {
-        return $this->request('GET', '/members', [
-            'limit' => $limit,
-        ]);
+        return $this->request('GET', '/members');
     }
 
     /**
@@ -132,15 +141,15 @@ class WorkableService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/user');
+        return $this->request('GET', '/users/me');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API path relative to the account base URL.
-     * @param  array   $data    Query parameters or request body.
+     * @param  string  $path  API path relative to the account URL.
+     * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -153,19 +162,23 @@ class WorkableService
      * Make a raw HTTP request to the Workable API.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API path relative to the account base URL.
-     * @param  array   $data    Query parameters or request body.
+     * @param  string  $path  API path relative to the account URL.
+     * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException If credentials are missing or the API returns an error.
+     * @throws \RuntimeException If the access token is missing or the request fails.
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->accessToken || !$this->subdomain) {
-            throw new \RuntimeException('Workable access token and subdomain are not configured.');
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Workable access token is not configured.');
         }
 
-        $url = 'https://www.workable.com/spi/v3/accounts/' . $this->subdomain . $path;
+        if (!$this->subdomain) {
+            throw new \RuntimeException('Workable subdomain is not configured.');
+        }
+
+        $url = $this->getAccountUrl() . $path;
 
         try {
             $http = Http::withHeaders([
@@ -185,7 +198,7 @@ class WorkableService
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Workable API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);

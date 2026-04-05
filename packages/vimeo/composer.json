@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-vimeo",
-    "description": "Vimeo integration for Laravel — manage videos, albums, and channels via the Vimeo API.",
+    "description": "Vimeo video integration for Laravel — list, get, and create videos, manage albums and folders.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,10 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "vimeo", "video", "opencompany"],
+    "keywords": ["tools", "vimeo", "video", "media", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-vimeo": "self.version"
     },
     "autoload": {
         "psr-4": {

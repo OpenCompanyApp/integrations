@@ -2,41 +2,29 @@
 
 ## identify_user
 
-Identify or create a user in Vero with profile attributes.
+Identify (create or update) a user in Vero with email, name, and custom attributes.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `identity` | string | yes | Unique user identifier (user ID or email) |
-| `email` | string | no | User's email address |
-| `name` | string | no | User's full name |
-| `extra` | object | no | Additional user traits as key-value pairs |
+| `id` | string | yes | Unique user identifier (e.g., database ID or UUID) |
+| `email` | string | yes | User email address |
+| `name` | string | no | Display name for the user |
+| `data` | object | no | Custom user attributes as key-value pairs |
 
-### Examples
-
-#### Identify a new user
+### Example
 
 ```lua
-local result = app.integrations.vero.identify_user({
-  identity = "user_12345",
-  email = "jane@example.com",
-  name = "Jane Doe",
-  extra = {
-    plan = "pro",
-    country = "US"
+app.integrations.vero.identify_user({
+  id = "usr_123",
+  email = "john@example.com",
+  name = "John Doe",
+  data = {
+    plan = "premium",
+    signup_date = "2025-01-15",
+    company = "Acme Inc"
   }
-})
-
-print(result.message)
-```
-
-#### Identify with minimal info
-
-```lua
-local result = app.integrations.vero.identify_user({
-  identity = "jane@example.com",
-  email = "jane@example.com"
 })
 ```
 
@@ -44,40 +32,27 @@ local result = app.integrations.vero.identify_user({
 
 ## track_event
 
-Track a custom event for a user in Vero. The user must already be identified.
+Track a behavioral event for a user. Events can trigger automated email campaigns in Vero.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `identity` | string | yes | Unique user identifier |
-| `event_name` | string | yes | Name of the event to track |
-| `data` | object | no | Event properties as key-value pairs |
+| `identity` | string | yes | User ID or email address identifying the user |
+| `event_name` | string | yes | Name of the event (e.g., "Logged in", "Purchased") |
+| `data` | object | no | Event-specific data as key-value pairs |
 
-### Examples
-
-#### Track a purchase event
+### Example
 
 ```lua
-local result = app.integrations.vero.track_event({
-  identity = "user_12345",
-  event_name = "Purchase Completed",
+app.integrations.vero.track_event({
+  identity = "usr_123",
+  event_name = "Purchased",
   data = {
-    amount = 49.99,
-    currency = "USD",
-    product = "Pro Plan"
+    product = "Widget",
+    price = 29.99,
+    currency = "USD"
   }
-})
-
-print(result.message)
-```
-
-#### Track a simple event
-
-```lua
-local result = app.integrations.vero.track_event({
-  identity = "user_12345",
-  event_name = "Logged In"
 })
 ```
 
@@ -85,104 +60,155 @@ local result = app.integrations.vero.track_event({
 
 ## update_user
 
-Update a user's profile attributes in Vero. Only specified fields are modified.
+Update a user's email address and/or custom attributes in Vero.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `identity` | string | yes | Unique user identifier |
-| `changes` | object | yes | Key-value pairs of attributes to update |
+| `id` | string | yes | Unique user identifier to update |
+| `email` | string | no | New email address for the user |
+| `data` | object | no | Attributes to update as key-value pairs |
 
-### Examples
-
-#### Update user plan and name
+### Example
 
 ```lua
-local result = app.integrations.vero.update_user({
-  identity = "user_12345",
-  changes = {
-    name = "Jane Smith",
+app.integrations.vero.update_user({
+  id = "usr_123",
+  email = "john.doe@newdomain.com",
+  data = {
     plan = "enterprise",
-    company = "Acme Corp"
+    company = "Big Corp"
+  }
+})
+```
+
+---
+
+## unsubscribe
+
+Unsubscribe a user from all Vero email campaigns.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | Unique user identifier to unsubscribe |
+
+### Example
+
+```lua
+app.integrations.vero.unsubscribe({
+  id = "usr_123"
+})
+```
+
+---
+
+## resubscribe
+
+Resubscribe a previously unsubscribed user to Vero email campaigns.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | Unique user identifier to resubscribe |
+
+### Example
+
+```lua
+app.integrations.vero.resubscribe({
+  id = "usr_123"
+})
+```
+
+---
+
+## get_current_user
+
+Get the profile of the currently authenticated Vero user. Useful for verifying API connectivity.
+
+### Parameters
+
+None.
+
+### Example
+
+```lua
+local user = app.integrations.vero.get_current_user({})
+print("Account: " .. (user.email or "unknown"))
+```
+
+---
+
+## Common Workflows
+
+### Onboard a new user and trigger welcome email
+
+```lua
+-- Step 1: Identify the user
+app.integrations.vero.identify_user({
+  id = "usr_456",
+  email = "jane@example.com",
+  name = "Jane Smith",
+  data = {
+    plan = "free",
+    signup_date = "2025-06-15"
   }
 })
 
-print(result.message)
+-- Step 2: Track the signup event (triggers welcome campaign)
+app.integrations.vero.track_event({
+  identity = "usr_456",
+  event_name = "Signed up",
+  data = {
+    source = "landing_page",
+    plan = "free"
+  }
+})
 ```
 
----
-
-## add_tag
-
-Add one or more tags to a user in Vero. Tags are useful for segmenting users.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `identity` | string | yes | Unique user identifier |
-| `tags` | array | yes | Array of tag names to add |
-
-### Examples
-
-#### Add a single tag
+### Upgrade a user's plan
 
 ```lua
-local result = app.integrations.vero.add_tag({
-  identity = "user_12345",
-  tags = { "VIP" }
+-- Update user attributes
+app.integrations.vero.update_user({
+  id = "usr_456",
+  data = {
+    plan = "premium",
+    upgraded_at = "2025-07-01"
+  }
 })
 
-print(result.message)
+-- Track the upgrade event
+app.integrations.vero.track_event({
+  identity = "usr_456",
+  event_name = "Upgraded plan",
+  data = {
+    from_plan = "free",
+    to_plan = "premium"
+  }
+})
 ```
 
-#### Add multiple tags
+### Handle a user leaving
 
 ```lua
-local result = app.integrations.vero.add_tag({
-  identity = "user_12345",
-  tags = { "Newsletter Subscriber", "Pro User", "Beta Tester" }
+-- Track churn event
+app.integrations.vero.track_event({
+  identity = "usr_456",
+  event_name = "Cancelled subscription",
+  data = {
+    reason = "too_expensive",
+    last_plan = "premium"
+  }
 })
 
-print(result.message)
-```
-
----
-
-## remove_tag
-
-Remove one or more tags from a user in Vero.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `identity` | string | yes | Unique user identifier |
-| `tags` | array | yes | Array of tag names to remove |
-
-### Examples
-
-#### Remove a tag
-
-```lua
-local result = app.integrations.vero.remove_tag({
-  identity = "user_12345",
-  tags = { "Trial" }
+-- Unsubscribe from emails
+app.integrations.vero.unsubscribe({
+  id = "usr_456"
 })
-
-print(result.message)
-```
-
-#### Remove multiple tags
-
-```lua
-local result = app.integrations.vero.remove_tag({
-  identity = "user_12345",
-  tags = { "Inactive", "Trial" }
-})
-
-print(result.message)
 ```
 
 ---
@@ -193,14 +219,14 @@ If you have multiple Vero accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.vero.identify_user({...})
+app.integrations.vero.identify_user({id = "1", email = "a@b.com"})
 
 -- Explicit default (portable across setups)
-app.integrations.vero.default.identify_user({...})
+app.integrations.vero.default.identify_user({id = "1", email = "a@b.com"})
 
 -- Named accounts
-app.integrations.vero.work.identify_user({...})
-app.integrations.vero.marketing.identify_user({...})
+app.integrations.vero.marketing.identify_user({id = "1", email = "a@b.com"})
+app.integrations.vero.transactional.track_event({identity = "1", event_name = "Order shipped"})
 ```
 
 All functions are identical across accounts — only the credentials differ.

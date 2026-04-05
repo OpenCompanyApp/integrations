@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "workable", "ats", "recruiting", "opencompany"],
+    "keywords": ["tools", "workable", "hr", "ats", "recruiting", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

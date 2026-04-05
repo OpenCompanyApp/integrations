@@ -1,14 +1,14 @@
 # Integration: Strava
 
-> Strava integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list activities, manage routes, clubs, and athlete data. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Strava fitness/activity integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list activities, view athlete profiles, manage clubs. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to fitness activity data from [Strava](https://www.strava.com). List recent activities, get detailed activity metrics, create manual activities, browse routes, and explore clubs — all through the Strava API.
+Give your AI agents access to fitness and activity data. List recent workouts, retrieve detailed activity information, create manual activities, and explore athlete profiles and clubs — all through the [Strava API](https://developers.strava.com/).
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Strava tool lets AI agents query fitness activities, manage routes, and interact with club data — giving agents visibility into athletic performance and activity tracking.
+This Strava integration lets AI agents query fitness activities, retrieve athlete profiles, and explore clubs — giving agents awareness of team health, fitness goals, and activity trends.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -32,7 +32,7 @@ This tool requires a Strava access token.
 return [
     'strava' => [
         'access_token' => env('STRAVA_ACCESS_TOKEN'),
-        'url'          => env('STRAVA_API_URL', 'https://www.strava.com/api/v3'),
+        'url'          => env('STRAVA_URL', 'https://www.strava.com/api/v3'),
     ],
 ];
 ```
@@ -41,38 +41,36 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `strava_list_activities` | read | List recent activities for the authenticated athlete |
+| `strava_list_activities` | read | List recent activities for the authenticated athlete (paginated, with date filters) |
 | `strava_get_activity` | read | Get detailed information about a specific activity |
-| `strava_create_activity` | write | Create a manual activity entry |
+| `strava_create_activity` | write | Create a manual activity (name, type, start date, elapsed time) |
 | `strava_get_athlete` | read | Get the authenticated athlete's profile |
-| `strava_list_routes` | read | List routes for a specific athlete |
 | `strava_list_clubs` | read | List clubs the authenticated athlete belongs to |
-| `strava_get_club` | read | Get details about a specific club |
-| `strava_get_current_user` | read | Get the currently authenticated athlete's profile |
+| `strava_get_current_user` | read | Get the current authenticated user's profile (alias for Get Athlete) |
 
 ## Quick Start
 
 ```php
 use OpenCompany\Integrations\Strava\StravaService;
 use OpenCompany\Integrations\Strava\Tools\StravaListActivities;
-use OpenCompany\Integrations\Strava\Tools\StravaGetActivity;
+use OpenCompany\Integrations\Strava\Tools\StravaGetAthlete;
 
 // Create tools
 $service = app(StravaService::class);
 $tools = [
     new StravaListActivities($service),
-    new StravaGetActivity($service),
+    new StravaGetAthlete($service),
 ];
 
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('What were my last 5 activities on Strava?');
+    ->prompt('What were my last 5 runs?');
 ```
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 8 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -97,28 +95,22 @@ $service = app(StravaService::class);
 $activities = $service->listActivities(page: 1, perPage: 10);
 
 // Get a specific activity
-$activity = $service->getActivity(12345678);
+$activity = $service->getActivity(1234567890);
 
 // Create a manual activity
 $activity = $service->createActivity(
     name: 'Morning Run',
     type: 'Run',
-    startDateLocal: '2026-04-05T08:00:00',
+    startDateLocal: '2025-01-15T09:30:00',
     elapsedTime: 1800,
-    extra: ['distance' => 5000, 'description' => 'Easy 5K'],
+    extra: ['distance' => 5000, 'description' => 'Easy run in the park'],
 );
 
 // Get athlete profile
 $athlete = $service->getAthlete();
 
-// List routes
-$routes = $service->listRoutes(athleteId: 12345);
-
 // List clubs
 $clubs = $service->listClubs();
-
-// Get club details
-$club = $service->getClub(clubId: 67890);
 ```
 
 ## Dependencies

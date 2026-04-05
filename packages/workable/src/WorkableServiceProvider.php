@@ -9,13 +9,13 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 /**
  * Laravel service provider for the Workable integration.
  *
- * Registers the WorkableService singleton and auto-discovers
- * the WorkableToolProvider with the ToolProviderRegistry.
+ * Registers the WorkableService as a singleton and bootstraps
+ * the WorkableToolProvider into the ToolProviderRegistry.
  */
 class WorkableServiceProvider extends ServiceProvider
 {
     /**
-     * Register Workable services into the container.
+     * Register the WorkableService singleton.
      */
     public function register(): void
     {
@@ -25,12 +25,13 @@ class WorkableServiceProvider extends ServiceProvider
             return new WorkableService(
                 accessToken: $creds->get('workable', 'access_token', ''),
                 subdomain: $creds->get('workable', 'subdomain', ''),
+                baseUrl: $creds->get('workable', 'base_url', 'https://www.workable.com/spi/v3/accounts'),
             );
         });
     }
 
     /**
-     * Boot the service provider — register the tool provider.
+     * Boot the service provider and register the tool provider.
      */
     public function boot(): void
     {

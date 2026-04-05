@@ -2,32 +2,34 @@
 
 ## list_forms
 
-List all forms in the Wufoo account.
+List all forms in your Wufoo account.
 
 ### Parameters
 
-None.
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| — | — | — | This tool takes no parameters. |
 
 ### Response
 
-Returns an array of form objects, each containing:
+Returns an object containing a `Forms` array with form details including:
 
-| Field | Description |
-|-------|-------------|
-| `Hash` | Form hash identifier (used as `form_id` in other tools) |
-| `Name` | Form name |
-| `Description` | Form description |
-| `EntryCount` | Total number of entries |
-| `Url` | Public URL to the form |
-| `DateCreated` | Creation timestamp |
-| `DateUpdated` | Last update timestamp |
+| Field | Type | Description |
+|-------|------|-------------|
+| `Hash` | string | Unique form identifier |
+| `Name` | string | Form name |
+| `Description` | string | Form description |
+| `Url` | string | Public form URL |
+| `DateCreated` | string | Creation date |
+| `DateUpdated` | string | Last update date |
+| `EntryCount` | string | Total number of entries |
 
 ### Example
 
 ```lua
 local result = app.integrations.wufoo.list_forms()
 
-for _, form in ipairs(result.forms) do
+for _, form in ipairs(result.Forms) do
   print(form.Name .. " (" .. form.Hash .. ") — " .. form.EntryCount .. " entries")
 end
 ```
@@ -36,204 +38,149 @@ end
 
 ## get_form
 
-Get details for a specific form.
+Get details for a specific Wufoo form by its identifier.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `form_id` | string | yes | The form hash identifier |
+| `form_id` | string | yes | The form hash or identifier |
 
 ### Example
 
 ```lua
 local result = app.integrations.wufoo.get_form({
-  form_id = "z1k08xw1ubbvkt"
+  form_id = "q1w2e3r4t5y6"
 })
 
-print(result.form.Name)
-print(result.form.Description)
-print(result.form.EntryCount .. " entries")
+local form = result.Forms[1]
+print("Form: " .. form.Name)
+print("Fields: " .. #form.Fields)
 ```
 
 ---
 
 ## list_entries
 
-List entries submitted to a form. Supports pagination.
+List entries submitted to a Wufoo form with pagination and optional filters.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `form_id` | string | yes | The form hash identifier |
-| `page_size` | integer | no | Number of entries per page (default: 100, max: 100) |
-| `page_start` | integer | no | Entry index to start from, 0-based (for pagination) |
-| `sort` | string | no | Sort direction: `"ASC"` (oldest first) or `"DESC"` (newest first) |
+| `form_id` | string | yes | The form hash or identifier |
+| `page` | integer | no | Page number (0-based). Default: 0 |
+| `page_size` | integer | no | Entries per page. Default: 25, max: 100 |
+| `filters` | object | no | Optional field filters (see below) |
+
+### Filter Parameters
+
+Filters are passed as key-value pairs. Common filter keys:
+
+| Key | Description |
+|-----|-------------|
+| `Filter1` | First filter expression (e.g., `"Field1+Is+equal_to+value"`) |
+| `Match` | Match logic: `"AND"` or `"OR"` when using multiple filters |
+| `SortBy` | Field to sort by (prefix with `-` for descending) |
+| `SortDirection` | Sort direction: `"ASC"` or `"DESC"` |
 
 ### Example
 
 ```lua
--- Get the 50 most recent entries
+-- Get first page of entries
 local result = app.integrations.wufoo.list_entries({
-  form_id = "z1k08xw1ubbvkt",
-  page_size = 50,
-  sort = "DESC"
+  form_id = "q1w2e3r4t5y6",
+  page = 0,
+  page_size = 25
 })
 
-for _, entry in ipairs(result.entries) do
-  print("Entry " .. entry.EntryId .. " by " .. (entry.Field1 or "unknown"))
+for _, entry in ipairs(result.Entries) do
+  print(entry.EntryId .. ": " .. (entry.Field1 or "no value"))
 end
 
--- Pagination: get next page
-if result.total == result.page_size then
-  local next = app.integrations.wufoo.list_entries({
-    form_id = "z1k08xw1ubbvkt",
-    page_size = 50,
-    page_start = result.page_start + result.page_size,
-    sort = "DESC"
-  })
-end
+-- Get next page
+local page2 = app.integrations.wufoo.list_entries({
+  form_id = "q1w2e3r4t5y6",
+  page = 1,
+  page_size = 25
+})
+
+-- With filters
+local filtered = app.integrations.wufoo.list_entries({
+  form_id = "q1w2e3r4t5y6",
+  filters = {
+    Filter1 = "Field1+Is+equal_to+John"
+  }
+})
 ```
 
 ---
 
 ## get_entry
 
-Get a single form entry by its unique entry ID.
+Get a single form entry by its identifier.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `entry_id` | string | yes | The unique entry identifier |
+| `entry_id` | string | yes | The entry identifier |
 
 ### Example
 
 ```lua
 local result = app.integrations.wufoo.get_entry({
-  entry_id = "42"
+  entry_id = "12345"
 })
 
-local entry = result.entry
+local entry = result.Entries[1]
 print("Entry ID: " .. entry.EntryId)
-print("Created: " .. entry.DateCreated)
--- Field values are keyed by their API IDs (e.g., Field1, Field2)
-for key, value in pairs(entry) do
-  if key:match("^Field") then
-    print("  " .. key .. " = " .. tostring(value))
-  end
-end
-```
-
----
-
-## submit_entry
-
-Submit a new entry to a Wufoo form. Use `list_fields` first to discover the correct field API IDs.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The form hash identifier |
-| `fields` | object | yes | Map of field API IDs to values |
-
-### Example
-
-```lua
--- First, discover fields
-local fields = app.integrations.wufoo.list_fields({
-  form_id = "z1k08xw1ubbvkt"
-})
-
-for _, field in ipairs(fields.fields) do
-  print(field.ID .. ": " .. field.Title .. " (" .. field.Type .. ")")
-end
-
--- Then submit an entry using the field IDs
-local result = app.integrations.wufoo.submit_entry({
-  form_id = "z1k08xw1ubbvkt",
-  fields = {
-    Field1 = "John Doe",
-    Field2 = "john@example.com",
-    Field3 = "Hello, I have a question.",
-    Field4 = "General Inquiry"
-  }
-})
-
-if result.success then
-  print("Entry created with ID: " .. tostring(result.entry_id))
-end
-```
-
----
-
-## list_fields
-
-List all fields for a specific form. Returns field types, labels, API IDs, and validation rules.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | string | yes | The form hash identifier |
-
-### Response
-
-Returns an array of field objects, each containing:
-
-| Field | Description |
-|-------|-------------|
-| `ID` | API field ID (e.g., "Field1") — use this when submitting entries |
-| `Title` | Human-readable field label |
-| `Type` | Field type (e.g., "text", "email", "checkbox", "select") |
-| `Required` | Whether the field is required ("1" or "0") |
-| `Choices` | Available options for select/radio/checkbox fields |
-
-### Example
-
-```lua
-local result = app.integrations.wufoo.list_fields({
-  form_id = "z1k08xw1ubbvkt"
-})
-
-for _, field in ipairs(result.fields) do
-  local req = field.Required == "1" and " (required)" or ""
-  print(field.ID .. " — " .. field.Title .. " [" .. field.Type .. "]" .. req)
-end
+print("Date Created: " .. entry.DateCreated)
 ```
 
 ---
 
 ## list_reports
 
-List all reports in the Wufoo account.
+List all reports in your Wufoo account.
 
 ### Parameters
 
-None.
-
-### Response
-
-Returns an array of report objects, each containing:
-
-| Field | Description |
-|-------|-------------|
-| `Hash` | Report hash identifier |
-| `Name` | Report name |
-| `Description` | Report description |
-| `Url` | Public URL to the report |
-| `EntryCount` | Number of entries included |
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| — | — | — | This tool takes no parameters. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wufoo.list_reports()
 
-for _, report in ipairs(result.reports) do
-  print(report.Name .. " — " .. report.EntryCount .. " entries")
+for _, report in ipairs(result.Reports) do
+  print(report.Name .. " — Form: " .. report.FormName)
 end
+```
+
+---
+
+## get_current_user
+
+Get the authenticated Wufoo user's profile information.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| — | — | — | This tool takes no parameters. |
+
+### Example
+
+```lua
+local result = app.integrations.wufoo.get_current_user()
+
+local user = result.Users[1]
+print("User: " .. user.FirstName .. " " .. user.LastName)
+print("Email: " .. user.Email)
+print("Organization: " .. user.Organization)
 ```
 
 ---
@@ -244,14 +191,17 @@ If you have multiple Wufoo accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.wufoo.list_forms()
+app.integrations.wufoo.list_forms({})
 
 -- Explicit default (portable across setups)
-app.integrations.wufoo.default.list_forms()
+app.integrations.wufoo.default.list_forms({})
 
 -- Named accounts
-app.integrations.wufoo.marketing.list_forms()
-app.integrations.wufoo.support.list_entries({ form_id = "abc123" })
+app.integrations.wufoo.marketing.list_forms({})
+app.integrations.wufoo.support.list_entries({
+  form_id = "abc123",
+  page_size = 50
+})
 ```
 
 All functions are identical across accounts — only the credentials differ.

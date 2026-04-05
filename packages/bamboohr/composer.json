@@ -8,10 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "bamboohr", "hr", "employees", "opencompany"],
+    "keywords": ["tools", "bamboohr", "hr", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-bamboohr": "self.version"
     },
     "autoload": {
         "psr-4": {

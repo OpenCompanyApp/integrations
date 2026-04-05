@@ -8,22 +8,22 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Workable\Tools\WorkableListJobs;
 use OpenCompany\Integrations\Workable\Tools\WorkableGetJob;
+use OpenCompany\Integrations\Workable\Tools\WorkableCreateJob;
 use OpenCompany\Integrations\Workable\Tools\WorkableListCandidates;
 use OpenCompany\Integrations\Workable\Tools\WorkableGetCandidate;
-use OpenCompany\Integrations\Workable\Tools\WorkableCreateCandidate;
 use OpenCompany\Integrations\Workable\Tools\WorkableListMembers;
 use OpenCompany\Integrations\Workable\Tools\WorkableGetCurrentUser;
 
 /**
  * Tool provider for the Workable ATS integration.
  *
- * Implements ConfigurableIntegration for multi-account support, credential management,
- * connection testing, and full tool registration with the integration-core registry.
+ * Implements ConfigurableIntegration for multi-account support and
+ * registers all 7 Workable tools (jobs, candidates, members, users).
  */
 class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
 {
     /**
-     * The application name used for registration.
+     * Get the application name identifier.
      */
     public function appName(): string
     {
@@ -31,40 +31,40 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Metadata for the app picker / tool listing UI.
+     * Get application metadata for display purposes.
      *
-     * @return array<string, mixed>
+     * @return array<string, string>
      */
     public function appMeta(): array
     {
         return [
             'label' => 'jobs, candidates, members',
-            'description' => 'Applicant tracking system',
+            'description' => 'Recruiting & ATS',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:workable',
         ];
     }
 
     /**
-     * Integration metadata for the integrations catalog.
+     * Get integration metadata for the marketplace.
      *
-     * @return array<string, mixed>
+     * @return array<string, string>
      */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Workable',
-            'description' => 'Applicant tracking system for recruiting and hiring',
+            'description' => 'Applicant tracking system — manage jobs, candidates, and hiring',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:workable',
             'category' => 'hr',
             'badge' => 'verified',
-            'docs_url' => 'https://workable.readme.io/reference',
+            'docs_url' => 'https://workable.com/spi/v3/docs',
         ];
     }
 
     /**
-     * Configuration schema for the integration settings UI.
+     * Get the configuration schema for the Workable integration.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -75,23 +75,31 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Enter your Workable API access token',
-                'hint' => 'Generate an access token in your Workable account under <strong>Settings &gt; Integrations &gt; Access Token</strong>',
+                'placeholder' => 'Enter your Workable access token',
+                'hint' => 'Generate an access token in your Workable account under Settings > Integrations > Access Token',
                 'required' => true,
             ],
             [
                 'key' => 'subdomain',
                 'type' => 'text',
-                'label' => 'Subdomain',
+                'label' => 'Account Subdomain',
                 'placeholder' => 'your-company',
-                'hint' => 'Your Workable account subdomain (the part before <code>.workable.com</code>)',
+                'hint' => 'Your Workable subdomain from <code>your-company.workable.com</code>',
                 'required' => true,
+            ],
+            [
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://www.workable.com/spi/v3/accounts',
+                'hint' => 'Change only if using a custom Workable API endpoint',
+                'default' => 'https://www.workable.com/spi/v3/accounts',
             ],
         ];
     }
 
     /**
-     * Test the connection to the Workable API using the provided config.
+     * Test the connection to the Workable API.
      *
      * @param  array<string, mixed>  $config
      * @return array{success: bool, message?: string, error?: string}
@@ -100,30 +108,45 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
     {
         $accessToken = $config['access_token'] ?? '';
         $subdomain = $config['subdomain'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://www.workable.com/spi/v3/accounts', '/');
 
-        if (empty($accessToken) || empty($subdomain)) {
-            return ['success' => false, 'error' => 'Access token and subdomain are required.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided.'];
+        }
+
+        if (empty($subdomain)) {
+            return ['success' => false, 'error' => 'No subdomain provided.'];
         }
 
         try {
+            $url = $baseUrl . '/' . $subdomain . '/users/me';
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get("https://www.workable.com/spi/v3/accounts/{$subdomain}/user");
+            ])->timeout(10)->get($url);
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $name = $data['name'] ?? 'Unknown';
+            $json = $response->json();
 
+            if ($json === null) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to Workable as {$name} ({$subdomain}).",
+                    'success' => false,
+                    'error' => "Could not reach Workable API at {$baseUrl}. Check the URL and subdomain.",
                 ];
             }
 
+            if ($response->successful()) {
+                $name = $json['name'] ?? $json['email'] ?? 'Unknown';
+                return [
+                    'success' => true,
+                    'message' => "Connected to Workable as {$name}.",
+                ];
+            }
+
+            $error = $json['error'] ?? $json['message'] ?? $response->body();
             return [
                 'success' => false,
-                'error' => "Workable API returned HTTP {$response->status()}. Check your access token and subdomain.",
+                'error' => 'Workable API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -131,22 +154,23 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Validation rules for the configuration fields.
+     * Get validation rules for the Workable configuration.
      *
-     * @return array<string, mixed>
+     * @return array<string, string>
      */
     public function validationRules(): array
     {
         return [
-            'access_token' => 'required|string',
-            'subdomain' => 'required|string',
+            'access_token' => 'nullable|string',
+            'subdomain' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
     /**
-     * Return the list of tools provided by this integration.
+     * Get all available Workable tools.
      *
-     * @return array<string, array<string, mixed>>
+     * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
      */
     public function tools(): array
     {
@@ -155,15 +179,22 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => WorkableListJobs::class,
                 'type' => 'read',
                 'name' => 'List Jobs',
-                'description' => 'List open and closed jobs in your Workable account.',
+                'description' => 'List all jobs with optional state filtering.',
                 'icon' => 'ph:briefcase',
             ],
             'workable_get_job' => [
                 'class' => WorkableGetJob::class,
                 'type' => 'read',
                 'name' => 'Get Job',
-                'description' => 'Get details for a specific job by shortcode.',
+                'description' => 'Get full details for a specific job.',
                 'icon' => 'ph:briefcase',
+            ],
+            'workable_create_job' => [
+                'class' => WorkableCreateJob::class,
+                'type' => 'write',
+                'name' => 'Create Job',
+                'description' => 'Create a new job posting.',
+                'icon' => 'ph:plus-circle',
             ],
             'workable_list_candidates' => [
                 'class' => WorkableListCandidates::class,
@@ -176,21 +207,14 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => WorkableGetCandidate::class,
                 'type' => 'read',
                 'name' => 'Get Candidate',
-                'description' => 'Get details for a specific candidate.',
+                'description' => 'Get full details for a specific candidate.',
                 'icon' => 'ph:user',
-            ],
-            'workable_create_candidate' => [
-                'class' => WorkableCreateCandidate::class,
-                'type' => 'write',
-                'name' => 'Create Candidate',
-                'description' => 'Create a new candidate for a specific job.',
-                'icon' => 'ph:user-plus',
             ],
             'workable_list_members' => [
                 'class' => WorkableListMembers::class,
                 'type' => 'read',
                 'name' => 'List Members',
-                'description' => 'List team members in your Workable account.',
+                'description' => 'List all team members (recruiters and hiring managers).',
                 'icon' => 'ph:users-three',
             ],
             'workable_get_current_user' => [
@@ -198,13 +222,13 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the currently authenticated user\'s profile.',
-                'icon' => 'ph:identification-badge',
+                'icon' => 'ph:user-circle',
             ],
         ];
     }
 
     /**
-     * Path to the Lua API reference documentation.
+     * Get the path to the Lua documentation file.
      */
     public function luaDocsPath(): ?string
     {
@@ -212,7 +236,7 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Credential field definitions for the integration.
+     * Get the credential fields for the Workable integration.
      *
      * @return array<int, array<string, mixed>>
      */
@@ -220,12 +244,13 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'subdomain', 'type' => 'text', 'label' => 'Subdomain', 'required' => true],
+            ['key' => 'subdomain', 'type' => 'string', 'label' => 'Subdomain', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'Base URL', 'required' => false, 'default' => 'https://www.workable.com/spi/v3/accounts'],
         ];
     }
 
     /**
-     * Confirm this class represents an integration.
+     * Confirm this is an integration provider.
      */
     public function isIntegration(): bool
     {
@@ -233,26 +258,35 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Create a tool instance, optionally using account-specific credentials.
+     * Create a tool instance, with optional multi-account support.
      *
-     * @param  string  $class    The tool class to instantiate.
-     * @param  array   $context  Context containing optional 'account' for multi-account support.
+     * @param  class-string<Tool>  $class  The tool class to instantiate.
+     * @param  array<string, mixed>  $context  Context containing optional 'account' for multi-account.
      */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the WorkableService, with optional account-specific credentials.
+     *
+     * @param  array<string, mixed>  $context
+     */
+    private function resolveService(array $context = []): WorkableService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new WorkableService(
+            return new WorkableService(
                 accessToken: $creds->get('workable', 'access_token', '', $account),
                 subdomain: $creds->get('workable', 'subdomain', '', $account),
+                baseUrl: $creds->get('workable', 'base_url', 'https://www.workable.com/spi/v3/accounts', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(WorkableService::class));
+        return app(WorkableService::class);
     }
 }

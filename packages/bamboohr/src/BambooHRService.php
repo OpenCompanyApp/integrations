@@ -5,85 +5,61 @@ namespace OpenCompany\Integrations\BambooHR;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * BambooHR API client for employee, department, and time-off management.
- *
- * Handles HTTP Basic authentication and all API communication with the
- * BambooHR v1 REST API. Tools call service methods — they never make
- * HTTP requests directly.
- */
 class BambooHRService
 {
-    private string $baseUrl;
-
     public function __construct(
         private string $apiKey = '',
         private string $subdomain = '',
-    ) {
-        $this->baseUrl = $this->subdomain
-            ? "https://api.bamboohr.com/api/gateway.php/{$this->subdomain}/v1"
-            : '';
-    }
+    ) {}
 
     /**
-     * Check whether the service has sufficient credentials to make API calls.
+     * Check whether the service has been configured with credentials.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey) && ! empty($this->subdomain);
+        return !empty($this->apiKey) && !empty($this->subdomain);
     }
 
-    // ── Employees ─────────────────────────────────────────
+    /**
+     * Get the base URL for the BambooHR API.
+     */
+    private function baseUrl(): string
+    {
+        return 'https://api.bamboohr.com/api/gateway.php/' . $this->subdomain . '/v1';
+    }
 
     /**
-     * List employees with optional pagination.
+     * List employees with optional pagination and field selection.
      *
      * @param  array<string>  $fields  Employee fields to include (e.g., ["firstName", "lastName", "jobTitle"]).
-     * @param  int  $page  Page number for pagination (1-based).
-     * @param  int  $limit  Number of results per page.
      * @return array<string, mixed>
      */
-    public function listEmployees(array $fields = [], int $page = 1, int $limit = 50): array
+    public function listEmployees(array $fields = ['id', 'firstName', 'lastName', 'jobTitle', 'department'], int $page = 1, int $perPage = 50): array
     {
-        $params = [];
-
-        if (! empty($fields)) {
-            $params['fields'] = implode(',', $fields);
-        }
-
-        if ($page > 1) {
-            $params['page'] = $page;
-        }
-
-        if ($limit !== 50) {
-            $params['limit'] = $limit;
-        }
-
         return $this->request('GET', '/employees/directory');
     }
 
     /**
      * Get a single employee by ID.
      *
-     * @param  string|int  $employeeId  The BambooHR employee ID.
-     * @param  array<string>  $fields  Fields to include (empty = default fields).
+     * @param  int|string  $employeeId
+     * @param  array<string>  $fields
      * @return array<string, mixed>
      */
-    public function getEmployee(string|int $employeeId, array $fields = []): array
+    public function getEmployee(int|string $employeeId, array $fields = []): array
     {
-        $path = '/employees/' . urlencode((string) $employeeId);
-
-        if (! empty($fields)) {
-            $path .= '?fields=' . urlencode(implode(',', $fields));
+        $query = [];
+        if (!empty($fields)) {
+            $query['fields'] = implode(',', $fields);
         }
 
-        return $this->request('GET', $path);
+        return $this->request('GET', '/employees/' . urlencode((string) $employeeId), $query);
     }
 
     /**
      * Create a new employee.
      *
-     * @param  array<string, mixed>  $data  Employee data (firstName, lastName, email, etc.).
+     * @param  array<string, mixed>  $data  Employee data (e.g., firstName, lastName, workEmail, jobTitle).
      * @return array<string, mixed>
      */
     public function createEmployee(array $data): array
@@ -94,19 +70,17 @@ class BambooHRService
     /**
      * Update an existing employee.
      *
-     * @param  string|int  $employeeId  The BambooHR employee ID.
+     * @param  int|string  $employeeId
      * @param  array<string, mixed>  $data  Fields to update.
      * @return array<string, mixed>
      */
-    public function updateEmployee(string|int $employeeId, array $data): array
+    public function updateEmployee(int|string $employeeId, array $data): array
     {
         return $this->request('POST', '/employees/' . urlencode((string) $employeeId), $data);
     }
 
-    // ── Departments ───────────────────────────────────────
-
     /**
-     * List all departments in the company.
+     * List all departments.
      *
      * @return array<string, mixed>
      */
@@ -115,23 +89,19 @@ class BambooHRService
         return $this->request('GET', '/departments');
     }
 
-    // ── Time Off ──────────────────────────────────────────
-
     /**
      * List time-off requests with optional filters.
      *
-     * @param  array<string, mixed>  $params  Filter parameters (status, start, end, employeeId, etc.).
+     * @param  array<string, mixed>  $filters  Optional query parameters (e.g., start, end, status, employeeId).
      * @return array<string, mixed>
      */
-    public function listTimeOffRequests(array $params = []): array
+    public function listTimeOffRequests(array $filters = []): array
     {
-        return $this->request('GET', '/time_off/requests', $params);
+        return $this->request('GET', '/time_off/requests', $filters);
     }
 
-    // ── Users ─────────────────────────────────────────────
-
     /**
-     * Get the current authenticated user's information.
+     * Get the current authenticated user.
      *
      * @return array<string, mixed>
      */
@@ -140,27 +110,31 @@ class BambooHRService
         return $this->request('GET', '/users/me');
     }
 
-    // ── HTTP ──────────────────────────────────────────────
-
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
      * @param  string  $path  API path (relative to base URL).
-     * @param  array<string, mixed>  $data  Query params (GET) or body data (POST/PUT).
+     * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
 
-        $body = trim($response->body());
+        $body = $response->body();
+        $json = $response->json();
 
-        if (empty($body)) {
-            return [];
+        if ($json !== null) {
+            return $json;
         }
 
-        return $response->json() ?? [];
+        // Some endpoints return empty bodies on success
+        if ($response->successful() && empty(trim($body))) {
+            return ['success' => true];
+        }
+
+        return ['raw' => $body];
     }
 
     /**
@@ -168,24 +142,24 @@ class BambooHRService
      *
      * @param  string  $method  HTTP method.
      * @param  string  $path  API path.
-     * @param  array<string, mixed>  $data  Request data.
+     * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException On configuration, connection, or API errors.
+     * @throws \RuntimeException
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('BambooHR integration is not configured. Provide both api_key and subdomain.');
+        if (!$this->apiKey || !$this->subdomain) {
+            throw new \RuntimeException('BambooHR API key and subdomain are not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = $this->baseUrl() . $path;
 
         try {
             $http = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiKey, 'x')->timeout(30);
+            ])->withBasicAuth($this->apiKey, '')->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
@@ -195,15 +169,13 @@ class BambooHRService
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (! $response->successful()) {
-                $error = $response->json('message') ?? $response->json('error') ?? $response->body();
+            if (!$response->successful()) {
+                $error = $response->json('error') ?? $response->body();
                 Log::error("BambooHR API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-                throw new \RuntimeException(
-                    'BambooHR API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error))
-                );
+                throw new \RuntimeException("BambooHR API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
             return $response;

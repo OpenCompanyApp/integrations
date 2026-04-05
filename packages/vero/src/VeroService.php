@@ -5,6 +5,12 @@ namespace OpenCompany\Integrations\Vero;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Vero email marketing API client.
+ *
+ * Wraps the Vero REST API (v2) for user identity management,
+ * event tracking, and subscription control.
+ */
 class VeroService
 {
     public function __construct(
@@ -15,144 +21,136 @@ class VeroService
     }
 
     /**
-     * Check whether the Vero integration is configured.
+     * Check whether the Vero auth token is configured.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->authToken);
+        return ! empty($this->authToken);
     }
 
-    /**
-     * Identify (or re-identify) a user in Vero.
-     *
-     * @param  string|int  $identity  Unique user identifier (id or email)
-     * @param  string|null $email     User email address
-     * @param  string|null $name      User full name
-     * @param  array<string, mixed>  $extra  Additional user traits
-     * @return array<string, mixed>
-     */
-    public function identifyUser(string|int $identity, ?string $email = null, ?string $name = null, array $extra = []): array
-    {
-        $data = [
-            'identity' => ['id' => (string) $identity],
-        ];
-
-        if ($email !== null) {
-            $data['identity']['email'] = $email;
-        }
-
-        if ($name !== null) {
-            $data['identity']['name'] = $name;
-        }
-
-        if (!empty($extra)) {
-            $data['identity']['data'] = $extra;
-        }
-
-        return $this->request('POST', '/users/track', $data);
-    }
+    // ── Users ─────────────────────────────────────────────
 
     /**
-     * Track an event for a user in Vero.
+     * Identify (create or update) a user in Vero.
      *
-     * @param  string|int  $identity   Unique user identifier
-     * @param  string      $eventName  Name of the event to track
-     * @param  array<string, mixed>  $data  Additional event properties
+     * @param  string  $id     Unique user identifier.
+     * @param  string  $email  User email address.
+     * @param  string  $name   Display name.
+     * @param  array<string, mixed>  $data  Additional user attributes.
      * @return array<string, mixed>
      */
-    public function trackEvent(string|int $identity, string $eventName, array $data = []): array
+    public function identifyUser(string $id, string $email, string $name = '', array $data = []): array
     {
         $payload = [
-            'identity' => ['id' => (string) $identity],
-            'event_name' => $eventName,
+            'id' => $id,
+            'email' => $email,
         ];
 
-        if (!empty($data)) {
+        if ($name !== '') {
+            $payload['name'] = $name;
+        }
+
+        if (! empty($data)) {
             $payload['data'] = $data;
         }
 
-        return $this->request('POST', '/events/track', $payload);
+        return $this->request('POST', '/users/identify', $payload);
     }
 
     /**
-     * Update a user's profile in Vero.
+     * Track an event for a user.
      *
-     * @param  string|int  $identity  Unique user identifier
-     * @param  array<string, mixed>  $changes  Key-value pairs of attributes to update
+     * @param  string  $identity   User ID or email.
+     * @param  string  $eventName  Name of the event to track.
+     * @param  array<string, mixed>  $data  Event-specific data.
      * @return array<string, mixed>
      */
-    public function updateUser(string|int $identity, array $changes): array
+    public function trackEvent(string $identity, string $eventName, array $data = []): array
     {
-        return $this->request('PUT', '/users/edit', [
-            'identity' => ['id' => (string) $identity],
-            'changes' => $changes,
+        $payload = [
+            'identity' => $identity,
+            'event_name' => $eventName,
+        ];
+
+        if (! empty($data)) {
+            $payload['data'] = $data;
+        }
+
+        return $this->request('POST', '/users/track', $payload);
+    }
+
+    /**
+     * Update a user's profile data.
+     *
+     * @param  string  $id    Unique user identifier.
+     * @param  string  $email Updated email address.
+     * @param  array<string, mixed>  $data  Attributes to update.
+     * @return array<string, mixed>
+     */
+    public function updateUser(string $id, string $email = '', array $data = []): array
+    {
+        $payload = [];
+
+        if ($email !== '') {
+            $payload['email'] = $email;
+        }
+
+        if (! empty($data)) {
+            $payload['data'] = $data;
+        }
+
+        return $this->request('PUT', '/users/' . urlencode($id), $payload);
+    }
+
+    /**
+     * Unsubscribe a user from all email communication.
+     *
+     * @param  string  $id  Unique user identifier.
+     * @return array<string, mixed>
+     */
+    public function unsubscribe(string $id): array
+    {
+        return $this->request('POST', '/users/unsubscribe', [
+            'id' => $id,
         ]);
     }
 
     /**
-     * Add one or more tags to a user in Vero.
+     * Resubscribe a user to email communication.
      *
-     * @param  string|int  $identity  Unique user identifier
-     * @param  array<int, string>  $tags  Tags to add
+     * @param  string  $id  Unique user identifier.
      * @return array<string, mixed>
      */
-    public function addTag(string|int $identity, array $tags): array
+    public function resubscribe(string $id): array
     {
-        return $this->request('POST', '/users/tags/add', [
-            'identity' => ['id' => (string) $identity],
-            'tags' => $tags,
+        return $this->request('POST', '/users/resubscribe', [
+            'id' => $id,
         ]);
     }
 
     /**
-     * Remove one or more tags from a user in Vero.
+     * Get the currently authenticated user profile.
      *
-     * @param  string|int  $identity  Unique user identifier
-     * @param  array<int, string>  $tags  Tags to remove
      * @return array<string, mixed>
      */
-    public function removeTag(string|int $identity, array $tags): array
+    public function getCurrentUser(): array
     {
-        return $this->request('POST', '/users/tags/remove', [
-            'identity' => ['id' => (string) $identity],
-            'tags' => $tags,
-        ]);
+        return $this->request('GET', '/users/me');
     }
+
+    // ── HTTP ──────────────────────────────────────────────
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path    API endpoint path
-     * @param  array<string, mixed>  $data  Request payload
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path    API endpoint path.
+     * @param  array<string, mixed>  $data  Request body or query parameters.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-
-        $body = $response->json();
-
-        if (is_array($body)) {
-            return $body;
-        }
-
-        return ['status' => $response->status(), 'message' => $response->body()];
-    }
-
-    /**
-     * Make a raw HTTP request to the Vero API.
-     *
-     * @param  string  $method  HTTP method
-     * @param  string  $path    API endpoint path
-     * @param  array<string, mixed>  $data  Request payload
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->authToken) {
+        if (! $this->authToken) {
             throw new \RuntimeException('Vero auth token is not configured.');
         }
 
@@ -160,7 +158,7 @@ class VeroService
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => $this->authToken,
+                'Authorization' => 'Bearer ' . $this->authToken,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
@@ -172,7 +170,7 @@ class VeroService
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
@@ -180,10 +178,10 @@ class VeroService
                     Log::warning("Vero API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Vero API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service is unavailable.");
+                    throw new \RuntimeException("Vero API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
                 }
 
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
+                $error = $response->json('error') ?? $response->json('message') ?? $body;
                 Log::error("Vero API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,
@@ -191,7 +189,7 @@ class VeroService
                 throw new \RuntimeException("Vero API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            return $response;
+            return $response->json() ?? [];
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Vero API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

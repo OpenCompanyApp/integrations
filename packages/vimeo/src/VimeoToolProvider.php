@@ -3,18 +3,23 @@
 namespace OpenCompany\Integrations\Vimeo;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoListVideos;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoGetVideo;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoUploadVideo;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoDeleteVideo;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoListAlbums;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoGetAlbum;
-use OpenCompany\Integrations\Vimeo\Tools\VimeoListChannels;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoCreateVideo;
 use OpenCompany\Integrations\Vimeo\Tools\VimeoGetCurrentUser;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoGetVideo;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoListAlbums;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoListFolders;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoListVideos;
 
+/**
+ * Tool provider for the Vimeo video integration.
+ *
+ * Declares 6 tools for video management, album browsing, folder listing,
+ * and user profile retrieval. Implements ConfigurableIntegration for
+ * settings UI and multi-account support via createTool().
+ */
 class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -25,21 +30,23 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'videos, albums, channels',
-            'description' => 'Video hosting & management',
+            'label' => 'videos, albums, folders',
+            'description' => 'Video hosting',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:vimeo',
         ];
     }
 
+    // ── ConfigurableIntegration ───────────────────────────
+
     public function integrationMeta(): array
     {
         return [
             'name' => 'Vimeo',
-            'description' => 'Video hosting, management, and streaming platform',
+            'description' => 'Video hosting, albums, and folder management',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:vimeo',
-            'category' => 'video',
+            'category' => 'media',
             'badge' => 'verified',
             'docs_url' => 'https://developer.vimeo.com/api/reference',
         ];
@@ -52,16 +59,16 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Enter your Vimeo personal access token',
-                'hint' => 'Generate a personal access token in your Vimeo account under <strong>Settings → API</strong> or via the <a href="https://developer.vimeo.com/apps" target="_blank">Vimeo Developer Portal</a>.',
+                'placeholder' => 'Enter your Vimeo access token',
+                'hint' => 'Generate a personal access token at <a href="https://developer.vimeo.com/apps" target="_blank">developer.vimeo.com/apps</a> with the scopes you need (public, private, create, edit, delete, interact, upload, stats).',
                 'required' => true,
             ],
             [
-                'key' => 'url',
+                'key' => 'base_url',
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.vimeo.com',
-                'hint' => 'Use <code>https://api.vimeo.com</code> unless you have a custom endpoint.',
+                'hint' => 'Change only if using a Vimeo API proxy or compatible alternative.',
                 'default' => 'https://api.vimeo.com',
             ],
         ];
@@ -70,10 +77,10 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.vimeo.com', '/');
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.vimeo.com', '/');
 
         if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+            return ['success' => false, 'error' => 'No access token provided.'];
         }
 
         try {
@@ -82,28 +89,21 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
                 'Content-Type' => 'application/json',
             ])->timeout(10)->get($baseUrl . '/me');
 
-            $json = $response->json();
+            if ($response->successful()) {
+                $name = $response->json('name') ?? 'Unknown';
+                $uri = $response->json('uri') ?? '';
 
-            if ($json === null) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach Vimeo API at {$baseUrl}. Check the URL.",
+                    'success' => true,
+                    'message' => "Connected to Vimeo as {$name} ({$uri}).",
                 ];
             }
 
-            if (!$response->successful()) {
-                $error = $json['error'] ?? $json['message'] ?? 'Unknown error';
-                return [
-                    'success' => false,
-                    'error' => "Vimeo API returned an error: {$error}",
-                ];
-            }
-
-            $name = $json['name'] ?? 'Unknown';
+            $error = $response->json('error') ?? $response->json('message') ?? $response->body();
 
             return [
-                'success' => true,
-                'message' => "Connected to Vimeo as {$name}.",
+                'success' => false,
+                'error' => 'Vimeo API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -114,9 +114,11 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'access_token' => 'nullable|string',
-            'url' => 'nullable|url',
+            'base_url' => 'nullable|url',
         ];
     }
+
+    // ── Tools ─────────────────────────────────────────────
 
     public function tools(): array
     {
@@ -125,57 +127,43 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => VimeoListVideos::class,
                 'type' => 'read',
                 'name' => 'List Videos',
-                'description' => 'List videos for the authenticated user.',
+                'description' => 'List videos for the authenticated user with pagination, query, and filters.',
                 'icon' => 'ph:video-camera',
             ],
             'vimeo_get_video' => [
                 'class' => VimeoGetVideo::class,
                 'type' => 'read',
                 'name' => 'Get Video',
-                'description' => 'Get details for a single video.',
+                'description' => 'Get details for a single video by ID.',
                 'icon' => 'ph:video-camera',
             ],
-            'vimeo_upload_video' => [
-                'class' => VimeoUploadVideo::class,
+            'vimeo_create_video' => [
+                'class' => VimeoCreateVideo::class,
                 'type' => 'write',
-                'name' => 'Upload Video',
-                'description' => 'Create an upload ticket for a new video.',
-                'icon' => 'ph:upload-simple',
-            ],
-            'vimeo_delete_video' => [
-                'class' => VimeoDeleteVideo::class,
-                'type' => 'write',
-                'name' => 'Delete Video',
-                'description' => 'Delete a video permanently.',
-                'icon' => 'ph:trash',
+                'name' => 'Create Video',
+                'description' => 'Create a new video upload slot on Vimeo.',
+                'icon' => 'ph:plus-circle',
             ],
             'vimeo_list_albums' => [
                 'class' => VimeoListAlbums::class,
                 'type' => 'read',
                 'name' => 'List Albums',
                 'description' => 'List albums (showcases) for the authenticated user.',
-                'icon' => 'ph:folder',
+                'icon' => 'ph:folders',
             ],
-            'vimeo_get_album' => [
-                'class' => VimeoGetAlbum::class,
+            'vimeo_list_folders' => [
+                'class' => VimeoListFolders::class,
                 'type' => 'read',
-                'name' => 'Get Album',
-                'description' => 'Get details for a single album.',
+                'name' => 'List Folders',
+                'description' => 'List folders (projects) for the authenticated user.',
                 'icon' => 'ph:folder',
-            ],
-            'vimeo_list_channels' => [
-                'class' => VimeoListChannels::class,
-                'type' => 'read',
-                'name' => 'List Channels',
-                'description' => 'List public Vimeo channels.',
-                'icon' => 'ph:television',
             ],
             'vimeo_get_current_user' => [
                 'class' => VimeoGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:user-circle',
+                'description' => 'Get the authenticated user\'s Vimeo profile.',
+                'icon' => 'ph:user',
             ],
         ];
     }
@@ -189,7 +177,7 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.vimeo.com'],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.vimeo.com'],
         ];
     }
 
@@ -198,21 +186,38 @@ class VimeoToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
+    /**
+     * Create a tool instance with optional multi-account credential resolution.
+     *
+     * @param  class-string<Tool>  $class  The tool class to instantiate
+     * @param  array<string, mixed>  $context  Runtime context, may contain 'account' for multi-account
+     */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the VimeoService, with optional account-specific credentials.
+     *
+     * When $context['account'] is set, creates a fresh service with that
+     * account's credentials. Otherwise uses the container singleton.
+     *
+     * @param  array<string, mixed>  $context  Runtime context
+     */
+    private function resolveService(array $context = []): VimeoService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new VimeoService(
+            return new VimeoService(
                 accessToken: $creds->get('vimeo', 'access_token', '', $account),
-                baseUrl: $creds->get('vimeo', 'url', 'https://api.vimeo.com', $account),
+                baseUrl: $creds->get('vimeo', 'base_url', 'https://api.vimeo.com', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(VimeoService::class));
+        return app(VimeoService::class);
     }
 }

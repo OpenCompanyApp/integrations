@@ -2,13 +2,13 @@
 
 > Workable ATS integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage jobs, candidates, and team members. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to your recruiting pipeline. List and manage job postings, view and create candidates, and look up team members — all through the [Workable](https://www.workable.com) API.
+Give your AI agents access to your recruiting pipeline. List and create job postings, browse candidates, and look up team members — all through the [Workable](https://www.workable.com) API.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Workable tool lets AI agents interact with your ATS — checking open positions, reviewing candidates, and even adding new applicants to the pipeline.
+This Workable tool lets AI agents manage recruiting workflows, check candidate statuses, and assist hiring managers — streamlining the entire hiring process.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This tool requires a Workable API access token and your account subdomain.
+This tool requires a Workable access token and account subdomain.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -33,6 +33,7 @@ return [
     'workable' => [
         'access_token' => env('WORKABLE_ACCESS_TOKEN'),
         'subdomain'    => env('WORKABLE_SUBDOMAIN'),
+        'base_url'     => env('WORKABLE_BASE_URL', 'https://www.workable.com/spi/v3/accounts'),
     ],
 ];
 ```
@@ -41,32 +42,32 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `workable_list_jobs` | read | List jobs, optionally filtered by state (published, draft, archived, closed) |
+| `workable_list_jobs` | read | List jobs with optional state filtering and pagination |
 | `workable_get_job` | read | Get full details for a specific job by shortcode |
-| `workable_list_candidates` | read | List candidates for a specific job |
+| `workable_create_job` | write | Create a new job posting |
+| `workable_list_candidates` | read | List candidates for a specific job with pagination |
 | `workable_get_candidate` | read | Get full details for a specific candidate |
-| `workable_create_candidate` | write | Create a new candidate for a job |
-| `workable_list_members` | read | List team members in the account |
-| `workable_get_current_user` | read | Get the authenticated user's profile |
+| `workable_list_members` | read | List all team members (recruiters and hiring managers) |
+| `workable_get_current_user` | read | Get the currently authenticated user's profile |
 
 ## Quick Start
 
 ```php
 use OpenCompany\Integrations\Workable\WorkableService;
 use OpenCompany\Integrations\Workable\Tools\WorkableListJobs;
-use OpenCompany\Integrations\Workable\Tools\WorkableCreateCandidate;
+use OpenCompany\Integrations\Workable\Tools\WorkableGetJob;
 
 // Create tools
 $service = app(WorkableService::class);
 $tools = [
     new WorkableListJobs($service),
-    new WorkableCreateCandidate($service),
+    new WorkableGetJob($service),
 ];
 
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('List all published jobs and show me the candidates for the first one.');
+    ->prompt('List all published jobs and show how many candidates each has.');
 ```
 
 ### Via ToolProvider (recommended)
@@ -95,17 +96,22 @@ $service = app(WorkableService::class);
 // List published jobs
 $jobs = $service->listJobs('published');
 
-// Get a specific job
-$job = $service->getJob('GRO-001');
+// Get job details
+$job = $service->getJob('GROVF002');
+
+// Create a new job
+$newJob = $service->createJob([
+    'title' => 'Senior Backend Engineer',
+    'description' => '<p>We are looking for...</p>',
+    'department' => 'Engineering',
+    'employment_type' => 'full-time',
+]);
 
 // List candidates for a job
-$candidates = $service->listCandidates('GRO-001');
+$candidates = $service->listCandidates('GROVF002');
 
-// Get a specific candidate
-$candidate = $service->getCandidate('abc123');
-
-// Create a candidate
-$newCandidate = $service->createCandidate('GRO-001', 'Jane Smith', 'jane@example.com');
+// Get candidate details
+$candidate = $service->getCandidate('abc123def456');
 
 // List team members
 $members = $service->listMembers();
@@ -126,7 +132,7 @@ $user = $service->getCurrentUser();
 - PHP 8.2+
 - Laravel 11 or 12
 - [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Workable](https://www.workable.com) account with API access enabled
+- A [Workable](https://www.workable.com) account with API access
 
 ## License
 

@@ -2,51 +2,41 @@
 
 namespace OpenCompany\Integrations\Tally\Tools;
 
-use OpenCompany\Integrations\Tally\TallyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Tally\TallyService;
 
 /**
  * List all workspaces accessible to the authenticated Tally user.
- *
- * Returns workspace names, IDs, and member information.
  */
 class TallyListWorkspaces implements Tool
 {
+    /**
+     * @param  TallyService  $service  The Tally API service instance.
+     */
     public function __construct(
         private TallyService $service,
     ) {}
 
-    /**
-     * Unique tool identifier.
-     */
     public function name(): string
     {
         return 'tally_list_workspaces';
     }
 
-    /**
-     * Human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'List all workspaces accessible to the authenticated Tally user. Returns workspace names, IDs, and member information.';
+        return 'List all workspaces accessible to the authenticated Tally user. Returns workspace names, IDs, and member info.';
     }
 
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array<string, string>>
-     */
     public function parameters(): array
     {
         return [];
     }
 
     /**
-     * Execute the list_workspaces tool.
+     * Execute the list workspaces request.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (unused).
+     * @param  array<string, mixed>  $args  Tool arguments (none required).
      */
     public function execute(array $args): ToolResult
     {

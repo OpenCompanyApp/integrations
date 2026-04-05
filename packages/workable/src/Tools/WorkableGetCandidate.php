@@ -7,10 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to retrieve details for a specific Workable candidate.
- *
- * Returns full candidate profile including name, email, phone,
- * resume, cover letter, timeline, and application stage.
+ * Tool to get full details for a specific Workable candidate.
  */
 class WorkableGetCandidate implements Tool
 {
@@ -22,7 +19,7 @@ class WorkableGetCandidate implements Tool
     ) {}
 
     /**
-     * The tool identifier.
+     * Get the tool name.
      */
     public function name(): string
     {
@@ -30,27 +27,27 @@ class WorkableGetCandidate implements Tool
     }
 
     /**
-     * Human-readable description of what this tool does.
+     * Get the tool description.
      */
     public function description(): string
     {
-        return 'Get full details for a specific candidate in Workable by their ID. Returns profile info, resume, cover letter, timeline, and current application stage.';
+        return 'Get full details for a specific Workable candidate by ID. Returns profile info, resume, cover letter, application stage, and activity history.';
     }
 
     /**
-     * Parameter schema for the tool.
+     * Get the tool parameter definitions.
      *
      * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The candidate ID. Find IDs using the list_candidates tool.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The candidate ID (e.g., "abc123def456").'],
         ];
     }
 
     /**
-     * Execute the get candidate request.
+     * Execute the tool and return the candidate details.
      *
      * @param  array<string, mixed>  $args
      */
@@ -61,11 +58,13 @@ class WorkableGetCandidate implements Tool
                 return ToolResult::error('Workable integration is not configured.');
             }
 
-            if (empty($args['id'])) {
-                return ToolResult::error('The id parameter is required.');
+            $id = $args['id'] ?? '';
+
+            if (empty($id)) {
+                return ToolResult::error('The "id" parameter is required.');
             }
 
-            $result = $this->service->getCandidate($args['id']);
+            $result = $this->service->getCandidate($id);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

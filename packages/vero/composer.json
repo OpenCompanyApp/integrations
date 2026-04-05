@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-vero",
-    "description": "Vero integration for Laravel — identify users, track events, update user profiles, and manage tags.",
+    "description": "Vero email marketing integration for Laravel — identify users, track events, manage subscriptions.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,10 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "vero", "email", "crm", "opencompany"],
+    "keywords": ["tools", "vero", "email", "marketing", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-vero": "self.version"
     },
     "autoload": {
         "psr-4": {

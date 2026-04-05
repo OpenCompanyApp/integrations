@@ -1,33 +1,23 @@
-# Tally — Lua API Reference
+# Tally Forms — Lua API Reference
 
 ## list_forms
 
-List all forms accessible in the Tally workspace.
+List all Tally forms accessible to the authenticated user. Returns form IDs, titles, status, and submission counts.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of forms to return (default: 100) |
-| `after` | string | no | Cursor for pagination — pass the value from a previous response to get the next page |
+| `page` | integer | no | Page number for pagination (default: 1) |
+| `limit` | integer | no | Number of forms per page (default: 20, max: 100) |
 
-### Examples
-
-```lua
--- List all forms
-local result = app.integrations.tally.list_forms({})
-
-for _, form in ipairs(result.forms or {}) do
-  print(form.name .. " (ID: " .. form.id .. ") — " .. form.numberOfSubmissions .. " submissions")
-end
-```
+### Example
 
 ```lua
--- Paginate through forms
-local result = app.integrations.tally.list_forms({ limit = 10 })
+local forms = app.integrations.tally.list_forms({ limit = 10 })
 
-if result.nextCursor then
-  local next = app.integrations.tally.list_forms({ limit = 10, after = result.nextCursor })
+for _, form in ipairs(forms.data) do
+  print(form.title .. " (" .. form.status .. ") - " .. form.numberOfResponses .. " responses")
 end
 ```
 
@@ -35,71 +25,50 @@ end
 
 ## get_form
 
-Get full details for a specific Tally form, including all fields and settings.
+Get full details of a specific Tally form, including form structure, fields, and settings.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `form_id` | string | yes | The Tally form ID (e.g., `"mVlDK4"`) |
+| `form_id` | string | yes | The Tally form ID (e.g., `"mVlBRN"`) |
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.tally.get_form({ form_id = "mVlDK4" })
-
-print("Form: " .. result.name)
-print("Status: " .. result.status)
-print("Fields:")
-
-for _, block in ipairs(result.blocks or {}) do
-  if block.type == "INPUT" then
-    print("  - " .. (block.title or "Untitled") .. " (" .. block.type .. ")")
-  end
-end
+local form = app.integrations.tally.get_form({ form_id = "mVlBRN" })
+print("Form: " .. form.title)
+print("Status: " .. form.status)
+print("Fields: " .. #form.questions)
 ```
 
 ---
 
 ## list_submissions
 
-List submissions for a specific Tally form. Supports date filtering and pagination.
+List all submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports pagination.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `form_id` | string | yes | The Tally form ID |
-| `limit` | integer | no | Maximum number of submissions to return (default: 100) |
-| `after` | string | no | Cursor for pagination |
-| `submitted_after` | string | no | ISO 8601 date — only return submissions after this date |
-| `submitted_before` | string | no | ISO 8601 date — only return submissions before this date |
+| `page` | integer | no | Page number for pagination (default: 1) |
+| `limit` | integer | no | Number of submissions per page (default: 20, max: 100) |
 
-### Examples
+### Example
 
 ```lua
--- List recent submissions for a form
 local result = app.integrations.tally.list_submissions({
-  form_id = "mVlDK4",
-  limit = 20
+  form_id = "mVlBRN",
+  limit = 50
 })
 
-for _, sub in ipairs(result.submissions or {}) do
-  print("Submitted: " .. sub.submittedAt)
-end
-```
-
-```lua
--- Filter submissions by date range
-local result = app.integrations.tally.list_submissions({
-  form_id = "mVlDK4",
-  submitted_after = "2026-01-01T00:00:00Z",
-  submitted_before = "2026-01-31T23:59:59Z",
-  limit = 100
-})
-
-for _, sub in ipairs(result.submissions or {}) do
-  print("Submitted: " .. sub.submittedAt)
+for _, submission in ipairs(result.data) do
+  print("Submitted at: " .. submission.createdAt)
+  for _, response in ipairs(submission.questions) do
+    print("  " .. response.question .. ": " .. tostring(response.value))
+  end
 end
 ```
 
@@ -107,7 +76,7 @@ end
 
 ## get_submission
 
-Get full details of a single Tally form submission.
+Get full details of a specific form submission by its ID, including all field responses and metadata.
 
 ### Parameters
 
@@ -115,15 +84,13 @@ Get full details of a single Tally form submission.
 |------|------|----------|-------------|
 | `submission_id` | string | yes | The Tally submission ID |
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.tally.get_submission({ submission_id = "sub_abc123" })
-
-print("Submitted at: " .. result.submittedAt)
-
-for key, value in pairs(result.data or {}) do
-  print("  " .. key .. ": " .. tostring(value))
+local sub = app.integrations.tally.get_submission({ submission_id = "sub_abc123" })
+print("Submitted: " .. sub.createdAt)
+for _, response in ipairs(sub.questions) do
+  print(response.question .. ": " .. tostring(response.value))
 end
 ```
 
@@ -137,12 +104,11 @@ List all workspaces accessible to the authenticated Tally user.
 
 None.
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.tally.list_workspaces({})
-
-for _, ws in ipairs(result.workspaces or {}) do
+local workspaces = app.integrations.tally.list_workspaces({})
+for _, ws in ipairs(workspaces.data) do
   print("Workspace: " .. ws.name .. " (ID: " .. ws.id .. ")")
 end
 ```
@@ -151,20 +117,75 @@ end
 
 ## get_current_user
 
-Get profile information for the currently authenticated Tally user.
+Get the authenticated user's profile information, including name and email.
 
 ### Parameters
 
 None.
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.tally.get_current_user({})
-
-print("Name: " .. (result.firstName or "") .. " " .. (result.lastName or ""))
-print("Email: " .. (result.email or ""))
+local user = app.integrations.tally.get_current_user({})
+print("Logged in as: " .. user.name .. " (" .. user.email .. ")")
 ```
+
+---
+
+## Common Workflows
+
+### List all forms and their recent submissions
+
+```lua
+local forms = app.integrations.tally.list_forms({ limit = 20 })
+
+for _, form in ipairs(forms.data) do
+  print("== " .. form.title .. " ==")
+
+  if form.numberOfResponses and form.numberOfResponses > 0 then
+    local submissions = app.integrations.tally.list_submissions({
+      form_id = form.id,
+      limit = 5
+    })
+
+    for _, sub in ipairs(submissions.data) do
+      print("  " .. sub.createdAt)
+    end
+  else
+    print("  No submissions yet")
+  end
+end
+```
+
+### Find a form by title and get its submissions
+
+```lua
+local forms = app.integrations.tally.list_forms({ limit = 100 })
+local target = nil
+
+for _, form in ipairs(forms.data) do
+  if form.title == "Contact Form" then
+    target = form
+    break
+  end
+end
+
+if target then
+  local subs = app.integrations.tally.list_submissions({
+    form_id = target.id,
+    limit = 50
+  })
+
+  print("Found " .. #subs.data .. " submissions")
+end
+```
+
+## Notes
+
+- Form IDs are short alphanumeric strings (e.g., `"mVlBRN"`)
+- Pagination is page-based; increase `page` to get more results
+- Submission responses are in the `questions` array of each submission object
+- Rate limits may apply; use pagination rather than requesting large limits
 
 ---
 
@@ -174,14 +195,14 @@ If you have multiple Tally accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.tally.function_name({...})
+app.integrations.tally.list_forms({})
 
 -- Explicit default (portable across setups)
-app.integrations.tally.default.function_name({...})
+app.integrations.tally.default.list_forms({})
 
 -- Named accounts
-app.integrations.tally.marketing.function_name({...})
-app.integrations.tally.hr.function_name({...})
+app.integrations.tally.work.list_forms({})
+app.integrations.tally.personal.list_forms({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

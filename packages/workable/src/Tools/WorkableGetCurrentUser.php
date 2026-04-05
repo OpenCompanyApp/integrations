@@ -7,9 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to retrieve the currently authenticated Workable user's profile.
- *
- * Returns user details including name, email, and account role.
+ * Tool to get the currently authenticated Workable user's profile.
  */
 class WorkableGetCurrentUser implements Tool
 {
@@ -21,7 +19,7 @@ class WorkableGetCurrentUser implements Tool
     ) {}
 
     /**
-     * The tool identifier.
+     * Get the tool name.
      */
     public function name(): string
     {
@@ -29,17 +27,17 @@ class WorkableGetCurrentUser implements Tool
     }
 
     /**
-     * Human-readable description of what this tool does.
+     * Get the tool description.
      */
     public function description(): string
     {
-        return 'Get the currently authenticated user\'s profile from Workable. Useful for verifying the connection and understanding which account is active.';
+        return 'Get the profile of the currently authenticated Workable user. Useful for verifying credentials and identifying who the API is acting as.';
     }
 
     /**
-     * Parameter schema for the tool.
+     * Get the tool parameter definitions.
      *
-     * @return array<string, mixed>
+     * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
@@ -47,7 +45,7 @@ class WorkableGetCurrentUser implements Tool
     }
 
     /**
-     * Execute the get current user request.
+     * Execute the tool and return the current user's profile.
      *
      * @param  array<string, mixed>  $args
      */

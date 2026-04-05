@@ -2,55 +2,46 @@
 
 ## list_tickets
 
-List support tickets with optional filtering and pagination.
+List support tickets with optional filters.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `departmentId` | string | no | Filter by department ID |
-| `status` | string | no | Filter by status (e.g., `"Open"`, `"On Hold"`, `"Closed"`) |
-| `priority` | string | no | Filter by priority (`"Highest"`, `"High"`, `"Medium"`, `"Low"`, `"Lowest"`) |
-| `contactId` | string | no | Filter by contact ID |
-| `assigneeId` | string | no | Filter by assignee (agent) ID |
-| `from` | integer | no | Pagination offset (default: 1) |
-| `limit` | integer | no | Results per page (default: 50, max: 200) |
-| `sortBy` | string | no | Sort field (e.g., `"createdTime"`, `"modifiedTime"`, `"ticketNumber"`) |
-| `sortOrder` | string | no | Sort direction: `"asc"` or `"desc"` |
+| `status` | string | no | Filter by status: "Open", "On Hold", "Closed", "Escalated" |
+| `priority` | string | no | Filter by priority: "High", "Medium", "Low" |
+| `from` | integer | no | Starting index for pagination (default: 1) |
+| `limit` | integer | no | Max tickets to return (default: 25, max: 200) |
+| `sortBy` | string | no | Sort field (e.g., "createdTime", "subject") |
+| `sortOrder` | string | no | Sort direction: "asc" or "desc" |
+| `search` | string | no | Search term for subject or description |
 
-### Examples
+### Example
 
 ```lua
--- List all open tickets
 local result = app.integrations["zoho-desk"].list_tickets({
   status = "Open",
-  limit = 25
-})
-
-for _, ticket in ipairs(result) do
-  print(ticket.ticketNumber .. ": " .. ticket.subject)
-end
-
--- List high-priority tickets in a specific department
-local result = app.integrations["zoho-desk"].list_tickets({
-  departmentId = "987654321",
   priority = "High",
-  sortBy = "createdTime",
-  sortOrder = "desc"
+  limit = 10
 })
+
+for _, ticket in ipairs(result.data or {}) do
+  print(ticket.id .. ": " .. ticket.subject .. " [" .. ticket.status .. "]")
+end
 ```
 
 ---
 
 ## get_ticket
 
-Get a single ticket by ID with full details.
+Get full details of a specific support ticket.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `ticketId` | string | yes | The Zoho Desk ticket ID |
+| `ticketId` | string | yes | The ticket ID to retrieve |
 
 ### Example
 
@@ -75,28 +66,28 @@ Create a new support ticket.
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `subject` | string | yes | Ticket subject line |
-| `departmentId` | string | yes | Department to assign the ticket to |
-| `description` | string | no | Detailed description of the issue |
+| `departmentId` | string | yes | Department ID to assign |
+| `description` | string | no | Detailed description |
 | `contactId` | string | no | Contact ID to associate |
 | `email` | string | no | Contact email (alternative to contactId) |
-| `priority` | string | no | Priority level |
-| `status` | string | no | Initial status (default: department default) |
-| `category` | string | no | Ticket category |
-| `channel` | string | no | Source channel (default: `"Web"`) |
+| `priority` | string | no | Priority: "High", "Medium", "Low", "Lowest" |
+| `status` | string | no | Initial status |
+| `channel` | string | no | Channel: "Email", "Phone", "Web", "Chat" |
 | `assigneeId` | string | no | Agent ID to assign |
+| `teamId` | string | no | Team ID to assign |
 
 ### Example
 
 ```lua
 local result = app.integrations["zoho-desk"].create_ticket({
-  subject = "Cannot access account",
-  departmentId = "987654321",
-  description = "User reports being locked out after password change.",
+  subject = "Login issue",
+  departmentId = "123456",
+  description = "User cannot log in after password reset.",
   priority = "High",
-  email = "john@example.com"
+  email = "user@example.com"
 })
 
-print("Created ticket: " .. result.ticketNumber)
+print("Created ticket: " .. result.id)
 ```
 
 ---
@@ -112,49 +103,50 @@ Update an existing support ticket.
 | `ticketId` | string | yes | The ticket ID to update |
 | `subject` | string | no | Updated subject |
 | `description` | string | no | Updated description |
-| `status` | string | no | New status (`"Open"`, `"On Hold"`, `"Closed"`, `"Resolved"`) |
+| `status` | string | no | New status |
 | `priority` | string | no | New priority |
-| `assigneeId` | string | no | Reassign to this agent |
-| `departmentId` | string | no | Move to this department |
-| `category` | string | no | Updated category |
-| `comment` | string | no | Add a comment with the update |
+| `assigneeId` | string | no | Reassign to agent |
+| `teamId` | string | no | Reassign to team |
+| `departmentId` | string | no | Move to department |
+| `channel` | string | no | Updated channel |
 
 ### Example
 
 ```lua
 local result = app.integrations["zoho-desk"].update_ticket({
   ticketId = "123456789",
-  status = "Resolved",
-  comment = "Issue resolved after resetting the user's password."
+  status = "Closed"
 })
+
+print("Ticket updated")
 ```
 
 ---
 
 ## list_contacts
 
-List customer contacts with optional search.
+List contacts from Zoho Desk.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `search` | string | no | Search by name or email |
-| `from` | integer | no | Pagination offset (default: 1) |
-| `limit` | integer | no | Results per page (default: 50, max: 200) |
+| `from` | integer | no | Starting index for pagination |
+| `limit` | integer | no | Max contacts to return |
+| `search` | string | no | Search by name, email, or phone |
 | `sortBy` | string | no | Sort field |
-| `sortOrder` | string | no | Sort direction |
+| `sortOrder` | string | no | Sort direction: "asc" or "desc" |
 
 ### Example
 
 ```lua
 local result = app.integrations["zoho-desk"].list_contacts({
-  search = "john@example.com",
-  limit = 10
+  search = "john",
+  limit = 5
 })
 
-for _, contact in ipairs(result) do
-  print(contact.firstName .. " " .. (contact.lastName or "") .. " - " .. (contact.email or ""))
+for _, contact in ipairs(result.data or {}) do
+  print(contact.id .. ": " .. contact.firstName .. " " .. (contact.lastName or ""))
 end
 ```
 
@@ -170,23 +162,23 @@ List knowledge base articles.
 |------|------|----------|-------------|
 | `departmentId` | string | no | Filter by department |
 | `categoryId` | string | no | Filter by category |
-| `status` | string | no | Filter by status (e.g., `"Published"`, `"Draft"`) |
-| `from` | integer | no | Pagination offset (default: 1) |
-| `limit` | integer | no | Results per page (default: 50, max: 200) |
+| `from` | integer | no | Starting index for pagination |
+| `limit` | integer | no | Max articles to return |
+| `search` | string | no | Search by title or content |
 | `sortBy` | string | no | Sort field |
-| `sortOrder` | string | no | Sort direction |
+| `sortOrder` | string | no | Sort direction: "asc" or "desc" |
 
 ### Example
 
 ```lua
 local result = app.integrations["zoho-desk"].list_articles({
-  departmentId = "987654321",
-  status = "Published",
-  limit = 20
+  departmentId = "123456",
+  search = "password reset",
+  limit = 5
 })
 
-for _, article in ipairs(result) do
-  print(article.title)
+for _, article in ipairs(result.data or {}) do
+  print(article.id .. ": " .. article.title)
 end
 ```
 
@@ -194,14 +186,21 @@ end
 
 ## list_departments
 
-List all departments in the organization. No parameters required.
+List all support departments.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `from` | integer | no | Starting index for pagination |
+| `limit` | integer | no | Max departments to return |
 
 ### Example
 
 ```lua
 local result = app.integrations["zoho-desk"].list_departments({})
 
-for _, dept in ipairs(result) do
+for _, dept in ipairs(result.data or {}) do
   print(dept.id .. ": " .. dept.name)
 end
 ```
@@ -210,7 +209,11 @@ end
 
 ## get_current_user
 
-Get the currently authenticated user profile. No parameters required.
+Get the currently authenticated user's profile.
+
+### Parameters
+
+None.
 
 ### Example
 
@@ -218,8 +221,8 @@ Get the currently authenticated user profile. No parameters required.
 local result = app.integrations["zoho-desk"].get_current_user({})
 
 print("Logged in as: " .. result.firstName .. " " .. (result.lastName or ""))
-print("Email: " .. (result.email or ""))
-print("Role: " .. (result.roleName or ""))
+print("Email: " .. (result.emailId or "N/A"))
+print("Role: " .. (result.role and result.role.name or "N/A"))
 ```
 
 ---
@@ -230,14 +233,14 @@ If you have multiple Zoho Desk accounts configured, use account-specific namespa
 
 ```lua
 -- Default account (always works)
-app.integrations["zoho-desk"].function_name({...})
+app.integrations["zoho-desk"].list_tickets({...})
 
 -- Explicit default (portable across setups)
-app.integrations["zoho-desk"].default.function_name({...})
+app.integrations["zoho-desk"].default.list_tickets({...})
 
 -- Named accounts
-app.integrations["zoho-desk"].production.function_name({...})
-app.integrations["zoho-desk"].staging.function_name({...})
+app.integrations["zoho-desk"].production.list_tickets({...})
+app.integrations["zoho-desk"].staging.list_tickets({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

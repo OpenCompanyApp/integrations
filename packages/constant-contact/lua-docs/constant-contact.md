@@ -2,25 +2,33 @@
 
 ## list_contacts
 
-List contacts from your Constant Contact account with optional status filtering.
+List contacts from Constant Contact with pagination and optional status filtering.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of contacts to return (max 500, default 100) |
-| `status` | string | no | Filter by status: `"active"`, `"unconfirmed"`, `"opted_out"`, or `"pending"` |
+| `limit` | integer | no | Maximum contacts per page (default: 50, max: 500) |
+| `cursor` | string | no | Pagination cursor from a previous response |
+| `status` | string | no | Filter by status: `"all"`, `"active"`, `"unconfirmed"`, `"opted_out"`, `"non_subscriber"` |
 
-### Example
+### Examples
 
 ```lua
-local result = app.integrations.constantcontact.list_contacts({
-  limit = 50,
-  status = "active"
+-- List all active contacts
+local result = app.integrations.constant_contact.list_contacts({
+  status = "active",
+  limit = 100
 })
 
-for _, contact in ipairs(result.contacts) do
-  print(contact.first_name .. " " .. contact.last_name .. " — " .. contact.email_address)
+-- Paginate through contacts
+local page1 = app.integrations.constant_contact.list_contacts({ limit = 50 })
+if page1._links and page1._links.next then
+  -- Extract cursor from the next link and fetch the next page
+  local page2 = app.integrations.constant_contact.list_contacts({
+    limit = 50,
+    cursor = page1._links.next -- use the cursor value from the previous response
+  })
 end
 ```
 
@@ -28,7 +36,7 @@ end
 
 ## get_contact
 
-Get details for a single contact by their Constant Contact contact ID.
+Get detailed information for a single Constant Contact contact.
 
 ### Parameters
 
@@ -39,13 +47,11 @@ Get details for a single contact by their Constant Contact contact ID.
 ### Example
 
 ```lua
-local result = app.integrations.constantcontact.get_contact({
-  contact_id = "abc123-def456"
+local contact = app.integrations.constant_contact.get_contact({
+  contact_id = "abc123-def456-ghi789"
 })
-
-print(result.contact.email_address)
-print(result.contact.first_name)
-print(result.contact.last_name)
+print(contact.first_name .. " " .. contact.last_name)
+print(contact.email_address.address)
 ```
 
 ---
@@ -58,88 +64,63 @@ Create a new contact in Constant Contact.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `email_address` | string | yes | Contact email address |
-| `first_name` | string | no | Contact first name |
-| `last_name` | string | no | Contact last name |
-| `list_ids` | array | no | Array of list IDs to add the contact to upon creation |
+| `email` | string | yes | Contact's email address |
+| `first_name` | string | no | Contact's first name |
+| `last_name` | string | no | Contact's last name |
+| `list_ids` | array | no | Array of list UUIDs to assign the contact to |
 
-### Example
-
-```lua
-local result = app.integrations.constantcontact.create_contact({
-  email_address = "alice@example.com",
-  first_name = "Alice",
-  last_name = "Smith"
-})
-
-print("Created contact: " .. result.contact.email_address)
-```
-
-### Create and add to lists
+### Examples
 
 ```lua
-local result = app.integrations.constantcontact.create_contact({
-  email_address = "bob@example.com",
-  first_name = "Bob",
-  last_name = "Jones",
-  list_ids = { "list-001", "list-002" }
+-- Create a contact with minimal info
+local result = app.integrations.constant_contact.create_contact({
+  email = "jane@example.com"
+})
+
+-- Create a contact with full details and list assignments
+local result = app.integrations.constant_contact.create_contact({
+  email = "john@example.com",
+  first_name = "John",
+  last_name = "Doe",
+  list_ids = {
+    "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "11111111-2222-3333-4444-555555555555"
+  }
 })
 ```
+
+**Tip:** Use `list_lists` to discover available list IDs before creating contacts.
 
 ---
 
-## update_contact
+## list_campaigns
 
-Update an existing contact's details in Constant Contact.
+List email campaigns from Constant Contact.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `contact_id` | string | yes | The Constant Contact contact ID to update |
-| `first_name` | string | no | Updated first name |
-| `last_name` | string | no | Updated last name |
-| `email_address` | string | no | Updated email address |
+| `limit` | integer | no | Maximum campaigns per page (default: 50) |
+| `cursor` | string | no | Pagination cursor from a previous response |
 
 ### Example
 
 ```lua
-local result = app.integrations.constantcontact.update_contact({
-  contact_id = "abc123-def456",
-  first_name = "Alice",
-  last_name = "Johnson"
+local campaigns = app.integrations.constant_contact.list_campaigns({
+  limit = 20
 })
 
-print("Updated contact: " .. result.contact.email_address)
-```
-
----
-
-## delete_contact
-
-Delete a contact from Constant Contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `contact_id` | string | yes | The Constant Contact contact ID to delete |
-
-### Example
-
-```lua
-local result = app.integrations.constantcontact.delete_contact({
-  contact_id = "abc123-def456"
-})
-
-print(result.message)
+for _, campaign in ipairs(campaigns.campaigns or {}) do
+  print(campaign.name .. " — " .. (campaign.current_status or "unknown"))
+end
 ```
 
 ---
 
 ## list_lists
 
-List all contact lists in your Constant Contact account.
+List all contact lists in Constant Contact.
 
 ### Parameters
 
@@ -148,87 +129,20 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.constantcontact.list_lists({})
+local lists = app.integrations.constant_contact.list_lists()
 
-for _, list in ipairs(result.lists) do
-  print(list.list_id .. ": " .. list.name .. " (" .. list.membership_count .. " members)")
+for _, list in ipairs(lists.lists or {}) do
+  print(list.name .. " (" .. list.membership_count .. " members) — ID: " .. list.list_id)
 end
 ```
 
----
-
-## get_list
-
-Get details for a single contact list by its list ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The Constant Contact list ID |
-
-### Example
-
-```lua
-local result = app.integrations.constantcontact.get_list({
-  list_id = "list-001"
-})
-
-print(result.list.name)
-print("Members: " .. result.list.membership_count)
-```
-
----
-
-## create_list
-
-Create a new contact list in Constant Contact.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name for the new contact list |
-
-### Example
-
-```lua
-local result = app.integrations.constantcontact.create_list({
-  name = "Newsletter Subscribers"
-})
-
-print("Created list: " .. result.list.name .. " (ID: " .. result.list.list_id .. ")")
-```
-
----
-
-## add_contact_to_list
-
-Add one or more existing contacts to a contact list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `list_id` | string | yes | The list ID to add contacts to |
-| `contact_ids` | array | yes | Array of contact IDs to add to the list |
-
-### Example
-
-```lua
-local result = app.integrations.constantcontact.add_contact_to_list({
-  list_id = "list-001",
-  contact_ids = { "abc123-def456", "ghi789-jkl012" }
-})
-
-print("Contacts added to list")
-```
+Use the `list_id` values when assigning contacts to lists via `create_contact`.
 
 ---
 
 ## get_current_user
 
-Get the current user account summary from Constant Contact.
+Get the authenticated user's Constant Contact account information.
 
 ### Parameters
 
@@ -237,11 +151,10 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.constantcontact.get_current_user({})
-
-print("Account: " .. (result.first_name or "") .. " " .. (result.last_name or ""))
-print("Email: " .. (result.email or "N/A"))
-print("Plan: " .. (result.plan_name or "N/A"))
+local user = app.integrations.constant_contact.get_current_user()
+print("Account: " .. (user.first_name or "") .. " " .. (user.last_name or ""))
+print("Email: " .. (user.email or "N/A"))
+print("Organization: " .. (user.organization_name or "N/A"))
 ```
 
 ---
@@ -252,14 +165,14 @@ If you have multiple Constant Contact accounts configured, use account-specific 
 
 ```lua
 -- Default account (always works)
-app.integrations.constantcontact.list_contacts({...})
+app.integrations.constant_contact.list_contacts({})
 
 -- Explicit default (portable across setups)
-app.integrations.constantcontact.default.list_contacts({...})
+app.integrations.constant_contact.default.list_contacts({})
 
 -- Named accounts
-app.integrations.constantcontact.work.list_contacts({...})
-app.integrations.constantcontact.personal.list_contacts({...})
+app.integrations.constant_contact.marketing.list_contacts({})
+app.integrations.constant_contact.newsletter.list_contacts({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

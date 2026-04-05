@@ -6,10 +6,16 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Laravel service provider for the Wufoo integration.
+ *
+ * Registers the WufooService as a singleton using credentials from the
+ * CredentialResolver, and boots the WufooToolProvider into the ToolProviderRegistry.
+ */
 class WufooServiceProvider extends ServiceProvider
 {
     /**
-     * Register the Wufoo service into the container.
+     * Register the WufooService singleton and bind credentials.
      */
     public function register(): void
     {
@@ -18,7 +24,7 @@ class WufooServiceProvider extends ServiceProvider
 
             return new WufooService(
                 apiKey: $creds->get('wufoo', 'api_key', ''),
-                subdomain: $creds->get('wufoo', 'subdomain', ''),
+                baseUrl: $creds->get('wufoo', 'base_url', 'https://example.wufoo.com/api/v3'),
             );
         });
     }

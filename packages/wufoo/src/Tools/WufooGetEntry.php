@@ -6,17 +6,25 @@ use OpenCompany\Integrations\Wufoo\WufooService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Tool to get a single Wufoo entry by its identifier.
+ *
+ * Calls GET /entries/{id}.json on the Wufoo API and returns the full
+ * entry data including all field values and metadata.
+ */
 class WufooGetEntry implements Tool
 {
     /**
      * Create a new WufooGetEntry tool instance.
+     *
+     * @param  WufooService  $service  The Wufoo API service instance.
      */
     public function __construct(
         private WufooService $service,
     ) {}
 
     /**
-     * Get the tool's machine name.
+     * Get the tool name identifier.
      */
     public function name(): string
     {
@@ -24,29 +32,30 @@ class WufooGetEntry implements Tool
     }
 
     /**
-     * Get a description of what this tool does.
+     * Get the human-readable description of what this tool does.
      */
     public function description(): string
     {
-        return 'Get a single form entry by its unique entry ID. Returns all field values and metadata for the entry.';
+        return 'Get a single Wufoo form entry by its identifier. Returns all field values and submission metadata for the entry.';
     }
 
     /**
-     * Get the parameter schema for this tool.
+     * Get the parameters this tool accepts.
      *
-     * @return array<string, array<string, mixed>>
+     * @return array<string, array<string, mixed>> The parameter definitions.
      */
     public function parameters(): array
     {
         return [
-            'entry_id' => ['type' => 'string', 'required' => true, 'description' => 'The unique entry identifier.'],
+            'entry_id' => ['type' => 'string', 'required' => true, 'description' => 'The entry identifier to retrieve.'],
         ];
     }
 
     /**
-     * Execute the tool and return a result.
+     * Execute the get entry operation.
      *
-     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  The tool arguments. Must contain 'entry_id'.
+     * @return ToolResult The result containing the entry data or an error message.
      */
     public function execute(array $args): ToolResult
     {
@@ -55,16 +64,15 @@ class WufooGetEntry implements Tool
                 return ToolResult::error('Wufoo integration is not configured.');
             }
 
-            $result = $this->service->getEntry($args['entry_id']);
-            $entries = $result['Entries'] ?? [];
+            $entryId = $args['entry_id'] ?? '';
 
-            if (empty($entries)) {
-                return ToolResult::error("Entry '{$args['entry_id']}' not found.");
+            if (empty($entryId)) {
+                return ToolResult::error('entry_id is required.');
             }
 
-            return ToolResult::success([
-                'entry' => $entries[0],
-            ]);
+            $result = $this->service->getEntry($entryId);
+
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

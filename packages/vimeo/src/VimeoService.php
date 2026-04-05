@@ -5,6 +5,13 @@ namespace OpenCompany\Integrations\Vimeo;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Vimeo API service — encapsulates all HTTP communication with the Vimeo REST API.
+ *
+ * Tools call service methods; they never make HTTP requests directly.
+ * Supports configurable base URL (default: https://api.vimeo.com) and
+ * Bearer token authentication via the access_token config field.
+ */
 class VimeoService
 {
     public function __construct(
@@ -15,119 +22,77 @@ class VimeoService
     }
 
     /**
-     * Check whether the service is properly configured with an access token.
+     * Check whether the service has credentials configured.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return ! empty($this->accessToken);
     }
+
+    // ── Videos ────────────────────────────────────────────
 
     /**
      * List videos for the authenticated user.
      *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $perPage  Number of videos per page (max 100).
+     * @param  array<string, mixed>  $params  Query parameters (per_page, page, query, filter, etc.)
      * @return array<string, mixed>
      */
-    public function listVideos(int $page = 1, int $perPage = 25): array
+    public function listVideos(array $params = []): array
     {
-        return $this->request('GET', '/me/videos', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        return $this->request('GET', '/me/videos', $params);
     }
 
     /**
      * Get a single video by its ID.
      *
-     * @param  int|string  $videoId  The video ID.
+     * @param  string  $videoId  The video URI path segment (e.g. "123456789")
      * @return array<string, mixed>
      */
-    public function getVideo(int|string $videoId): array
+    public function getVideo(string $videoId): array
     {
-        return $this->request('GET', '/videos/' . urlencode((string) $videoId));
+        return $this->request('GET', '/videos/' . urlencode($videoId));
     }
 
     /**
-     * Create an upload ticket for a new video.
+     * Create a new video upload slot.
      *
-     * Initializes a video upload via the POST approach and returns
-     * the upload URL and newly created video object.
+     * Initiates an upload via the approach specified (pull, post, or streaming).
      *
-     * @param  array<string, mixed> $params  Upload parameters (name, description, etc.).
+     * @param  array<string, mixed>  $data  Upload parameters (upload.approach, name, description, etc.)
      * @return array<string, mixed>
      */
-    public function uploadVideo(array $params): array
+    public function createVideo(array $data): array
     {
-        $body = [
-            'upload' => [
-                'approach' => 'post',
-            ],
-        ];
-
-        if (isset($params['name'])) {
-            $body['name'] = $params['name'];
-        }
-        if (isset($params['description'])) {
-            $body['description'] = $params['description'];
-        }
-        if (isset($params['privacy'])) {
-            $body['privacy'] = $params['privacy'];
-        }
-
-        return $this->request('POST', '/me/videos', $body);
+        return $this->request('POST', '/me/videos', $data);
     }
 
-    /**
-     * Delete a video by its ID.
-     *
-     * @param  int|string  $videoId  The video ID.
-     */
-    public function deleteVideo(int|string $videoId): void
-    {
-        $this->request('DELETE', '/videos/' . urlencode((string) $videoId));
-    }
+    // ── Albums ────────────────────────────────────────────
 
     /**
      * List albums for the authenticated user.
      *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $perPage  Number of albums per page.
+     * @param  array<string, mixed>  $params  Query parameters (per_page, page, query, etc.)
      * @return array<string, mixed>
      */
-    public function listAlbums(int $page = 1, int $perPage = 25): array
+    public function listAlbums(array $params = []): array
     {
-        return $this->request('GET', '/me/albums', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        return $this->request('GET', '/me/albums', $params);
     }
 
-    /**
-     * Get a single album by its ID.
-     *
-     * @param  int|string  $albumId  The album ID.
-     * @return array<string, mixed>
-     */
-    public function getAlbum(int|string $albumId): array
-    {
-        return $this->request('GET', '/me/albums/' . urlencode((string) $albumId));
-    }
+    // ── Folders ───────────────────────────────────────────
 
     /**
-     * List public channels.
+     * List folders (projects) for the authenticated user.
      *
-     * @param  int  $page  Page number (1-based).
-     * @param  int  $perPage  Number of channels per page.
+     * @param  array<string, mixed>  $params  Query parameters (per_page, page, query, etc.)
      * @return array<string, mixed>
      */
-    public function listChannels(int $page = 1, int $perPage = 25): array
+    public function listFolders(array $params = []): array
     {
-        return $this->request('GET', '/channels', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        return $this->request('GET', '/me/folders', $params);
     }
+
+    // ── User ──────────────────────────────────────────────
 
     /**
      * Get the authenticated user's profile.
@@ -139,33 +104,42 @@ class VimeoService
         return $this->request('GET', '/me');
     }
 
+    // ── HTTP ──────────────────────────────────────────────
+
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query params or JSON body.
+     * @param  string  $method  HTTP method (GET, POST, PUT, PATCH, DELETE)
+     * @param  string  $path    API path (e.g. "/me/videos")
+     * @param  array<string, mixed>  $data  Query params (GET) or body data (POST/PUT/PATCH)
      * @return array<string, mixed>
+     *
+     * @throws \RuntimeException on connection or API errors
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Vimeo API.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query params or JSON body.
+     * @param  string  $method  HTTP method
+     * @param  string  $path    API path
+     * @param  array<string, mixed>  $data  Query params or body data
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException On connection failure or API error.
+     * @throws \RuntimeException on missing credentials, connection errors, or API errors
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             throw new \RuntimeException('Vimeo access token is not configured.');
         }
 
@@ -181,19 +155,20 @@ class VimeoService
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
+                'PATCH' => $http->patch($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains((string) $contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Vimeo API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Vimeo API endpoint not available (HTTP {$response->status()}).");
+                    throw new \RuntimeException("Vimeo API returned an unexpected response (HTTP {$response->status()}). Check the base URL and access token.");
                 }
 
                 $error = $response->json('error') ?? $response->json('message') ?? $body;

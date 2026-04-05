@@ -2,55 +2,50 @@
 
 namespace OpenCompany\Integrations\Tally\Tools;
 
-use OpenCompany\Integrations\Tally\TallyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Tally\TallyService;
 
 /**
- * List all forms accessible to the authenticated Tally user.
- *
- * Returns an array of form objects including form ID, name, status,
- * number of submissions, and creation date.
+ * List all Tally forms with pagination support.
  */
 class TallyListForms implements Tool
 {
+    /**
+     * @param  TallyService  $service  The Tally API service instance.
+     */
     public function __construct(
         private TallyService $service,
     ) {}
 
-    /**
-     * Unique tool identifier.
-     */
     public function name(): string
     {
         return 'tally_list_forms';
     }
 
-    /**
-     * Human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'List all forms accessible in the Tally workspace. Returns form IDs, names, status, and submission counts. Use the form IDs with other Tally tools to get details or list submissions.';
+        return 'List all Tally forms accessible to the authenticated user. Returns form IDs, titles, status, and submission counts. Supports pagination.';
     }
 
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array{type: string, description?: string, required?: bool}>
-     */
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of forms to return (default: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the value from a previous response to get the next page.'],
+            'page' => [
+                'type' => 'integer',
+                'description' => 'Page number for pagination (default: 1).',
+            ],
+            'limit' => [
+                'type' => 'integer',
+                'description' => 'Number of forms per page (default: 20, max: 100).',
+            ],
         ];
     }
 
     /**
-     * Execute the list_forms tool.
+     * Execute the list forms request.
      *
-     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments (page, limit).
      */
     public function execute(array $args): ToolResult
     {
@@ -59,8 +54,10 @@ class TallyListForms implements Tool
                 return ToolResult::error('Tally integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
-            $result = $this->service->listForms($limit, $args['after'] ?? null);
+            $page = isset($args['page']) ? (int) $args['page'] : 1;
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
+
+            $result = $this->service->listForms($page, $limit);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

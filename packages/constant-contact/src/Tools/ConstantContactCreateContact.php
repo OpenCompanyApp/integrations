@@ -7,22 +7,21 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create a new contact in Constant Contact.
+ * Tool: Create Contact
  *
- * Creates a new contact with an email address, and optionally sets
- * the first name, last name, and list memberships.
+ * Creates a new contact in Constant Contact with email, name, and optional list assignments.
  */
 class ConstantContactCreateContact implements Tool
 {
     /**
-     * Create a new ConstantContactCreateContact tool instance.
+     * @param  ConstantContactService  $service  The Constant Contact API service.
      */
     public function __construct(
         private ConstantContactService $service,
     ) {}
 
     /**
-     * Return the tool name used for routing.
+     * The unique tool slug.
      */
     public function name(): string
     {
@@ -30,32 +29,47 @@ class ConstantContactCreateContact implements Tool
     }
 
     /**
-     * Return a human-readable description of what this tool does.
+     * Human-readable description shown in tool catalogs and generated docs.
      */
     public function description(): string
     {
-        return 'Create a new contact in Constant Contact with an email address, first name, and last name.';
+        return 'Create a new contact in Constant Contact. Requires an email address. Optionally set first name, last name, and assign to lists.';
     }
 
     /**
-     * Define the parameters this tool accepts.
+     * Parameter definitions for the tool.
      *
-     * @return array<string, array<string, mixed>> Parameter definitions
+     * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
         return [
-            'email_address' => ['type' => 'string', 'required' => true, 'description' => 'Contact email address.'],
-            'first_name' => ['type' => 'string', 'description' => 'Contact first name.'],
-            'last_name' => ['type' => 'string', 'description' => 'Contact last name.'],
-            'list_ids' => ['type' => 'array', 'description' => 'Array of list IDs to add the contact to upon creation.'],
+            'email' => [
+                'type' => 'string',
+                'required' => true,
+                'description' => 'The contact\'s email address.',
+            ],
+            'first_name' => [
+                'type' => 'string',
+                'description' => 'The contact\'s first name.',
+            ],
+            'last_name' => [
+                'type' => 'string',
+                'description' => 'The contact\'s last name.',
+            ],
+            'list_ids' => [
+                'type' => 'array',
+                'description' => 'Array of list UUIDs to add the contact to. Use list_contacts or list_lists to discover available list IDs.',
+                'items' => ['type' => 'string'],
+            ],
         ];
     }
 
     /**
-     * Execute the tool: create a new contact in Constant Contact.
+     * Execute the create contact tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments
+     * @param  array<string, mixed>  $args  Tool arguments (email, first_name, last_name, list_ids).
+     * @return ToolResult
      */
     public function execute(array $args): ToolResult
     {
@@ -64,14 +78,15 @@ class ConstantContactCreateContact implements Tool
                 return ToolResult::error('Constant Contact integration is not configured.');
             }
 
-            if (empty($args['email_address'])) {
-                return ToolResult::error('email_address is required.');
+            $email = $args['email'] ?? '';
+            if (empty($email)) {
+                return ToolResult::error('Email address is required.');
             }
 
             $result = $this->service->createContact(
-                email: $args['email_address'],
-                firstName: $args['first_name'] ?? null,
-                lastName: $args['last_name'] ?? null,
+                email: $email,
+                firstName: $args['first_name'] ?? '',
+                lastName: $args['last_name'] ?? '',
                 listIds: $args['list_ids'] ?? [],
             );
 

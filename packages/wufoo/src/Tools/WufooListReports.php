@@ -6,17 +6,25 @@ use OpenCompany\Integrations\Wufoo\WufooService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Tool to list all reports in the authenticated Wufoo account.
+ *
+ * Calls GET /reports.json on the Wufoo API and returns an array of report
+ * objects including report identifiers, names, and associated form details.
+ */
 class WufooListReports implements Tool
 {
     /**
      * Create a new WufooListReports tool instance.
+     *
+     * @param  WufooService  $service  The Wufoo API service instance.
      */
     public function __construct(
         private WufooService $service,
     ) {}
 
     /**
-     * Get the tool's machine name.
+     * Get the tool name identifier.
      */
     public function name(): string
     {
@@ -24,17 +32,17 @@ class WufooListReports implements Tool
     }
 
     /**
-     * Get a description of what this tool does.
+     * Get the human-readable description of what this tool does.
      */
     public function description(): string
     {
-        return 'List all reports in the Wufoo account. Returns report names, hash identifiers, and URLs.';
+        return 'List all reports in your Wufoo account. Returns report identifiers, names, descriptions, and the forms they are associated with.';
     }
 
     /**
-     * Get the parameter schema for this tool.
+     * Get the parameters this tool accepts.
      *
-     * @return array<string, array<string, mixed>>
+     * @return array<string, array<string, mixed>> The parameter definitions.
      */
     public function parameters(): array
     {
@@ -42,9 +50,10 @@ class WufooListReports implements Tool
     }
 
     /**
-     * Execute the tool and return a result.
+     * Execute the list reports operation.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (none required).
+     * @param  array<string, mixed>  $args  The tool arguments (none required).
+     * @return ToolResult The result containing the list of reports or an error message.
      */
     public function execute(array $args): ToolResult
     {
@@ -54,12 +63,8 @@ class WufooListReports implements Tool
             }
 
             $result = $this->service->listReports();
-            $reports = $result['Reports'] ?? [];
 
-            return ToolResult::success([
-                'reports' => $reports,
-                'total' => count($reports),
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

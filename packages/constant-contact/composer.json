@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-constant-contact",
-    "description": "Constant Contact integration for Laravel — manage contacts and contact lists.",
+    "description": "Constant Contact email marketing integration for Laravel — manage contacts, campaigns, and lists.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,10 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "constant-contact", "email", "marketing", "contacts", "opencompany"],
+    "keywords": ["tools", "constant-contact", "email", "marketing", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-constant-contact": "self.version"
     },
     "autoload": {
         "psr-4": {

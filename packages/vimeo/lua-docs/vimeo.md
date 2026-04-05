@@ -2,98 +2,97 @@
 
 ## list_videos
 
-List videos for the authenticated Vimeo user. Returns paginated results.
+List videos for the authenticated Vimeo user with pagination, search, and filters.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `per_page` | integer | no | Videos per page (max 100, default: 25) |
+| `per_page` | integer | no | Videos per page (1–100, default: 25) |
+| `page` | integer | no | Page number (default: 1) |
+| `query` | string | no | Full-text search by name or description |
+| `filter` | string | no | Filter category: `"embeddable"`, `"playable"`, `"purchase_price"`, `"privacy"` |
+| `filter_embeddable` | boolean | no | When filter is `"embeddable"`: true = only embeddable |
+| `filter_playable` | boolean | no | When filter is `"playable"`: true = only playable |
+| `direction` | string | no | Sort direction: `"asc"` or `"desc"` |
+| `sort` | string | no | Sort field: `"alphabetical"`, `"comments"`, `"date"`, `"duration"`, `"likes"`, `"plays"` |
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.vimeo.list_videos({
-  page = 1,
-  per_page = 10
-})
+-- List recent videos
+local result = app.integrations.vimeo.list_videos({per_page = 10, sort = "date", direction = "desc"})
 
 for _, video in ipairs(result.videos) do
   print(video.name .. " (" .. video.duration .. "s)")
 end
+
+-- Search for a video
+local result = app.integrations.vimeo.list_videos({query = "product demo"})
 ```
 
 ---
 
 ## get_video
 
-Get detailed information about a single video.
+Get detailed information about a single video by ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `video_id` | string | yes | The video ID (e.g., `"123456789"`) |
+| `video_id` | string | yes | Vimeo video ID (e.g. `"123456789"`) |
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.vimeo.get_video({
-  video_id = "123456789"
-})
-
-print(result.name)
-print(result.description)
-print("Duration: " .. result.duration .. "s")
-print("Link: " .. result.link)
+local video = app.integrations.vimeo.get_video({video_id = "123456789"})
+print(video.name)
+print("Duration: " .. (video.duration or 0) .. "s")
+print("Plays: " .. (video.stats.plays or 0))
 ```
 
 ---
 
-## upload_video
+## create_video
 
-Create an upload ticket for a new video. Returns an upload URL that you can POST the video file binary to.
+Create a new video upload slot on Vimeo. Choose an upload approach:
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | no | Title of the video |
-| `description` | string | no | Description of the video |
-| `privacy` | string | no | Privacy: `"anybody"`, `"nobody"`, `"contacts"`, `"password"`, `"disable"`, `"unlisted"` |
-
-### Examples
-
-```lua
-local result = app.integrations.vimeo.upload_video({
-  name = "My New Video",
-  description = "Uploaded via OpenCompany",
-  privacy = "nobody"
-})
-
-print("Upload link: " .. result.upload_link)
-print("Video URI: " .. result.video_uri)
-```
-
----
-
-## delete_video
-
-Delete a video permanently. This action cannot be undone.
+- **`pull`** — Vimeo downloads from a URL you provide (simplest for hosted files)
+- **`post`** — You POST the file to the returned upload link (direct upload)
+- **`streaming`** — Use the Tus protocol for large or resumable uploads
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `video_id` | string | yes | The video ID to delete |
+| `upload_approach` | string | no | Upload method: `"pull"`, `"post"`, or `"streaming"` (default: `"post"`) |
+| `upload_link` | string | conditional | Required when approach is `"pull"`. URL Vimeo will download from |
+| `name` | string | no | Video title |
+| `description` | string | no | Video description |
+| `privacy` | string | no | Privacy: `"anybody"`, `"nobody"`, `"contacts"`, `"password"`, `"unlisted"`, `"disable"` |
+| `password` | string | conditional | Required when privacy is `"password"` |
+| `folder_uri` | string | no | Folder (project) URI to add the video to |
 
 ### Examples
 
 ```lua
-app.integrations.vimeo.delete_video({
-  video_id = "123456789"
+-- Pull a video from a URL
+local result = app.integrations.vimeo.create_video({
+  upload_approach = "pull",
+  upload_link = "https://example.com/video.mp4",
+  name = "Product Demo",
+  description = "Latest product walkthrough",
+  privacy = "anybody"
 })
+print("Video created: " .. result.uri)
+
+-- Create an upload slot for direct upload
+local result = app.integrations.vimeo.create_video({
+  upload_approach = "post",
+  name = "My New Video"
+})
+-- Use result.upload.upload_link to POST the file bytes
 ```
 
 ---
@@ -106,68 +105,46 @@ List albums (showcases) for the authenticated user.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `per_page` | integer | no | Albums per page (default: 25) |
+| `per_page` | integer | no | Albums per page (1–100, default: 25) |
+| `page` | integer | no | Page number (default: 1) |
+| `query` | string | no | Search albums by name or description |
+| `sort` | string | no | Sort field: `"alphabetical"`, `"date"`, `"duration"`, `"manual"`, `"modified_time"`, `"name"` |
+| `direction` | string | no | Sort direction: `"asc"` or `"desc"` |
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.vimeo.list_albums({
-  page = 1,
-  per_page = 10
-})
+local result = app.integrations.vimeo.list_albums({per_page = 10})
 
-for _, album in ipairs(result.data) do
-  print(album.name)
+for _, album in ipairs(result.albums) do
+  local videoCount = album.metadata.connections.videos or 0
+  print(album.name .. " (" .. videoCount .. " videos)")
 end
 ```
 
 ---
 
-## get_album
+## list_folders
 
-Get detailed information about a single album.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `album_id` | string | yes | The album ID |
-
-### Examples
-
-```lua
-local result = app.integrations.vimeo.get_album({
-  album_id = "1234567"
-})
-
-print(result.name)
-print(result.description)
-```
-
----
-
-## list_channels
-
-List public Vimeo channels.
+List folders (projects) for the authenticated user.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `per_page` | integer | no | Channels per page (default: 25) |
+| `per_page` | integer | no | Folders per page (1–100, default: 25) |
+| `page` | integer | no | Page number (default: 1) |
+| `query` | string | no | Search folders by name |
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.vimeo.list_channels({
-  page = 1,
-  per_page = 10
-})
+local result = app.integrations.vimeo.list_folders()
 
-for _, channel in ipairs(result.data) do
-  print(channel.name)
+for _, folder in ipairs(result.folders) do
+  local videos = folder.metadata.connections.videos or 0
+  local subs = folder.metadata.connections.subfolders or 0
+  print(folder.name .. " — " .. videos .. " videos, " .. subs .. " subfolders")
 end
 ```
 
@@ -175,20 +152,68 @@ end
 
 ## get_current_user
 
-Get the authenticated user's profile information.
+Get the authenticated user's Vimeo profile.
 
 ### Parameters
 
 None.
 
-### Examples
+### Example
 
 ```lua
-local result = app.integrations.vimeo.get_current_user({})
-
-print("Name: " .. result.name)
-print("Account: " .. (result.account or "unknown"))
+local user = app.integrations.vimeo.get_current_user()
+print("Connected as: " .. user.name)
+print("Account type: " .. user.account)
+print("Videos: " .. (user.metadata.connections.videos or 0))
+print("Upload quota: " .. (user.upload_quota.space.free or 0) .. " / " .. (user.upload_quota.space.max or 0) .. " bytes free")
 ```
+
+---
+
+## Common Workflows
+
+### Search for a video and get its details
+
+```lua
+local results = app.integrations.vimeo.list_videos({query = "onboarding", per_page = 5})
+
+if #results.videos > 0 then
+  local video = app.integrations.vimeo.get_video({video_id = results.videos[1].id})
+  print("Found: " .. video.name)
+  print("Duration: " .. (video.duration or 0) .. "s")
+  print("Plays: " .. (video.stats.plays or 0))
+end
+```
+
+### Browse all videos with pagination
+
+```lua
+local page = 1
+local all_videos = {}
+
+repeat
+  local result = app.integrations.vimeo.list_videos({page = page, per_page = 100})
+  for _, v in ipairs(result.videos) do
+    table.insert(all_videos, v)
+  end
+  page = page + 1
+until not result.paging.next or #result.videos == 0
+
+print("Total videos fetched: " .. #all_videos)
+```
+
+---
+
+## Privacy Values
+
+| Value | Meaning |
+|-------|---------|
+| `anybody` | Public — anyone can view |
+| `nobody` | Private — only the owner |
+| `contacts` | Only contacts of the owner |
+| `password` | Password-protected |
+| `unlisted` | Unlisted — only those with the link |
+| `disable` | Hide from Vimeo |
 
 ---
 
@@ -198,14 +223,14 @@ If you have multiple Vimeo accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.vimeo.function_name({...})
+app.integrations.vimeo.list_videos({per_page = 10})
 
 -- Explicit default (portable across setups)
-app.integrations.vimeo.default.function_name({...})
+app.integrations.vimeo.default.list_videos({per_page = 10})
 
 -- Named accounts
-app.integrations.vimeo.work.function_name({...})
-app.integrations.vimeo.personal.function_name({...})
+app.integrations.vimeo.work.list_videos({per_page = 10})
+app.integrations.vimeo.personal.list_videos({per_page = 10})
 ```
 
 All functions are identical across accounts — only the credentials differ.

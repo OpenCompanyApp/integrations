@@ -5,42 +5,48 @@ namespace OpenCompany\Integrations\Tally;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Tally API service client for form and submission management.
+ *
+ * Wraps all HTTP communication with the Tally REST API.
+ * Tools call this service — they never make HTTP requests directly.
+ */
 class TallyService
 {
     public function __construct(
-        private string $apiKey = '',
+        private string $accessToken = '',
         private string $baseUrl = 'https://api.tally.so',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the Tally integration is configured (has an API key).
+     * Check whether the service has been configured with an access token.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return !empty($this->accessToken);
     }
 
+    // ── Forms ─────────────────────────────────────────────
+
     /**
-     * List all forms accessible to the authenticated user.
+     * List forms with optional pagination.
      *
-     * @param  int  $limit   Maximum number of forms to return (default: 100).
-     * @param  string|null  $after  Cursor for pagination.
+     * @param  int  $page  Page number (1-based).
+     * @param  int  $limit  Results per page.
      * @return array<string, mixed>
      */
-    public function listForms(int $limit = 100, ?string $after = null): array
+    public function listForms(int $page = 1, int $limit = 20): array
     {
-        $params = ['limit' => $limit];
-        if ($after) {
-            $params['after'] = $after;
-        }
-
-        return $this->request('GET', '/forms', $params);
+        return $this->request('GET', '/forms', [
+            'page' => $page,
+            'limit' => $limit,
+        ]);
     }
 
     /**
-     * Get details for a single form by its ID.
+     * Get a single form by ID.
      *
      * @param  string  $formId  The Tally form ID.
      * @return array<string, mixed>
@@ -50,39 +56,26 @@ class TallyService
         return $this->request('GET', '/forms/' . urlencode($formId));
     }
 
+    // ── Submissions ───────────────────────────────────────
+
     /**
-     * List submissions for a specific form.
+     * List submissions for a specific form with optional pagination.
      *
      * @param  string  $formId  The Tally form ID.
-     * @param  int  $limit  Maximum number of submissions to return.
-     * @param  string|null  $after  Cursor for pagination.
-     * @param  string|null submittedAfter  ISO 8601 date to filter submissions after.
-     * @param  string|null  $submittedBefore  ISO 8601 date to filter submissions before.
+     * @param  int  $page  Page number (1-based).
+     * @param  int  $limit  Results per page.
      * @return array<string, mixed>
      */
-    public function listSubmissions(
-        string $formId,
-        int $limit = 100,
-        ?string $after = null,
-        ?string $submittedAfter = null,
-        ?string $submittedBefore = null,
-    ): array {
-        $params = ['limit' => $limit];
-        if ($after) {
-            $params['after'] = $after;
-        }
-        if ($submittedAfter) {
-            $params['submittedAfter'] = $submittedAfter;
-        }
-        if ($submittedBefore) {
-            $params['submittedBefore'] = $submittedBefore;
-        }
-
-        return $this->request('GET', '/forms/' . urlencode($formId) . '/submissions', $params);
+    public function listSubmissions(string $formId, int $page = 1, int $limit = 20): array
+    {
+        return $this->request('GET', '/forms/' . urlencode($formId) . '/submissions', [
+            'page' => $page,
+            'limit' => $limit,
+        ]);
     }
 
     /**
-     * Get a single submission by its ID.
+     * Get a single submission by ID.
      *
      * @param  string  $submissionId  The Tally submission ID.
      * @return array<string, mixed>
@@ -91,6 +84,8 @@ class TallyService
     {
         return $this->request('GET', '/submissions/' . urlencode($submissionId));
     }
+
+    // ── Workspaces ────────────────────────────────────────
 
     /**
      * List all workspaces accessible to the authenticated user.
@@ -102,8 +97,10 @@ class TallyService
         return $this->request('GET', '/workspaces');
     }
 
+    // ── User ──────────────────────────────────────────────
+
     /**
-     * Get the currently authenticated Tally user.
+     * Get the currently authenticated user's profile.
      *
      * @return array<string, mixed>
      */
@@ -112,21 +109,21 @@ class TallyService
         return $this->request('GET', '/me');
     }
 
+    // ── HTTP ──────────────────────────────────────────────
+
     /**
-     * Make an API request and return parsed JSON.
+     * Make an authenticated API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  string  $path  API path (e.g. "/forms").
+     * @param  array<string, mixed>  $data  Query params or request body.
      * @return array<string, mixed>
+     *
+     * @throws \RuntimeException on connection or API errors.
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
-
-        if ($response->status() === 204) {
-            return [];
-        }
 
         return $response->json() ?? [];
     }
@@ -135,23 +132,23 @@ class TallyService
      * Make a raw HTTP request to the Tally API.
      *
      * @param  string  $method  HTTP method.
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query or body parameters.
+     * @param  string  $path  API path.
+     * @param  array<string, mixed>  $data  Query params or request body.
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException
+     * @throws \RuntimeException on missing credentials, connection failure, or API errors.
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Tally API key is not configured.');
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Tally access token is not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
@@ -167,11 +164,11 @@ class TallyService
                 $contentType = $response->header('Content-Type');
                 $body = $response->body();
 
-                if (str_contains((string) $contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
                     Log::warning("Tally API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Tally API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
+                    throw new \RuntimeException("Tally API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
                 }
 
                 $error = $response->json('error') ?? $response->json('message') ?? $body;

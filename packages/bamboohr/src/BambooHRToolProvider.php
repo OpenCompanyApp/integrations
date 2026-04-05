@@ -3,8 +3,8 @@
 namespace OpenCompany\Integrations\BambooHR;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRListEmployees;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRGetEmployee;
@@ -14,12 +14,6 @@ use OpenCompany\Integrations\BambooHR\Tools\BambooHRListDepartments;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRListTimeOffRequests;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRGetCurrentUser;
 
-/**
- * Tool provider for the BambooHR HR integration.
- *
- * Registers 7 tools for managing employees, departments, and time-off
- * requests. Supports multi-account credential resolution via createTool().
- */
 class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -33,22 +27,20 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
             'label' => 'employees, departments, time-off',
             'description' => 'HR management',
             'icon' => 'ph:users-three',
-            'logo' => 'simple-icons:bamboo',
+            'logo' => 'simple-icons:bamboohr',
         ];
     }
-
-    // ── ConfigurableIntegration ───────────────────────────
 
     public function integrationMeta(): array
     {
         return [
             'name' => 'BambooHR',
-            'description' => 'HR management — employees, departments, and time-off tracking',
+            'description' => 'Human resources management — employees, departments, and time-off',
             'icon' => 'ph:users-three',
-            'logo' => 'simple-icons:bamboo',
+            'logo' => 'simple-icons:bamboohr',
             'category' => 'hr',
-            'badge' => 'new',
-            'docs_url' => 'https://documentation.bamboohr.com/reference',
+            'badge' => 'verified',
+            'docs_url' => 'https://documentation.bamboohr.com/docs',
         ];
     }
 
@@ -60,15 +52,15 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'secret',
                 'label' => 'API Key',
                 'placeholder' => 'Enter your BambooHR API key',
-                'hint' => 'Generate an API key in BambooHR under <strong>Settings → API Keys</strong>. The key authenticates via HTTP Basic Auth.',
+                'hint' => 'Generate an API key in BambooHR under Settings > API Keys',
                 'required' => true,
             ],
             [
                 'key' => 'subdomain',
-                'type' => 'text',
+                'type' => 'string',
                 'label' => 'Subdomain',
-                'placeholder' => 'yourcompany',
-                'hint' => 'Your BambooHR subdomain from the login URL: <code>https://yourcompany.bamboohr.com</code>.',
+                'placeholder' => 'your-company',
+                'hint' => 'Your BambooHR subdomain (the part before .bamboohr.com)',
                 'required' => true,
             ],
         ];
@@ -84,43 +76,37 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
         }
 
         try {
-            $baseUrl = "https://api.bamboohr.com/api/gateway.php/{$subdomain}/v1";
+            $baseUrl = 'https://api.bamboohr.com/api/gateway.php/' . $subdomain . '/v1';
 
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
-            ])->withBasicAuth($apiKey, 'x')->timeout(10)->get($baseUrl . '/users/me');
+            ])->withBasicAuth($apiKey, '')->timeout(10)->get($baseUrl . '/users/me');
 
-            if ($response->successful()) {
-                $user = $response->json();
-                $name = trim(($user['firstName'] ?? '') . ' ' . ($user['lastName'] ?? ''));
+            $json = $response->json();
 
+            if ($json === null && !$response->successful()) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to BambooHR as {$name}.",
+                    'success' => false,
+                    'error' => "Could not reach BambooHR API. Check your API key and subdomain.",
                 ];
             }
 
-            $error = $response->json('message') ?? $response->body();
-
             return [
-                'success' => false,
-                'error' => 'BambooHR API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'success' => true,
+                'message' => "Connected to BambooHR ({$subdomain}).",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string|array<int, string>> */
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
-            'subdomain' => 'nullable|string',
+            'api_key' => 'required|string',
+            'subdomain' => 'required|string',
         ];
     }
-
-    // ── Tools ─────────────────────────────────────────────
 
     public function tools(): array
     {
@@ -129,59 +115,52 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => BambooHRListEmployees::class,
                 'type' => 'read',
                 'name' => 'List Employees',
-                'description' => 'List employees in BambooHR with optional field selection and pagination.',
+                'description' => 'List employees from the company directory.',
                 'icon' => 'ph:users',
             ],
             'bamboohr_get_employee' => [
                 'class' => BambooHRGetEmployee::class,
                 'type' => 'read',
                 'name' => 'Get Employee',
-                'description' => 'Get details for a single employee by ID.',
+                'description' => 'Get detailed information for a specific employee.',
                 'icon' => 'ph:user',
             ],
             'bamboohr_create_employee' => [
                 'class' => BambooHRCreateEmployee::class,
                 'type' => 'write',
                 'name' => 'Create Employee',
-                'description' => 'Create a new employee in BambooHR.',
+                'description' => 'Create a new employee record.',
                 'icon' => 'ph:user-plus',
             ],
             'bamboohr_update_employee' => [
                 'class' => BambooHRUpdateEmployee::class,
                 'type' => 'write',
                 'name' => 'Update Employee',
-                'description' => 'Update an existing employee\'s information.',
-                'icon' => 'ph:pencil-simple',
+                'description' => 'Update an existing employee record.',
+                'icon' => 'ph:pencil',
             ],
             'bamboohr_list_departments' => [
                 'class' => BambooHRListDepartments::class,
                 'type' => 'read',
                 'name' => 'List Departments',
-                'description' => 'List all departments in the company.',
+                'description' => 'List all company departments.',
                 'icon' => 'ph:buildings',
             ],
             'bamboohr_list_time_off_requests' => [
                 'class' => BambooHRListTimeOffRequests::class,
                 'type' => 'read',
-                'name' => 'List Time Off Requests',
-                'description' => 'List time-off requests with optional filters for status, date range, or employee.',
+                'name' => 'List Time-Off Requests',
+                'description' => 'List time-off requests with optional filters.',
                 'icon' => 'ph:calendar-dots',
             ],
             'bamboohr_get_current_user' => [
                 'class' => BambooHRGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated user\'s profile.',
+                'description' => 'Get the currently authenticated user.',
                 'icon' => 'ph:identification-card',
             ],
         ];
-    }
-
-    // ── Shared ────────────────────────────────────────────
-
-    public function isIntegration(): bool
-    {
-        return true;
     }
 
     public function luaDocsPath(): ?string
@@ -197,38 +176,26 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Create a tool instance with optional multi-account credential resolution.
-     *
-     * @param  class-string<Tool>  $class  The tool class to instantiate.
-     * @param  array<string, mixed>  $context  Runtime context (may contain 'account' key).
-     */
-    public function createTool(string $class, array $context = []): Tool
+    public function isIntegration(): bool
     {
-        return new $class($this->resolveService($context));
+        return true;
     }
 
-    /**
-     * Resolve the BambooHRService, with optional account-specific credentials.
-     *
-     * When $context['account'] is set, creates a fresh service instance with
-     * that account's credentials. Otherwise falls back to the container singleton.
-     *
-     * @param  array<string, mixed>  $context  Runtime context with optional 'account' key.
-     */
-    private function resolveService(array $context = []): BambooHRService
+    public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new BambooHRService(
+            $service = new BambooHRService(
                 apiKey: $creds->get('bamboohr', 'api_key', '', $account),
                 subdomain: $creds->get('bamboohr', 'subdomain', '', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(BambooHRService::class);
+        return new $class(app(BambooHRService::class));
     }
 }

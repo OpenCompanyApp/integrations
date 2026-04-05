@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-tally",
-    "description": "Tally form builder integration for Laravel — manage forms, submissions, workspaces and more.",
+    "description": "Tally forms integration for Laravel — list forms, get submissions, manage workspaces.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,10 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "tally", "forms", "opencompany"],
+    "keywords": ["tools", "tally", "forms", "surveys", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-tally": "self.version"
     },
     "autoload": {
         "psr-4": {

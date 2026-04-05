@@ -9,8 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * Tool to list candidates for a specific Workable job.
  *
- * Returns a paginated list of candidates including names, emails,
- * stages, and application dates.
+ * Supports pagination via limit and offset parameters.
  */
 class WorkableListCandidates implements Tool
 {
@@ -22,7 +21,7 @@ class WorkableListCandidates implements Tool
     ) {}
 
     /**
-     * The tool identifier.
+     * Get the tool name.
      */
     public function name(): string
     {
@@ -30,28 +29,29 @@ class WorkableListCandidates implements Tool
     }
 
     /**
-     * Human-readable description of what this tool does.
+     * Get the tool description.
      */
     public function description(): string
     {
-        return 'List candidates for a specific job in Workable. Returns candidate names, emails, current stage, and application dates.';
+        return 'List candidates for a specific Workable job. Returns paginated results with candidate names, emails, stages, and applied dates.';
     }
 
     /**
-     * Parameter schema for the tool.
+     * Get the tool parameter definitions.
      *
      * @return array<string, array<string, mixed>>
      */
     public function parameters(): array
     {
         return [
-            'shortcode' => ['type' => 'string', 'required' => true, 'description' => 'The job shortcode (e.g., "GRO-001"). Find shortcodes using the list_jobs tool.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of candidates to return (default: 50).'],
+            'shortcode' => ['type' => 'string', 'required' => true, 'description' => 'The job shortcode to list candidates for (e.g., "GROVF002").'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of results per page (default: 50, max: 100).'],
+            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination — pass the value from a previous response to get the next page.'],
         ];
     }
 
     /**
-     * Execute the list candidates request.
+     * Execute the tool and return the list of candidates.
      *
      * @param  array<string, mixed>  $args
      */
@@ -62,13 +62,16 @@ class WorkableListCandidates implements Tool
                 return ToolResult::error('Workable integration is not configured.');
             }
 
-            if (empty($args['shortcode'])) {
-                return ToolResult::error('The shortcode parameter is required.');
+            $shortcode = $args['shortcode'] ?? '';
+
+            if (empty($shortcode)) {
+                return ToolResult::error('The "shortcode" parameter is required.');
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : null;
 
-            $result = $this->service->listCandidates($args['shortcode'], $limit);
+            $result = $this->service->listCandidates($shortcode, $limit, $offset);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

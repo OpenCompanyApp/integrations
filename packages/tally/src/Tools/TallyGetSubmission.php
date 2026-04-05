@@ -2,54 +2,47 @@
 
 namespace OpenCompany\Integrations\Tally\Tools;
 
-use OpenCompany\Integrations\Tally\TallyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Tally\TallyService;
 
 /**
- * Get full details of a single Tally form submission by its ID.
- *
- * Returns the complete submission data including all field responses
- * and respondent metadata.
+ * Get details of a specific Tally form submission by its ID.
  */
 class TallyGetSubmission implements Tool
 {
+    /**
+     * @param  TallyService  $service  The Tally API service instance.
+     */
     public function __construct(
         private TallyService $service,
     ) {}
 
-    /**
-     * Unique tool identifier.
-     */
     public function name(): string
     {
         return 'tally_get_submission';
     }
 
-    /**
-     * Human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'Get full details of a single Tally form submission by its ID. Returns all field responses and respondent metadata.';
+        return 'Get full details of a specific form submission by its ID, including all field responses and metadata.';
     }
 
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array{type: string, description?: string, required?: bool}>
-     */
     public function parameters(): array
     {
         return [
-            'submission_id' => ['type' => 'string', 'required' => true, 'description' => 'The Tally submission ID.'],
+            'submission_id' => [
+                'type' => 'string',
+                'required' => true,
+                'description' => 'The Tally submission ID.',
+            ],
         ];
     }
 
     /**
-     * Execute the get_submission tool.
+     * Execute the get submission request.
      *
-     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments (submission_id).
      */
     public function execute(array $args): ToolResult
     {
@@ -58,7 +51,12 @@ class TallyGetSubmission implements Tool
                 return ToolResult::error('Tally integration is not configured.');
             }
 
-            $result = $this->service->getSubmission($args['submission_id']);
+            $submissionId = $args['submission_id'] ?? '';
+            if (empty($submissionId)) {
+                return ToolResult::error('Submission ID is required.');
+            }
+
+            $result = $this->service->getSubmission($submissionId);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

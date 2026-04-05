@@ -2,13 +2,13 @@
 
 > Zoho Desk integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage tickets, contacts, articles, and departments. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to your Zoho Desk help desk. List and manage support tickets, search contacts, browse knowledge base articles, and query departments — all through the [Zoho Desk REST API](https://desk.zoho.com/DeskAPIDocument).
+Give your AI agents access to customer support operations. List and manage tickets, browse contacts, search knowledge base articles, and retrieve department information — all through the [Zoho Desk](https://desk.zoho.com) API.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Zoho Desk tool lets AI agents interact with your help desk — creating and updating tickets, looking up contacts, searching the knowledge base, and querying department structure.
+This Zoho Desk tool lets AI agents manage support tickets, look up contact information, search knowledge base articles, and navigate department structures — giving agents full helpdesk awareness.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This integration requires a Zoho Desk OAuth2 access token and organization ID.
+This tool requires a Zoho Desk OAuth access token and organization ID.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -32,24 +32,31 @@ This integration requires a Zoho Desk OAuth2 access token and organization ID.
 return [
     'zoho-desk' => [
         'access_token' => env('ZOHO_DESK_ACCESS_TOKEN'),
-        'base_url'     => env('ZOHO_DESK_BASE_URL', 'https://desk.zoho.com/api/v1'),
+        'url'          => env('ZOHO_DESK_URL', 'https://desk.zoho.com/api/v1'),
         'org_id'       => env('ZOHO_DESK_ORG_ID'),
     ],
 ];
 ```
 
+### Setting Up OAuth
+
+1. Go to the [Zoho API Console](https://api-console.zoho.com/)
+2. Register a new client with the `Desk.tickets.READ`, `Desk.tickets.WRITE`, `Desk.contacts.READ`, `Desk.articles.READ`, `Desk.departments.READ`, and `Desk.users.READ` scopes
+3. Generate an OAuth access token
+4. Find your Organization ID in Zoho Desk under **Setup → Organization → Organization Profile**
+
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `zohodesk_list_tickets` | read | List support tickets with filtering and pagination |
-| `zohodesk_get_ticket` | read | Get a single ticket by ID with full details |
+| `zohodesk_list_tickets` | read | List support tickets with optional filters |
+| `zohodesk_get_ticket` | read | Get full details of a specific ticket |
 | `zohodesk_create_ticket` | write | Create a new support ticket |
-| `zohodesk_update_ticket` | write | Update an existing ticket (status, priority, assignee, etc.) |
-| `zohodesk_list_contacts` | read | List customer contacts |
+| `zohodesk_update_ticket` | write | Update an existing ticket's fields |
+| `zohodesk_list_contacts` | read | List and search contacts |
 | `zohodesk_list_articles` | read | List knowledge base articles |
-| `zohodesk_list_departments` | read | List all departments in the organization |
-| `zohodesk_get_current_user` | read | Get the currently authenticated user profile |
+| `zohodesk_list_departments` | read | List support departments |
+| `zohodesk_get_current_user` | read | Get the authenticated user's profile |
 
 ## Quick Start
 
@@ -68,7 +75,7 @@ $tools = [
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('Show me all open tickets in the Support department');
+    ->prompt('Show me all open high-priority tickets');
 ```
 
 ### Via ToolProvider (recommended)
@@ -95,33 +102,33 @@ use OpenCompany\Integrations\ZohoDesk\ZohoDeskService;
 $service = app(ZohoDeskService::class);
 
 // List tickets
-$tickets = $service->listTickets(['status' => 'Open', 'limit' => 25]);
+$tickets = $service->listTickets(['status' => 'Open', 'limit' => 10]);
 
-// Get a single ticket
+// Get a specific ticket
 $ticket = $service->getTicket('123456789');
 
 // Create a ticket
-$newTicket = $service->createTicket([
-    'subject' => 'Cannot access account',
-    'departmentId' => '987654321',
-    'description' => 'User reports being locked out after password change.',
+$ticket = $service->createTicket([
+    'subject' => 'Login issue',
+    'departmentId' => '123456',
+    'description' => 'User cannot log in to the application.',
     'priority' => 'High',
 ]);
 
 // Update a ticket
-$service->updateTicket('123456789', ['status' => 'Resolved']);
+$service->updateTicket('123456789', ['status' => 'Closed']);
 
 // List contacts
-$contacts = $service->listContacts(['search' => 'john@example.com']);
+$contacts = $service->listContacts(['search' => 'john']);
 
-// List knowledge base articles
-$articles = $service->listArticles(['departmentId' => '987654321']);
+// List articles
+$articles = $service->listArticles(['departmentId' => '123456']);
 
 // List departments
 $departments = $service->listDepartments();
 
-// Current user
-$me = $service->getCurrentUser();
+// Get current user
+$user = $service->getCurrentUser();
 ```
 
 ## Dependencies
@@ -136,7 +143,7 @@ $me = $service->getCurrentUser();
 - PHP 8.2+
 - Laravel 11 or 12
 - [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Zoho Desk](https://desk.zoho.com) account with API access enabled
+- A [Zoho Desk](https://desk.zoho.com) account with API access
 
 ## License
 

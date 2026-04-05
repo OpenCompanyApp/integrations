@@ -2,12 +2,21 @@
 
 namespace OpenCompany\Integrations\Vero\Tools;
 
-use OpenCompany\Integrations\Vero\VeroService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Vero\VeroService;
 
+/**
+ * Update a user's profile data in Vero.
+ *
+ * Modifies an existing user's email address and/or custom attributes.
+ * The user is identified by their unique ID.
+ */
 class VeroUpdateUser implements Tool
 {
+    /**
+     * @param  VeroService  $service  The Vero API service instance.
+     */
     public function __construct(
         private VeroService $service,
     ) {}
@@ -19,41 +28,48 @@ class VeroUpdateUser implements Tool
 
     public function description(): string
     {
-        return 'Update a user\'s profile attributes in Vero. Provide the user\'s identity and a changes object with the attributes to update. Only the specified fields are modified — omitted fields remain unchanged.';
+        return 'Update a user\'s profile in Vero. Pass the user ID, an optional new email, and a data object with attributes to update.';
     }
 
     public function parameters(): array
     {
         return [
-            'identity' => ['type' => 'string', 'required' => true, 'description' => 'Unique user identifier — the same ID or email used when identifying the user.'],
-            'changes' => ['type' => 'object', 'required' => true, 'description' => 'Key-value pairs of attributes to update (e.g., {"name": "Jane Doe", "plan": "enterprise"}).'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'Unique user identifier to update.'],
+            'email' => ['type' => 'string', 'description' => 'New email address for the user.'],
+            'data' => ['type' => 'object', 'description' => 'Attributes to update as key-value pairs (e.g., {"plan": "enterprise", "company": "Acme Inc"}).'],
         ];
     }
 
+    /**
+     * Execute the update user tool.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments.
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Vero integration is not configured.');
             }
 
-            $identity = $args['identity'];
-            $changes = $args['changes'];
+            $id = $args['id'] ?? '';
 
-            if (is_string($changes)) {
-                $changes = json_decode($changes, true) ?? [];
+            if (empty($id)) {
+                return ToolResult::error('User ID is required.');
             }
 
-            if (empty($changes)) {
-                return ToolResult::error('The changes parameter must contain at least one attribute to update.');
+            $email = $args['email'] ?? '';
+            $data = $args['data'] ?? [];
+
+            if (empty($email) && empty($data)) {
+                return ToolResult::error('Provide at least an email or data to update.');
             }
 
-            $result = $this->service->updateUser($identity, $changes);
+            $result = $this->service->updateUser($id, $email, $data);
 
             return ToolResult::success([
-                'message' => "User '{$identity}' updated successfully.",
-                'changes' => $changes,
-                'data' => $result,
+                'id' => $id,
+                'status' => $result['status'] ?? 'updated',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

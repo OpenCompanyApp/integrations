@@ -9,8 +9,8 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 /**
  * Laravel service provider for the Constant Contact integration.
  *
- * Registers the ConstantContactService as a singleton (resolving default credentials)
- * and boots the tool provider into the ToolProviderRegistry.
+ * Registers the ConstantContactService as a singleton and bootstraps
+ * the tool provider into the ToolProviderRegistry.
  */
 class ConstantContactServiceProvider extends ServiceProvider
 {
@@ -23,13 +23,14 @@ class ConstantContactServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new ConstantContactService(
-                accessToken: $creds->get('constantcontact', 'access_token', ''),
+                accessToken: $creds->get('constant_contact', 'access_token', ''),
+                baseUrl: $creds->get('constant_contact', 'url', 'https://api.cc.email/v3'),
             );
         });
     }
 
     /**
-     * Boot the Constant Contact tool provider into the registry.
+     * Boot the service provider and register with the ToolProviderRegistry.
      */
     public function boot(): void
     {

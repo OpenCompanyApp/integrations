@@ -6,17 +6,25 @@ use OpenCompany\Integrations\Wufoo\WufooService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Tool to list entries for a specific Wufoo form with pagination and filters.
+ *
+ * Calls GET /forms/{id}/entries.json on the Wufoo API. Supports pagination
+ * via page/pageSize parameters and optional field-based filters.
+ */
 class WufooListEntries implements Tool
 {
     /**
      * Create a new WufooListEntries tool instance.
+     *
+     * @param  WufooService  $service  The Wufoo API service instance.
      */
     public function __construct(
         private WufooService $service,
     ) {}
 
     /**
-     * Get the tool's machine name.
+     * Get the tool name identifier.
      */
     public function name(): string
     {
@@ -24,32 +32,33 @@ class WufooListEntries implements Tool
     }
 
     /**
-     * Get a description of what this tool does.
+     * Get the human-readable description of what this tool does.
      */
     public function description(): string
     {
-        return 'List entries submitted to a Wufoo form. Supports pagination with pageSize and pageStart parameters. Returns entry data with all field values.';
+        return 'List entries submitted to a Wufoo form. Supports pagination and optional filters to narrow results. Use the page and pageSize parameters to paginate through large result sets.';
     }
 
     /**
-     * Get the parameter schema for this tool.
+     * Get the parameters this tool accepts.
      *
-     * @return array<string, array<string, mixed>>
+     * @return array<string, array<string, mixed>> The parameter definitions.
      */
     public function parameters(): array
     {
         return [
-            'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or unique identifier.'],
-            'page_size' => ['type' => 'integer', 'description' => 'Number of entries per page (default: 100, max: 100).'],
-            'page_start' => ['type' => 'integer', 'description' => 'Entry index to start from (0-based, for pagination).'],
-            'sort' => ['type' => 'string', 'description' => 'Sort direction by entry ID: "ASC" (oldest first) or "DESC" (newest first).'],
+            'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The form hash or identifier to list entries for.'],
+            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (0-based). Default: 0.'],
+            'page_size' => ['type' => 'integer', 'description' => 'Number of entries per page. Default: 25, maximum: 100.'],
+            'filters' => ['type' => 'object', 'description' => 'Optional field filters. Keys are filter parameters (e.g., "Filter1", "Match", "SortBy") and values are the filter values.'],
         ];
     }
 
     /**
-     * Execute the tool and return a result.
+     * Execute the list entries operation.
      *
-     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  The tool arguments. Must contain 'form_id'.
+     * @return ToolResult The result containing the paginated list of entries or an error message.
      */
     public function execute(array $args): ToolResult
     {
@@ -58,20 +67,23 @@ class WufooListEntries implements Tool
                 return ToolResult::error('Wufoo integration is not configured.');
             }
 
-            $formId = $args['form_id'];
-            $pageSize = isset($args['page_size']) ? (int) $args['page_size'] : 100;
-            $pageStart = isset($args['page_start']) ? (int) $args['page_start'] : 0;
-            $sort = $args['sort'] ?? null;
+            $formId = $args['form_id'] ?? '';
 
-            $result = $this->service->listEntries($formId, $pageSize, $pageStart, $sort);
-            $entries = $result['Entries'] ?? [];
+            if (empty($formId)) {
+                return ToolResult::error('form_id is required.');
+            }
 
-            return ToolResult::success([
-                'entries' => $entries,
-                'total' => count($entries),
-                'page_size' => $pageSize,
-                'page_start' => $pageStart,
-            ]);
+            $page = isset($args['page']) ? (int) $args['page'] : 0;
+            $pageSize = isset($args['page_size']) ? (int) $args['page_size'] : 25;
+            $filters = $args['filters'] ?? [];
+
+            if (!is_array($filters)) {
+                $filters = [];
+            }
+
+            $result = $this->service->listEntries($formId, $page, $pageSize, $filters);
+
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-aws",
+    "description": "AWS cloud integration for Laravel — manage S3 buckets, EC2 instances, Lambda functions, DynamoDB tables, CloudWatch metrics, SNS topics, and IAM users.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "aws", "cloud", "ec2", "lambda", "s3", "dynamodb", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Aws\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Aws\\AwsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

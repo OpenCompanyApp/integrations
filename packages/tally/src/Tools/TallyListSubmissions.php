@@ -2,58 +2,55 @@
 
 namespace OpenCompany\Integrations\Tally\Tools;
 
-use OpenCompany\Integrations\Tally\TallyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Tally\TallyService;
 
 /**
- * List submissions for a specific Tally form.
- *
- * Returns paginated submission data including field responses,
- * submission timestamps, and respondent metadata.
+ * List submissions for a specific Tally form with pagination.
  */
 class TallyListSubmissions implements Tool
 {
+    /**
+     * @param  TallyService  $service  The Tally API service instance.
+     */
     public function __construct(
         private TallyService $service,
     ) {}
 
-    /**
-     * Unique tool identifier.
-     */
     public function name(): string
     {
         return 'tally_list_submissions';
     }
 
-    /**
-     * Human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'List submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports filtering by date range and pagination.';
+        return 'List all submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports pagination.';
     }
 
-    /**
-     * Define the parameters this tool accepts.
-     *
-     * @return array<string, array{type: string, description?: string, required?: bool}>
-     */
     public function parameters(): array
     {
         return [
-            'form_id' => ['type' => 'string', 'required' => true, 'description' => 'The Tally form ID (e.g., "mVlDK4").'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of submissions to return (default: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the value from a previous response to get the next page.'],
-            'submitted_after' => ['type' => 'string', 'description' => 'ISO 8601 date string to filter submissions after this date (e.g., "2025-01-01T00:00:00Z").'],
-            'submitted_before' => ['type' => 'string', 'description' => 'ISO 8601 date string to filter submissions before this date (e.g., "2025-12-31T23:59:59Z").'],
+            'form_id' => [
+                'type' => 'string',
+                'required' => true,
+                'description' => 'The Tally form ID to retrieve submissions for (e.g., "mVlBRN").',
+            ],
+            'page' => [
+                'type' => 'integer',
+                'description' => 'Page number for pagination (default: 1).',
+            ],
+            'limit' => [
+                'type' => 'integer',
+                'description' => 'Number of submissions per page (default: 20, max: 100).',
+            ],
         ];
     }
 
     /**
-     * Execute the list_submissions tool.
+     * Execute the list submissions request.
      *
-     * @param  array<string, mixed>  $args  Tool arguments.
+     * @param  array<string, mixed>  $args  Tool arguments (form_id, page, limit).
      */
     public function execute(array $args): ToolResult
     {
@@ -62,16 +59,15 @@ class TallyListSubmissions implements Tool
                 return ToolResult::error('Tally integration is not configured.');
             }
 
-            $formId = $args['form_id'];
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
+            $formId = $args['form_id'] ?? '';
+            if (empty($formId)) {
+                return ToolResult::error('Form ID is required.');
+            }
 
-            $result = $this->service->listSubmissions(
-                $formId,
-                $limit,
-                $args['after'] ?? null,
-                $args['submitted_after'] ?? null,
-                $args['submitted_before'] ?? null,
-            );
+            $page = isset($args['page']) ? (int) $args['page'] : 1;
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
+
+            $result = $this->service->listSubmissions($formId, $page, $limit);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

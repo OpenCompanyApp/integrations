@@ -7,22 +7,21 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all contact lists in Constant Contact.
+ * Tool: List Lists
  *
- * Returns all contact lists in the account with their names,
- * membership counts, and dates.
+ * Lists all contact lists in Constant Contact.
  */
 class ConstantContactListLists implements Tool
 {
     /**
-     * Create a new ConstantContactListLists tool instance.
+     * @param  ConstantContactService  $service  The Constant Contact API service.
      */
     public function __construct(
         private ConstantContactService $service,
     ) {}
 
     /**
-     * Return the tool name used for routing.
+     * The unique tool slug.
      */
     public function name(): string
     {
@@ -30,17 +29,17 @@ class ConstantContactListLists implements Tool
     }
 
     /**
-     * Return a human-readable description of what this tool does.
+     * Human-readable description shown in tool catalogs and generated docs.
      */
     public function description(): string
     {
-        return 'List all contact lists in your Constant Contact account.';
+        return 'List all contact lists in Constant Contact. Returns list IDs, names, and membership counts. Use list IDs when creating contacts.';
     }
 
     /**
-     * Define the parameters this tool accepts.
+     * Parameter definitions for the tool.
      *
-     * @return array<string, array<string, mixed>> Parameter definitions
+     * @return array<string, mixed>
      */
     public function parameters(): array
     {
@@ -48,9 +47,10 @@ class ConstantContactListLists implements Tool
     }
 
     /**
-     * Execute the tool: list contact lists from Constant Contact.
+     * Execute the list lists tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments
+     * @param  array<string, mixed>  $args  Tool arguments (none).
+     * @return ToolResult
      */
     public function execute(array $args): ToolResult
     {

@@ -6,63 +6,41 @@ use OpenCompany\Integrations\ZohoDesk\ZohoDeskService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Tool: zohodesk_list_departments
- *
- * List all departments in the Zoho Desk organization.
- */
 class ZohoDeskListDepartments implements Tool
 {
-    /**
-     * @param  ZohoDeskService  $service  The Zoho Desk API service instance.
-     */
     public function __construct(
         private ZohoDeskService $service,
     ) {}
 
-    /**
-     * The tool name used for registration and invocation.
-     */
     public function name(): string
     {
         return 'zohodesk_list_departments';
     }
 
-    /**
-     * A human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'List all departments in the Zoho Desk organization. Useful for finding department IDs needed when creating or filtering tickets.';
+        return 'List all departments configured in Zoho Desk. Returns department IDs, names, descriptions, and visibility settings. Department IDs are needed when creating tickets.';
     }
 
-    /**
-     * The parameter schema for this tool.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
-        return [];
+        return [
+            'from' => ['type' => 'integer', 'description' => 'Starting index for pagination (default: 1).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of departments to return (default: 25).'],
+        ];
     }
 
-    /**
-     * Execute the tool — list departments from Zoho Desk.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (unused).
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Zoho Desk integration is not configured.');
             }
 
-            $result = $this->service->listDepartments();
+            $params = array_filter($args, fn($value) => $value !== null && $value !== '');
+            $result = $this->service->listDepartments($params);
 
-            $departments = $result['data'] ?? $result['departments'] ?? $result;
-
-            return ToolResult::success(is_array($departments) ? $departments : [$departments]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Constant Contact API service for interacting with the Constant Contact v3 REST API.
+ * Service class for communicating with the Constant Contact v3 API.
  *
- * Handles authentication via Bearer token, HTTP requests, error handling,
- * and response parsing for all Constant Contact endpoints.
+ * Handles authentication via Bearer token and provides methods for all
+ * supported endpoints: contacts, campaigns, lists, and user info.
  */
 class ConstantContactService
 {
     /**
      * Create a new ConstantContactService instance.
      *
-     * @param  string  $accessToken  Constant Contact OAuth2 access token
-     * @param  string  $baseUrl  Base URL for the Constant Contact API
+     * @param  string  $accessToken  The OAuth2 bearer token for API authentication.
+     * @param  string  $baseUrl      The base URL for the Constant Contact API (default: https://api.cc.email/v3).
      */
     public function __construct(
         private string $accessToken = '',
@@ -27,7 +27,7 @@ class ConstantContactService
     }
 
     /**
-     * Check whether the service is configured with an access token.
+     * Check whether the service is properly configured with an access token.
      */
     public function isConfigured(): bool
     {
@@ -35,16 +35,22 @@ class ConstantContactService
     }
 
     /**
-     * List contacts with optional filtering.
+     * List contacts with optional pagination and status filtering.
      *
-     * @param  int  $limit  Maximum number of contacts to return (max 500, default 100)
-     * @param  string|null  $status  Filter by status: "active", "unconfirmed", "opted_out", "pending"
-     * @return array<string, mixed> Paginated contact results
+     * @param  int|null       $limit   Maximum number of contacts to return per page (default: 50, max: 500).
+     * @param  string|null    $cursor  Pagination cursor from a previous response.
+     * @param  string|null    $status  Filter by contact status: "all", "active", "unconfirmed", "opted_out", "non_subscriber".
+     * @return array<string, mixed>
      */
-    public function listContacts(int $limit = 100, ?string $status = null): array
+    public function listContacts(?int $limit = null, ?string $cursor = null, ?string $status = null): array
     {
-        $params = ['limit' => min($limit, 500)];
-
+        $params = [];
+        if ($limit !== null) {
+            $params['limit'] = $limit;
+        }
+        if ($cursor !== null) {
+            $params['cursor'] = $cursor;
+        }
         if ($status !== null) {
             $params['status'] = $status;
         }
@@ -53,10 +59,10 @@ class ConstantContactService
     }
 
     /**
-     * Get a single contact by their Constant Contact contact ID.
+     * Get a single contact by ID.
      *
-     * @param  string  $contactId  The Constant Contact contact ID
-     * @return array<string, mixed> Contact data
+     * @param  string  $contactId  The Constant Contact contact ID.
+     * @return array<string, mixed>
      */
     public function getContact(string $contactId): array
     {
@@ -64,61 +70,60 @@ class ConstantContactService
     }
 
     /**
-     * Create a new contact in Constant Contact.
+     * Create a new contact.
      *
-     * @param  string  $email  Contact email address
-     * @param  string|null  $firstName  Optional first name
-     * @param  string|null  $lastName  Optional last name
-     * @param  array<int, string>  $listIds  Optional list IDs to add the contact to
-     * @return array<string, mixed> Created contact data
+     * @param  string    $email       The contact's email address.
+     * @param  string    $firstName   The contact's first name.
+     * @param  string    $lastName    The contact's last name.
+     * @param  array     $listIds     Array of list UUIDs to add the contact to.
+     * @return array<string, mixed>
      */
-    public function createContact(string $email, ?string $firstName = null, ?string $lastName = null, array $listIds = []): array
+    public function createContact(string $email, string $firstName = '', string $lastName = '', array $listIds = []): array
     {
-        $data = [
-            'email_address' => ['address' => $email],
+        $body = [
+            'email_address' => [
+                'address' => $email,
+                'permission_to_send' => 'implicit',
+            ],
         ];
 
-        if ($firstName !== null) {
-            $data['first_name'] = $firstName;
+        if ($firstName !== '') {
+            $body['first_name'] = $firstName;
         }
-
-        if ($lastName !== null) {
-            $data['last_name'] = $lastName;
+        if ($lastName !== '') {
+            $body['last_name'] = $lastName;
         }
-
         if (!empty($listIds)) {
-            $data['list_memberships'] = $listIds;
+            $body['list_memberships'] = $listIds;
         }
 
-        return $this->request('POST', '/contacts', $data);
+        return $this->request('POST', '/contacts', $body);
     }
 
     /**
-     * Update an existing contact in Constant Contact.
+     * List email campaigns with optional pagination.
      *
-     * @param  string  $contactId  The Constant Contact contact ID
-     * @param  array<string, mixed>  $data  Fields to update
-     * @return array<string, mixed> Updated contact data
+     * @param  int|null     $limit   Maximum number of campaigns to return per page (default: 50).
+     * @param  string|null  $cursor  Pagination cursor from a previous response.
+     * @return array<string, mixed>
      */
-    public function updateContact(string $contactId, array $data): array
+    public function listCampaigns(?int $limit = null, ?string $cursor = null): array
     {
-        return $this->request('PUT', '/contacts/' . urlencode($contactId), $data);
+        $params = [];
+        if ($limit !== null) {
+            $params['limit'] = $limit;
+        }
+        if ($cursor !== null) {
+            $params['cursor'] = $cursor;
+        }
+
+        return $this->request('GET', '/emails', $params);
     }
 
     /**
-     * Delete a contact from Constant Contact.
+     * List all contact lists.
      *
-     * @param  string  $contactId  The Constant Contact contact ID
-     */
-    public function deleteContact(string $contactId): void
-    {
-        $this->request('DELETE', '/contacts/' . urlencode($contactId));
-    }
-
-    /**
-     * List all contact lists in the account.
-     *
-     * @return array<string, mixed> List of contact lists
+     * @return array<string, mixed>
      */
     public function listLists(): array
     {
@@ -126,60 +131,22 @@ class ConstantContactService
     }
 
     /**
-     * Get a single contact list by ID.
+     * Get the current authenticated user's account information.
      *
-     * @param  string  $listId  The Constant Contact list ID
-     * @return array<string, mixed> Contact list data
-     */
-    public function getList(string $listId): array
-    {
-        return $this->request('GET', '/contact_lists/' . urlencode($listId));
-    }
-
-    /**
-     * Create a new contact list.
-     *
-     * @param  string  $name  The list name
-     * @return array<string, mixed> Created list data
-     */
-    public function createList(string $name): array
-    {
-        return $this->request('POST', '/contact_lists', [
-            'name' => $name,
-        ]);
-    }
-
-    /**
-     * Add contacts to a contact list.
-     *
-     * @param  string  $listId  The list ID
-     * @param  array<int, string>  $contactIds  Array of contact IDs to add
-     * @return array<string, mixed> Result of the add operation
-     */
-    public function addContactToList(string $listId, array $contactIds): array
-    {
-        return $this->request('POST', '/contact_lists/' . urlencode($listId) . '/contacts', [
-            'contact_ids' => $contactIds,
-        ]);
-    }
-
-    /**
-     * Get the current user account summary.
-     *
-     * @return array<string, mixed> Account summary data
+     * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/account/summary');
+        return $this->request('GET', '/user');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path (relative to base URL)
-     * @param  array<string, mixed>  $data  Request data (query params for GET, body for POST)
-     * @return array<string, mixed> Parsed JSON response
+     * @param  string               $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string               $path    API endpoint path (relative to base URL).
+     * @param  array<string, mixed> $data    Query parameters or JSON body.
+     * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
@@ -190,15 +157,12 @@ class ConstantContactService
     /**
      * Make a raw HTTP request to the Constant Contact API.
      *
-     * Attaches the Bearer access token on every request.
-     * Handles error responses, HTML bodies, and connection failures.
+     * @param  string               $method  HTTP method.
+     * @param  string               $path    API endpoint path.
+     * @param  array<string, mixed> $data    Query parameters or JSON body.
+     * @return \Illuminate\Http\Client\Response
      *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Request payload
-     * @return \Illuminate\Http\Client\Response Raw HTTP response
-     *
-     * @throws \RuntimeException On auth, connection, or API errors
+     * @throws \RuntimeException If the API key is missing or the request fails.
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
@@ -212,6 +176,7 @@ class ConstantContactService
             $http = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
@@ -230,15 +195,19 @@ class ConstantContactService
                     Log::warning("Constant Contact API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Constant Contact API returned unexpected HTML (HTTP {$response->status()}).");
+                    throw new \RuntimeException("Constant Contact API endpoint not available (HTTP {$response->status()}). The URL may be incorrect or the service is experiencing issues.");
                 }
 
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
+                $error = $response->json();
+                $errorMessage = is_array($error)
+                    ? ($error[0]['error_message'] ?? json_encode($error))
+                    : $body;
+
                 Log::error("Constant Contact API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'error' => $errorMessage,
                 ]);
-                throw new \RuntimeException("Constant Contact API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new \RuntimeException("Constant Contact API error ({$response->status()}): " . (is_string($errorMessage) ? $errorMessage : json_encode($errorMessage)));
             }
 
             return $response;

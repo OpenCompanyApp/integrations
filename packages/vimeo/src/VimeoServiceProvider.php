@@ -6,6 +6,13 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Laravel service provider for the Vimeo integration.
+ *
+ * Registers the VimeoService as a singleton using credentials from
+ * the CredentialResolver, and boots the VimeoToolProvider into the
+ * ToolProviderRegistry.
+ */
 class VimeoServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -15,7 +22,7 @@ class VimeoServiceProvider extends ServiceProvider
 
             return new VimeoService(
                 accessToken: $creds->get('vimeo', 'access_token', ''),
-                baseUrl: $creds->get('vimeo', 'url', 'https://api.vimeo.com'),
+                baseUrl: $creds->get('vimeo', 'base_url', 'https://api.vimeo.com'),
             );
         });
     }

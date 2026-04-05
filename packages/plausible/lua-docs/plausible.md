@@ -142,3 +142,23 @@ local result = app.integrations.plausible.query_stats({
   date_range = "30d"
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple plausible accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.plausible.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.plausible.default.function_name({...})
+
+-- Named accounts
+app.integrations.plausible.work.function_name({...})
+app.integrations.plausible.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

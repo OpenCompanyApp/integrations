@@ -307,3 +307,23 @@ local result = app.integrations.zoom.zoom_update_meeting({
   start_time = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple zoom accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.zoom.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.zoom.default.function_name({...})
+
+-- Named accounts
+app.integrations.zoom.work.function_name({...})
+app.integrations.zoom.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

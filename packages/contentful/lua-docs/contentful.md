@@ -231,3 +231,23 @@ local result = app.integrations.contentful.contentful_update_entry({
   version = 0
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple contentful accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.contentful.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.contentful.default.function_name({...})
+
+-- Named accounts
+app.integrations.contentful.work.function_name({...})
+app.integrations.contentful.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

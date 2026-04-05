@@ -454,3 +454,23 @@ Some list endpoints support pagination via `limit` and cursor-style parameters. 
 - Text fields (`desc`, `text`) support Markdown.
 - Archiving a card or list is reversible; deleting a card is permanent.
 - Rate limits apply — avoid rapid successive calls in tight loops.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple trello accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.trello.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.trello.default.function_name({...})
+
+-- Named accounts
+app.integrations.trello.work.function_name({...})
+app.integrations.trello.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

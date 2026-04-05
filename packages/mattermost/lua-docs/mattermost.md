@@ -246,3 +246,23 @@ local post = app.integrations.mattermost.mattermost_create_post({
   file_ids = '["' .. upload.file_infos[1].id .. '"]'
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple mattermost accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.mattermost.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.mattermost.default.function_name({...})
+
+-- Named accounts
+app.integrations.mattermost.work.function_name({...})
+app.integrations.mattermost.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

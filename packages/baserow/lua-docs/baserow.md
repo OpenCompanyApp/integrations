@@ -242,3 +242,23 @@ local result = app.integrations.baserow.baserow_update_row({
   data = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple baserow accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.baserow.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.baserow.default.function_name({...})
+
+-- Named accounts
+app.integrations.baserow.work.function_name({...})
+app.integrations.baserow.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

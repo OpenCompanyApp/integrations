@@ -1116,3 +1116,23 @@ end
 - **Use `create_or_update_contact`** instead of `create_contact` when you want idempotent upserts by email — this avoids duplicates.
 - **All list endpoints** return a `results` array. Check for the `after` field to determine if more pages are available.
 - **Engagements require explicit association** — After creating a note, task, or meeting, you may need to associate it with contacts/deals/companies separately depending on your workflow.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple hubspot accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.hubspot.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.hubspot.default.function_name({...})
+
+-- Named accounts
+app.integrations.hubspot.work.function_name({...})
+app.integrations.hubspot.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

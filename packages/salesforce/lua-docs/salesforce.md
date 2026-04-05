@@ -491,3 +491,23 @@ local result = app.integrations.salesforce.salesforce_get_user({
 print("User: " .. result.Name)
 print("Email: " .. result.Email)
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple salesforce accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.salesforce.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.salesforce.default.function_name({...})
+
+-- Named accounts
+app.integrations.salesforce.work.function_name({...})
+app.integrations.salesforce.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

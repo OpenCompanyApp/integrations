@@ -376,3 +376,23 @@ local result = app.integrations.mailchimp.mailchimp_update_subscriber({
   merge_fields = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple mailchimp accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.mailchimp.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.mailchimp.default.function_name({...})
+
+-- Named accounts
+app.integrations.mailchimp.work.function_name({...})
+app.integrations.mailchimp.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -315,3 +315,23 @@ local result = app.integrations.sendgrid.sendgrid_get_templates({
   limit = 50
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple sendgrid accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.sendgrid.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.sendgrid.default.function_name({...})
+
+-- Named accounts
+app.integrations.sendgrid.work.function_name({...})
+app.integrations.sendgrid.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

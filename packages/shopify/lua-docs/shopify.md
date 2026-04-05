@@ -327,3 +327,23 @@ List endpoints support cursor-based pagination. Pass `page_info` from a previous
 - Financial status values: `pending`, `paid`, `partially_paid`, `refunded`, `voided`.
 - Product status values: `active`, `draft`, `archived`.
 - Cancellation reasons: `customer`, `inventory`, `fraud`, `other`.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple shopify accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.shopify.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.shopify.default.function_name({...})
+
+-- Named accounts
+app.integrations.shopify.work.function_name({...})
+app.integrations.shopify.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -309,3 +309,23 @@ local result = app.integrations.klaviyo.klaviyo_update_profile({
   phone_number = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple klaviyo accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.klaviyo.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.klaviyo.default.function_name({...})
+
+-- Named accounts
+app.integrations.klaviyo.work.function_name({...})
+app.integrations.klaviyo.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

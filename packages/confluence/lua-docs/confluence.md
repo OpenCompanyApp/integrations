@@ -248,3 +248,23 @@ local result = app.integrations.confluence.confluence_update_page({
   body = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple confluence accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.confluence.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.confluence.default.function_name({...})
+
+-- Named accounts
+app.integrations.confluence.work.function_name({...})
+app.integrations.confluence.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

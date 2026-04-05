@@ -306,3 +306,23 @@ local user = app.integrations.supabase.supabase_get_current_user()
 print("User ID: " .. user.id)
 print("Email: " .. user.email)
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple supabase accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.supabase.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.supabase.default.function_name({...})
+
+-- Named accounts
+app.integrations.supabase.work.function_name({...})
+app.integrations.supabase.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

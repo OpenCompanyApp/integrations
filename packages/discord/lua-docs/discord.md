@@ -371,3 +371,23 @@ local result = app.integrations.discord.discord_update_channel({
   topic = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple discord accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.discord.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.discord.default.function_name({...})
+
+-- Named accounts
+app.integrations.discord.work.function_name({...})
+app.integrations.discord.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

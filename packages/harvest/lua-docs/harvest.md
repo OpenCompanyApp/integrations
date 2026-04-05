@@ -243,3 +243,23 @@ local result = app.integrations.harvest.harvest_update_time_entry({
   notes = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple harvest accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.harvest.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.harvest.default.function_name({...})
+
+-- Named accounts
+app.integrations.harvest.work.function_name({...})
+app.integrations.harvest.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

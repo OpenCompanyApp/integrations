@@ -689,3 +689,23 @@ Several list endpoints support cursor-based pagination. When a response includes
 - **Rate limits:** Slack API rate limits apply. Use pagination parameters rather than requesting large result sets in a single call.
 - **Usergroups:** The `update_usergroup_members` tool **replaces** the entire member list. Fetch the current list first if you need to add or remove individual members.
 - **Thread replies:** When replying in a thread, pass the parent message's `ts` value as `thread_ts` in `send_message`, not the `ts` of another reply.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple slack accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.slack.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.slack.default.function_name({...})
+
+-- Named accounts
+app.integrations.slack.work.function_name({...})
+app.integrations.slack.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

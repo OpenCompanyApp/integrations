@@ -443,3 +443,23 @@ local result = app.integrations.gitlab.gitlab_update_merge_request({
   title = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple gitlab accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.gitlab.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.gitlab.default.function_name({...})
+
+-- Named accounts
+app.integrations.gitlab.work.function_name({...})
+app.integrations.gitlab.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

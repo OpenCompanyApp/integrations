@@ -207,3 +207,23 @@ app.integrations.google_drive.share_file({
 - `append_rows` is better than `write_range` when adding rows to an existing table -- it auto-detects where the data ends.
 - Calendar event times use ISO 8601 with timezone offset. Always include the offset or set `time_zone` explicitly.
 - Drive search excludes trashed files by default.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple google accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.google.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.google.default.function_name({...})
+
+-- Named accounts
+app.integrations.google.work.function_name({...})
+app.integrations.google.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

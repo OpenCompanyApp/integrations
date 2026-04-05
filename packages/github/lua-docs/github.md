@@ -983,3 +983,23 @@ local runs = app.integrations.github.list_workflow_runs({ owner = "octocat", rep
 - **Workflow dispatch**: The `dispatch_workflow` tool only works with workflows that have a `workflow_dispatch` trigger defined in their YAML file.
 - **Labels**: `add_labels` appends labels to an issue. `update_issue` with `labels` replaces all labels. Use the appropriate tool for your use case.
 - **Issue vs. PR comments**: Both use the same `create_issue_comment` tool — PRs are a type of issue in the GitHub API, so `issue_number` accepts either an issue number or a PR number.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple github accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.github.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.github.default.function_name({...})
+
+-- Named accounts
+app.integrations.github.work.function_name({...})
+app.integrations.github.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

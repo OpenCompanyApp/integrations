@@ -62,3 +62,23 @@ Deals can have the following statuses:
 - `open` — Active deal in the pipeline
 - `won` — Deal is won/closed
 - `lost` — Deal is lost/closed
+
+---
+
+## Multi-Account Usage
+
+If you have multiple pipedrive accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.pipedrive.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.pipedrive.default.function_name({...})
+
+-- Named accounts
+app.integrations.pipedrive.work.function_name({...})
+app.integrations.pipedrive.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

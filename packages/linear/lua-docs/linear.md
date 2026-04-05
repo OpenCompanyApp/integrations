@@ -758,3 +758,23 @@ print("Fetched " .. #issues .. " issues total")
 - **GraphQL backend**: All operations use the Linear GraphQL API at `https://api.linear.app/graphql`. For operations not covered by the built-in tools, use `raw_query` to run custom GraphQL queries or mutations.
 - **Rate limits**: Linear enforces API rate limits. If you encounter errors during bulk operations, add delays between calls.
 - **Team discovery**: Call `get_teams({})` first to discover team IDs, then `list_workflows({ team_id = "..." })` for available states, and `list_labels({ team_id = "..." })` for available labels.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple linear accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.linear.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.linear.default.function_name({...})
+
+-- Named accounts
+app.integrations.linear.work.function_name({...})
+app.integrations.linear.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

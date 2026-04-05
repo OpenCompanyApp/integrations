@@ -409,3 +409,23 @@ local result = app.integrations.asana.asana_update_task({
   notes = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple asana accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.asana.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.asana.default.function_name({...})
+
+-- Named accounts
+app.integrations.asana.work.function_name({...})
+app.integrations.asana.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

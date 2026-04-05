@@ -308,3 +308,23 @@ local result = app.integrations.xero.xero_update_invoice({
   line_items = {}
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple xero accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.xero.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.xero.default.function_name({...})
+
+-- Named accounts
+app.integrations.xero.work.function_name({...})
+app.integrations.xero.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

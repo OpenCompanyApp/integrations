@@ -356,3 +356,23 @@ local result = app.integrations.twilio.twilio_delete_recording({
 
 print("Deleted: " .. tostring(result.deleted))
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple twilio accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.twilio.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.twilio.default.function_name({...})
+
+-- Named accounts
+app.integrations.twilio.work.function_name({...})
+app.integrations.twilio.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -219,3 +219,23 @@ local result = app.integrations.openai.openai_create_embedding({
   input = "The quick brown fox jumps over the lazy dog"
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple openai accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.openai.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.openai.default.function_name({...})
+
+-- Named accounts
+app.integrations.openai.work.function_name({...})
+app.integrations.openai.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

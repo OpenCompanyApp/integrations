@@ -211,3 +211,23 @@ local result = app.integrations.quickbooks.quickbooks_create_payment({
   total_amount = "150.00"
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple quickbooks accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.quickbooks.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.quickbooks.default.function_name({...})
+
+-- Named accounts
+app.integrations.quickbooks.work.function_name({...})
+app.integrations.quickbooks.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

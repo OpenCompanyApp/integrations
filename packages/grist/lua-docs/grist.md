@@ -318,3 +318,23 @@ app.integrations.grist.update_records({
   records = '[{"id": ' .. newId .. ', "fields": {"Email": "jane.doe@example.com"}}]'
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple grist accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.grist.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.grist.default.function_name({...})
+
+-- Named accounts
+app.integrations.grist.work.function_name({...})
+app.integrations.grist.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -389,3 +389,23 @@ local result = app.integrations.zendesk.zendesk_update_ticket({
   priority = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple zendesk accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.zendesk.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.zendesk.default.function_name({...})
+
+-- Named accounts
+app.integrations.zendesk.work.function_name({...})
+app.integrations.zendesk.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

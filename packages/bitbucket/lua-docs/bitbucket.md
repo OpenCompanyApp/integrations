@@ -352,3 +352,23 @@ local result = app.integrations.bitbucket.bitbucket_update_issue({
   issue_id = 0
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple bitbucket accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.bitbucket.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.bitbucket.default.function_name({...})
+
+-- Named accounts
+app.integrations.bitbucket.work.function_name({...})
+app.integrations.bitbucket.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

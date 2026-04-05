@@ -200,3 +200,23 @@ local result = app.integrations.nocodb.nocodb_batch_create({
   records = '[{"Name":"Alice"},{"Name":"Bob"},{"Name":"Charlie"}]'
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple nocodb accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.nocodb.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.nocodb.default.function_name({...})
+
+-- Named accounts
+app.integrations.nocodb.work.function_name({...})
+app.integrations.nocodb.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

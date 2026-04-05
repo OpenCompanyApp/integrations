@@ -77,3 +77,23 @@ Common event types for filtering:
 ## Tags
 
 You can attach tags to outgoing emails for categorization and filtering. Pass `tags` as a comma-separated string when sending an email. Tags are used for analytics and event filtering.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple mailgun accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.mailgun.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.mailgun.default.function_name({...})
+
+-- Named accounts
+app.integrations.mailgun.work.function_name({...})
+app.integrations.mailgun.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -157,3 +157,23 @@ for _, entry in ipairs(result.oncalls) do
   print(entry.user.name .. " - " .. entry.escalation_policy.name)
 end
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple pagerduty accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.pagerduty.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.pagerduty.default.function_name({...})
+
+-- Named accounts
+app.integrations.pagerduty.work.function_name({...})
+app.integrations.pagerduty.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

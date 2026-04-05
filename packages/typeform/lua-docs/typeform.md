@@ -299,3 +299,23 @@ local result = app.integrations.typeform.delete_webhook({
 
 print(result.message)
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple typeform accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.typeform.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.typeform.default.function_name({...})
+
+-- Named accounts
+app.integrations.typeform.work.function_name({...})
+app.integrations.typeform.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

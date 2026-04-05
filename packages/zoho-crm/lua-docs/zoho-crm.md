@@ -305,3 +305,23 @@ local result = app.integrations.zoho-crm.zoho_crm_update_lead({
   last_name = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple zoho-crm accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.zoho-crm.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.zoho-crm.default.function_name({...})
+
+-- Named accounts
+app.integrations.zoho-crm.work.function_name({...})
+app.integrations.zoho-crm.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

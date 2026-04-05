@@ -290,3 +290,23 @@ local result = app.integrations.figma.figma_post_comment({
   client_meta = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple figma accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.figma.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.figma.default.function_name({...})
+
+-- Named accounts
+app.integrations.figma.work.function_name({...})
+app.integrations.figma.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

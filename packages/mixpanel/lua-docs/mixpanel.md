@@ -245,3 +245,23 @@ if result.authenticated then
   print("Successfully authenticated with Mixpanel")
 end
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple mixpanel accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.mixpanel.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.mixpanel.default.function_name({...})
+
+-- Named accounts
+app.integrations.mixpanel.work.function_name({...})
+app.integrations.mixpanel.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

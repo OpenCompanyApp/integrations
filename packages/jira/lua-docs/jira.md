@@ -788,3 +788,23 @@ print("Fetched " .. #all_issues .. " open issues")
 - **Agile API**: Board and sprint tools use the Jira Agile REST API (`/rest/agile/1.0`), which requires Jira Software access.
 - **Rate limits**: Jira Cloud enforces rate limits. If you encounter errors, reduce `max_results` or add delays between calls.
 - **Delete is irreversible**: The `delete_issue` tool permanently removes an issue. Consider transitioning to a "Done" or "Closed" status instead when possible.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple jira accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.jira.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.jira.default.function_name({...})
+
+-- Named accounts
+app.integrations.jira.work.function_name({...})
+app.integrations.jira.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

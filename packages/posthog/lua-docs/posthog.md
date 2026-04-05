@@ -222,3 +222,23 @@ for _, dashboard in ipairs(result.results) do
   print(dashboard.name .. " (ID: " .. dashboard.id .. ")")
 end
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple posthog accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.posthog.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.posthog.default.function_name({...})
+
+-- Named accounts
+app.integrations.posthog.work.function_name({...})
+app.integrations.posthog.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

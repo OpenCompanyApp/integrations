@@ -628,3 +628,23 @@ end
 - **ID parameters** — Single-object lookups (get, update, delete, cancel, confirm, capture, pay, void) use the parameter name `id` (not the object-type name). For example, `get_customer({ id = "cus_..." })`, not `get_customer({ customer = "cus_..." })`.
 - **Test mode** — Use `sk_test_...` keys to interact with Stripe's test environment. No real charges are created.
 - **Error handling** — API errors include the HTTP status code and Stripe error message. Common errors: `401` (invalid API key), `402` (request failed — e.g., card declined), `404` (object not found), `429` (rate limit exceeded).
+
+---
+
+## Multi-Account Usage
+
+If you have multiple stripe accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.stripe.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.stripe.default.function_name({...})
+
+-- Named accounts
+app.integrations.stripe.work.function_name({...})
+app.integrations.stripe.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

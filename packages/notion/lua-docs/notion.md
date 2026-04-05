@@ -554,3 +554,23 @@ This pagination pattern applies to:
 - **Integration scope** — The integration can only access pages and databases it has been explicitly added to via **Connections** in Notion.
 - **Archiving vs. deleting** — Pages are archived (recoverable). Blocks are permanently deleted.
 - **Database rows are pages** — Each row in a Notion database is a page object. Use `notion_query_database` to list rows and `notion_update_page` to modify row properties.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple notion accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.notion.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.notion.default.function_name({...})
+
+-- Named accounts
+app.integrations.notion.work.function_name({...})
+app.integrations.notion.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

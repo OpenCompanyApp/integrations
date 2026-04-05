@@ -624,3 +624,23 @@ print("Remaining tasks: " .. #remaining)
 - **Deleting projects** is permanent and removes all contained tasks and sections. Use with caution.
 - **Deleting sections** does not delete the tasks within — they move to the project root.
 - **Filter expressions** use Todoist's filter syntax, e.g. `"today"`, `"overdue"`, `"p1 & @work"`, `"7 days"`, `"assigned to: me"`. See [Todoist Filters](https://todoist.com/help/articles/introduction-to-filters) for full reference.
+
+---
+
+## Multi-Account Usage
+
+If you have multiple todoist accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.todoist.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.todoist.default.function_name({...})
+
+-- Named accounts
+app.integrations.todoist.work.function_name({...})
+app.integrations.todoist.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

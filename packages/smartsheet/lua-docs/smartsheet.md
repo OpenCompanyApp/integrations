@@ -351,3 +351,23 @@ local result = app.integrations.smartsheet.get_current_user({})
 
 print("Logged in as: " .. result.firstName .. " " .. result.lastName .. " <" .. result.email .. ">")
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple smartsheet accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.smartsheet.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.smartsheet.default.function_name({...})
+
+-- Named accounts
+app.integrations.smartsheet.work.function_name({...})
+app.integrations.smartsheet.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

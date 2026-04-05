@@ -166,3 +166,23 @@ local result = app.integrations.resend.resend_create_contact({
   last_name = "Doe"
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple resend accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.resend.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.resend.default.function_name({...})
+
+-- Named accounts
+app.integrations.resend.work.function_name({...})
+app.integrations.resend.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

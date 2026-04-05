@@ -295,3 +295,23 @@ print(result.resource.booking_url)
 
 1. `calendly_create_one_off` — Create a temporary event type for a specific time window
 2. Share the resulting `scheduling_url` with the participant
+
+---
+
+## Multi-Account Usage
+
+If you have multiple calendly accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.calendly.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.calendly.default.function_name({...})
+
+-- Named accounts
+app.integrations.calendly.work.function_name({...})
+app.integrations.calendly.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -239,3 +239,23 @@ local result = app.integrations.wrike.wrike_update_task({
   description = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple wrike accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.wrike.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.wrike.default.function_name({...})
+
+-- Named accounts
+app.integrations.wrike.work.function_name({...})
+app.integrations.wrike.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

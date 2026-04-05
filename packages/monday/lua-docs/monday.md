@@ -206,3 +206,23 @@ local result = app.integrations.monday.monday_create_update({
   body = "This task is now in progress."
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple monday accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.monday.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.monday.default.function_name({...})
+
+-- Named accounts
+app.integrations.monday.work.function_name({...})
+app.integrations.monday.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

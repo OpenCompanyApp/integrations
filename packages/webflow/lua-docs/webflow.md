@@ -280,3 +280,23 @@ local result = app.integrations.webflow.webflow_update_item({
   fields = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple webflow accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.webflow.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.webflow.default.function_name({...})
+
+-- Named accounts
+app.integrations.webflow.work.function_name({...})
+app.integrations.webflow.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

@@ -60,3 +60,23 @@ print(result.name)
 print("Revenue: $" .. (result.revenue / 100))
 print("MRR: $" .. (result.mrr / 100))
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple trustmrr accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.trustmrr.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.trustmrr.default.function_name({...})
+
+-- Named accounts
+app.integrations.trustmrr.work.function_name({...})
+app.integrations.trustmrr.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

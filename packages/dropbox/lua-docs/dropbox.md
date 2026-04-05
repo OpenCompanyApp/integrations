@@ -337,3 +337,23 @@ local result = app.integrations.dropbox.dropbox_upload_file({
   mode = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple dropbox accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.dropbox.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.dropbox.default.function_name({...})
+
+-- Named accounts
+app.integrations.dropbox.work.function_name({...})
+app.integrations.dropbox.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

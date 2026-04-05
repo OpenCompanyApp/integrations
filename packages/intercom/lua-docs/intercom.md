@@ -290,3 +290,23 @@ local result = app.integrations.intercom.intercom_update_contact({
   email = ""
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple intercom accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.intercom.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.intercom.default.function_name({...})
+
+-- Named accounts
+app.integrations.intercom.work.function_name({...})
+app.integrations.intercom.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

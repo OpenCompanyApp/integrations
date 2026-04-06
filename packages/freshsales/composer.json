@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "freshsales", "crm", "opencompany"],
+    "keywords": ["tools", "freshsales", "crm", "sales", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

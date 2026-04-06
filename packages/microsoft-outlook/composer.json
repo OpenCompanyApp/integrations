@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-microsoft-outlook",
+    "description": "Microsoft Outlook integration for Laravel — read and send email, manage calendars and events via the Microsoft Graph API.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "microsoft", "outlook", "email", "calendar", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-microsoft-outlook": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftOutlook\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftOutlook\\OutlookServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

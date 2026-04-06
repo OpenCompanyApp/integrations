@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-courier",
+    "description": "Courier integration for Laravel — send messages, list messages, manage recipients and templates.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "courier", "communication", "notifications", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-courier": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Courier\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Courier\\CourierServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

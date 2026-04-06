@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-one-drive",
+    "description": "Microsoft OneDrive integration for Laravel — list, get, upload, and download files via Microsoft Graph API.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "onedrive", "storage", "microsoft", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-one-drive": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\OneDrive\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\OneDrive\\OneDriveServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

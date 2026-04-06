@@ -6,14 +6,8 @@ use OpenCompany\Integrations\Webflow\WebflowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Create a new item in a Webflow collection.
- */
 class WebflowCreateItem implements Tool
 {
-    /**
-     * @param  WebflowService  $service  The Webflow API client
-     */
     public function __construct(
         private WebflowService $service,
     ) {}
@@ -25,67 +19,38 @@ class WebflowCreateItem implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Create a new item in a Webflow collection.
-        Provide the collection ID and a fields object matching the collection schema.
-        Optionally set is_draft to create as a draft or is_archived to archive on creation.
-        MD;
+        return 'Create a new item in a Webflow CMS collection. Pass field data as key-value pairs matching the collection\'s schema. Set live to true to publish immediately.';
     }
 
     public function parameters(): array
     {
         return [
-            'collection_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the Webflow collection.'],
-            'fields' => ['type' => 'string', 'required' => true, 'description' => 'Item field data as a JSON object. Keys should match the collection field slugs.'],
-            'is_draft' => ['type' => 'boolean', 'description' => 'Whether the item should be created as a draft (default false).'],
-            'is_archived' => ['type' => 'boolean', 'description' => 'Whether the item should be archived on creation (default false).'],
+            'collection_id' => ['type' => 'string', 'required' => true, 'description' => 'The unique identifier of the CMS collection to add the item to.'],
+            'fields' => ['type' => 'object', 'required' => true, 'description' => 'Field data as key-value pairs matching the collection schema. Common fields: name, slug, _archived, _draft.'],
+            'live' => ['type' => 'boolean', 'description' => 'Whether to publish the item immediately (default: false). Set to true to make the item live on the site.'],
         ];
     }
 
-    /**
-     * Create a new item in a collection with the provided field data.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (collection_id, fields, is_draft, is_archived)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Webflow integration is not configured.');
             }
 
-            $collectionId = $args['collection_id'] ?? '';
-
-            if (empty($collectionId)) {
-                return ToolResult::error('collection_id is required.');
+            if (empty($args['collection_id'])) {
+                return ToolResult::error('Collection ID is required.');
             }
 
-            $fieldsRaw = $args['fields'] ?? '';
-
-            if (empty($fieldsRaw)) {
-                return ToolResult::error('fields is required.');
+            if (empty($args['fields']) || !is_array($args['fields'])) {
+                return ToolResult::error('Fields must be a non-empty object with key-value pairs.');
             }
 
-            $fields = $fieldsRaw;
-            if (is_string($fieldsRaw)) {
-                $decoded = json_decode($fieldsRaw, true);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    return ToolResult::error('Invalid JSON in fields: ' . json_last_error_msg());
-                }
-                $fields = $decoded;
-            }
+            $live = isset($args['live']) && (bool) $args['live'];
 
-            $isDraft = ! empty($args['is_draft']);
-            $isArchived = ! empty($args['is_archived']);
+            $result = $this->service->createItem($args['collection_id'], $args['fields'], $live);
 
-            $result = $this->service->createItem($collectionId, $fields, $isDraft, $isArchived);
-
-            $item = $result['item'] ?? $result;
-
-            return ToolResult::success([
-                'id' => $item['id'] ?? '',
-                'createdOn' => $item['createdOn'] ?? null,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

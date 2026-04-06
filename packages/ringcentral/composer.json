@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-ringcentral",
+    "description": "RingCentral integration for Laravel — send SMS, list messages, view call logs, and manage contacts.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "ringcentral", "communication", "sms", "voip", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-ringcentral": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\RingCentral\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\RingCentral\\RingCentralServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

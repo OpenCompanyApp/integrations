@@ -9,13 +9,11 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * List posts in a Mattermost channel.
  *
- * Supports pagination via page and per_page parameters.
+ * Returns a collection of posts from the specified channel, including
+ * post IDs, message content, author user IDs, and timestamps.
  */
 class MattermostListPosts implements Tool
 {
-    /**
-     * @param  MattermostService  $service  The Mattermost API client
-     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -27,51 +25,36 @@ class MattermostListPosts implements Tool
 
     public function description(): string
     {
-        return 'List posts in a Mattermost channel. Supports pagination with page and per_page.';
+        return 'List posts in a Mattermost channel. Returns post IDs, messages, author info, and timestamps. Use page and per_page for pagination.';
     }
 
     public function parameters(): array
     {
         return [
-            'channel_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the channel to list posts from.'],
-            'page'       => ['type' => 'integer', 'description' => 'The page number to retrieve (0-indexed, default 0).'],
-            'per_page'   => ['type' => 'integer', 'description' => 'Number of posts per page (default 60).'],
+            'channel_id' => ['type' => 'string', 'required' => true, 'description' => 'The channel ID to list posts from.'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (0-indexed). Default: 0.'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of posts per page. Default: 60.'],
         ];
     }
 
-    /**
-     * List posts in a Mattermost channel.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (channel_id, page, per_page)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mattermost integration is not configured.');
             }
 
             $channelId = $args['channel_id'] ?? '';
-
             if (empty($channelId)) {
                 return ToolResult::error('channel_id is required.');
             }
 
-            $params = [];
+            $page = isset($args['page']) ? (int) $args['page'] : 0;
+            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 60;
 
-            if (isset($args['page'])) {
-                $params['page'] = (int) $args['page'];
-            }
-            if (isset($args['per_page'])) {
-                $params['per_page'] = (int) $args['per_page'];
-            }
+            $result = $this->service->listPosts($channelId, $page, $perPage);
 
-            $result = $this->service->listPosts($channelId, $params);
-
-            return ToolResult::success([
-                'ok' => true,
-                'posts' => $result,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -12,18 +12,20 @@ use Illuminate\Support\Facades\Log;
  */
 class IntercomService
 {
-    private const BASE_URL = 'https://api.intercom.io';
-
     /**
-     * @param  string  $apiToken  Intercom personal access token
+     * @param  string  $accessToken  Intercom personal access token
+     * @param  string  $baseUrl      Intercom API base URL (default: https://api.intercom.io)
      */
     public function __construct(
-        private string $apiToken = '',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.intercom.io',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     public function isConfigured(): bool
     {
-        return ! empty($this->apiToken);
+        return ! empty($this->accessToken);
     }
 
     // ── Contacts ───────────────────────────────────────────
@@ -118,9 +120,9 @@ class IntercomService
     }
 
     /**
-     * List conversations with optional pagination and sorting.
+     * List conversations with optional pagination, sorting, and status filter.
      *
-     * @param  array<string, mixed>  $params  Query params: limit, starting_after, sort_order
+     * @param  array<string, mixed>  $params  Query params: limit, starting_after, sort_order, status
      * @return array<string, mixed>
      */
     public function listConversations(array $params = []): array
@@ -199,7 +201,7 @@ class IntercomService
         return $this->request('GET', '/companies', $params);
     }
 
-    // ── Me (test connection) ───────────────────────────────
+    // ── Me (current user) ──────────────────────────────────
 
     /**
      * Get the current admin (authenticated user).
@@ -214,30 +216,32 @@ class IntercomService
     // ── HTTP ───────────────────────────────────────────────
 
     /**
-     * Make an API request.
+     * Make an API request and return parsed JSON.
      *
      * @param  array<string, mixed>  $data  Query params (GET) or JSON body (POST/PUT/DELETE)
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        if (! $this->apiToken) {
-            throw new \RuntimeException('Intercom API token is not configured.');
+        if (! $this->accessToken) {
+            throw new \RuntimeException('Intercom access token is not configured.');
         }
+
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiToken,
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Intercom-Version' => '2.11',
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get(self::BASE_URL . $path, $data),
-                'POST' => $http->post(self::BASE_URL . $path, $data),
-                'PUT' => $http->put(self::BASE_URL . $path, $data),
-                'DELETE' => $http->delete(self::BASE_URL . $path, $data),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 

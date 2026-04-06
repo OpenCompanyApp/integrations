@@ -36,14 +36,20 @@ class LaunchDarklyService
      * @param  int  $offset  Offset for pagination (default: 0)
      * @return array<string, mixed>
      */
-    public function listFlags(?string $projectKey = null, int $limit = 20, int $offset = 0): array
+    public function listFlags(?string $projectKey = null, int $limit = 20, int $offset = 0, ?string $env = null): array
     {
         $project = $projectKey ?? $this->projectKey;
 
-        return $this->request('GET', "/flags/{$project}", [
+        $params = [
             'limit' => $limit,
             'offset' => $offset,
-        ]);
+        ];
+
+        if ($env !== null) {
+            $params['env'] = $env;
+        }
+
+        return $this->request('GET', "/flags/{$project}", $params);
     }
 
     /**
@@ -51,13 +57,19 @@ class LaunchDarklyService
      *
      * @param  string  $featureFlagKey  The feature flag key
      * @param  string|null  $projectKey  Override the default project key
+     * @param  string|null  $env  Environment key to filter by
      * @return array<string, mixed>
      */
-    public function getFlag(string $featureFlagKey, ?string $projectKey = null): array
+    public function getFlag(string $featureFlagKey, ?string $projectKey = null, ?string $env = null): array
     {
         $project = $projectKey ?? $this->projectKey;
 
-        return $this->request('GET', "/flags/{$project}/{$featureFlagKey}");
+        $params = [];
+        if ($env !== null) {
+            $params['env'] = $env;
+        }
+
+        return $this->request('GET', "/flags/{$project}/{$featureFlagKey}", $params);
     }
 
     /**
@@ -108,13 +120,24 @@ class LaunchDarklyService
     }
 
     /**
+     * Get a single project by key.
+     *
+     * @param  string  $projectKey  The project key
+     * @return array<string, mixed>
+     */
+    public function getProject(string $projectKey): array
+    {
+        return $this->request('GET', "/projects/{$projectKey}");
+    }
+
+    /**
      * Get the currently authenticated user.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/members/me');
     }
 
     /**

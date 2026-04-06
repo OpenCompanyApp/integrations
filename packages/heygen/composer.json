@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-heygen",
-    "description": "HeyGen AI video generation integration for Laravel — create videos, manage avatars, list voices, and more.",
+    "description": "HeyGen AI video generation integration for Laravel — create videos, manage avatars, voices, and templates.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "heygen", "video", "ai", "avatars", "opencompany"],
+    "keywords": ["tools", "heygen", "ai", "video", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

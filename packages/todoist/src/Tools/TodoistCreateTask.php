@@ -2,8 +2,8 @@
 
 namespace OpenCompany\Integrations\Todoist\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Todoist\TodoistService;
 
 /**

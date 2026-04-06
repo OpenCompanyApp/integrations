@@ -1,0 +1,33 @@
+{
+    "name": "opencompanyapp/integration-front",
+    "description": "Front (frontapp.com) integration for Laravel — manage conversations, messages, and contacts.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "front", "communication", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-front": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Front\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Front\\FrontServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

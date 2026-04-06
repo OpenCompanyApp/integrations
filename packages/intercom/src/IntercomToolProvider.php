@@ -8,6 +8,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Intercom\Tools\IntercomCreateContact;
 use OpenCompany\Integrations\Intercom\Tools\IntercomGetContact;
+use OpenCompany\Integrations\Intercom\Tools\IntercomGetCurrentUser;
 use OpenCompany\Integrations\Intercom\Tools\IntercomUpdateContact;
 use OpenCompany\Integrations\Intercom\Tools\IntercomListContacts;
 use OpenCompany\Integrations\Intercom\Tools\IntercomSearchContacts;
@@ -35,7 +36,7 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'crm, contacts, conversations, support',
+            'label' => 'contacts, conversations, support',
             'description' => 'Customer messaging platform',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:intercom',
@@ -49,7 +50,7 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Customer messaging platform – contacts, conversations, admins, tags, notes, and companies',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:intercom',
-            'category' => 'productivity',
+            'category' => 'support',
             'badge' => 'verified',
             'docs_url' => 'https://developers.intercom.com/docs/references/',
         ];
@@ -59,31 +60,40 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_token',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'Personal Access Token',
+                'label' => 'Access Token',
                 'placeholder' => 'dG9rZW4...',
                 'hint' => 'Create a personal access token in Intercom Settings → Developers → Your App → Configure → Authentication.',
                 'required' => true,
+            ],
+            [
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.intercom.io',
+                'hint' => 'Override only if using a custom Intercom API endpoint. Defaults to <code>https://api.intercom.io</code>.',
+                'default' => 'https://api.intercom.io',
             ],
         ];
     }
 
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.intercom.io', '/');
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided. Create one in Intercom Settings → Developers.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided. Create one in Intercom Settings → Developers.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiToken,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Intercom-Version' => '2.11',
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.intercom.io/me');
+            ])->timeout(10)->get($baseUrl . '/me');
 
             if ($response->successful()) {
                 $data = $response->json() ?? [];
@@ -115,7 +125,8 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
     public function validationRules(): array
     {
         return [
-            'api_token' => 'nullable|string',
+            'access_token' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
@@ -123,12 +134,12 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             // Contacts
-            'intercom_create_contact' => [
-                'class' => IntercomCreateContact::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create a new contact in Intercom.',
-                'icon' => 'ph:user-plus',
+            'intercom_list_contacts' => [
+                'class' => IntercomListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List Intercom contacts with pagination.',
+                'icon' => 'ph:users',
             ],
             'intercom_get_contact' => [
                 'class' => IntercomGetContact::class,
@@ -137,19 +148,19 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Retrieve an Intercom contact by ID.',
                 'icon' => 'ph:user',
             ],
+            'intercom_create_contact' => [
+                'class' => IntercomCreateContact::class,
+                'type' => 'write',
+                'name' => 'Create Contact',
+                'description' => 'Create a new contact in Intercom.',
+                'icon' => 'ph:user-plus',
+            ],
             'intercom_update_contact' => [
                 'class' => IntercomUpdateContact::class,
                 'type' => 'write',
                 'name' => 'Update Contact',
                 'description' => 'Update an existing Intercom contact.',
                 'icon' => 'ph:pencil-simple',
-            ],
-            'intercom_list_contacts' => [
-                'class' => IntercomListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List Intercom contacts with pagination.',
-                'icon' => 'ph:users',
             ],
             'intercom_search_contacts' => [
                 'class' => IntercomSearchContacts::class,
@@ -166,6 +177,20 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
                 'icon' => 'ph:trash',
             ],
             // Conversations
+            'intercom_list_conversations' => [
+                'class' => IntercomListConversations::class,
+                'type' => 'read',
+                'name' => 'List Conversations',
+                'description' => 'List Intercom conversations with pagination and status filter.',
+                'icon' => 'ph:list',
+            ],
+            'intercom_get_conversation' => [
+                'class' => IntercomGetConversation::class,
+                'type' => 'read',
+                'name' => 'Get Conversation',
+                'description' => 'Retrieve an Intercom conversation by ID.',
+                'icon' => 'ph:chat-circle',
+            ],
             'intercom_create_conversation' => [
                 'class' => IntercomCreateConversation::class,
                 'type' => 'write',
@@ -180,20 +205,6 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Reply to an Intercom conversation.',
                 'icon' => 'ph:chat-circle-dots',
             ],
-            'intercom_list_conversations' => [
-                'class' => IntercomListConversations::class,
-                'type' => 'read',
-                'name' => 'List Conversations',
-                'description' => 'List Intercom conversations with pagination.',
-                'icon' => 'ph:list',
-            ],
-            'intercom_get_conversation' => [
-                'class' => IntercomGetConversation::class,
-                'type' => 'read',
-                'name' => 'Get Conversation',
-                'description' => 'Retrieve an Intercom conversation by ID.',
-                'icon' => 'ph:chat-circle',
-            ],
             // Admins
             'intercom_list_admins' => [
                 'class' => IntercomListAdmins::class,
@@ -201,6 +212,13 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'List Admins',
                 'description' => 'List Intercom admins.',
                 'icon' => 'ph:shield-check',
+            ],
+            'intercom_get_current_user' => [
+                'class' => IntercomGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the currently authenticated Intercom admin.',
+                'icon' => 'ph:user-circle',
             ],
             // Tags
             'intercom_list_tags' => [
@@ -244,7 +262,8 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.intercom.io'],
         ];
     }
 
@@ -272,7 +291,8 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             return new IntercomService(
-                apiToken: $creds->get('intercom', 'api_token', '', $account),
+                accessToken: $creds->get('intercom', 'access_token', '', $account),
+                baseUrl: $creds->get('intercom', 'base_url', 'https://api.intercom.io', $account),
             );
         }
 

@@ -1,14 +1,14 @@
 # Integration: HeyGen
 
-> HeyGen AI video generation integration for the [Laravel AI SDK](https://github.com/laravel/ai) — create videos, manage avatars, list voices, and more. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> HeyGen AI video generation integration for the [Laravel AI SDK](https://github.com/laravel/ai) — create videos, manage avatars, voices, and templates. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to AI-powered video generation. Create videos with customizable avatars and voices, manage your avatar library, and monitor video status — all through the [HeyGen](https://www.heygen.com) API.
+Give your AI agents access to AI-powered video generation. Create talking avatar videos, list available avatars and voices, manage templates, and track video status — all through the [HeyGen](https://heygen.com) API.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This HeyGen tool lets AI agents generate AI videos, manage avatars, and query account information — enabling automated video content creation workflows.
+This HeyGen tool lets AI agents generate AI videos, check rendering progress, and browse available avatars, voices, and templates — enabling automated video production workflows.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This tool requires a HeyGen API key.
+This tool requires a HeyGen API access token.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -31,8 +31,8 @@ This tool requires a HeyGen API key.
 ```php
 return [
     'heygen' => [
-        'api_key' => env('HEYGEN_API_KEY'),
-        'url'     => env('HEYGEN_URL', 'https://api.heygen.com/v2'),
+        'access_token' => env('HEYGEN_API_TOKEN'),
+        'url'          => env('HEYGEN_API_URL', 'https://api.heygen.com'),
     ],
 ];
 ```
@@ -41,38 +41,37 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `heygen_create_video` | write | Generate a new AI video with an avatar and voice |
-| `heygen_get_video` | read | Get the status and details of a video |
 | `heygen_list_videos` | read | List generated videos with pagination |
-| `heygen_list_avatars` | read | List available avatars for video generation |
-| `heygen_get_avatar` | read | Get details of a specific avatar |
-| `heygen_list_voices` | read | List available voices for video generation |
-| `heygen_create_avatar` | write | Create a new custom avatar |
-| `heygen_get_current_user` | read | Get the authenticated user's account information |
+| `heygen_get_video` | read | Get status and details of a specific video |
+| `heygen_create_video` | write | Generate a new AI video with avatars and voices |
+| `heygen_list_avatars` | read | List all available talking avatars |
+| `heygen_list_voices` | read | List all available voices |
+| `heygen_get_current_user` | read | Get authenticated user's account information |
+| `heygen_list_templates` | read | List available video templates |
 
 ## Quick Start
 
 ```php
 use OpenCompany\Integrations\HeyGen\HeyGenService;
+use OpenCompany\Integrations\HeyGen\Tools\HeyGenListAvatars;
 use OpenCompany\Integrations\HeyGen\Tools\HeyGenCreateVideo;
-use OpenCompany\Integrations\HeyGen\Tools\HeyGenGetVideo;
 
 // Create tools
 $service = app(HeyGenService::class);
 $tools = [
+    new HeyGenListAvatars($service),
     new HeyGenCreateVideo($service),
-    new HeyGenGetVideo($service),
 ];
 
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('Create a short product demo video using the default avatar');
+    ->prompt('List my available avatars and create a test video with the first one.');
 ```
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 8 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -82,7 +81,7 @@ $provider = $registry->get('heygen');
 
 // Create any tool via the provider
 $tool = $provider->createTool(
-    \OpenCompany\Integrations\HeyGen\Tools\HeyGenCreateVideo::class
+    \OpenCompany\Integrations\HeyGen\Tools\HeyGenListAvatars::class
 );
 ```
 
@@ -93,26 +92,33 @@ use OpenCompany\Integrations\HeyGen\HeyGenService;
 
 $service = app(HeyGenService::class);
 
-// Create a video
-$video = $service->createVideo([
-    'video_inputs' => [
-        [
-            'avatar' => ['avatar_id' => 'avatar_abc123', 'avatar_style' => 'normal'],
-            'voice'  => ['voice_id' => 'voice_def456'],
-            'script' => ['text' => 'Hello world!'],
-        ],
-    ],
-    'test' => true,
-]);
-
-// Check video status
-$status = $service->getVideo($video['data']['video_id']);
-
 // List avatars
 $avatars = $service->listAvatars();
 
 // List voices
 $voices = $service->listVoices();
+
+// Create a video
+$result = $service->createVideo(
+    videoInputs: [
+        [
+            'character' => [
+                'avatar_id' => 'avatar-abc123',
+                'voice_id' => 'voice-xyz789',
+            ],
+            'script' => 'Welcome to our product demo!',
+        ],
+    ],
+    test: true,
+);
+
+$videoId = $result['data']['video_id'];
+
+// Check video status
+$status = $service->getVideo($videoId);
+
+// List templates
+$templates = $service->listTemplates(limit: 20);
 
 // Get user info
 $user = $service->getCurrentUser();
@@ -130,7 +136,7 @@ $user = $service->getCurrentUser();
 - PHP 8.2+
 - Laravel 11 or 12
 - [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [HeyGen](https://www.heygen.com) account with API access
+- A [HeyGen](https://heygen.com) account with API access
 
 ## License
 

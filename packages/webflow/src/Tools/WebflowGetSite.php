@@ -6,14 +6,8 @@ use OpenCompany\Integrations\Webflow\WebflowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Retrieve details for a specific Webflow site by its ID.
- */
 class WebflowGetSite implements Tool
 {
-    /**
-     * @param  WebflowService  $service  The Webflow API client
-     */
     public function __construct(
         private WebflowService $service,
     ) {}
@@ -25,38 +19,28 @@ class WebflowGetSite implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Retrieve details for a specific Webflow site by its ID.
-        Returns the site name, domains, publication status, and metadata.
-        MD;
+        return 'Get details for a specific Webflow site by its ID. Returns site name, domain, publishing status, and other metadata.';
     }
 
     public function parameters(): array
     {
         return [
-            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the Webflow site.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The unique identifier of the Webflow site (e.g., "641d84b8f0bca14670785897").'],
         ];
     }
 
-    /**
-     * Get details for a specific site by its ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (site_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Webflow integration is not configured.');
             }
 
-            $siteId = $args['site_id'] ?? '';
-
-            if (empty($siteId)) {
-                return ToolResult::error('site_id is required.');
+            if (empty($args['id'])) {
+                return ToolResult::error('Site ID is required.');
             }
 
-            $result = $this->service->getSite($siteId);
+            $result = $this->service->getSite($args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

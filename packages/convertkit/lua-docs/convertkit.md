@@ -2,7 +2,7 @@
 
 ## list_subscribers
 
-List subscribers from your ConvertKit account with pagination and sorting.
+List subscribers from your ConvertKit account with pagination and date filtering.
 
 ### Parameters
 
@@ -10,7 +10,8 @@ List subscribers from your ConvertKit account with pagination and sorting.
 |------|------|----------|-------------|
 | `page` | integer | no | Page number (starts at 1, default: 1) |
 | `per_page` | integer | no | Results per page (max 50, default: 50) |
-| `sort_order` | string | no | Sort direction: `"asc"` (oldest first) or `"desc"` (newest first, default) |
+| `from` | string | no | Filter subscribers added after this date (ISO 8601, e.g. "2025-01-01") |
+| `to` | string | no | Filter subscribers added before this date (ISO 8601, e.g. "2025-12-31") |
 
 ### Example
 
@@ -18,7 +19,8 @@ List subscribers from your ConvertKit account with pagination and sorting.
 local result = app.integrations.convertkit.list_subscribers({
   page = 1,
   per_page = 25,
-  sort_order = "desc"
+  from = "2025-01-01",
+  to = "2025-12-31"
 })
 
 for _, sub in ipairs(result.subscribers) do
@@ -51,28 +53,22 @@ print(result.subscriber.state)
 
 ---
 
-## create_subscriber
+## list_forms
 
-Create or update a subscriber in ConvertKit by email address.
+List all forms in your ConvertKit account.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | yes | Subscriber email address |
-| `first_name` | string | no | Subscriber first name |
-| `fields` | object | no | Custom field values as key-value pairs |
+None.
 
 ### Example
 
 ```lua
-local result = app.integrations.convertkit.create_subscriber({
-  email = "alice@example.com",
-  first_name = "Alice",
-  fields = { company = "Acme Inc" }
-})
+local result = app.integrations.convertkit.list_forms({})
 
-print("Created subscriber: " .. result.subscriber.email_address)
+for _, form in ipairs(result.forms) do
+  print(form.id .. ": " .. form.name)
+end
 ```
 
 ---
@@ -119,55 +115,35 @@ print("Created tag: " .. result.tag.name .. " (ID: " .. result.tag.id .. ")")
 
 ---
 
-## tag_subscriber
+## list_broadcasts
 
-Add a tag to a subscriber by email. Creates the subscriber if they don't exist.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `tag_id` | integer | yes | The tag ID (use `list_tags` to find IDs) |
-| `email` | string | yes | Subscriber email address |
-| `first_name` | string | no | Subscriber first name (used if creating new subscriber) |
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.tag_subscriber({
-  tag_id = 99887,
-  email = "bob@example.com",
-  first_name = "Bob"
-})
-```
-
----
-
-## untag_subscriber
-
-Remove a tag from a subscriber by email.
+List broadcasts (email blasts) from your ConvertKit account with pagination.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `tag_id` | integer | yes | The tag ID to remove (use `list_tags` to find IDs) |
-| `email` | string | yes | Subscriber email address |
+| `page` | integer | no | Page number (starts at 1, default: 1) |
+| `per_page` | integer | no | Results per page (default: 50) |
 
 ### Example
 
 ```lua
-local result = app.integrations.convertkit.untag_subscriber({
-  tag_id = 99887,
-  email = "bob@example.com"
+local result = app.integrations.convertkit.list_broadcasts({
+  page = 1,
+  per_page = 25
 })
+
+for _, broadcast in ipairs(result.broadcasts) do
+  print(broadcast.id .. ": " .. broadcast.subject)
+end
 ```
 
 ---
 
-## list_forms
+## get_current_user
 
-List all forms in your ConvertKit account.
+Get the authenticated ConvertKit account information.
 
 ### Parameters
 
@@ -176,55 +152,10 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.convertkit.list_forms({})
+local result = app.integrations.convertkit.get_current_user({})
 
-for _, form in ipairs(result.forms) do
-  print(form.id .. ": " .. form.name)
-end
-```
-
----
-
-## subscribe_to_form
-
-Subscribe an email address to a ConvertKit form.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `form_id` | integer | yes | The form ID (use `list_forms` to find IDs) |
-| `email` | string | yes | Subscriber email address |
-| `first_name` | string | no | Subscriber first name |
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.subscribe_to_form({
-  form_id = 55443,
-  email = "carol@example.com",
-  first_name = "Carol"
-})
-```
-
----
-
-## list_sequences
-
-List all sequences (courses) in your ConvertKit account.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.convertkit.list_sequences({})
-
-for _, seq in ipairs(result.courses) do
-  print(seq.id .. ": " .. seq.name)
-end
+print("Account: " .. result.name)
+print("Email: " .. result.primary_email_address)
 ```
 
 ---

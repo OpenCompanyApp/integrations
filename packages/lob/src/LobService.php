@@ -9,7 +9,7 @@ class LobService
 {
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.lob.com/v1',
+        private string $baseUrl = 'https://api.lob.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -20,46 +20,50 @@ class LobService
     }
 
     /**
-     * Send a postcard.
+     * List letters (paginated).
      *
-     * @param  string|array  $to  Recipient address ID or address object.
-     * @param  string|array|null  $from  Sender address ID or address object (optional for some accounts).
-     * @param  string  $front  HTML string or template ID for the front of the postcard.
-     * @param  string  $back  HTML string or template ID for the back of the postcard.
-     * @param  array  $mergeVariables  Optional merge variables for template interpolation.
-     * @return array The created postcard object.
+     * @param  int  $limit  Number of results per page (default: 10, max: 100).
+     * @param  int  $offset  Number of results to skip (default: 0).
+     * @return array Paginated list of letter objects.
      */
-    public function sendPostcard(string|array $to, string|array|null $from, string $front, string $back, array $mergeVariables = []): array
+    public function listLetters(int $limit = 10, int $offset = 0): array
     {
-        $data = [
-            'to' => $to,
-            'front' => $front,
-            'back' => $back,
-        ];
-
-        if ($from !== null) {
-            $data['from'] = $from;
-        }
-
-        if (!empty($mergeVariables)) {
-            $data['merge_variables'] = $mergeVariables;
-        }
-
-        return $this->request('POST', '/postcards', $data);
+        return $this->request('GET', '/v1/letters', [
+            'limit' => $limit,
+            'offset' => $offset,
+        ]);
     }
 
     /**
-     * Send a letter.
+     * Get a letter by ID.
+     *
+     * @param  string  $id  The letter ID (e.g., "ltr_...").
+     * @return array The letter object.
+     */
+    public function getLetter(string $id): array
+    {
+        return $this->request('GET', '/v1/letters/' . urlencode($id));
+    }
+
+    /**
+     * Create (send) a letter.
      *
      * @param  string|array  $to  Recipient address ID or address object.
-     * @param  string|array|null  $from  Sender address ID or address object (optional for some accounts).
+     * @param  string|array|null  $from  Sender address ID or address object.
      * @param  string  $file  HTML string or template ID for the letter content.
+     * @param  string|null  $description  Optional internal description for the letter.
      * @param  bool  $color  Whether to print in color (default: true).
      * @param  bool  $doubleSided  Whether to print double-sided (default: true).
      * @return array The created letter object.
      */
-    public function sendLetter(string|array $to, string|array|null $from, string $file, bool $color = true, bool $doubleSided = true): array
-    {
+    public function createLetter(
+        string|array $to,
+        string|array|null $from,
+        string $file,
+        ?string $description = null,
+        bool $color = true,
+        bool $doubleSided = true,
+    ): array {
         $data = [
             'to' => $to,
             'file' => $file,
@@ -71,7 +75,26 @@ class LobService
             $data['from'] = $from;
         }
 
-        return $this->request('POST', '/letters', $data);
+        if ($description !== null) {
+            $data['description'] = $description;
+        }
+
+        return $this->request('POST', '/v1/letters', $data);
+    }
+
+    /**
+     * List postcards (paginated).
+     *
+     * @param  int  $limit  Number of results per page (default: 10, max: 100).
+     * @param  int  $offset  Number of results to skip (default: 0).
+     * @return array Paginated list of postcard objects.
+     */
+    public function listPostcards(int $limit = 10, int $offset = 0): array
+    {
+        return $this->request('GET', '/v1/postcards', [
+            'limit' => $limit,
+            'offset' => $offset,
+        ]);
     }
 
     /**
@@ -82,54 +105,51 @@ class LobService
      */
     public function getPostcard(string $id): array
     {
-        return $this->request('GET', '/postcards/' . urlencode($id));
+        return $this->request('GET', '/v1/postcards/' . urlencode($id));
     }
 
     /**
-     * List postcards (paginated).
+     * Create (send) a postcard.
      *
-     * @param  int  $limit  Number of results per page (default: 10, max: 100).
-     * @param  string|null  $after  Cursor for pagination — pass the ID from a previous response.
-     * @param  array  $filters  Optional filters (e.g., metadata, size, etc.).
-     * @return array Paginated list of postcard objects.
+     * @param  string|array  $to  Recipient address ID or address object.
+     * @param  string|array|null  $from  Sender address ID or address object.
+     * @param  string  $front  HTML string or template ID for the front of the postcard.
+     * @param  string  $back  HTML string or template ID for the back of the postcard.
+     * @param  string|null  $description  Optional internal description for the postcard.
+     * @return array The created postcard object.
      */
-    public function listPostcards(int $limit = 10, ?string $after = null, array $filters = []): array
-    {
-        $params = array_merge(['limit' => $limit], $filters);
-        if ($after) {
-            $params['after'] = $after;
+    public function createPostcard(
+        string|array $to,
+        string|array|null $from,
+        string $front,
+        string $back,
+        ?string $description = null,
+    ): array {
+        $data = [
+            'to' => $to,
+            'front' => $front,
+            'back' => $back,
+        ];
+
+        if ($from !== null) {
+            $data['from'] = $from;
         }
 
-        return $this->request('GET', '/postcards', $params);
+        if ($description !== null) {
+            $data['description'] = $description;
+        }
+
+        return $this->request('POST', '/v1/postcards', $data);
     }
 
     /**
-     * Verify a US address.
+     * List addresses in the Lob account.
      *
-     * @param  string  $address  Primary address line (street number, street name, etc.).
-     * @param  string  $city  City name.
-     * @param  string  $state  Two-letter state code (e.g., "CA").
-     * @param  string  $zip  ZIP code (5-digit or ZIP+4).
-     * @return array The verification result with deliverability status and normalized address.
+     * @return array Paginated list of address objects.
      */
-    public function verifyAddress(string $address, string $city, string $state, string $zip): array
+    public function listAddresses(): array
     {
-        return $this->request('POST', '/us_verifications', [
-            'primary_line' => $address,
-            'city' => $city,
-            'state' => $state,
-            'zip_code' => $zip,
-        ]);
-    }
-
-    /**
-     * Get the current authenticated user / account info.
-     *
-     * @return array The user object.
-     */
-    public function getCurrentUser(): array
-    {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/v1/addresses');
     }
 
     /**
@@ -142,7 +162,10 @@ class LobService
     }
 
     /**
-     * Make a raw HTTP request to the Lob API.
+     * Make a raw HTTP request to the Lob API using Basic authentication.
+     *
+     * Lob uses Basic auth where the API key (test or live) is the username
+     * and the password is empty.
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
@@ -154,9 +177,8 @@ class LobService
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(30);
+            ])->withBasicAuth($this->apiKey, '')->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),

@@ -27,6 +27,7 @@ class LaunchDarklyGetFlag implements Tool
         return [
             'feature_flag_key' => ['type' => 'string', 'required' => true, 'description' => 'The feature flag key (e.g., "enable-new-dashboard").'],
             'project_key' => ['type' => 'string', 'description' => 'The project key (defaults to the configured project).'],
+            'env' => ['type' => 'string', 'description' => 'Environment key to filter results (e.g., "production", "staging").'],
         ];
     }
 
@@ -42,7 +43,8 @@ class LaunchDarklyGetFlag implements Tool
             }
 
             $projectKey = $args['project_key'] ?? null;
-            $result = $this->service->getFlag($args['feature_flag_key'], $projectKey);
+            $env = $args['env'] ?? null;
+            $result = $this->service->getFlag($args['feature_flag_key'], $projectKey, $env);
 
             $envStates = [];
             foreach ($result['environments'] ?? [] as $envKey => $env) {

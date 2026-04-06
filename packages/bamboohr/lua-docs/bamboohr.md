@@ -164,6 +164,61 @@ end
 
 ---
 
+## get_time_off_request
+
+Get detailed information for a specific time-off request by its ID.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `request_id` | integer | yes | The BambooHR time-off request ID |
+
+### Example
+
+```lua
+local result = app.integrations.bamboohr.get_time_off_request({
+  request_id = 123
+})
+
+print("Request for employee " .. (result.employeeId or ""))
+print("From " .. (result.start or "") .. " to " .. (result.end or ""))
+print("Status: " .. (result.status or ""))
+print("Type: " .. (result.typeName or ""))
+```
+
+---
+
+## list_reports
+
+Generate a custom report with specified employee fields.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `fields` | array | yes | List of employee fields to include (e.g., `{"firstName", "lastName", "jobTitle", "department", "workEmail", "hireDate", "status"}`) |
+| `title` | string | no | Optional title for the report |
+
+### Available Fields
+
+Common field names: `firstName`, `lastName`, `jobTitle`, `department`, `workEmail`, `hireDate`, `status`, `location`, `supervisor`, `workPhone`, `mobilePhone`, `address1`, `city`, `state`, `zipcode`, `country`, `gender`, `maritalStatus`, `birthday`, `ssn`, `payRate`, `payType`, `payPer`, `employeeNumber`.
+
+### Example
+
+```lua
+local result = app.integrations.bamboohr.list_reports({
+  fields = {"firstName", "lastName", "jobTitle", "department", "hireDate"},
+  title = "Engineering Team Report"
+})
+
+for _, row in ipairs(result.employees or {}) do
+  print(row.firstName .. " " .. row.lastName .. " — " .. (row.jobTitle or "N/A"))
+end
+```
+
+---
+
 ## get_current_user
 
 Get information about the currently authenticated BambooHR user.

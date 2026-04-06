@@ -7,13 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get a Mattermost post by ID.
+ * Get a single Mattermost post by ID.
+ *
+ * Returns the full post object including id, create_at, update_at,
+ * message, channel_id, user_id, and any metadata or attachments.
  */
 class MattermostGetPost implements Tool
 {
-    /**
-     * @param  MattermostService  $service  The Mattermost API client
-     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -25,40 +25,31 @@ class MattermostGetPost implements Tool
 
     public function description(): string
     {
-        return 'Get a Mattermost post by its ID.';
+        return 'Get a specific Mattermost post by ID. Returns the full post including message content, author, channel, and timestamps.';
     }
 
     public function parameters(): array
     {
         return [
-            'post_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the post to retrieve.'],
+            'post_id' => ['type' => 'string', 'required' => true, 'description' => 'The post ID.'],
         ];
     }
 
-    /**
-     * Get a Mattermost post by ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (post_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mattermost integration is not configured.');
             }
 
             $postId = $args['post_id'] ?? '';
-
             if (empty($postId)) {
                 return ToolResult::error('post_id is required.');
             }
 
             $result = $this->service->getPost($postId);
 
-            return ToolResult::success([
-                'ok' => true,
-                'post' => $result,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -3,28 +3,17 @@
 namespace OpenCompany\Integrations\Mattermost;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostCreateChannel;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostCreatePost;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostDeletePost;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostGetChannel;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostGetPost;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostGetTeam;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostGetUser;
 use OpenCompany\Integrations\Mattermost\Tools\MattermostListChannels;
+use OpenCompany\Integrations\Mattermost\Tools\MattermostGetChannel;
+use OpenCompany\Integrations\Mattermost\Tools\MattermostCreatePost;
 use OpenCompany\Integrations\Mattermost\Tools\MattermostListPosts;
+use OpenCompany\Integrations\Mattermost\Tools\MattermostGetPost;
 use OpenCompany\Integrations\Mattermost\Tools\MattermostListTeams;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostListUsers;
-use OpenCompany\Integrations\Mattermost\Tools\MattermostUploadFile;
+use OpenCompany\Integrations\Mattermost\Tools\MattermostGetCurrentUser;
 
-/**
- * Registers all Mattermost tools and provides integration metadata.
- *
- * Exposes 12 tools covering posts, channels, teams, users,
- * and file uploads via the ToolProvider contract.
- */
 class MattermostToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -35,9 +24,9 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, channels, teams, users',
-            'description' => 'Messaging',
-            'icon' => 'ph:chat-circle-dots',
+            'label' => 'channels, posts, teams, messages',
+            'description' => 'Team messaging and communication',
+            'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:mattermost',
         ];
     }
@@ -46,12 +35,12 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Mattermost',
-            'description' => 'Posts, channels, teams, users, and file uploads',
-            'icon' => 'ph:chat-circle-dots',
+            'description' => 'Open-source team messaging and communication platform',
+            'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:mattermost',
-            'category' => 'productivity',
+            'category' => 'communication',
             'badge' => 'verified',
-            'docs_url' => 'https://api.mattermost.com/',
+            'docs_url' => 'https://developers.mattermost.com/api-documentation/',
         ];
     }
 
@@ -59,171 +48,118 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_token',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'API Token',
-                'placeholder' => 'Personal Access Token or Bot Token...',
-                'hint' => 'Mattermost Personal Access Token or Bot Token for API authentication.',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Mattermost personal access token',
+                'hint' => 'Generate a personal access token in Mattermost under Account Settings → Security → Personal Access Tokens',
                 'required' => true,
             ],
             [
-                'key' => 'base_url',
-                'type' => 'text',
-                'label' => 'Base URL',
-                'placeholder' => 'https://mattermost.example.com/api/v4',
-                'hint' => 'The base URL of your Mattermost server API (e.g. https://mattermost.example.com/api/v4).',
-                'required' => true,
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'Server URL',
+                'placeholder' => 'https://mattermost.example.com',
+                'hint' => 'The base URL of your Mattermost server (no trailing slash)',
+                'default' => 'https://mattermost.example.com',
             ],
         ];
     }
 
-    /**
-     * Test the Mattermost connection using the provided credentials.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_token' and 'base_url'
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
-        $baseUrl = $config['base_url'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://mattermost.example.com', '/');
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided.'];
-        }
-
-        if (empty($baseUrl)) {
-            return ['success' => false, 'error' => 'No base URL provided.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiToken,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get(rtrim($baseUrl, '/') . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/api/v4/users/me');
 
-            $body = $response->json() ?? [];
+            $json = $response->json();
 
-            if ($response->successful()) {
-                $username = $body['username'] ?? 'Unknown';
-
+            if ($json === null) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to Mattermost as {$username}.",
+                    'success' => false,
+                    'error' => "Could not reach Mattermost API at {$baseUrl}. Check the URL.",
                 ];
             }
 
-            $message = $body['message'] ?? $response->body();
+            $username = $json['username'] ?? 'unknown';
 
             return [
-                'success' => false,
-                'error' => 'Mattermost API error: ' . (is_string($message) ? $message : json_encode($message)),
+                'success' => true,
+                'message' => "Connected to Mattermost as @{$username} at {$baseUrl}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
-            'api_token' => 'nullable|string',
-            'base_url'  => 'nullable|string',
+            'access_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
     public function tools(): array
     {
         return [
-            // Posts
-            'mattermost_create_post' => [
-                'class' => MattermostCreatePost::class,
-                'type' => 'write',
-                'name' => 'Create Post',
-                'description' => 'Create a new post in a Mattermost channel.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'mattermost_get_post' => [
-                'class' => MattermostGetPost::class,
-                'type' => 'read',
-                'name' => 'Get Post',
-                'description' => 'Get a Mattermost post by ID.',
-                'icon' => 'ph:chat-circle-text',
-            ],
-            'mattermost_delete_post' => [
-                'class' => MattermostDeletePost::class,
-                'type' => 'write',
-                'name' => 'Delete Post',
-                'description' => 'Delete a Mattermost post.',
-                'icon' => 'ph:trash',
-            ],
-            'mattermost_list_posts' => [
-                'class' => MattermostListPosts::class,
-                'type' => 'read',
-                'name' => 'List Posts',
-                'description' => 'List posts in a Mattermost channel.',
-                'icon' => 'ph:list-bullets',
-            ],
-            // Channels
-            'mattermost_create_channel' => [
-                'class' => MattermostCreateChannel::class,
-                'type' => 'write',
-                'name' => 'Create Channel',
-                'description' => 'Create a channel in a Mattermost team.',
-                'icon' => 'ph:plus-circle',
-            ],
             'mattermost_list_channels' => [
                 'class' => MattermostListChannels::class,
                 'type' => 'read',
                 'name' => 'List Channels',
-                'description' => 'List channels in a Mattermost team.',
+                'description' => 'List channels the current user belongs to.',
                 'icon' => 'ph:hash',
             ],
             'mattermost_get_channel' => [
                 'class' => MattermostGetChannel::class,
                 'type' => 'read',
                 'name' => 'Get Channel',
-                'description' => 'Get a Mattermost channel by ID.',
-                'icon' => 'ph:hash-straight',
+                'description' => 'Get details of a specific channel.',
+                'icon' => 'ph:hash',
             ],
-            // Teams
+            'mattermost_create_post' => [
+                'class' => MattermostCreatePost::class,
+                'type' => 'write',
+                'name' => 'Create Post',
+                'description' => 'Post a message to a channel.',
+                'icon' => 'ph:paper-plane-tilt',
+            ],
+            'mattermost_list_posts' => [
+                'class' => MattermostListPosts::class,
+                'type' => 'read',
+                'name' => 'List Posts',
+                'description' => 'List posts in a channel.',
+                'icon' => 'ph:list-bullets',
+            ],
+            'mattermost_get_post' => [
+                'class' => MattermostGetPost::class,
+                'type' => 'read',
+                'name' => 'Get Post',
+                'description' => 'Get a specific post by ID.',
+                'icon' => 'ph:chat-text',
+            ],
             'mattermost_list_teams' => [
                 'class' => MattermostListTeams::class,
                 'type' => 'read',
                 'name' => 'List Teams',
-                'description' => 'List all Mattermost teams.',
-                'icon' => 'ph:buildings',
+                'description' => 'List teams the current user belongs to.',
+                'icon' => 'ph:users-three',
             ],
-            'mattermost_get_team' => [
-                'class' => MattermostGetTeam::class,
+            'mattermost_get_current_user' => [
+                'class' => MattermostGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Team',
-                'description' => 'Get a Mattermost team by ID.',
-                'icon' => 'ph:building',
-            ],
-            // Users
-            'mattermost_list_users' => [
-                'class' => MattermostListUsers::class,
-                'type' => 'read',
-                'name' => 'List Users',
-                'description' => 'List Mattermost users.',
-                'icon' => 'ph:users',
-            ],
-            'mattermost_get_user' => [
-                'class' => MattermostGetUser::class,
-                'type' => 'read',
-                'name' => 'Get User',
-                'description' => 'Get a Mattermost user by ID.',
-                'icon' => 'ph:user',
-            ],
-            // Files
-            'mattermost_upload_file' => [
-                'class' => MattermostUploadFile::class,
-                'type' => 'write',
-                'name' => 'Upload File',
-                'description' => 'Upload a file to Mattermost.',
-                'icon' => 'ph:upload-simple',
+                'name' => 'Get Current User',
+                'description' => 'Get the currently authenticated user profile.',
+                'icon' => 'ph:user-circle',
             ],
         ];
     }
@@ -236,8 +172,8 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-            ['key' => 'base_url', 'type' => 'text', 'label' => 'Base URL', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Server URL', 'required' => false, 'default' => 'https://mattermost.example.com'],
         ];
     }
 
@@ -246,30 +182,21 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the MattermostService, with optional account-specific credentials.
-     *
-     * @param  array<string, mixed>  $context
-     */
-    private function resolveService(array $context = []): MattermostService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new MattermostService(
-                apiToken: $creds->get('mattermost', 'api_token', '', $account),
-                baseUrl: $creds->get('mattermost', 'base_url', '', $account),
+            $service = new MattermostService(
+                accessToken: $creds->get('mattermost', 'access_token', '', $account),
+                baseUrl: $creds->get('mattermost', 'url', 'https://mattermost.example.com', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(MattermostService::class);
+        return new $class(app(MattermostService::class));
     }
 }

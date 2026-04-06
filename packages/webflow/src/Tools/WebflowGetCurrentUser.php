@@ -6,14 +6,8 @@ use OpenCompany\Integrations\Webflow\WebflowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Retrieve the currently authenticated Webflow user.
- */
 class WebflowGetCurrentUser implements Tool
 {
-    /**
-     * @param  WebflowService  $service  The Webflow API client
-     */
     public function __construct(
         private WebflowService $service,
     ) {}
@@ -25,10 +19,7 @@ class WebflowGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Retrieve the currently authenticated Webflow user.
-        Returns the user's name, email, and account metadata.
-        MD;
+        return 'Get the currently authenticated Webflow user. Returns user profile including name, email, and account details.';
     }
 
     public function parameters(): array
@@ -36,15 +27,10 @@ class WebflowGetCurrentUser implements Tool
         return [];
     }
 
-    /**
-     * Get the currently authenticated user's profile.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (none required)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Webflow integration is not configured.');
             }
 

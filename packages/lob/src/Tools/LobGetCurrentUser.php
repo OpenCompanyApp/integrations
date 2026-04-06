@@ -19,7 +19,7 @@ class LobGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Retrieve the current Lob account information, including company name, balance, and plan details.';
+        return 'List saved addresses in the Lob account. Returns all verified addresses that can be used as sender or recipient for letters and postcards.';
     }
 
     public function parameters(): array
@@ -34,7 +34,7 @@ class LobGetCurrentUser implements Tool
                 return ToolResult::error('Lob integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
+            $result = $this->service->listAddresses();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

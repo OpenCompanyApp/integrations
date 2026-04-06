@@ -6,14 +6,8 @@ use OpenCompany\Integrations\Webflow\WebflowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List all Webflow sites the authenticated user has access to.
- */
 class WebflowListSites implements Tool
 {
-    /**
-     * @param  WebflowService  $service  The Webflow API client
-     */
     public function __construct(
         private WebflowService $service,
     ) {}
@@ -25,10 +19,7 @@ class WebflowListSites implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List all Webflow sites the authenticated user has access to.
-        Returns site IDs, names, domains, and publication status.
-        MD;
+        return 'List all Webflow sites the authenticated user has access to. Returns site IDs, names, and domains needed for further CMS operations.';
     }
 
     public function parameters(): array
@@ -36,40 +27,16 @@ class WebflowListSites implements Tool
         return [];
     }
 
-    /**
-     * List all sites accessible to the authenticated user.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (none required)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Webflow integration is not configured.');
             }
 
             $result = $this->service->listSites();
-            $sites = $result['sites'] ?? $result['data'] ?? $result;
 
-            if (empty($sites)) {
-                return ToolResult::success('No sites found.');
-            }
-
-            $output = [];
-            foreach ($sites as $site) {
-                $output[] = [
-                    'id' => $site['id'] ?? '',
-                    'name' => $site['name'] ?? '',
-                    'shortName' => $site['shortName'] ?? '',
-                    'domain' => $site['defaultDomain'] ?? '',
-                    'publishedOn' => $site['lastPublished'] ?? null,
-                ];
-            }
-
-            return ToolResult::success([
-                'count' => count($output),
-                'sites' => $output,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -614,6 +614,21 @@ print("Remaining tasks: " .. #remaining)
 
 ---
 
+## User
+
+### `app.integrations.todoist.get_current_user(...)`
+
+Get the current authenticated user's profile information. No parameters required.
+
+Returns user details including full name, email, avatar, and plan type.
+
+```lua
+local user = app.integrations.todoist.get_current_user({})
+print("Connected as: " .. user.full_name .. " (" .. user.email .. ")")
+```
+
+---
+
 ## Notes
 
 - **Priority values** are inverted compared to display: `1` is normal (no highlight), `4` is urgent (red). Todoist shows them as P4→P1 in the UI.

@@ -2,8 +2,8 @@
 
 namespace OpenCompany\Integrations\Todoist\Tools;
 
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
 use OpenCompany\Integrations\Todoist\TodoistService;
 
 /**
@@ -36,6 +36,7 @@ class TodoistListTasks implements Tool
             'label' => ['type' => 'string', 'required' => false, 'description' => 'Filter by label name.'],
             'filter' => ['type' => 'string', 'required' => false, 'description' => 'Todoist filter expression (e.g., "today", "p1 & @Work").'],
             'lang' => ['type' => 'string', 'required' => false, 'description' => 'Language for the filter expression (e.g., "en", "de").'],
+            'limit' => ['type' => 'integer', 'required' => false, 'description' => 'Maximum number of tasks to return (default: all).'],
             'ids' => ['type' => 'array', 'required' => false, 'description' => 'List of specific task IDs to retrieve.', 'items' => ['type' => 'string']],
         ];
     }

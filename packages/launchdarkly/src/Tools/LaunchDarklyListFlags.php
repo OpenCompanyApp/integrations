@@ -28,6 +28,7 @@ class LaunchDarklyListFlags implements Tool
             'project_key' => ['type' => 'string', 'description' => 'The project key (defaults to the configured project).'],
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of flags to return (default: 20, max: 100).'],
             'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
+            'env' => ['type' => 'string', 'description' => 'Environment key to filter results (e.g., "production", "staging").'],
         ];
     }
 
@@ -41,8 +42,9 @@ class LaunchDarklyListFlags implements Tool
             $projectKey = $args['project_key'] ?? null;
             $limit = isset($args['limit']) ? (int) $args['limit'] : 20;
             $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
+            $env = $args['env'] ?? null;
 
-            $result = $this->service->listFlags($projectKey, $limit, $offset);
+            $result = $this->service->listFlags($projectKey, $limit, $offset, $env);
 
             $flags = $result['items'] ?? [];
             $totalCount = $result['_links']['next']['href'] ?? null;

@@ -101,6 +101,34 @@ class BambooHRService
     }
 
     /**
+     * Get a single time-off request by ID.
+     *
+     * @param  int|string  $requestId  The time-off request ID.
+     * @return array<string, mixed>
+     */
+    public function getTimeOffRequest(int|string $requestId): array
+    {
+        return $this->request('GET', '/time_off/requests/' . urlencode((string) $requestId));
+    }
+
+    /**
+     * Run a custom report with the specified fields.
+     *
+     * @param  array<string>  $fields  Employee fields to include in the report (e.g., ["firstName", "lastName", "jobTitle", "department"]).
+     * @param  string  $title  Optional report title.
+     * @return array<string, mixed>
+     */
+    public function listReports(array $fields = [], string $title = 'Custom Report'): array
+    {
+        $data = [
+            'title' => $title,
+            'fields' => $fields,
+        ];
+
+        return $this->request('GET', '/reports/custom', $data);
+    }
+
+    /**
      * Get the current authenticated user.
      *
      * @return array<string, mixed>
@@ -159,7 +187,7 @@ class BambooHRService
             $http = Http::withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiKey, '')->timeout(30);
+            ])->withBasicAuth($this->apiKey, 'x')->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),

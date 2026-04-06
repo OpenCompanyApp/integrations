@@ -7,42 +7,45 @@ use Illuminate\Support\Facades\Log;
 
 class FreshsalesService
 {
-    /**
-     * Create a new FreshsalesService instance.
-     *
-     * @param  string  $apiKey  The Freshsales API token.
-     * @param  string  $domain  The Freshsales account domain (e.g., "mycompany").
-     */
     public function __construct(
         private string $apiKey = '',
-        private string $domain = '',
-    ) {}
+        private string $baseUrl = '',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the service is properly configured.
+     * Check whether the service is configured with an API key and base URL.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->domain);
+        return !empty($this->apiKey) && !empty($this->baseUrl);
     }
 
     /**
-     * Get the base URL for the Freshsales API.
-     */
-    public function getBaseUrl(): string
-    {
-        return "https://{$this->domain}.myfreshworks.com/crm/sales/api";
-    }
-
-    /**
-     * List contacts with optional filters.
+     * List contacts with optional pagination and sorting.
      *
-     * @param  array  $filters  Query parameters (e.g., page, per_page, sort, sort_type).
+     * @param  int  $page     Page number (1-based).
+     * @param  int  $perPage  Results per page.
+     * @param  string|null  $sort     Sort direction: "asc" or "desc".
+     * @param  string|null  $sortBy   Field to sort by (e.g., "created_at", "updated_at").
      * @return array<string, mixed>
      */
-    public function listContacts(array $filters = []): array
+    public function listContacts(int $page = 1, int $perPage = 20, ?string $sort = null, ?string $sortBy = null): array
     {
-        return $this->request('GET', '/contacts', $filters);
+        $params = [
+            'page' => $page,
+            'per_page' => $perPage,
+        ];
+
+        if ($sort !== null) {
+            $params['sort'] = $sort;
+        }
+        if ($sortBy !== null) {
+            $params['sort_by'] = $sortBy;
+        }
+
+        return $this->request('GET', '/api/contacts', $params);
     }
 
     /**
@@ -53,51 +56,33 @@ class FreshsalesService
      */
     public function getContact(int $id): array
     {
-        return $this->request('GET', '/contacts/' . $id);
+        return $this->request('GET', '/api/contacts/' . $id);
     }
 
     /**
      * Create a new contact.
      *
-     * @param  array<string, mixed>  $data  Contact data (first_name, last_name, email, etc.).
+     * @param  array<string, mixed>  $data  Contact data (first_name, last_name, email, mobile_number, etc.).
      * @return array<string, mixed>
      */
     public function createContact(array $data): array
     {
-        return $this->request('POST', '/contacts', ['contact' => $data]);
+        return $this->request('POST', '/api/contacts', ['contact' => $data]);
     }
 
     /**
-     * Update an existing contact.
+     * List deals with optional pagination.
      *
-     * @param  int  $id  The contact ID.
-     * @param  array<string, mixed>  $data  Fields to update.
+     * @param  int  $page     Page number (1-based).
+     * @param  int  $perPage  Results per page.
      * @return array<string, mixed>
      */
-    public function updateContact(int $id, array $data): array
+    public function listDeals(int $page = 1, int $perPage = 20): array
     {
-        return $this->request('PUT', '/contacts/' . $id, ['contact' => $data]);
-    }
-
-    /**
-     * Delete a contact by ID.
-     *
-     * @param  int  $id  The contact ID.
-     */
-    public function deleteContact(int $id): void
-    {
-        $this->request('DELETE', '/contacts/' . $id);
-    }
-
-    /**
-     * List deals with optional filters.
-     *
-     * @param  array  $filters  Query parameters (e.g., page, per_page, sort, sort_type).
-     * @return array<string, mixed>
-     */
-    public function listDeals(array $filters = []): array
-    {
-        return $this->request('GET', '/deals', $filters);
+        return $this->request('GET', '/api/deals', [
+            'page' => $page,
+            'per_page' => $perPage,
+        ]);
     }
 
     /**
@@ -108,29 +93,33 @@ class FreshsalesService
      */
     public function getDeal(int $id): array
     {
-        return $this->request('GET', '/deals/' . $id);
+        return $this->request('GET', '/api/deals/' . $id);
     }
 
     /**
-     * Create a new deal.
+     * List sales accounts with optional pagination.
      *
-     * @param  array<string, mixed>  $data  Deal data (name, amount, deal_stage_id, etc.).
+     * @param  int  $page     Page number (1-based).
+     * @param  int  $perPage  Results per page.
      * @return array<string, mixed>
      */
-    public function createDeal(array $data): array
+    public function listAccounts(int $page = 1, int $perPage = 20): array
     {
-        return $this->request('POST', '/deals', ['deal' => $data]);
+        return $this->request('GET', '/api/sales_accounts', [
+            'page' => $page,
+            'per_page' => $perPage,
+        ]);
     }
 
     /**
-     * List sales accounts with optional filters.
+     * Get a single sales account by ID.
      *
-     * @param  array  $filters  Query parameters (e.g., page, per_page, sort, sort_type).
+     * @param  int  $id  The account ID.
      * @return array<string, mixed>
      */
-    public function listAccounts(array $filters = []): array
+    public function getAccount(int $id): array
     {
-        return $this->request('GET', '/sales_accounts', $filters);
+        return $this->request('GET', '/api/sales_accounts/' . $id);
     }
 
     /**
@@ -140,40 +129,41 @@ class FreshsalesService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users/me');
+        return $this->request('GET', '/api/users/me');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path (e.g., "/contacts").
-     * @param  array<string, mixed>  $data  Request body or query parameters.
+     * @param  string  $path    API endpoint path (e.g., "/api/contacts").
+     * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+
         return $response->json() ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Freshsales API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Request body or query parameters.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path    API endpoint path.
+     * @param  array<string, mixed>  $data  Query parameters or request body.
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \RuntimeException
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->apiKey || !$this->domain) {
+        if (!$this->apiKey || !$this->baseUrl) {
             throw new \RuntimeException('Freshsales API key and domain are not configured.');
         }
 
-        $url = $this->getBaseUrl() . $path;
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
@@ -200,7 +190,7 @@ class FreshsalesService
                     throw new \RuntimeException("Freshsales API endpoint not available (HTTP {$response->status()}). Check your domain and API key.");
                 }
 
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
+                $error = $response->json('error') ?? $response->json('errors') ?? $body;
                 Log::error("Freshsales API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,

@@ -1,257 +1,232 @@
 # Mattermost — Lua API Reference
 
-## Authentication
+## list_channels
 
-The Mattermost integration uses a **Personal Access Token** (or Bot Token) sent via the `Authorization: Bearer {token}` header. You also need the base URL of your Mattermost server (e.g. `https://mattermost.example.com/api/v4`).
+List channels the current user belongs to.
 
-Create a token: **Mattermost → Account Settings → Security → Personal Access Tokens**
-
-## Pagination
-
-List endpoints use `page` (0-indexed) and `per_page` parameters. Default page size is 60.
-
-## Common Workflows
-
-### Post a message to a channel
-
-1. `mattermost_list_teams` — Find the team
-2. `mattermost_list_channels` — Find the channel
-3. `mattermost_create_post` — Send the message
-
-### Reply in a thread
-
-1. `mattermost_create_post` — Note the `id` of the parent post
-2. `mattermost_create_post` — Pass `root_id` with the parent post ID
-
-### Upload and attach a file
-
-1. `mattermost_upload_file` — Upload the file, note the returned file ID
-2. `mattermost_create_post` — Pass `file_ids` as a JSON array with the file ID
-
-### Create a new channel
-
-1. `mattermost_list_teams` — Get the team ID
-2. `mattermost_create_channel` — Create the channel
-
----
-
-## mattermost_create_post
-
-Create a new post in a Mattermost channel. Supports file attachments, custom properties, and thread replies.
+### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to create the post in |
-| `message` | string | yes | The message content of the post |
-| `root_id` | string | no | The parent post ID for creating a thread reply |
-| `file_ids` | string | no | JSON array of file IDs to attach (from `mattermost_upload_file`) |
-| `props` | string | no | JSON object of custom properties for the post |
+| `page` | integer | no | Page number (0-indexed). Default: 0. |
+| `per_page` | integer | no | Number of channels per page. Default: 60. |
+
+### Response
+
+Returns an array of channel objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Channel ID |
+| `name` | string | Channel URL name |
+| `display_name` | string | Human-readable name |
+| `type` | string | Channel type: `O` (public), `P` (private), `D` (direct) |
+| `team_id` | string | Team this channel belongs to |
+| `header` | string | Channel header text |
+| `purpose` | string | Channel purpose text |
+
+### Example
 
 ```lua
-local result = app.integrations.mattermost.mattermost_create_post({
-  channel_id = "abc123",
-  message = "Hello from the integration!"
-})
--- result.id is the new post ID
-```
-
-### Thread reply
-
-```lua
-local result = app.integrations.mattermost.mattermost_create_post({
-  channel_id = "abc123",
-  message = "Replying to the thread",
-  root_id = "parent_post_id"
-})
-```
-
-## mattermost_get_post
-
-Get a Mattermost post by its ID.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `post_id` | string | yes | The ID of the post to retrieve |
-
-```lua
-local result = app.integrations.mattermost.mattermost_get_post({ post_id = "post123" })
--- result.post contains the full post object
-```
-
-## mattermost_delete_post
-
-Delete a Mattermost post by its ID.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `post_id` | string | yes | The ID of the post to delete |
-
-```lua
-local result = app.integrations.mattermost.mattermost_delete_post({ post_id = "post123" })
--- result.ok == true on success
-```
-
-## mattermost_list_posts
-
-List posts in a Mattermost channel. Supports pagination.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to list posts from |
-| `page` | integer | no | Page number (0-indexed, default 0) |
-| `per_page` | integer | no | Number of posts per page (default 60) |
-
-```lua
-local result = app.integrations.mattermost.mattermost_list_posts({
-  channel_id = "abc123",
+local channels = app.integrations.mattermost.list_channels({
   page = 0,
   per_page = 20
 })
--- result.posts contains the post list
+
+for _, ch in ipairs(channels) do
+  print(ch.display_name .. " (" .. ch.type .. ") - " .. ch.id)
+end
 ```
 
-## mattermost_create_channel
+---
 
-Create a channel in a Mattermost team.
+## get_channel
+
+Get details of a specific channel by ID.
+
+### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `team_id` | string | yes | The ID of the team to create the channel in |
-| `name` | string | yes | URL-friendly channel name (lowercase, no spaces) |
-| `display_name` | string | no | Human-readable display name |
-| `type` | string | no | `"O"` for open (default), `"P"` for private |
-| `purpose` | string | no | Brief description of the channel purpose |
+| `channel_id` | string | yes | The channel ID. |
+
+### Example
 
 ```lua
-local result = app.integrations.mattermost.mattermost_create_channel({
-  team_id = "team123",
-  name = "project-alpha",
-  display_name = "Project Alpha",
-  type = "O",
-  purpose = "Discussion for Project Alpha"
+local channel = app.integrations.mattermost.get_channel({
+  channel_id = "abc123def456"
 })
--- result.id is the new channel ID
+
+print(channel.display_name .. ": " .. (channel.purpose or "No purpose set"))
 ```
 
-## mattermost_list_channels
+---
 
-List channels in a Mattermost team. Supports pagination.
+## create_post
+
+Post a message to a channel.
+
+### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `team_id` | string | yes | The ID of the team to list channels for |
-| `page` | integer | no | Page number (0-indexed, default 0) |
-| `per_page` | integer | no | Number of channels per page (default 60) |
+| `channel_id` | string | yes | The channel to post the message in. |
+| `message` | string | yes | The message text. Supports Markdown. |
+
+### Response
+
+Returns the created post object with `id`, `create_at`, `update_at`, and the message content.
+
+### Example
 
 ```lua
-local result = app.integrations.mattermost.mattermost_list_channels({
-  team_id = "team123"
+local post = app.integrations.mattermost.create_post({
+  channel_id = "abc123def456",
+  message = "Hello from the AI agent! :robot:"
 })
--- result.channels contains the channel list
+
+print("Posted message ID: " .. post.id)
 ```
 
-## mattermost_get_channel
+---
 
-Get a Mattermost channel by its ID.
+## list_posts
+
+List posts in a channel.
+
+### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to retrieve |
+| `channel_id` | string | yes | The channel ID. |
+| `page` | integer | no | Page number (0-indexed). Default: 0. |
+| `per_page` | integer | no | Number of posts per page. Default: 60. |
+
+### Response
+
+Returns an object with `order` (array of post IDs) and `posts` (map of post ID → post object). Each post has:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Post ID |
+| `message` | string | Post content |
+| `user_id` | string | Author user ID |
+| `channel_id` | string | Channel ID |
+| `create_at` | integer | Creation timestamp (ms) |
+| `update_at` | integer | Last update timestamp (ms) |
+
+### Example
 
 ```lua
-local result = app.integrations.mattermost.mattermost_get_channel({ channel_id = "abc123" })
--- result.channel contains the channel object
-```
-
-## mattermost_list_teams
-
-List all Mattermost teams. Supports pagination.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (0-indexed, default 0) |
-| `per_page` | integer | no | Number of teams per page (default 60) |
-
-```lua
-local result = app.integrations.mattermost.mattermost_list_teams({})
--- result.teams contains the team list
-```
-
-## mattermost_get_team
-
-Get a Mattermost team by its ID.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `team_id` | string | yes | The ID of the team to retrieve |
-
-```lua
-local result = app.integrations.mattermost.mattermost_get_team({ team_id = "team123" })
--- result.team contains the team object
-```
-
-## mattermost_list_users
-
-List Mattermost users. Supports pagination and filtering by team.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (0-indexed, default 0) |
-| `per_page` | integer | no | Number of users per page (default 60) |
-| `in_team_id` | string | no | Filter users to those in the specified team |
-
-```lua
-local result = app.integrations.mattermost.mattermost_list_users({
+local result = app.integrations.mattermost.list_posts({
+  channel_id = "abc123def456",
   page = 0,
-  per_page = 50,
-  in_team_id = "team123"
+  per_page = 10
 })
--- result.users contains the user list
+
+for _, postId in ipairs(result.order) do
+  local post = result.posts[postId]
+  print(post.user_id .. ": " .. post.message)
+end
 ```
 
-## mattermost_get_user
+---
 
-Get a Mattermost user by their ID.
+## get_post
+
+Get a specific post by ID.
+
+### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `user_id` | string | yes | The ID of the user to retrieve |
+| `post_id` | string | yes | The post ID. |
+
+### Example
 
 ```lua
-local result = app.integrations.mattermost.mattermost_get_user({ user_id = "user123" })
--- result.user contains the user object
+local post = app.integrations.mattermost.get_post({
+  post_id = "xyz789"
+})
+
+print("Message: " .. post.message)
+print("Author: " .. post.user_id)
 ```
 
-## mattermost_upload_file
+---
 
-Upload a file to Mattermost. The returned file ID can be attached to a post using the `file_ids` parameter of `mattermost_create_post`.
+## list_teams
+
+List teams the current user belongs to.
+
+### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `channel_id` | string | yes | The ID of the channel to associate the file with |
-| `filename` | string | yes | The name of the file to upload |
-| `file_content` | string | yes | The raw file content (base64 encoded for binary files) |
+| `page` | integer | no | Page number (0-indexed). Default: 0. |
+| `per_page` | integer | no | Number of teams per page. Default: 60. |
+
+### Response
+
+Returns an array of team objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Team ID |
+| `name` | string | Team URL name |
+| `display_name` | string | Human-readable team name |
+| `description` | string | Team description |
+| `type` | string | Team type: `O` (open), `I` (invite) |
+| `email` | string | Team email |
+
+### Example
 
 ```lua
-local upload = app.integrations.mattermost.mattermost_upload_file({
-  channel_id = "abc123",
-  filename = "report.pdf",
-  file_content = "<base64-encoded-content>"
-})
+local teams = app.integrations.mattermost.list_teams({})
 
--- Attach the uploaded file to a post
-local post = app.integrations.mattermost.mattermost_create_post({
-  channel_id = "abc123",
-  message = "Here is the report",
-  file_ids = '["' .. upload.file_infos[1].id .. '"]'
-})
+for _, team in ipairs(teams) do
+  print(team.display_name .. " (" .. team.type .. ")")
+end
+```
+
+---
+
+## get_current_user
+
+Get the profile of the currently authenticated user.
+
+### Parameters
+
+None.
+
+### Response
+
+Returns a user object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | User ID |
+| `username` | string | Username |
+| `email` | string | Email address |
+| `nickname` | string | Display nickname |
+| `first_name` | string | First name |
+| `last_name` | string | Last name |
+| `roles` | string | User roles (e.g., "system_admin") |
+| `locale` | string | User locale (e.g., "en") |
+
+### Example
+
+```lua
+local user = app.integrations.mattermost.get_current_user({})
+
+print("Logged in as: @" .. user.username .. " (" .. user.email .. ")")
 ```
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple mattermost accounts configured, use account-specific namespaces:
+If you have multiple Mattermost accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
@@ -262,7 +237,7 @@ app.integrations.mattermost.default.function_name({...})
 
 -- Named accounts
 app.integrations.mattermost.work.function_name({...})
-app.integrations.mattermost.personal.function_name({...})
+app.integrations.mattermost.staging.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

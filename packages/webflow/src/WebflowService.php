@@ -5,30 +5,19 @@ namespace OpenCompany\Integrations\Webflow;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Client for the Webflow v2 REST API covering sites, collections, items, webhooks, assets, and users.
- *
- * Wraps the Webflow Data API (v2) and handles authentication via personal access token
- * or OAuth bearer token, request routing, and error reporting.
- */
 class WebflowService
 {
-    private const BASE_URL = 'https://api.webflow.com/v2';
-    private const API_VERSION = '2.0';
-
-    /**
-     * @param  string  $apiKey  Webflow personal access token or OAuth bearer token
-     */
     public function __construct(
-        private string $apiKey = '',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.webflow.com',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey);
+        return !empty($this->accessToken);
     }
-
-    // ── Sites ──────────────────────────────────────────────
 
     /**
      * List all sites the authenticated user has access to.
@@ -37,68 +26,40 @@ class WebflowService
      */
     public function listSites(): array
     {
-        return $this->request('GET', '/sites');
+        return $this->request('GET', '/v2/sites');
     }
 
     /**
      * Get details for a specific site.
      *
-     * @param  string  $siteId  The site identifier
      * @return array<string, mixed>
      */
     public function getSite(string $siteId): array
     {
-        return $this->request('GET', "/sites/{$siteId}");
+        return $this->request('GET', '/v2/sites/' . urlencode($siteId));
     }
 
     /**
-     * Publish a site.
+     * List collections for a site.
      *
-     * @param  string  $siteId  The site identifier
      * @return array<string, mixed>
      */
-    public function publishSite(string $siteId): array
+    public function listCollections(string $siteId, int $limit = 100, int $offset = 0): array
     {
-        return $this->request('POST', "/sites/{$siteId}/publish");
-    }
-
-    // ── Collections ────────────────────────────────────────
-
-    /**
-     * List all collections for a site.
-     *
-     * @param  string  $siteId  The site identifier
-     * @return array<string, mixed>
-     */
-    public function listCollections(string $siteId): array
-    {
-        return $this->request('GET', "/sites/{$siteId}/collections");
+        return $this->request('GET', '/v2/sites/' . urlencode($siteId) . '/collections', [
+            'limit' => $limit,
+            'offset' => $offset,
+        ]);
     }
 
     /**
-     * Get a collection by its ID.
+     * List items in a collection.
      *
-     * @param  string  $collectionId  The collection identifier
-     * @return array<string, mixed>
-     */
-    public function getCollection(string $collectionId): array
-    {
-        return $this->request('GET', "/collections/{$collectionId}");
-    }
-
-    // ── Items ──────────────────────────────────────────────
-
-    /**
-     * List items in a collection with optional pagination.
-     *
-     * @param  string  $collectionId  The collection identifier
-     * @param  int  $limit  Maximum number of items to return
-     * @param  int  $offset  Number of items to skip
      * @return array<string, mixed>
      */
     public function listItems(string $collectionId, int $limit = 100, int $offset = 0): array
     {
-        return $this->request('GET', "/collections/{$collectionId}/items", [
+        return $this->request('GET', '/v2/collections/' . urlencode($collectionId) . '/items', [
             'limit' => $limit,
             'offset' => $offset,
         ]);
@@ -107,119 +68,28 @@ class WebflowService
     /**
      * Get a single item from a collection.
      *
-     * @param  string  $collectionId  The collection identifier
-     * @param  string  $itemId  The item identifier
      * @return array<string, mixed>
      */
     public function getItem(string $collectionId, string $itemId): array
     {
-        return $this->request('GET', "/collections/{$collectionId}/items/{$itemId}");
+        return $this->request('GET', '/v2/collections/' . urlencode($collectionId) . '/items/' . urlencode($itemId));
     }
 
     /**
      * Create a new item in a collection.
      *
-     * @param  string  $collectionId  The collection identifier
-     * @param  array<string, mixed>  $fields  The item field data
-     * @param  bool  $isDraft  Whether the item is a draft
-     * @param  bool  $isArchived  Whether the item is archived
+     * @param  array<string, mixed>  $fields  Field data for the item.
+     * @param  bool  $live  Whether to publish the item immediately.
      * @return array<string, mixed>
      */
-    public function createItem(string $collectionId, array $fields, bool $isDraft = false, bool $isArchived = false): array
+    public function createItem(string $collectionId, array $fields, bool $live = false): array
     {
-        return $this->request('POST', "/collections/{$collectionId}/items", [
-            'isDraft' => $isDraft,
-            'isArchived' => $isArchived,
+        $query = $live ? ['live' => 'true'] : [];
+
+        return $this->request('POST', '/v2/collections/' . urlencode($collectionId) . '/items', [
             'fieldData' => $fields,
-        ]);
+        ], $query);
     }
-
-    /**
-     * Update an existing item in a collection.
-     *
-     * @param  string  $collectionId  The collection identifier
-     * @param  string  $itemId  The item identifier
-     * @param  array<string, mixed>  $fields  The item field data to update
-     * @param  bool  $isDraft  Whether the item is a draft
-     * @param  bool  $isArchived  Whether the item is archived
-     * @return array<string, mixed>
-     */
-    public function updateItem(string $collectionId, string $itemId, array $fields, bool $isDraft = false, bool $isArchived = false): array
-    {
-        return $this->request('PUT', "/collections/{$collectionId}/items/{$itemId}", [
-            'isDraft' => $isDraft,
-            'isArchived' => $isArchived,
-            'fieldData' => $fields,
-        ]);
-    }
-
-    /**
-     * Delete an item from a collection.
-     *
-     * @param  string  $collectionId  The collection identifier
-     * @param  string  $itemId  The item identifier
-     * @return array<string, mixed>
-     */
-    public function deleteItem(string $collectionId, string $itemId): array
-    {
-        return $this->request('DELETE', "/collections/{$collectionId}/items/{$itemId}");
-    }
-
-    // ── Webhooks ───────────────────────────────────────────
-
-    /**
-     * List all webhooks for a site.
-     *
-     * @param  string  $siteId  The site identifier
-     * @return array<string, mixed>
-     */
-    public function listWebhooks(string $siteId): array
-    {
-        return $this->request('GET', "/sites/{$siteId}/webhooks");
-    }
-
-    /**
-     * Create a webhook for a site.
-     *
-     * @param  string  $siteId  The site identifier
-     * @param  string  $triggerType  The event trigger type (e.g. form_submission, site_publish)
-     * @param  string  $url  The webhook callback URL
-     * @return array<string, mixed>
-     */
-    public function createWebhook(string $siteId, string $triggerType, string $url): array
-    {
-        return $this->request('POST', "/sites/{$siteId}/webhooks", [
-            'triggerType' => $triggerType,
-            'url' => $url,
-        ]);
-    }
-
-    /**
-     * Delete a webhook from a site.
-     *
-     * @param  string  $siteId  The site identifier
-     * @param  string  $webhookId  The webhook identifier
-     * @return array<string, mixed>
-     */
-    public function deleteWebhook(string $siteId, string $webhookId): array
-    {
-        return $this->request('DELETE', "/sites/{$siteId}/webhooks/{$webhookId}");
-    }
-
-    // ── Assets ─────────────────────────────────────────────
-
-    /**
-     * List all assets for a site.
-     *
-     * @param  string  $siteId  The site identifier
-     * @return array<string, mixed>
-     */
-    public function listAssets(string $siteId): array
-    {
-        return $this->request('GET', "/sites/{$siteId}/assets");
-    }
-
-    // ── Users ──────────────────────────────────────────────
 
     /**
      * Get the currently authenticated user.
@@ -228,56 +98,75 @@ class WebflowService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/user');
+        return $this->request('GET', '/v2/user');
     }
 
-    // ── HTTP ───────────────────────────────────────────────
-
     /**
-     * Make an API request to the Webflow v2 API.
+     * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Request query parameters or JSON body
+     * @param  array<string, mixed>  $data  Body/query data.
+     * @param  array<string, string>  $query  Additional query parameters appended to the URL.
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], array $query = []): array
     {
-        if (! $this->apiKey) {
-            throw new \RuntimeException('Webflow API key is not configured.');
+        $response = $this->rawRequest($method, $path, $data, $query);
+
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Make a raw HTTP request to the Webflow API.
+     *
+     * @param  array<string, mixed>  $data  Body or query data depending on method.
+     * @param  array<string, string>  $query  Additional query parameters appended to the URL.
+     */
+    private function rawRequest(string $method, string $path, array $data = [], array $query = []): \Illuminate\Http\Client\Response
+    {
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Webflow access token is not configured.');
+        }
+
+        $url = $this->baseUrl . $path;
+
+        if (!empty($query)) {
+            $url .= '?' . http_build_query($query);
         }
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
-                'accept-version' => self::API_VERSION,
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get(self::BASE_URL . $path, $data),
-                'POST' => $http->post(self::BASE_URL . $path, $data),
-                'PUT' => $http->put(self::BASE_URL . $path, $data),
-                'DELETE' => $http->delete(self::BASE_URL . $path, $data),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (! $response->successful()) {
-                $body = $response->json() ?? [];
-                $err = $body['message'] ?? $body['msg'] ?? $body['error'] ?? $response->body();
+            if (!$response->successful()) {
+                $contentType = $response->header('Content-Type');
+                $body = $response->body();
 
+                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                    Log::warning("Webflow API returned HTML for {$method} {$path}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("Webflow API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the service is unavailable.");
+                }
+
+                $error = $response->json('message') ?? $response->json('error') ?? $body;
                 Log::error("Webflow API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $err,
+                    'error' => $error,
                 ]);
-
-                $msg = is_string($err) ? $err : json_encode($err);
-
-                throw new \RuntimeException('Webflow API error (' . $response->status() . '): ' . $msg);
+                throw new \RuntimeException("Webflow API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            return $response->json() ?? [];
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Webflow API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

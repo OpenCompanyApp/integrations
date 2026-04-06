@@ -6,9 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-/**
- * Laravel service provider that registers the WebflowService singleton and bootstraps Webflow tools.
- */
 class WebflowServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -17,7 +14,8 @@ class WebflowServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new WebflowService(
-                apiKey: $creds->get('webflow', 'api_key', ''),
+                accessToken: $creds->get('webflow', 'access_token', ''),
+                baseUrl: $creds->get('webflow', 'url', 'https://api.webflow.com'),
             );
         });
     }

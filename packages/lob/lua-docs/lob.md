@@ -1,8 +1,53 @@
 # Lob — Lua API Reference
 
-## send_postcard
+## list_letters
 
-Send a postcard via Lob direct mail API.
+List letters with pagination.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Results per page (default: 10, max: 100) |
+| `offset` | integer | no | Number of results to skip (default: 0) |
+
+### Example
+
+```lua
+local result = app.integrations.lob.list_letters({ limit = 25 })
+
+for _, letter in ipairs(result.data) do
+  print(letter.id .. " — " .. letter.status)
+end
+```
+
+---
+
+## get_letter
+
+Retrieve a letter by its Lob ID.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | The letter ID (e.g., `"ltr_abcdef123456"`) |
+
+### Example
+
+```lua
+local result = app.integrations.lob.get_letter({ id = "ltr_abc123" })
+
+print("Status: " .. result.status)
+print("Tracking: " .. (result.tracking_number or "N/A"))
+print("URL: " .. result.url)
+```
+
+---
+
+## create_letter
+
+Create and send a letter via Lob.
 
 ### Parameters
 
@@ -10,49 +55,7 @@ Send a postcard via Lob direct mail API.
 |------|------|----------|-------------|
 | `to` | string | yes | Recipient — address ID (e.g., `"adr_..."`) or inline address object |
 | `from` | string | no | Sender — address ID or inline address object |
-| `front` | string | yes | HTML string or template ID for the front of the postcard |
-| `back` | string | yes | HTML string or template ID for the back of the postcard |
-| `merge_variables` | object | no | Key-value pairs for template personalization |
-
-### Example
-
-```lua
-local result = app.integrations.lob.send_postcard({
-  to = "adr_abc123",
-  from = "adr_def456",
-  front = "<html><body><h1>Hello {{name}}!</h1></body></html>",
-  back = "<html><body><p>Return: 123 Main St</p></body></html>",
-  merge_variables = { name = "Alice" }
-})
-
-print("Postcard ID: " .. result.id)
-print("Status: " .. result.status)
-```
-
-### Using a template
-
-```lua
-local result = app.integrations.lob.send_postcard({
-  to = "adr_abc123",
-  from = "adr_def456",
-  front = "tmpl_postcard_front",
-  back = "tmpl_postcard_back",
-  merge_variables = { name = "Bob", discount = "25%" }
-})
-```
-
----
-
-## send_letter
-
-Send a letter via Lob direct mail API.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `to` | string | yes | Recipient — address ID or inline address object |
-| `from` | string | no | Sender — address ID or inline address object |
+| `description` | string | no | Internal description (not printed on the letter) |
 | `file` | string | yes | HTML string or template ID for the letter content |
 | `color` | boolean | no | Print in color (default: `true`) |
 | `double_sided` | boolean | no | Print double-sided (default: `true`) |
@@ -60,9 +63,10 @@ Send a letter via Lob direct mail API.
 ### Example
 
 ```lua
-local result = app.integrations.lob.send_letter({
+local result = app.integrations.lob.create_letter({
   to = "adr_abc123",
   from = "adr_def456",
+  description = "Welcome letter",
   file = "<html><body><p>Dear {{name}}, welcome!</p></body></html>",
   color = true,
   double_sided = true
@@ -70,6 +74,40 @@ local result = app.integrations.lob.send_letter({
 
 print("Letter ID: " .. result.id)
 print("Expected delivery: " .. result.expected_delivery_date)
+```
+
+### Using a template
+
+```lua
+local result = app.integrations.lob.create_letter({
+  to = "adr_abc123",
+  from = "adr_def456",
+  file = "tmpl_welcome_letter",
+  description = "Template letter"
+})
+```
+
+---
+
+## list_postcards
+
+List postcards with pagination.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Results per page (default: 10, max: 100) |
+| `offset` | integer | no | Number of results to skip (default: 0) |
+
+### Example
+
+```lua
+local result = app.integrations.lob.list_postcards({ limit = 25 })
+
+for _, postcard in ipairs(result.data) do
+  print(postcard.id .. " — " .. postcard.status)
+end
 ```
 
 ---
@@ -95,70 +133,52 @@ print("Tracking: " .. (result.tracking_number or "N/A"))
 
 ---
 
-## list_postcards
+## create_postcard
 
-List postcards with pagination.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Results per page (default: 10, max: 100) |
-| `after` | string | no | Cursor — ID from previous page for pagination |
-
-### Example
-
-```lua
-local result = app.integrations.lob.list_postcards({ limit = 25 })
-
-for _, postcard in ipairs(result.data) do
-  print(postcard.id .. " — " .. postcard.status)
-end
-
--- Next page
-if result.has_more then
-  local next = app.integrations.lob.list_postcards({
-    limit = 25,
-    after = result.data[#result.data].id
-  })
-end
-```
-
----
-
-## verify_address
-
-Verify a US mailing address.
+Create and send a postcard via Lob.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `address` | string | yes | Primary address line (e.g., `"123 Main St"`) |
-| `city` | string | yes | City name (e.g., `"San Francisco"`) |
-| `state` | string | yes | Two-letter state code (e.g., `"CA"`) |
-| `zip` | string | yes | ZIP code (5-digit or ZIP+4) |
+| `to` | string | yes | Recipient — address ID or inline address object |
+| `from` | string | no | Sender — address ID or inline address object |
+| `description` | string | no | Internal description (not printed on the postcard) |
+| `front` | string | yes | HTML string or template ID for the front of the postcard |
+| `back` | string | yes | HTML string or template ID for the back of the postcard |
 
 ### Example
 
 ```lua
-local result = app.integrations.lob.verify_address({
-  address = "185 Berry St Ste 6100",
-  city = "San Francisco",
-  state = "CA",
-  zip = "94107"
+local result = app.integrations.lob.create_postcard({
+  to = "adr_abc123",
+  from = "adr_def456",
+  description = "Marketing postcard",
+  front = "<html><body><h1>Hello!</h1></body></html>",
+  back = "<html><body><p>Return: 123 Main St</p></body></html>"
 })
 
-print("Deliverable: " .. result.deliverability)
--- "deliverable", "deliverable_unnecessary_unit", "undeliverable", etc.
-print("Normalized: " .. result.primary_line .. ", " .. result.city .. " " .. result.state .. " " .. result.zip_code)
+print("Postcard ID: " .. result.id)
+print("Status: " .. result.status)
+```
+
+### Using a template
+
+```lua
+local result = app.integrations.lob.create_postcard({
+  to = "adr_abc123",
+  from = "adr_def456",
+  front = "tmpl_postcard_front",
+  back = "tmpl_postcard_back",
+  description = "Template postcard"
+})
 ```
 
 ---
 
 ## get_current_user
 
-Retrieve the current Lob account info.
+List saved addresses in the Lob account.
 
 ### Parameters
 
@@ -169,8 +189,9 @@ None.
 ```lua
 local result = app.integrations.lob.get_current_user({})
 
-print("Company: " .. result.company_name)
-print("Balance: $" .. result.balance)
+for _, addr in ipairs(result.data) do
+  print(addr.id .. ": " .. addr.description .. " — " .. addr.address_line1)
+end
 ```
 
 ---
@@ -181,14 +202,14 @@ If you have multiple Lob accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.lob.send_postcard({...})
+app.integrations.lob.create_letter({...})
 
 -- Explicit default (portable across setups)
-app.integrations.lob.default.send_postcard({...})
+app.integrations.lob.default.create_letter({...})
 
 -- Named accounts
-app.integrations.lob.marketing.send_postcard({...})
-app.integrations.lob.billing.send_letter({...})
+app.integrations.lob.marketing.create_postcard({...})
+app.integrations.lob.billing.create_letter({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

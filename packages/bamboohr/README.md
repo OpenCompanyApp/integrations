@@ -47,6 +47,8 @@ return [
 | `bamboohr_update_employee` | write | Update an existing employee record |
 | `bamboohr_list_departments` | read | List all company departments |
 | `bamboohr_list_time_off_requests` | read | List time-off requests with optional filters |
+| `bamboohr_get_time_off_request` | read | Get details for a specific time-off request |
+| `bamboohr_list_reports` | read | Generate a custom report with specified employee fields |
 | `bamboohr_get_current_user` | read | Get the currently authenticated user |
 
 ## Quick Start
@@ -66,7 +68,7 @@ $tools = [
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 9 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;

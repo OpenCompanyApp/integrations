@@ -2,11 +2,32 @@
     "name": "opencompanyapp/integration-figma",
     "description": "Figma integration for OpenCompany — files, images, comments, projects, components, and styles.",
     "license": "MIT",
-    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
     "keywords": ["tools", "figma", "design", "opencompany"],
-    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
-    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Figma\\": "src/"}},
-    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Figma\\FigmaServiceProvider"]}},
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-figma": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Figma\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Figma\\FigmaServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }

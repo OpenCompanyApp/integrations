@@ -7,13 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get a Mattermost channel by ID.
+ * Get details of a specific Mattermost channel by ID.
+ *
+ * Returns the full channel object including id, name, display_name,
+ * header, purpose, type, team_id, creator_id, and timestamps.
  */
 class MattermostGetChannel implements Tool
 {
-    /**
-     * @param  MattermostService  $service  The Mattermost API client
-     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -25,40 +25,31 @@ class MattermostGetChannel implements Tool
 
     public function description(): string
     {
-        return 'Get a Mattermost channel by its ID.';
+        return 'Get details of a specific Mattermost channel by ID. Returns channel name, display name, type, header, purpose, and member counts.';
     }
 
     public function parameters(): array
     {
         return [
-            'channel_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the channel to retrieve.'],
+            'channel_id' => ['type' => 'string', 'required' => true, 'description' => 'The channel ID.'],
         ];
     }
 
-    /**
-     * Get a Mattermost channel by ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (channel_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mattermost integration is not configured.');
             }
 
             $channelId = $args['channel_id'] ?? '';
-
             if (empty($channelId)) {
                 return ToolResult::error('channel_id is required.');
             }
 
             $result = $this->service->getChannel($channelId);
 
-            return ToolResult::success([
-                'ok' => true,
-                'channel' => $result,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

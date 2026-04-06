@@ -1,58 +1,35 @@
 # HeyGen — Lua API Reference
 
-## create_video
+## list_videos
 
-Generate a new AI video with a customizable avatar and voice.
+List generated videos with pagination.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `video_inputs` | array | yes | Array of video input objects (see below) |
-| `test` | boolean | no | Set to `true` for a test video (free, watermarked) |
-| `title` | string | no | Optional title for the video |
-| `dimension` | object | no | Video dimensions, e.g. `{ width = 1920, height = 1080 }` |
+| `limit` | integer | no | Maximum number of videos to return (default: 10, max: 100) |
+| `offset` | integer | no | Number of videos to skip for pagination (default: 0) |
 
-### Video Input Object
-
-Each element in `video_inputs` should contain:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `avatar` | object | `{ avatar_id = "xxx", avatar_style = "normal" }` |
-| `voice` | object | `{ voice_id = "yyy" }` |
-| `script` | object | `{ text = "Your script text here" }` |
-
-### Example
+### Examples
 
 ```lua
-local result = app.integrations.heygen.create_video({
-  video_inputs = {
-    {
-      avatar = {
-        avatar_id = "avatar_abc123",
-        avatar_style = "normal"
-      },
-      voice = {
-        voice_id = "voice_def456"
-      },
-      script = {
-        text = "Hello! Welcome to our product demo."
-      }
-    }
-  },
-  test = true,
-  title = "Product Demo"
+-- List recent videos
+local result = app.integrations.heygen.list_videos({
+  limit = 10,
+  offset = 0
 })
 
-print("Video ID: " .. result.data.video_id)
+for _, video in ipairs(result.data.videos) do
+  print(video.video_id .. ": " .. video.status)
+end
 ```
 
 ---
 
 ## get_video
 
-Retrieve the status, URL, and details of a video by its ID.
+Get the status and details of a specific video.
 
 ### Parameters
 
@@ -64,46 +41,93 @@ Retrieve the status, URL, and details of a video by its ID.
 
 ```lua
 local result = app.integrations.heygen.get_video({
-  video_id = "video_abc123"
+  video_id = "abc123"
 })
 
 print("Status: " .. result.data.status)
 if result.data.video_url then
-  print("URL: " .. result.data.video_url)
+  print("Download: " .. result.data.video_url)
 end
 ```
 
 ---
 
-## list_videos
+## create_video
 
-List generated videos with pagination.
+Generate a new AI video with avatars and voices. Returns a `video_id` to track generation progress.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `limit` | integer | no | Max videos per page (default: 10) |
-| `offset` | integer | no | Pagination offset (0-based) |
+| `video_inputs` | array | yes | Array of video input objects defining scenes |
+| `dimension` | object | no | Video dimensions, e.g. `{width = 1920, height = 1080}` |
+| `test` | boolean | no | Generate a test/preview video (default: false) |
 
-### Example
+### Video Input Structure
+
+Each video input defines a scene:
 
 ```lua
-local result = app.integrations.heygen.list_videos({
-  limit = 5,
-  offset = 0
+{
+  character = {
+    avatar_id = "avatar-id-here",
+    voice_id = "voice-id-here"
+  },
+  script = "Your script text here",
+  voice_settings = {
+    speed = 1.0,
+    stability = 0.5
+  }
+}
+```
+
+### Examples
+
+```lua
+-- Create a simple avatar video
+local result = app.integrations.heygen.create_video({
+  video_inputs = {
+    {
+      character = {
+        avatar_id = "avatar-abc123",
+        voice_id = "voice-xyz789"
+      },
+      script = "Welcome to our product demo!"
+    }
+  },
+  test = true
 })
 
-for _, video in ipairs(result.data.videos) do
-  print(video.video_id .. ": " .. video.title .. " [" .. video.status .. "]")
-end
+print("Video ID: " .. result.data.video_id)
+```
+
+```lua
+-- Create a video with custom dimensions
+local result = app.integrations.heygen.create_video({
+  video_inputs = {
+    {
+      character = {
+        avatar_id = "avatar-abc123",
+        voice_id = "voice-xyz789"
+      },
+      script = "This is a landscape video."
+    }
+  },
+  dimension = { width = 1920, height = 1080 },
+  test = false
+})
 ```
 
 ---
 
 ## list_avatars
 
-List all available avatars for video generation. No parameters required.
+List all available talking avatars.
+
+### Parameters
+
+None.
 
 ### Example
 
@@ -117,32 +141,13 @@ end
 
 ---
 
-## get_avatar
+## list_voices
 
-Retrieve details of a specific avatar by ID.
+List all available voices for video generation.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `avatar_id` | string | yes | The unique identifier of the avatar |
-
-### Example
-
-```lua
-local result = app.integrations.heygen.get_avatar({
-  avatar_id = "avatar_abc123"
-})
-
-print("Name: " .. result.data.avatar_name)
-print("Preview: " .. result.data.preview_image_url)
-```
-
----
-
-## list_voices
-
-List all available voices for video generation. No parameters required.
+None.
 
 ### Example
 
@@ -150,50 +155,53 @@ List all available voices for video generation. No parameters required.
 local result = app.integrations.heygen.list_voices({})
 
 for _, voice in ipairs(result.data.voices) do
-  print(voice.voice_id .. ": " .. voice.display_name .. " (" .. voice.language .. ", " .. voice.gender .. ")")
+  print(voice.voice_id .. ": " .. voice.display_name .. " (" .. voice.language .. ")")
 end
-```
-
----
-
-## create_avatar
-
-Create a new custom avatar by providing a training video URL.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `video_url` | string | yes | URL of the training video (2-5 min single-person video) |
-| `name` | string | yes | A name for the new avatar |
-| `description` | string | no | Optional description for the avatar |
-
-### Example
-
-```lua
-local result = app.integrations.heygen.create_avatar({
-  video_url = "https://example.com/training-video.mp4",
-  name = "John - Sales Avatar",
-  description = "Sales team avatar for product demos"
-})
-
-print("Avatar ID: " .. result.data.avatar_id)
 ```
 
 ---
 
 ## get_current_user
 
-Retrieve the authenticated user's account information. No parameters required.
+Get the authenticated user's account information.
+
+### Parameters
+
+None.
 
 ### Example
 
 ```lua
 local result = app.integrations.heygen.get_current_user({})
 
-print("Name: " .. result.data.name)
 print("Plan: " .. result.data.plan)
-print("Credits remaining: " .. result.data.remaining_credits)
+print("Remaining credits: " .. result.data.remaining_quota)
+```
+
+---
+
+## list_templates
+
+List available video templates with pagination.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Maximum number of templates to return (default: 10, max: 100) |
+| `offset` | integer | no | Number of templates to skip for pagination (default: 0) |
+
+### Example
+
+```lua
+local result = app.integrations.heygen.list_templates({
+  limit = 20,
+  offset = 0
+})
+
+for _, template in ipairs(result.data.templates) do
+  print(template.template_id .. ": " .. template.name)
+end
 ```
 
 ---
@@ -210,8 +218,8 @@ app.integrations.heygen.function_name({...})
 app.integrations.heygen.default.function_name({...})
 
 -- Named accounts
-app.integrations.heygen.production.function_name({...})
-app.integrations.heygen.marketing.function_name({...})
+app.integrations.heygen.work.function_name({...})
+app.integrations.heygen.personal.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

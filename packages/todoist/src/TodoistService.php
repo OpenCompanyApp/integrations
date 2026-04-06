@@ -8,27 +8,52 @@ use RuntimeException;
 
 /**
  * Todoist API client for interacting with tasks, projects, sections, labels, and comments.
+ *
+ * Communicates with the Todoist REST API v2 and Sync API v9.
+ * Authentication uses a personal access token sent as a Bearer header.
  */
 class TodoistService
 {
-    private const BASE_URL = 'https://api.todoist.com/rest/v2';
-    private const QUICK_ADD_URL = 'https://api.todoist.com/api/v1/quick/add';
+    private const DEFAULT_BASE_URL = 'https://api.todoist.com';
+    private const REST_V2_PREFIX = '/rest/v2';
+    private const QUICK_ADD_URL = '/api/v1/quick/add';
+    private const SYNC_V9_PREFIX = '/sync/v9';
 
     /**
-     * @param string $apiToken Todoist personal access token for API authentication.
+     * @param string $accessToken Todoist personal access token for API authentication.
+     * @param string $baseUrl     Base URL for the Todoist API (default: https://api.todoist.com).
      */
     public function __construct(
-        private string $apiToken = '',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = self::DEFAULT_BASE_URL,
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the Todoist integration is properly configured with an API token.
+     * Check whether the Todoist integration is properly configured with an access token.
      *
-     * @return bool True if an API token is set.
+     * @return bool True if an access token is set.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiToken);
+        return !empty($this->accessToken);
+    }
+
+    // ─── User ──────────────────────────────────────────────────────────────
+
+    /**
+     * Get the current user's profile via the Sync v9 API.
+     *
+     * Returns user information including full name, email, avatar, and plan details.
+     *
+     * @return array<string, mixed> User profile data.
+     *
+     * @throws RuntimeException If the request fails.
+     */
+    public function getCurrentUser(): array
+    {
+        return $this->request('GET', self::SYNC_V9_PREFIX . '/user');
     }
 
     /**
@@ -40,7 +65,7 @@ class TodoistService
      */
     public function testConnection(): array
     {
-        return $this->request('GET', '/user');
+        return $this->getCurrentUser();
     }
 
     // ─── Tasks ─────────────────────────────────────────────────────────────
@@ -55,7 +80,7 @@ class TodoistService
      */
     public function createTask(array $params): array
     {
-        return $this->request('POST', '/tasks', $params);
+        return $this->request('POST', self::REST_V2_PREFIX . '/tasks', $params);
     }
 
     /**
@@ -68,7 +93,7 @@ class TodoistService
      */
     public function getTask(string $id): array
     {
-        return $this->request('GET', "/tasks/{$id}");
+        return $this->request('GET', self::REST_V2_PREFIX . "/tasks/{$id}");
     }
 
     /**
@@ -82,7 +107,7 @@ class TodoistService
      */
     public function updateTask(string $id, array $params): array
     {
-        return $this->request('POST', "/tasks/{$id}", $params);
+        return $this->request('POST', self::REST_V2_PREFIX . "/tasks/{$id}", $params);
     }
 
     /**
@@ -95,7 +120,7 @@ class TodoistService
      */
     public function deleteTask(string $id): array
     {
-        $this->request('DELETE', "/tasks/{$id}");
+        $this->request('DELETE', self::REST_V2_PREFIX . "/tasks/{$id}");
 
         return ['deleted' => true, 'id' => $id];
     }
@@ -110,7 +135,7 @@ class TodoistService
      */
     public function closeTask(string $id): array
     {
-        $this->request('POST', "/tasks/{$id}/close");
+        $this->request('POST', self::REST_V2_PREFIX . "/tasks/{$id}/close");
 
         return ['closed' => true, 'id' => $id];
     }
@@ -125,7 +150,7 @@ class TodoistService
      */
     public function reopenTask(string $id): array
     {
-        $this->request('POST', "/tasks/{$id}/reopen");
+        $this->request('POST', self::REST_V2_PREFIX . "/tasks/{$id}/reopen");
 
         return ['reopened' => true, 'id' => $id];
     }
@@ -140,7 +165,7 @@ class TodoistService
      */
     public function listTasks(array $params = []): array
     {
-        return $this->request('GET', '/tasks', $params);
+        return $this->request('GET', self::REST_V2_PREFIX . '/tasks', $params);
     }
 
     /**
@@ -168,7 +193,7 @@ class TodoistService
             $body['auto_reminder'] = true;
         }
 
-        return $this->rawRequest('POST', self::QUICK_ADD_URL, $body);
+        return $this->request('POST', self::QUICK_ADD_URL, $body);
     }
 
     // ─── Projects ──────────────────────────────────────────────────────────
@@ -183,7 +208,7 @@ class TodoistService
      */
     public function createProject(array $params): array
     {
-        return $this->request('POST', '/projects', $params);
+        return $this->request('POST', self::REST_V2_PREFIX . '/projects', $params);
     }
 
     /**
@@ -196,7 +221,7 @@ class TodoistService
      */
     public function getProject(string $id): array
     {
-        return $this->request('GET', "/projects/{$id}");
+        return $this->request('GET', self::REST_V2_PREFIX . "/projects/{$id}");
     }
 
     /**
@@ -210,7 +235,7 @@ class TodoistService
      */
     public function updateProject(string $id, array $params): array
     {
-        return $this->request('POST', "/projects/{$id}", $params);
+        return $this->request('POST', self::REST_V2_PREFIX . "/projects/{$id}", $params);
     }
 
     /**
@@ -223,7 +248,7 @@ class TodoistService
      */
     public function deleteProject(string $id): array
     {
-        $this->request('DELETE', "/projects/{$id}");
+        $this->request('DELETE', self::REST_V2_PREFIX . "/projects/{$id}");
 
         return ['deleted' => true, 'id' => $id];
     }
@@ -237,7 +262,7 @@ class TodoistService
      */
     public function listProjects(): array
     {
-        return $this->request('GET', '/projects');
+        return $this->request('GET', self::REST_V2_PREFIX . '/projects');
     }
 
     // ─── Sections ──────────────────────────────────────────────────────────
@@ -252,7 +277,7 @@ class TodoistService
      */
     public function createSection(array $params): array
     {
-        return $this->request('POST', '/sections', $params);
+        return $this->request('POST', self::REST_V2_PREFIX . '/sections', $params);
     }
 
     /**
@@ -265,7 +290,7 @@ class TodoistService
      */
     public function getSection(string $id): array
     {
-        return $this->request('GET', "/sections/{$id}");
+        return $this->request('GET', self::REST_V2_PREFIX . "/sections/{$id}");
     }
 
     /**
@@ -278,7 +303,7 @@ class TodoistService
      */
     public function deleteSection(string $id): array
     {
-        $this->request('DELETE', "/sections/{$id}");
+        $this->request('DELETE', self::REST_V2_PREFIX . "/sections/{$id}");
 
         return ['deleted' => true, 'id' => $id];
     }
@@ -298,7 +323,7 @@ class TodoistService
             $params['project_id'] = $projectId;
         }
 
-        return $this->request('GET', '/sections', $params);
+        return $this->request('GET', self::REST_V2_PREFIX . '/sections', $params);
     }
 
     // ─── Comments ──────────────────────────────────────────────────────────
@@ -313,7 +338,7 @@ class TodoistService
      */
     public function createComment(array $params): array
     {
-        return $this->request('POST', '/comments', $params);
+        return $this->request('POST', self::REST_V2_PREFIX . '/comments', $params);
     }
 
     /**
@@ -335,7 +360,7 @@ class TodoistService
             $params['project_id'] = $projectId;
         }
 
-        return $this->request('GET', '/comments', $params);
+        return $this->request('GET', self::REST_V2_PREFIX . '/comments', $params);
     }
 
     // ─── Labels ────────────────────────────────────────────────────────────
@@ -349,16 +374,16 @@ class TodoistService
      */
     public function listLabels(): array
     {
-        return $this->request('GET', '/labels');
+        return $this->request('GET', self::REST_V2_PREFIX . '/labels');
     }
 
     // ─── HTTP Helpers ──────────────────────────────────────────────────────
 
     /**
-     * Send an authenticated request to the Todoist REST API v2.
+     * Send an authenticated request to the Todoist API.
      *
      * @param string               $method HTTP method (GET, POST, DELETE).
-     * @param string               $path   API path (e.g., '/tasks').
+     * @param string               $path   API path (e.g., '/rest/v2/tasks', '/sync/v9/user').
      * @param array<string, mixed> $params Query parameters (GET) or JSON body (POST).
      * @return array<string, mixed> Decoded JSON response.
      *
@@ -366,51 +391,48 @@ class TodoistService
      */
     private function request(string $method, string $path, array $params = []): array
     {
-        $url = self::BASE_URL . $path;
-
-        return $this->rawRequest($method, $url, $params);
-    }
-
-    /**
-     * Send an authenticated request to an arbitrary Todoist URL.
-     *
-     * @param string               $method HTTP method (GET, POST, DELETE).
-     * @param string               $url    Full URL to send the request to.
-     * @param array<string, mixed> $params Query parameters (GET) or JSON body (POST).
-     * @return array<string, mixed> Decoded JSON response.
-     *
-     * @throws RuntimeException If the API returns an error.
-     */
-    private function rawRequest(string $method, string $url, array $params = []): array
-    {
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiToken,
-            'Content-Type' => 'application/json',
-        ]);
-
-        if ($method === 'GET') {
-            $response = $response->get($url, $params);
-        } elseif ($method === 'DELETE') {
-            $response = $response->delete($url);
-        } else {
-            $response = $response->post($url, $params);
+        if (!$this->accessToken) {
+            throw new RuntimeException('Todoist access token is not configured.');
         }
 
-        if ($response->failed()) {
-            Log::error('Todoist API error', [
+        $url = $this->baseUrl . $path;
+
+        try {
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Content-Type' => 'application/json',
+            ])->timeout(30);
+
+            $response = match (strtoupper($method)) {
+                'GET' => $http->get($url, $params),
+                'POST' => $http->post($url, $params),
+                'DELETE' => $http->delete($url),
+                default => throw new RuntimeException("Unsupported HTTP method: {$method}"),
+            };
+
+            if (!$response->successful()) {
+                Log::error('Todoist API error', [
+                    'method' => $method,
+                    'url' => $url,
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+
+                throw new RuntimeException(
+                    "Todoist API error ({$response->status()}): {$response->body()}"
+                );
+            }
+
+            $json = $response->json();
+
+            return is_array($json) ? $json : ['result' => $json];
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error('Todoist API connection error', [
                 'method' => $method,
                 'url' => $url,
-                'status' => $response->status(),
-                'body' => $response->body(),
+                'error' => $e->getMessage(),
             ]);
-
-            throw new RuntimeException(
-                "Todoist API error ({$response->status()}): {$response->body()}"
-            );
+            throw new RuntimeException("Failed to connect to Todoist API: {$e->getMessage()}");
         }
-
-        $json = $response->json();
-
-        return is_array($json) ? $json : ['result' => $json];
     }
 }

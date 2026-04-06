@@ -24,6 +24,7 @@ class ConvertKitServiceProvider extends ServiceProvider
 
             return new ConvertKitService(
                 apiKey: $creds->get('convertkit', 'api_key', ''),
+                baseUrl: $creds->get('convertkit', 'url', 'https://api.convertkit.com'),
             );
         });
     }

@@ -7,15 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List channels in a Mattermost team.
+ * List channels the current user belongs to.
  *
- * Supports pagination via page and per_page parameters.
+ * Returns an array of channel objects including id, name, display_name,
+ * type (O = public, P = private, D = direct), team_id, and other metadata.
  */
 class MattermostListChannels implements Tool
 {
-    /**
-     * @param  MattermostService  $service  The Mattermost API client
-     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -27,51 +25,30 @@ class MattermostListChannels implements Tool
 
     public function description(): string
     {
-        return 'List channels in a Mattermost team. Supports pagination with page and per_page.';
+        return 'List channels the current user belongs to in Mattermost. Returns channel IDs, names, types, and team associations. Use this to discover available channels before posting messages or reading posts.';
     }
 
     public function parameters(): array
     {
         return [
-            'team_id'  => ['type' => 'string', 'required' => true, 'description' => 'The ID of the team to list channels for.'],
-            'page'     => ['type' => 'integer', 'description' => 'The page number to retrieve (0-indexed, default 0).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of channels per page (default 60).'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (0-indexed). Default: 0.'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of channels per page. Default: 60.'],
         ];
     }
 
-    /**
-     * List channels in a Mattermost team.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (team_id, page, per_page)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mattermost integration is not configured.');
             }
 
-            $teamId = $args['team_id'] ?? '';
+            $page = isset($args['page']) ? (int) $args['page'] : 0;
+            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 60;
 
-            if (empty($teamId)) {
-                return ToolResult::error('team_id is required.');
-            }
+            $result = $this->service->listChannels($page, $perPage);
 
-            $params = [];
-
-            if (isset($args['page'])) {
-                $params['page'] = (int) $args['page'];
-            }
-            if (isset($args['per_page'])) {
-                $params['per_page'] = (int) $args['per_page'];
-            }
-
-            $result = $this->service->listChannels($teamId, $params);
-
-            return ToolResult::success([
-                'ok' => true,
-                'channels' => $result,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

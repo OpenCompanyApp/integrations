@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Figma\Tools\FigmaDeleteComment;
-use OpenCompany\Integrations\Figma\Tools\FigmaGetComments;
+use OpenCompany\Integrations\Figma\Tools\FigmaGetCurrentUser;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetComponent;
-use OpenCompany\Integrations\Figma\Tools\FigmaGetComponents;
+use OpenCompany\Integrations\Figma\Tools\FigmaGetComments;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetFile;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetFileImages;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetFileNodes;
@@ -19,14 +19,19 @@ use OpenCompany\Integrations\Figma\Tools\FigmaGetProjectFiles;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetStyle;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetStyles;
 use OpenCompany\Integrations\Figma\Tools\FigmaGetTeamProjects;
+use OpenCompany\Integrations\Figma\Tools\FigmaListComments;
+use OpenCompany\Integrations\Figma\Tools\FigmaListComponents;
+use OpenCompany\Integrations\Figma\Tools\FigmaListFiles;
+use OpenCompany\Integrations\Figma\Tools\FigmaListProjects;
 use OpenCompany\Integrations\Figma\Tools\FigmaListTeamComponents;
 use OpenCompany\Integrations\Figma\Tools\FigmaPostComment;
 
 /**
  * Registers all Figma tools and provides integration metadata.
  *
- * Exposes 15 tools covering files, images, comments, projects,
+ * Exposes 19 tools covering files, images, comments, projects,
  * components, and styles via the ToolProvider contract.
+ * Supports multi-account via ConfigurableIntegration.
  */
 class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -62,12 +67,20 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_token',
+                'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Personal Access Token',
                 'placeholder' => 'figd_...',
                 'hint' => 'Figma Personal Access Token. Generate one in <strong>Settings → Personal access tokens</strong>.',
                 'required' => true,
+            ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.figma.com',
+                'hint' => 'The Figma API base URL. Change only if using a proxy or custom endpoint.',
+                'default' => 'https://api.figma.com',
             ],
         ];
     }
@@ -75,22 +88,23 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
     /**
      * Test the Figma connection using the provided credentials.
      *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_token'
+     * @param  array<string, mixed>  $config  Configuration containing 'access_token' and optionally 'url'
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.figma.com', '/');
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided. Generate a Personal Access Token in Figma settings.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided. Generate a Personal Access Token in Figma settings.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'X-Figma-Token' => $apiToken,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.figma.com/v1/me');
+            ])->timeout(10)->get($baseUrl . '/v1/me');
 
             if (! $response->successful()) {
                 $status = $response->status();
@@ -119,7 +133,8 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
     public function validationRules(): array
     {
         return [
-            'api_token' => 'nullable|string',
+            'access_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
@@ -127,6 +142,13 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             // Files
+            'figma_list_files' => [
+                'class' => FigmaListFiles::class,
+                'type' => 'read',
+                'name' => 'List Files',
+                'description' => 'List Figma files accessible to the authenticated user.',
+                'icon' => 'ph:files',
+            ],
             'figma_get_file' => [
                 'class' => FigmaGetFile::class,
                 'type' => 'read',
@@ -157,11 +179,18 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
                 'icon' => 'ph:paint-bucket',
             ],
             // Comments
+            'figma_list_comments' => [
+                'class' => FigmaListComments::class,
+                'type' => 'read',
+                'name' => 'List Comments',
+                'description' => 'List comments on a Figma file.',
+                'icon' => 'ph:chat-circle-dots',
+            ],
             'figma_get_comments' => [
                 'class' => FigmaGetComments::class,
                 'type' => 'read',
                 'name' => 'Get Comments',
-                'description' => 'List comments on a Figma file.',
+                'description' => 'List comments on a Figma file (legacy alias).',
                 'icon' => 'ph:chat-circle-dots',
             ],
             'figma_post_comment' => [
@@ -179,11 +208,18 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
                 'icon' => 'ph:trash',
             ],
             // Teams & Projects
+            'figma_list_projects' => [
+                'class' => FigmaListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List projects in a Figma team.',
+                'icon' => 'ph:folder',
+            ],
             'figma_get_team_projects' => [
                 'class' => FigmaGetTeamProjects::class,
                 'type' => 'read',
                 'name' => 'Get Team Projects',
-                'description' => 'List projects in a Figma team.',
+                'description' => 'List projects in a Figma team (legacy alias).',
                 'icon' => 'ph:folder',
             ],
             'figma_get_project_files' => [
@@ -201,11 +237,18 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'List styles in a Figma file.',
                 'icon' => 'ph:palette',
             ],
+            'figma_list_components' => [
+                'class' => FigmaListComponents::class,
+                'type' => 'read',
+                'name' => 'List Components',
+                'description' => 'List components in a Figma file.',
+                'icon' => 'ph:puzzle-piece',
+            ],
             'figma_get_components' => [
                 'class' => FigmaGetComponents::class,
                 'type' => 'read',
                 'name' => 'Get Components',
-                'description' => 'List components in a Figma file.',
+                'description' => 'List components in a Figma file (legacy alias).',
                 'icon' => 'ph:puzzle-piece',
             ],
             'figma_get_component' => [
@@ -230,11 +273,18 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
                 'icon' => 'ph:stack',
             ],
             // Auth
+            'figma_get_current_user' => [
+                'class' => FigmaGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated Figma user profile.',
+                'icon' => 'ph:user',
+            ],
             'figma_get_me' => [
                 'class' => FigmaGetMe::class,
                 'type' => 'read',
                 'name' => 'Get Me',
-                'description' => 'Get the authenticated Figma user profile.',
+                'description' => 'Get the authenticated Figma user profile (legacy alias).',
                 'icon' => 'ph:user',
             ],
         ];
@@ -248,7 +298,8 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.figma.com'],
         ];
     }
 
@@ -276,7 +327,8 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             return new FigmaService(
-                apiToken: $creds->get('figma', 'api_token', '', $account),
+                accessToken: $creds->get('figma', 'access_token', '', $account),
+                baseUrl: $creds->get('figma', 'url', 'https://api.figma.com', $account),
             );
         }
 

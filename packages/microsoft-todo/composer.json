@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-microsoft-todo",
+    "description": "Microsoft To Do integration for Laravel — manage todo lists and tasks via the Microsoft Graph API.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "microsoft", "todo", "tasks", "productivity", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\MicrosoftTodo\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\MicrosoftTodo\\MicrosoftTodoServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

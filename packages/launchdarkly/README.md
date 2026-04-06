@@ -47,6 +47,7 @@ return [
 | `launchdarkly_toggle_flag` | write | Turn a feature flag on or off in an environment |
 | `launchdarkly_list_environments` | read | List environments for a project |
 | `launchdarkly_list_projects` | read | List all LaunchDarkly projects |
+| `launchdarkly_get_project` | read | Get details of a specific LaunchDarkly project |
 | `launchdarkly_get_current_user` | read | Get the currently authenticated user |
 
 ## Quick Start
@@ -71,7 +72,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;

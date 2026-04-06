@@ -11,12 +11,18 @@ List feature flags in a LaunchDarkly project.
 | `project_key` | string | no | Project key (defaults to configured project) |
 | `limit` | integer | no | Max flags to return (default: 20, max: 100) |
 | `offset` | integer | no | Pagination offset (default: 0) |
+| `env` | string | no | Environment key to filter results (e.g., `"production"`) |
 
 ### Examples
 
 ```lua
 -- List flags in default project
 local result = app.integrations.launchdarkly.list_flags({})
+
+-- Filter by environment
+local result = app.integrations.launchdarkly.list_flags({
+  env = "production"
+})
 
 for _, flag in ipairs(result.flags) do
   print(flag.key .. ": " .. flag.name)
@@ -49,12 +55,19 @@ Get detailed information about a specific feature flag.
 |------|------|----------|-------------|
 | `feature_flag_key` | string | yes | The flag key, e.g. `"enable-new-dashboard"` |
 | `project_key` | string | no | Project key (defaults to configured project) |
+| `env` | string | no | Environment key to filter results (e.g., `"production"`) |
 
 ### Examples
 
 ```lua
 local result = app.integrations.launchdarkly.get_flag({
   feature_flag_key = "enable-new-dashboard"
+})
+
+-- Get flag filtered to production environment
+local result = app.integrations.launchdarkly.get_flag({
+  feature_flag_key = "enable-new-dashboard",
+  env = "production"
 })
 
 print("Flag: " .. result.name)
@@ -147,6 +160,34 @@ for _, project in ipairs(result.projects) do
   for _, env_key in ipairs(project.environment_keys) do
     print("  - " .. env_key)
   end
+end
+```
+
+---
+
+## get_project
+
+Get detailed information about a specific LaunchDarkly project.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `project_key` | string | yes | The project key (e.g., `"default"`, `"my-backend-project"`) |
+
+### Examples
+
+```lua
+local result = app.integrations.launchdarkly.get_project({
+  project_key = "default"
+})
+
+print("Project: " .. result.name)
+print("Description: " .. result.description)
+print("Environments: " .. result.environment_count)
+
+for env_key, env in pairs(result.environments) do
+  print("  " .. env_key .. ": " .. env.name .. " (color: " .. env.color .. ")")
 end
 ```
 

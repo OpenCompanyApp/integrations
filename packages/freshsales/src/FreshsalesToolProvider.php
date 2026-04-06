@@ -9,62 +9,41 @@ use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListContacts;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetContact;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesCreateContact;
-use OpenCompany\Integrations\Freshsales\Tools\FreshsalesUpdateContact;
-use OpenCompany\Integrations\Freshsales\Tools\FreshsalesDeleteContact;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListDeals;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetDeal;
-use OpenCompany\Integrations\Freshsales\Tools\FreshsalesCreateDeal;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListAccounts;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetCurrentUser;
 
 class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
 {
-    /**
-     * Get the application name identifier.
-     */
     public function appName(): string
     {
         return 'freshsales';
     }
 
-    /**
-     * Get metadata for the application display.
-     *
-     * @return array<string, mixed>
-     */
     public function appMeta(): array
     {
         return [
             'label' => 'contacts, deals, accounts',
-            'description' => 'CRM',
+            'description' => 'CRM & sales management',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:freshworks',
         ];
     }
 
-    /**
-     * Get integration metadata for display and categorization.
-     *
-     * @return array<string, mixed>
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Freshsales',
-            'description' => 'CRM for high-velocity sales teams',
+            'description' => 'CRM platform for managing contacts, deals, and sales accounts',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:freshworks',
-            'category' => 'crm',
+            'category' => 'sales',
             'badge' => 'verified',
             'docs_url' => 'https://developers.freshworks.com/crm/api/',
         ];
     }
 
-    /**
-     * Get the configuration schema for the integration settings UI.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function configSchema(): array
     {
         return [
@@ -81,58 +60,51 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'string',
                 'label' => 'Domain',
                 'placeholder' => 'mycompany',
-                'hint' => 'Your Freshsales subdomain (the part before <code>.myfreshworks.com</code>)',
+                'hint' => 'Your Freshsales subdomain (the part before <code>.myfreshworks.com</code>). For example, if your URL is <code>https://mycompany.myfreshworks.com/crm/sales</code>, enter <code>mycompany</code>.',
                 'required' => true,
             ],
         ];
     }
 
-    /**
-     * Test the connection to the Freshsales API using the given configuration.
-     *
-     * @param  array<string, mixed>  $config
-     * @return array<string, mixed>
-     */
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
         $domain = $config['domain'] ?? '';
 
-        if (empty($apiKey) || empty($domain)) {
-            return ['success' => false, 'error' => 'API key and domain are required.'];
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No API key provided'];
         }
 
-        try {
-            $baseUrl = "https://{$domain}.myfreshworks.com/crm/sales/api";
+        if (empty($domain)) {
+            return ['success' => false, 'error' => 'No domain provided'];
+        }
 
+        $baseUrl = 'https://' . $domain . '.myfreshworks.com/crm/sales';
+
+        try {
             $response = Http::withHeaders([
                 'Authorization' => 'Token token=' . $apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/api/users/me');
 
             if ($response->successful()) {
                 $user = $response->json();
 
                 return [
                     'success' => true,
-                    'message' => "Connected to Freshsales as " . ($user['user']['display_name'] ?? $user['user']['email'] ?? 'unknown user') . ".",
+                    'message' => 'Connected to Freshsales as ' . ($user['user']['display_name'] ?? $user['user']['email'] ?? 'unknown user') . '.',
                 ];
             }
 
             return [
                 'success' => false,
-                'error' => "Authentication failed (HTTP {$response->status()}). Check your API key and domain.",
+                'error' => "Connection failed (HTTP {$response->status()}): " . ($response->json('error') ?? $response->body()),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get validation rules for the integration configuration.
-     *
-     * @return array<string, mixed>
-     */
     public function validationRules(): array
     {
         return [
@@ -141,11 +113,6 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Get the list of tools provided by this integration.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function tools(): array
     {
         return [
@@ -153,88 +120,59 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => FreshsalesListContacts::class,
                 'type' => 'read',
                 'name' => 'List Contacts',
-                'description' => 'List contacts from Freshsales CRM.',
+                'description' => 'List contacts from Freshsales CRM with pagination and sorting.',
                 'icon' => 'ph:users',
             ],
             'freshsales_get_contact' => [
                 'class' => FreshsalesGetContact::class,
                 'type' => 'read',
                 'name' => 'Get Contact',
-                'description' => 'Get details of a specific contact.',
+                'description' => 'Get details for a specific Freshsales contact.',
                 'icon' => 'ph:user',
             ],
             'freshsales_create_contact' => [
                 'class' => FreshsalesCreateContact::class,
                 'type' => 'write',
                 'name' => 'Create Contact',
-                'description' => 'Create a new contact in Freshsales.',
+                'description' => 'Create a new contact in Freshsales CRM.',
                 'icon' => 'ph:user-plus',
-            ],
-            'freshsales_update_contact' => [
-                'class' => FreshsalesUpdateContact::class,
-                'type' => 'write',
-                'name' => 'Update Contact',
-                'description' => 'Update an existing contact in Freshsales.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'freshsales_delete_contact' => [
-                'class' => FreshsalesDeleteContact::class,
-                'type' => 'write',
-                'name' => 'Delete Contact',
-                'description' => 'Delete a contact from Freshsales.',
-                'icon' => 'ph:trash',
             ],
             'freshsales_list_deals' => [
                 'class' => FreshsalesListDeals::class,
                 'type' => 'read',
                 'name' => 'List Deals',
-                'description' => 'List deals from Freshsales CRM.',
+                'description' => 'List deals from Freshsales CRM with pagination.',
                 'icon' => 'ph:currency-dollar',
             ],
             'freshsales_get_deal' => [
                 'class' => FreshsalesGetDeal::class,
                 'type' => 'read',
                 'name' => 'Get Deal',
-                'description' => 'Get details of a specific deal.',
+                'description' => 'Get details for a specific Freshsales deal.',
                 'icon' => 'ph:currency-dollar',
-            ],
-            'freshsales_create_deal' => [
-                'class' => FreshsalesCreateDeal::class,
-                'type' => 'write',
-                'name' => 'Create Deal',
-                'description' => 'Create a new deal in Freshsales.',
-                'icon' => 'ph:plus',
             ],
             'freshsales_list_accounts' => [
                 'class' => FreshsalesListAccounts::class,
                 'type' => 'read',
                 'name' => 'List Accounts',
-                'description' => 'List sales accounts from Freshsales.',
+                'description' => 'List sales accounts from Freshsales CRM with pagination.',
                 'icon' => 'ph:buildings',
             ],
             'freshsales_get_current_user' => [
                 'class' => FreshsalesGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Freshsales user.',
+                'description' => 'Get the currently authenticated Freshsales user profile.',
                 'icon' => 'ph:identification-badge',
             ],
         ];
     }
 
-    /**
-     * Get the path to the Lua documentation file.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/freshsales.md';
     }
 
-    /**
-     * Get the credential fields required for this integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
@@ -243,20 +181,11 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Confirm this is an integration provider.
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance, optionally using account-specific credentials.
-     *
-     * @param  string  $class  The tool class to instantiate.
-     * @param  array<string, mixed>  $context  Context with optional 'account' key for multi-account support.
-     */
     public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
@@ -264,9 +193,14 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
+            $domain = $creds->get('freshsales', 'domain', '', $account);
+            $baseUrl = $domain
+                ? 'https://' . $domain . '.myfreshworks.com/crm/sales'
+                : '';
+
             $service = new FreshsalesService(
                 apiKey: $creds->get('freshsales', 'api_key', '', $account),
-                domain: $creds->get('freshsales', 'domain', '', $account),
+                baseUrl: $baseUrl,
             );
 
             return new $class($service);

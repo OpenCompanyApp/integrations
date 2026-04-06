@@ -19,7 +19,8 @@ class FigmaServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new FigmaService(
-                apiToken: $creds->get('figma', 'api_token', ''),
+                accessToken: $creds->get('figma', 'access_token', ''),
+                baseUrl: $creds->get('figma', 'url', 'https://api.figma.com'),
             );
         });
     }

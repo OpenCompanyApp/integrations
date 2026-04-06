@@ -8,6 +8,7 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\LaunchDarkly\Tools\LaunchDarklyGetCurrentUser;
 use OpenCompany\Integrations\LaunchDarkly\Tools\LaunchDarklyGetFlag;
+use OpenCompany\Integrations\LaunchDarkly\Tools\LaunchDarklyGetProject;
 use OpenCompany\Integrations\LaunchDarkly\Tools\LaunchDarklyListEnvironments;
 use OpenCompany\Integrations\LaunchDarkly\Tools\LaunchDarklyListFlags;
 use OpenCompany\Integrations\LaunchDarkly\Tools\LaunchDarklyListProjects;
@@ -86,7 +87,7 @@ class LaunchDarklyToolProvider implements ToolProvider, ConfigurableIntegration
             $response = Http::withHeaders([
                 'Authorization' => $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/users/me');
+            ])->timeout(10)->get($baseUrl . '/members/me');
 
             $json = $response->json();
 
@@ -155,6 +156,13 @@ class LaunchDarklyToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'List Projects',
                 'description' => 'List all LaunchDarkly projects.',
                 'icon' => 'ph:folder',
+            ],
+            'launchdarkly_get_project' => [
+                'class' => LaunchDarklyGetProject::class,
+                'type' => 'read',
+                'name' => 'Get Project',
+                'description' => 'Get details of a specific LaunchDarkly project.',
+                'icon' => 'ph:folder-open',
             ],
             'launchdarkly_get_current_user' => [
                 'class' => LaunchDarklyGetCurrentUser::class,

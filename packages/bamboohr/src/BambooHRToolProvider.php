@@ -12,6 +12,8 @@ use OpenCompany\Integrations\BambooHR\Tools\BambooHRCreateEmployee;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRUpdateEmployee;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRListDepartments;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRListTimeOffRequests;
+use OpenCompany\Integrations\BambooHR\Tools\BambooHRGetTimeOffRequest;
+use OpenCompany\Integrations\BambooHR\Tools\BambooHRListReports;
 use OpenCompany\Integrations\BambooHR\Tools\BambooHRGetCurrentUser;
 
 class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
@@ -80,7 +82,7 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
 
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
-            ])->withBasicAuth($apiKey, '')->timeout(10)->get($baseUrl . '/users/me');
+            ])->withBasicAuth($apiKey, 'x')->timeout(10)->get($baseUrl . '/users/me');
 
             $json = $response->json();
 
@@ -152,6 +154,20 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'List Time-Off Requests',
                 'description' => 'List time-off requests with optional filters.',
                 'icon' => 'ph:calendar-dots',
+            ],
+            'bamboohr_get_time_off_request' => [
+                'class' => BambooHRGetTimeOffRequest::class,
+                'type' => 'read',
+                'name' => 'Get Time-Off Request',
+                'description' => 'Get details for a specific time-off request.',
+                'icon' => 'ph:calendar-check',
+            ],
+            'bamboohr_list_reports' => [
+                'class' => BambooHRListReports::class,
+                'type' => 'read',
+                'name' => 'List Reports',
+                'description' => 'Generate a custom report with specified employee fields.',
+                'icon' => 'ph:file-text',
             ],
             'bamboohr_get_current_user' => [
                 'class' => BambooHRGetCurrentUser::class,

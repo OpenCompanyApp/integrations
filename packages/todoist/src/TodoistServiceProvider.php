@@ -3,11 +3,14 @@
 namespace OpenCompany\Integrations\Todoist;
 
 use Illuminate\Support\ServiceProvider;
-use OpenCompany\Integrations\Core\Contracts\CredentialResolver;
-use OpenCompany\Integrations\Core\Support\ToolProviderRegistry;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
  * Laravel service provider for the Todoist integration package.
+ *
+ * Registers the TodoistService singleton with credentials resolved from
+ * the integration configuration, and bootstraps the tool provider registry.
  */
 class TodoistServiceProvider extends ServiceProvider
 {
@@ -20,7 +23,8 @@ class TodoistServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new TodoistService(
-                apiToken: $creds->get('todoist', 'api_token', ''),
+                accessToken: $creds->get('todoist', 'access_token', ''),
+                baseUrl: $creds->get('todoist', 'base_url', 'https://api.todoist.com'),
             );
         });
     }

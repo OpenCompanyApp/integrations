@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List subscribers in ConvertKit with pagination and sorting.
+ * List subscribers in ConvertKit with pagination and date filtering.
  *
  * Returns a paginated list of subscribers from the ConvertKit account.
- * Supports customizable page size, page number, and sort order.
+ * Supports customizable page size, page number, and date range filters.
  */
 class ConvertKitListSubscribers implements Tool
 {
@@ -34,7 +34,7 @@ class ConvertKitListSubscribers implements Tool
      */
     public function description(): string
     {
-        return 'List subscribers from your ConvertKit account. Supports pagination and sort order.';
+        return 'List subscribers from your ConvertKit account. Supports pagination and date range filtering.';
     }
 
     /**
@@ -47,7 +47,8 @@ class ConvertKitListSubscribers implements Tool
         return [
             'page' => ['type' => 'integer', 'description' => 'Page number (starts at 1).'],
             'per_page' => ['type' => 'integer', 'description' => 'Results per page (max 50, default 50).'],
-            'sort_order' => ['type' => 'string', 'description' => 'Sort direction: "asc" (oldest first) or "desc" (newest first, default).'],
+            'from' => ['type' => 'string', 'description' => 'Filter subscribers added after this date (ISO 8601, e.g. "2025-01-01").'],
+            'to' => ['type' => 'string', 'description' => 'Filter subscribers added before this date (ISO 8601, e.g. "2025-12-31").'],
         ];
     }
 
@@ -65,9 +66,10 @@ class ConvertKitListSubscribers implements Tool
 
             $page = isset($args['page']) ? (int) $args['page'] : 1;
             $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 50;
-            $sortOrder = $args['sort_order'] ?? 'desc';
+            $from = $args['from'] ?? null;
+            $to = $args['to'] ?? null;
 
-            $result = $this->service->listSubscribers($page, $perPage, $sortOrder);
+            $result = $this->service->listSubscribers($page, $perPage, $from, $to);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -6,16 +6,13 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitCreateSubscriber;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitCreateTag;
+use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitGetCurrentUser;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitGetSubscriber;
+use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListBroadcasts;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListForms;
-use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListSequences;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListSubscribers;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListTags;
-use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitSubscribeToForm;
-use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitTagSubscriber;
-use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitUntagSubscriber;
 
 /**
  * ConvertKit tool provider and configurable integration.
@@ -40,7 +37,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'subscribers, tags, forms, sequences',
+            'label' => 'subscribers, tags, forms, broadcasts',
             'description' => 'Email marketing & newsletters',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:convertkit',
@@ -54,10 +51,10 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'ConvertKit',
-            'description' => 'Email marketing platform for creators — manage subscribers, tags, forms, and sequences.',
+            'description' => 'Email marketing platform for creators — manage subscribers, tags, forms, and broadcasts.',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:convertkit',
-            'category' => 'email_marketing',
+            'category' => 'email',
             'badge' => 'verified',
             'docs_url' => 'https://developers.convertkit.com/',
         ];
@@ -79,13 +76,21 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
                 'hint' => 'Find your API key in ConvertKit Settings → Advanced.',
                 'required' => true,
             ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.convertkit.com',
+                'hint' => 'Defaults to <code>https://api.convertkit.com</code>. Change only if using a custom endpoint.',
+                'default' => 'https://api.convertkit.com',
+            ],
         ];
     }
 
     /**
      * Test the connection to ConvertKit using the provided configuration.
      *
-     * Makes a GET request to the /account endpoint to verify credentials.
+     * Makes a GET request to the /v3/account endpoint to verify credentials.
      *
      * @param  array<string, mixed>  $config  Configuration values (must include api_key)
      * @return array{success: bool, message?: string, error?: string} Connection test result
@@ -93,6 +98,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.convertkit.com', '/');
 
         if (empty($apiKey)) {
             return ['success' => false, 'error' => 'No API key provided'];
@@ -101,7 +107,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
         try {
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.convertkit.com/v3/account', [
+            ])->timeout(10)->get($baseUrl . '/v3/account', [
                 'api_key' => $apiKey,
             ]);
 
@@ -142,6 +148,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'api_key' => 'required|string',
+            'url' => 'nullable|url',
         ];
     }
 
@@ -159,7 +166,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ConvertKitListSubscribers::class,
                 'type' => 'read',
                 'name' => 'List Subscribers',
-                'description' => 'List subscribers with pagination and sorting.',
+                'description' => 'List subscribers with pagination and date filtering.',
                 'icon' => 'ph:users',
             ],
             'convertkit_get_subscriber' => [
@@ -169,12 +176,12 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get details for a single subscriber.',
                 'icon' => 'ph:user',
             ],
-            'convertkit_create_subscriber' => [
-                'class' => ConvertKitCreateSubscriber::class,
-                'type' => 'write',
-                'name' => 'Create Subscriber',
-                'description' => 'Create or update a subscriber by email.',
-                'icon' => 'ph:user-plus',
+            'convertkit_list_forms' => [
+                'class' => ConvertKitListForms::class,
+                'type' => 'read',
+                'name' => 'List Forms',
+                'description' => 'List all forms in the account.',
+                'icon' => 'ph:form',
             ],
             'convertkit_list_tags' => [
                 'class' => ConvertKitListTags::class,
@@ -190,40 +197,19 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Create a new tag.',
                 'icon' => 'ph:tag',
             ],
-            'convertkit_tag_subscriber' => [
-                'class' => ConvertKitTagSubscriber::class,
-                'type' => 'write',
-                'name' => 'Tag Subscriber',
-                'description' => 'Add a tag to a subscriber.',
-                'icon' => 'ph:tag',
-            ],
-            'convertkit_untag_subscriber' => [
-                'class' => ConvertKitUntagSubscriber::class,
-                'type' => 'write',
-                'name' => 'Untag Subscriber',
-                'description' => 'Remove a tag from a subscriber.',
-                'icon' => 'ph:tag',
-            ],
-            'convertkit_list_forms' => [
-                'class' => ConvertKitListForms::class,
+            'convertkit_list_broadcasts' => [
+                'class' => ConvertKitListBroadcasts::class,
                 'type' => 'read',
-                'name' => 'List Forms',
-                'description' => 'List all forms in the account.',
-                'icon' => 'ph:form',
+                'name' => 'List Broadcasts',
+                'description' => 'List broadcasts with pagination.',
+                'icon' => 'ph:megaphone',
             ],
-            'convertkit_subscribe_to_form' => [
-                'class' => ConvertKitSubscribeToForm::class,
-                'type' => 'write',
-                'name' => 'Subscribe to Form',
-                'description' => 'Subscribe an email to a form.',
-                'icon' => 'ph:envelope',
-            ],
-            'convertkit_list_sequences' => [
-                'class' => ConvertKitListSequences::class,
+            'convertkit_get_current_user' => [
+                'class' => ConvertKitGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'List Sequences',
-                'description' => 'List all sequences (courses) in the account.',
-                'icon' => 'ph:list-bullets',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated ConvertKit account information.',
+                'icon' => 'ph:user-circle',
             ],
         ];
     }
@@ -245,6 +231,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.convertkit.com'],
         ];
     }
 
@@ -274,6 +261,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
 
             $service = new ConvertKitService(
                 apiKey: $creds->get('convertkit', 'api_key', '', $account),
+                baseUrl: $creds->get('convertkit', 'url', 'https://api.convertkit.com', $account),
             );
 
             return new $class($service);

@@ -3,28 +3,17 @@
 namespace OpenCompany\Integrations\Webflow;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Webflow\Tools\WebflowCreateItem;
-use OpenCompany\Integrations\Webflow\Tools\WebflowCreateWebhook;
-use OpenCompany\Integrations\Webflow\Tools\WebflowDeleteItem;
-use OpenCompany\Integrations\Webflow\Tools\WebflowDeleteWebhook;
-use OpenCompany\Integrations\Webflow\Tools\WebflowGetCollection;
 use OpenCompany\Integrations\Webflow\Tools\WebflowGetCurrentUser;
 use OpenCompany\Integrations\Webflow\Tools\WebflowGetItem;
 use OpenCompany\Integrations\Webflow\Tools\WebflowGetSite;
-use OpenCompany\Integrations\Webflow\Tools\WebflowListAssets;
 use OpenCompany\Integrations\Webflow\Tools\WebflowListCollections;
 use OpenCompany\Integrations\Webflow\Tools\WebflowListItems;
 use OpenCompany\Integrations\Webflow\Tools\WebflowListSites;
-use OpenCompany\Integrations\Webflow\Tools\WebflowListWebhooks;
-use OpenCompany\Integrations\Webflow\Tools\WebflowPublishSite;
-use OpenCompany\Integrations\Webflow\Tools\WebflowUpdateItem;
 
-/**
- * Registers all available Webflow tools and provides integration metadata, configuration schema, and connection testing.
- */
 class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -35,9 +24,9 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'cms, website builder',
-            'description' => 'Website & CMS management',
-            'icon' => 'ph:globe',
+            'label' => 'sites, collections, items',
+            'description' => 'CMS management',
+            'icon' => 'ph:browser',
             'logo' => 'simple-icons:webflow',
         ];
     }
@@ -46,12 +35,12 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Webflow',
-            'description' => 'Sites, collections, items, webhooks, and assets',
-            'icon' => 'ph:globe',
+            'description' => 'Design-driven CMS — manage sites, collections, and items',
+            'icon' => 'ph:browser',
             'logo' => 'simple-icons:webflow',
             'category' => 'cms',
             'badge' => 'verified',
-            'docs_url' => 'https://developers.webflow.com',
+            'docs_url' => 'https://developers.webflow.com/data/docs',
         ];
     }
 
@@ -59,65 +48,79 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_key',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'Personal Access Token',
-                'placeholder' => 'Your Webflow API token',
-                'hint' => 'Generate a personal access token in your <a href="https://webflow.com/dashboard/account/sites" target="_blank">Webflow account settings</a>.',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Webflow access token',
+                'hint' => 'Generate an access token in your Webflow project settings under "Integrations" or use an OAuth app',
                 'required' => true,
+            ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.webflow.com',
+                'hint' => 'Use <code>https://api.webflow.com</code> for the standard Webflow API',
+                'default' => 'https://api.webflow.com',
             ],
         ];
     }
 
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.webflow.com', '/');
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided. Generate one in Webflow → Account Settings.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-                'accept-version' => '2.0',
-            ])->timeout(10)->get('https://api.webflow.com/v2/user');
+            ])->timeout(10)->get($baseUrl . '/v2/user');
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $email = $data['email'] ?? 'Unknown user';
+            $json = $response->json();
 
+            if ($json === null) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to Webflow as \"{$email}\".",
+                    'success' => false,
+                    'error' => "Could not reach Webflow API at {$baseUrl}. Check the URL.",
                 ];
             }
 
-            $error = $response->json('message') ?? $response->body();
+            if (!$response->successful()) {
+                $error = $json['message'] ?? $json['error'] ?? 'Unknown error';
+
+                return [
+                    'success' => false,
+                    'error' => "Webflow API error: {$error}",
+                ];
+            }
+
+            $user = $json['user'] ?? $json;
 
             return [
-                'success' => false,
-                'error' => 'Webflow API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'success' => true,
+                'message' => "Connected to Webflow API as " . ($user['email'] ?? 'authenticated user') . ".",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string|array<int, string>> */
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
+            'access_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
     public function tools(): array
     {
         return [
-            // Sites
             'webflow_list_sites' => [
                 'class' => WebflowListSites::class,
                 'type' => 'read',
@@ -132,101 +135,40 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get details for a specific Webflow site.',
                 'icon' => 'ph:globe',
             ],
-            'webflow_publish_site' => [
-                'class' => WebflowPublishSite::class,
-                'type' => 'write',
-                'name' => 'Publish Site',
-                'description' => 'Publish a Webflow site.',
-                'icon' => 'ph:rocket-launch',
-            ],
-            // Collections
             'webflow_list_collections' => [
                 'class' => WebflowListCollections::class,
                 'type' => 'read',
                 'name' => 'List Collections',
-                'description' => 'List all collections for a Webflow site.',
-                'icon' => 'ph:folder',
+                'description' => 'List CMS collections for a Webflow site.',
+                'icon' => 'ph:folders',
             ],
-            'webflow_get_collection' => [
-                'class' => WebflowGetCollection::class,
-                'type' => 'read',
-                'name' => 'Get Collection',
-                'description' => 'Get a Webflow collection by its ID.',
-                'icon' => 'ph:folder',
-            ],
-            // Items
             'webflow_list_items' => [
                 'class' => WebflowListItems::class,
                 'type' => 'read',
                 'name' => 'List Items',
-                'description' => 'List items in a Webflow collection.',
+                'description' => 'List items in a Webflow CMS collection.',
                 'icon' => 'ph:list',
             ],
             'webflow_get_item' => [
                 'class' => WebflowGetItem::class,
                 'type' => 'read',
                 'name' => 'Get Item',
-                'description' => 'Get a single item from a Webflow collection.',
+                'description' => 'Get a single CMS item from a collection.',
                 'icon' => 'ph:file-text',
             ],
             'webflow_create_item' => [
                 'class' => WebflowCreateItem::class,
                 'type' => 'write',
                 'name' => 'Create Item',
-                'description' => 'Create a new item in a Webflow collection.',
-                'icon' => 'ph:plus-circle',
+                'description' => 'Create a new item in a Webflow CMS collection.',
+                'icon' => 'ph:plus',
             ],
-            'webflow_update_item' => [
-                'class' => WebflowUpdateItem::class,
-                'type' => 'write',
-                'name' => 'Update Item',
-                'description' => 'Update an existing item in a Webflow collection.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'webflow_delete_item' => [
-                'class' => WebflowDeleteItem::class,
-                'type' => 'write',
-                'name' => 'Delete Item',
-                'description' => 'Delete an item from a Webflow collection.',
-                'icon' => 'ph:trash',
-            ],
-            // Webhooks
-            'webflow_list_webhooks' => [
-                'class' => WebflowListWebhooks::class,
-                'type' => 'read',
-                'name' => 'List Webhooks',
-                'description' => 'List all webhooks for a Webflow site.',
-                'icon' => 'ph:webhooks-logo',
-            ],
-            'webflow_create_webhook' => [
-                'class' => WebflowCreateWebhook::class,
-                'type' => 'write',
-                'name' => 'Create Webhook',
-                'description' => 'Create a webhook for a Webflow site.',
-                'icon' => 'ph:webhooks-logo',
-            ],
-            'webflow_delete_webhook' => [
-                'class' => WebflowDeleteWebhook::class,
-                'type' => 'write',
-                'name' => 'Delete Webhook',
-                'description' => 'Delete a webhook from a Webflow site.',
-                'icon' => 'ph:webhooks-logo',
-            ],
-            // Users
             'webflow_get_current_user' => [
                 'class' => WebflowGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the currently authenticated Webflow user.',
                 'icon' => 'ph:user',
-            ],
-            // Assets
-            'webflow_list_assets' => [
-                'class' => WebflowListAssets::class,
-                'type' => 'read',
-                'name' => 'List Assets',
-                'description' => 'List all assets for a Webflow site.',
-                'icon' => 'ph:image',
             ],
         ];
     }
@@ -239,7 +181,8 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.webflow.com'],
         ];
     }
 
@@ -248,29 +191,21 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the WebflowService, with optional account-specific credentials.
-     *
-     * @param  array<string, mixed>  $context
-     */
-    private function resolveService(array $context = []): WebflowService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new WebflowService(
-                apiKey: $creds->get('webflow', 'api_key', '', $account),
+            $service = new WebflowService(
+                accessToken: $creds->get('webflow', 'access_token', '', $account),
+                baseUrl: $creds->get('webflow', 'url', 'https://api.webflow.com', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(WebflowService::class);
+        return new $class(app(WebflowService::class));
     }
 }

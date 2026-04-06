@@ -40,6 +40,7 @@ class IntercomListConversations implements Tool
             'limit' => ['type' => 'integer', 'description' => 'Maximum number of conversations to return (default 20).'],
             'starting_after' => ['type' => 'string', 'description' => 'Pagination cursor from a previous response.'],
             'sort_order' => ['type' => 'string', 'description' => 'Sort order: "asc" or "desc".'],
+            'status' => ['type' => 'string', 'description' => 'Filter by conversation status: "open", "closed", or "all".'],
         ];
     }
 
@@ -65,6 +66,9 @@ class IntercomListConversations implements Tool
             }
             if (! empty($args['sort_order'])) {
                 $params['sort_order'] = $args['sort_order'];
+            }
+            if (! empty($args['status'])) {
+                $params['status'] = $args['status'];
             }
 
             $result = $this->service->listConversations($params);

@@ -17,11 +17,11 @@ class ConvertKitService
      * Create a new ConvertKitService instance.
      *
      * @param  string  $apiKey  ConvertKit API key
-     * @param  string  $baseUrl  Base URL for the ConvertKit API
+     * @param  string  $baseUrl  Base URL for the ConvertKit API (defaults to https://api.convertkit.com)
      */
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://api.convertkit.com/v3',
+        private string $baseUrl = 'https://api.convertkit.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -43,24 +43,34 @@ class ConvertKitService
      */
     public function getAccount(): array
     {
-        return $this->request('GET', '/account');
+        return $this->request('GET', '/v3/account');
     }
 
     /**
-     * List subscribers with pagination and sorting.
+     * List subscribers with pagination and optional date filtering.
      *
      * @param  int  $page  Page number (starts at 1)
      * @param  int  $perPage  Number of results per page (max 50)
-     * @param  string  $sortOrder  Sort direction: "asc" or "desc"
+     * @param  string|null  $from  Start date filter (ISO 8601, e.g. "2025-01-01")
+     * @param  string|null  $to  End date filter (ISO 8601, e.g. "2025-12-31")
      * @return array<string, mixed> Paginated subscriber results
      */
-    public function listSubscribers(int $page = 1, int $perPage = 50, string $sortOrder = 'desc'): array
+    public function listSubscribers(int $page = 1, int $perPage = 50, ?string $from = null, ?string $to = null): array
     {
-        return $this->request('GET', '/subscribers', [
+        $params = [
             'page' => $page,
             'per_page' => min($perPage, 50),
-            'sort_order' => $sortOrder,
-        ]);
+        ];
+
+        if ($from !== null) {
+            $params['from'] = $from;
+        }
+
+        if ($to !== null) {
+            $params['to'] = $to;
+        }
+
+        return $this->request('GET', '/v3/subscribers', $params);
     }
 
     /**
@@ -71,30 +81,17 @@ class ConvertKitService
      */
     public function getSubscriber(int $subscriberId): array
     {
-        return $this->request('GET', '/subscribers/' . $subscriberId);
+        return $this->request('GET', '/v3/subscribers/' . $subscriberId);
     }
 
     /**
-     * Create or update a subscriber by email address.
+     * List all forms in the account.
      *
-     * @param  string  $email  Subscriber email address
-     * @param  string|null  $firstName  Optional first name
-     * @param  array<string, mixed>  $fields  Optional custom field values
-     * @return array<string, mixed> Created/updated subscriber data
+     * @return array<string, mixed> List of forms
      */
-    public function createSubscriber(string $email, ?string $firstName = null, array $fields = []): array
+    public function listForms(): array
     {
-        $data = ['email' => $email];
-
-        if ($firstName !== null) {
-            $data['first_name'] = $firstName;
-        }
-
-        if (!empty($fields)) {
-            $data['fields'] = $fields;
-        }
-
-        return $this->request('POST', '/subscribers', $data);
+        return $this->request('GET', '/v3/forms');
     }
 
     /**
@@ -104,7 +101,7 @@ class ConvertKitService
      */
     public function listTags(): array
     {
-        return $this->request('GET', '/tags');
+        return $this->request('GET', '/v3/tags');
     }
 
     /**
@@ -115,81 +112,24 @@ class ConvertKitService
      */
     public function createTag(string $name): array
     {
-        return $this->request('POST', '/tags', [
+        return $this->request('POST', '/v3/tags', [
             'tag' => ['name' => $name],
         ]);
     }
 
     /**
-     * Tag a subscriber by subscribing them to a tag.
+     * List broadcasts with pagination.
      *
-     * @param  int  $tagId  The tag ID
-     * @param  string  $email  Subscriber email address
-     * @param  string|null  $firstName  Optional first name
-     * @return array<string, mixed> Subscription result
+     * @param  int  $page  Page number (starts at 1)
+     * @param  int  $perPage  Number of results per page
+     * @return array<string, mixed> Paginated broadcast results
      */
-    public function tagSubscriber(int $tagId, string $email, ?string $firstName = null): array
+    public function listBroadcasts(int $page = 1, int $perPage = 50): array
     {
-        $data = ['email' => $email];
-
-        if ($firstName !== null) {
-            $data['first_name'] = $firstName;
-        }
-
-        return $this->request('POST', '/tags/' . $tagId . '/subscribe', $data);
-    }
-
-    /**
-     * Remove a tag from a subscriber by unsubscribing them from the tag.
-     *
-     * @param  int  $tagId  The tag ID
-     * @param  string  $email  Subscriber email address
-     * @return array<string, mixed> Unsubscription result
-     */
-    public function untagSubscriber(int $tagId, string $email): array
-    {
-        return $this->request('POST', '/tags/' . $tagId . '/unsubscribe', [
-            'email' => $email,
+        return $this->request('GET', '/v3/broadcasts', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
-    }
-
-    /**
-     * List all forms in the account.
-     *
-     * @return array<string, mixed> List of forms
-     */
-    public function listForms(): array
-    {
-        return $this->request('GET', '/forms');
-    }
-
-    /**
-     * Subscribe an email address to a form.
-     *
-     * @param  int  $formId  The form ID
-     * @param  string  $email  Subscriber email address
-     * @param  string|null  $firstName  Optional first name
-     * @return array<string, mixed> Subscription result
-     */
-    public function subscribeToForm(int $formId, string $email, ?string $firstName = null): array
-    {
-        $data = ['email' => $email];
-
-        if ($firstName !== null) {
-            $data['first_name'] = $firstName;
-        }
-
-        return $this->request('POST', '/forms/' . $formId . '/subscribe', $data);
-    }
-
-    /**
-     * List all sequences (courses) in the account.
-     *
-     * @return array<string, mixed> List of sequences
-     */
-    public function listSequences(): array
-    {
-        return $this->request('GET', '/sequences');
     }
 
     /**

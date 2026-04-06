@@ -26,7 +26,7 @@ class LobListPostcards implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of results per page (default: 10, max: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the ID from a previous page to get the next page.'],
+            'offset' => ['type' => 'integer', 'description' => 'Number of results to skip for pagination (default: 0).'],
         ];
     }
 
@@ -38,9 +38,9 @@ class LobListPostcards implements Tool
             }
 
             $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
-            $after = $args['after'] ?? null;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            $result = $this->service->listPostcards($limit, $after);
+            $result = $this->service->listPostcards($limit, $offset);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

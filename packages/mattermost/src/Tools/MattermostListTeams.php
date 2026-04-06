@@ -7,15 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all Mattermost teams.
+ * List teams the current user belongs to.
  *
- * Supports pagination via page and per_page parameters.
+ * Returns an array of team objects including id, name, display_name,
+ * description, type (O = open, I = invite), and email.
  */
 class MattermostListTeams implements Tool
 {
-    /**
-     * @param  MattermostService  $service  The Mattermost API client
-     */
     public function __construct(
         private MattermostService $service,
     ) {}
@@ -27,44 +25,30 @@ class MattermostListTeams implements Tool
 
     public function description(): string
     {
-        return 'List all Mattermost teams. Supports pagination with page and per_page.';
+        return 'List teams the current user belongs to in Mattermost. Returns team IDs, names, display names, and types. Use this to discover available teams before working with channels.';
     }
 
     public function parameters(): array
     {
         return [
-            'page'     => ['type' => 'integer', 'description' => 'The page number to retrieve (0-indexed, default 0).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of teams per page (default 60).'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (0-indexed). Default: 0.'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of teams per page. Default: 60.'],
         ];
     }
 
-    /**
-     * List all Mattermost teams.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (page, per_page)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mattermost integration is not configured.');
             }
 
-            $params = [];
+            $page = isset($args['page']) ? (int) $args['page'] : 0;
+            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 60;
 
-            if (isset($args['page'])) {
-                $params['page'] = (int) $args['page'];
-            }
-            if (isset($args['per_page'])) {
-                $params['per_page'] = (int) $args['per_page'];
-            }
+            $result = $this->service->listTeams($page, $perPage);
 
-            $result = $this->service->listTeams($params);
-
-            return ToolResult::success([
-                'ok' => true,
-                'teams' => $result,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -17,7 +17,8 @@ class IntercomServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new IntercomService(
-                apiToken: $creds->get('intercom', 'api_token', ''),
+                accessToken: $creds->get('intercom', 'access_token', ''),
+                baseUrl: $creds->get('intercom', 'base_url', 'https://api.intercom.io'),
             );
         });
     }

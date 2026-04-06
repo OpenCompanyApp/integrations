@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-deepl",
-    "description": "DeepL translation integration for Laravel — translate text, detect languages, check usage.",
+    "description": "DeepL translation integration for Laravel — translate text, manage glossaries, list languages, and check usage.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "deepl", "translation", "opencompany"],
+    "keywords": ["tools", "deepl", "translation", "ai", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

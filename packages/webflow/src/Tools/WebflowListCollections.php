@@ -6,14 +6,8 @@ use OpenCompany\Integrations\Webflow\WebflowService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List all collections (CMS databases) for a given Webflow site.
- */
 class WebflowListCollections implements Tool
 {
-    /**
-     * @param  WebflowService  $service  The Webflow API client
-     */
     public function __construct(
         private WebflowService $service,
     ) {}
@@ -25,57 +19,35 @@ class WebflowListCollections implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List all collections (CMS databases) for a given Webflow site.
-        Returns collection IDs, names, slugs, and field schemas.
-        MD;
+        return 'List CMS collections for a Webflow site. Collections are content models (e.g., "Blog Posts", "Team Members") that hold structured items.';
     }
 
     public function parameters(): array
     {
         return [
-            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The ID of the Webflow site.'],
+            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The unique identifier of the Webflow site.'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of collections to return (default: 100).'],
+            'offset' => ['type' => 'integer', 'description' => 'Number of collections to skip for pagination (default: 0).'],
         ];
     }
 
-    /**
-     * List all collections for a specific site.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (site_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Webflow integration is not configured.');
             }
 
-            $siteId = $args['site_id'] ?? '';
-
-            if (empty($siteId)) {
-                return ToolResult::error('site_id is required.');
+            if (empty($args['site_id'])) {
+                return ToolResult::error('Site ID is required.');
             }
 
-            $result = $this->service->listCollections($siteId);
-            $collections = $result['collections'] ?? $result['data'] ?? $result;
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            if (empty($collections)) {
-                return ToolResult::success('No collections found for this site.');
-            }
+            $result = $this->service->listCollections($args['site_id'], $limit, $offset);
 
-            $output = [];
-            foreach ($collections as $collection) {
-                $output[] = [
-                    'id' => $collection['id'] ?? '',
-                    'name' => $collection['displayName'] ?? $collection['name'] ?? '',
-                    'slug' => $collection['slug'] ?? '',
-                ];
-            }
-
-            return ToolResult::success([
-                'count' => count($output),
-                'collections' => $output,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -41,6 +41,21 @@ class BannerbearService
     }
 
     /**
+     * List images in the account.
+     *
+     * @param  int  $page  Page number for pagination (1-based).
+     * @param  int  $limit  Number of results per page.
+     * @return array List of image resources.
+     */
+    public function listImages(int $page = 1, int $limit = 20): array
+    {
+        return $this->request('GET', '/images', [
+            'page' => $page,
+            'limit' => $limit,
+        ]);
+    }
+
+    /**
      * Get an image by its ID.
      *
      * @param  string  $imageId  The image UID.
@@ -117,6 +132,21 @@ class BannerbearService
         ], $options);
 
         return $this->request('POST', '/animated_gifs', $payload);
+    }
+
+    /**
+     * List collections in the account.
+     *
+     * @param  int  $page  Page number for pagination (1-based).
+     * @param  int  $limit  Number of results per page.
+     * @return array List of collection resources.
+     */
+    public function listCollections(int $page = 1, int $limit = 20): array
+    {
+        return $this->request('GET', '/collections', [
+            'page' => $page,
+            'limit' => $limit,
+        ]);
     }
 
     /**

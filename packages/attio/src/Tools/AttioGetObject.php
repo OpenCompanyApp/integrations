@@ -39,7 +39,7 @@ class AttioGetObject implements Tool
     public function parameters(): array
     {
         return [
-            'object' => ['type' => 'string', 'required' => true, 'description' => 'The object slug or UUID (e.g. "people", "companies", "deals").'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The object slug or UUID (e.g. "people", "companies", "deals").'],
         ];
     }
 
@@ -55,7 +55,7 @@ class AttioGetObject implements Tool
                 return ToolResult::error('Attio integration is not configured.');
             }
 
-            $result = $this->service->getObject($args['object']);
+            $result = $this->service->getObject($args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -9,14 +9,9 @@ use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Attio\Tools\AttioListRecords;
 use OpenCompany\Integrations\Attio\Tools\AttioGetRecord;
 use OpenCompany\Integrations\Attio\Tools\AttioCreateRecord;
-use OpenCompany\Integrations\Attio\Tools\AttioUpdateRecord;
-use OpenCompany\Integrations\Attio\Tools\AttioDeleteRecord;
 use OpenCompany\Integrations\Attio\Tools\AttioListObjects;
 use OpenCompany\Integrations\Attio\Tools\AttioGetObject;
-use OpenCompany\Integrations\Attio\Tools\AttioListLists;
-use OpenCompany\Integrations\Attio\Tools\AttioGetList;
-use OpenCompany\Integrations\Attio\Tools\AttioListEntries;
-use OpenCompany\Integrations\Attio\Tools\AttioCreateNote;
+use OpenCompany\Integrations\Attio\Tools\AttioListWorkspaces;
 use OpenCompany\Integrations\Attio\Tools\AttioGetCurrentUser;
 
 class AttioToolProvider implements ToolProvider, ConfigurableIntegration
@@ -37,8 +32,8 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'records, objects, lists, notes',
-            'description' => 'CRM',
+            'label' => 'records, objects, workspaces',
+            'description' => 'CRM & Sales',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:attio',
         ];
@@ -56,7 +51,7 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Modern CRM platform for managing contacts, companies, deals and more',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:attio',
-            'category' => 'crm',
+            'category' => 'sales',
             'badge' => 'verified',
             'docs_url' => 'https://developers.attio.com/docs',
         ];
@@ -71,20 +66,20 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_key',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Attio API key',
-                'hint' => 'Generate an API key in your Attio workspace settings under "API Keys"',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Attio API access token',
+                'hint' => 'Generate an access token in your Attio workspace settings under "API Keys"',
                 'required' => true,
             ],
             [
-                'key' => 'url',
+                'key' => 'base_url',
                 'type' => 'url',
                 'label' => 'API Base URL',
-                'placeholder' => 'https://api.attio.com/v2',
+                'placeholder' => 'https://api.attio.com',
                 'hint' => 'Use the default Attio API URL, or a custom endpoint if applicable',
-                'default' => 'https://api.attio.com/v2',
+                'default' => 'https://api.attio.com',
             ],
         ];
     }
@@ -97,18 +92,18 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.attio.com/v2', '/');
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.attio.com', '/');
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/self');
+            ])->timeout(10)->get($baseUrl . '/v2/self');
 
             $json = $response->json();
 
@@ -138,8 +133,8 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
-            'url' => 'nullable|url',
+            'access_token' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
@@ -155,7 +150,7 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => AttioListRecords::class,
                 'type' => 'read',
                 'name' => 'List Records',
-                'description' => 'List records for an object type (e.g. people, companies).',
+                'description' => 'List records for an object type with filtering, sorting, and pagination.',
                 'icon' => 'ph:list',
             ],
             'attio_get_record' => [
@@ -172,20 +167,6 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Create a new record for an object type.',
                 'icon' => 'ph:plus',
             ],
-            'attio_update_record' => [
-                'class' => AttioUpdateRecord::class,
-                'type' => 'write',
-                'name' => 'Update Record',
-                'description' => 'Update an existing record by ID.',
-                'icon' => 'ph:pencil',
-            ],
-            'attio_delete_record' => [
-                'class' => AttioDeleteRecord::class,
-                'type' => 'write',
-                'name' => 'Delete Record',
-                'description' => 'Delete a record by ID.',
-                'icon' => 'ph:trash',
-            ],
             'attio_list_objects' => [
                 'class' => AttioListObjects::class,
                 'type' => 'read',
@@ -200,33 +181,12 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get details for a specific object type.',
                 'icon' => 'ph:square',
             ],
-            'attio_list_lists' => [
-                'class' => AttioListLists::class,
+            'attio_list_workspaces' => [
+                'class' => AttioListWorkspaces::class,
                 'type' => 'read',
-                'name' => 'List Lists',
-                'description' => 'List all lists in the workspace.',
-                'icon' => 'ph:columns',
-            ],
-            'attio_get_list' => [
-                'class' => AttioGetList::class,
-                'type' => 'read',
-                'name' => 'Get List',
-                'description' => 'Get details for a specific list.',
-                'icon' => 'ph:column',
-            ],
-            'attio_list_entries' => [
-                'class' => AttioListEntries::class,
-                'type' => 'read',
-                'name' => 'List Entries',
-                'description' => 'List entries in a specific list.',
-                'icon' => 'ph:list-dashes',
-            ],
-            'attio_create_note' => [
-                'class' => AttioCreateNote::class,
-                'type' => 'write',
-                'name' => 'Create Note',
-                'description' => 'Create a note attached to a record.',
-                'icon' => 'ph:note',
+                'name' => 'List Workspaces',
+                'description' => 'List all workspaces accessible to the authenticated user.',
+                'icon' => 'ph:buildings',
             ],
             'attio_get_current_user' => [
                 'class' => AttioGetCurrentUser::class,
@@ -254,8 +214,8 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.attio.com/v2'],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.attio.com'],
         ];
     }
 
@@ -281,8 +241,8 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             $service = new AttioService(
-                apiKey: $creds->get('attio', 'api_key', '', $account),
-                baseUrl: $creds->get('attio', 'url', 'https://api.attio.com/v2', $account),
+                accessToken: $creds->get('attio', 'access_token', '', $account),
+                baseUrl: $creds->get('attio', 'base_url', 'https://api.attio.com', $account),
             );
 
             return new $class($service);

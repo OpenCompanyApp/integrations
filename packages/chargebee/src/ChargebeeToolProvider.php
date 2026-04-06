@@ -6,18 +6,13 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Chargebee\Tools\ChargebeeCancelSubscription;
-use OpenCompany\Integrations\Chargebee\Tools\ChargebeeCreateCustomer;
-use OpenCompany\Integrations\Chargebee\Tools\ChargebeeCreateSubscription;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeGetCurrentUser;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeGetCustomer;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeGetInvoice;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeGetSubscription;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeListCustomers;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeListInvoices;
-use OpenCompany\Integrations\Chargebee\Tools\ChargebeeListPlans;
 use OpenCompany\Integrations\Chargebee\Tools\ChargebeeListSubscriptions;
-use OpenCompany\Integrations\Chargebee\Tools\ChargebeeUpdateSubscription;
 
 /**
  * Tool provider for the Chargebee billing and subscription management integration.
@@ -42,7 +37,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'subscriptions, customers, invoices, plans',
+            'label' => 'subscriptions, customers, invoices',
             'description' => 'Billing & subscription management',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargebee',
@@ -59,7 +54,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Subscription billing and revenue management',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargebee',
-            'category' => 'billing',
+            'category' => 'payments',
             'badge' => 'verified',
             'docs_url' => 'https://apidocs.chargebee.com/docs/api',
         ];
@@ -72,11 +67,11 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_key',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Chargebee API key',
-                'hint' => 'Find your API key in Chargebee under Settings > API Keys',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Chargebee API access token',
+                'hint' => 'Find your API key in Chargebee under Settings > Configure Chargebee > API Keys',
                 'required' => true,
             ],
             [
@@ -95,11 +90,11 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
         $siteName = $config['site_name'] ?? '';
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         if (empty($siteName)) {
@@ -107,9 +102,11 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
         }
 
         try {
-            $response = Http::withBasicAuth($apiKey, '')
-                ->timeout(10)
-                ->get("https://{$siteName}.chargebee.com/api/v2/site");
+            $baseUrl = "https://{$siteName}.chargebee.com/api/v2";
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/users/me');
 
             if ($response->successful()) {
                 return [
@@ -120,7 +117,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
 
             return [
                 'success' => false,
-                'error' => "Authentication failed (HTTP {$response->status()}). Check your API key and site name.",
+                'error' => "Authentication failed (HTTP {$response->status()}). Check your access token and site name.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -133,7 +130,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
+            'access_token' => 'nullable|string',
             'site_name' => 'nullable|string',
         ];
     }
@@ -148,7 +145,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ChargebeeListSubscriptions::class,
                 'type' => 'read',
                 'name' => 'List Subscriptions',
-                'description' => 'List subscriptions with optional filtering by status and plan.',
+                'description' => 'List subscriptions with optional filtering by state.',
                 'icon' => 'ph:list',
             ],
             'chargebee_get_subscription' => [
@@ -157,27 +154,6 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'Get Subscription',
                 'description' => 'Retrieve details of a single subscription.',
                 'icon' => 'ph:eye',
-            ],
-            'chargebee_create_subscription' => [
-                'class' => ChargebeeCreateSubscription::class,
-                'type' => 'write',
-                'name' => 'Create Subscription',
-                'description' => 'Create a new subscription for a customer.',
-                'icon' => 'ph:plus',
-            ],
-            'chargebee_update_subscription' => [
-                'class' => ChargebeeUpdateSubscription::class,
-                'type' => 'write',
-                'name' => 'Update Subscription',
-                'description' => 'Update an existing subscription (change plan, add addons).',
-                'icon' => 'ph:pencil',
-            ],
-            'chargebee_cancel_subscription' => [
-                'class' => ChargebeeCancelSubscription::class,
-                'type' => 'write',
-                'name' => 'Cancel Subscription',
-                'description' => 'Cancel an active subscription.',
-                'icon' => 'ph:x-circle',
             ],
             'chargebee_list_customers' => [
                 'class' => ChargebeeListCustomers::class,
@@ -193,18 +169,11 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Retrieve details of a single customer.',
                 'icon' => 'ph:user',
             ],
-            'chargebee_create_customer' => [
-                'class' => ChargebeeCreateCustomer::class,
-                'type' => 'write',
-                'name' => 'Create Customer',
-                'description' => 'Create a new customer record.',
-                'icon' => 'ph:user-plus',
-            ],
             'chargebee_list_invoices' => [
                 'class' => ChargebeeListInvoices::class,
                 'type' => 'read',
                 'name' => 'List Invoices',
-                'description' => 'List invoices with optional filtering by status and date.',
+                'description' => 'List invoices with optional filtering by status.',
                 'icon' => 'ph:file-text',
             ],
             'chargebee_get_invoice' => [
@@ -214,18 +183,11 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Retrieve details of a single invoice.',
                 'icon' => 'ph:file',
             ],
-            'chargebee_list_plans' => [
-                'class' => ChargebeeListPlans::class,
-                'type' => 'read',
-                'name' => 'List Plans',
-                'description' => 'List available billing plans.',
-                'icon' => 'ph:tag',
-            ],
             'chargebee_get_current_user' => [
                 'class' => ChargebeeGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Site Info',
-                'description' => 'Verify site access and retrieve site information.',
+                'name' => 'Get Current User',
+                'description' => 'Retrieve the current authenticated user information.',
                 'icon' => 'ph:info',
             ],
         ];
@@ -245,7 +207,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
             ['key' => 'site_name', 'type' => 'string', 'label' => 'Site Name', 'required' => true],
         ];
     }
@@ -275,7 +237,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             $service = new ChargebeeService(
-                apiKey: $creds->get('chargebee', 'api_key', '', $account),
+                accessToken: $creds->get('chargebee', 'access_token', '', $account),
                 siteName: $creds->get('chargebee', 'site_name', '', $account),
             );
 

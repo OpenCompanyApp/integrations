@@ -8,6 +8,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Tool to list customers from Chargebee with pagination.
+ *
+ * Returns customer details including email, name, company, and billing address.
  */
 class ChargebeeListCustomers implements Tool
 {
@@ -43,7 +45,7 @@ class ChargebeeListCustomers implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of customers to return per page (max 100, default 10).'],
-            'offset' => ['type' => 'string', 'description' => 'Pagination offset — pass the value from a previous response to get the next page.'],
+            'page' => ['type' => 'string', 'description' => 'Pagination cursor — pass the value from a previous response to get the next page.'],
         ];
     }
 
@@ -61,7 +63,7 @@ class ChargebeeListCustomers implements Tool
 
             $result = $this->service->listCustomers(
                 limit: isset($args['limit']) ? (int) $args['limit'] : null,
-                offset: $args['offset'] ?? null,
+                page: $args['page'] ?? null,
             );
 
             $customers = $result['list'] ?? [];
@@ -77,7 +79,7 @@ class ChargebeeListCustomers implements Tool
             ];
 
             if ($nextOffset !== null) {
-                $response['next_offset'] = $nextOffset;
+                $response['next_page'] = $nextOffset;
             }
 
             return ToolResult::success($response);

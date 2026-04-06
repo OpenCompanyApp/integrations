@@ -8,6 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Tool to retrieve a single invoice from Chargebee by ID.
+ *
+ * Returns detailed invoice information including line items, totals,
+ * tax breakdown, and payment status.
  */
 class ChargebeeGetInvoice implements Tool
 {

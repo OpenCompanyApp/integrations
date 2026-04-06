@@ -1,253 +1,216 @@
-# HTTP client for the Baserow API — Lua API Reference
+# Baserow — Lua API Reference
 
-## baserow_batch_create
+## list_tables
 
-Create multiple rows in a Baserow table in a single request..
+List rows in a Baserow database table with pagination and optional filtering.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `records` | string | yes | JSON array of row objects, e.g. [{ |
+| `table_id` | integer | yes | The Baserow table ID to list rows from |
+| `page` | integer | no | Page number (1-based). Defaults to 1. |
+| `size` | integer | no | Number of rows per page. Defaults to 100. |
+| `filters` | object | no | Optional Baserow filter parameters |
 
-### Example
+### Filter Parameters
+
+Filters are passed as a key-value object. Common filter keys:
+
+| Key | Description |
+|-----|-------------|
+| `search` | Full-text search across all fields |
+| `filter__field_{id}__equal` | Field equals value |
+| `filter__field_{id}__contains` | Field contains value |
+| `filter__field_{id}__contains_not` | Field does not contain value |
+| `filter__field_{id}__higher_than` | Field value is higher than |
+| `filter__field_{id}__lower_than` | Field value is lower than |
+| `filter__field_{id}__empty` | Field is empty (set to "true") |
+| `filter__field_{id}__not_empty` | Field is not empty (set to "true") |
+| `filter_type` | `"AND"` (default) or `"OR"` for combining filters |
+
+### Examples
 
 ```lua
-local result = app.integrations.baserow.baserow_batch_create({
-  table_id = 0
-  records = ""
+-- List first page of rows from table 42
+local result = app.integrations.baserow.list_tables({
+  table_id = 42
+})
+
+-- Paginated results
+local result = app.integrations.baserow.list_tables({
+  table_id = 42,
+  page = 2,
+  size = 50
+})
+
+-- Search rows
+local result = app.integrations.baserow.list_tables({
+  table_id = 42,
+  filters = { search = "John" }
+})
+
+-- Filter by specific field value
+local result = app.integrations.baserow.list_tables({
+  table_id = 42,
+  filters = {
+    filter__field_123__equal = "Active"
+  }
 })
 ```
 
-## baserow_batch_delete
+---
 
-Delete multiple rows from a Baserow table in a single request..
+## get_row
+
+Get a single row from a Baserow database table by its row ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `row_ids` | string | yes |  |
+| `table_id` | integer | yes | The Baserow table ID |
+| `row_id` | integer | yes | The ID of the row to retrieve |
 
 ### Example
 
 ```lua
-local result = app.integrations.baserow.baserow_batch_delete({
-  table_id = 0
-  row_ids = ""
+local row = app.integrations.baserow.get_row({
+  table_id = 42,
+  row_id = 1
+})
+
+print(row.id, row.Name, row.Email)
+```
+
+---
+
+## create_row
+
+Create a new row in a Baserow database table.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `table_id` | integer | yes | The Baserow table ID |
+| `data` | object | yes | Row data with field names as keys |
+
+### Example
+
+```lua
+local row = app.integrations.baserow.create_row({
+  table_id = 42,
+  data = {
+    Name = "John Doe",
+    Email = "john@example.com",
+    Status = "Active",
+    Notes = "New customer"
+  }
+})
+
+print("Created row with ID: " .. row.id)
+```
+
+---
+
+## update_row
+
+Update fields of an existing row in a Baserow database table.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `table_id` | integer | yes | The Baserow table ID |
+| `row_id` | integer | yes | The ID of the row to update |
+| `data` | object | yes | Updated field data (only specified fields are changed) |
+
+### Example
+
+```lua
+local row = app.integrations.baserow.update_row({
+  table_id = 42,
+  row_id = 1,
+  data = {
+    Status = "Inactive",
+    Notes = "Customer churned"
+  }
+})
+
+print("Updated row: " .. row.id)
+```
+
+---
+
+## delete_row
+
+Delete a row from a Baserow database table. This action is permanent.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `table_id` | integer | yes | The Baserow table ID |
+| `row_id` | integer | yes | The ID of the row to delete |
+
+### Example
+
+```lua
+app.integrations.baserow.delete_row({
+  table_id = 42,
+  row_id = 1
 })
 ```
 
-## baserow_batch_update
+---
 
-Update multiple rows in a Baserow table in a single request. Each row must include its.
+## list_databases
+
+List all databases (applications) in the Baserow workspace.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `records` | string | yes | JSON array of row objects to update. Each must include an  |
+| `page` | integer | no | Page number (1-based). Defaults to 1. |
+| `size` | integer | no | Number of results per page. Defaults to 100. |
 
 ### Example
 
 ```lua
-local result = app.integrations.baserow.baserow_batch_update({
-  table_id = 0
-  records = ""
-})
+local result = app.integrations.baserow.list_databases()
+
+for _, db in ipairs(result) do
+  print(db.id, db.name, db.type)
+end
 ```
 
-## baserow_create_row
+---
 
-Create a new row in a Baserow table with the provided field values..
+## get_current_user
+
+Get the currently authenticated Baserow user profile.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `data` | string | yes | JSON object of field values, e.g. { |
-| `before` | integer | no | If provided, the new row will be positioned before this row ID. |
+None.
 
 ### Example
 
 ```lua
-local result = app.integrations.baserow.baserow_create_row({
-  table_id = 0
-  data = ""
-  before = 0
-})
-```
+local user = app.integrations.baserow.get_current_user()
 
-## baserow_delete_row
-
-Delete a single row from a Baserow table by its ID..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `row_id` | integer | yes | The row ID to delete. |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_delete_row({
-  table_id = 0
-  row_id = 0
-})
-```
-
-## baserow_get_row
-
-Get a single Baserow row by its table and row ID..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `row_id` | integer | yes | The row ID to retrieve. |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_get_row({
-  table_id = 0
-  row_id = 0
-})
-```
-
-## baserow_get_table
-
-Get details for a single Baserow table by its ID..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_get_table({
-  table_id = 0
-})
-```
-
-## baserow_list_databases
-
-List all Baserow databases (applications) accessible to the current token..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | no | Filter by application type, e.g.  |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_list_databases({
-  type = ""
-})
-```
-
-## baserow_list_fields
-
-List all fields (columns) and their types in a Baserow table..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_list_fields({
-  table_id = 0
-})
-```
-
-## baserow_list_rows
-
-List rows in a Baserow table with optional filtering, searching, sorting, and pagination..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `limit` | integer | no | Maximum number of rows to return (default: 100). |
-| `offset` | integer | no | Number of rows to skip for pagination. |
-| `search` | string | no | Search term to filter rows by. |
-| `order_by` | string | no | Field name to order by. Prefix with  |
-| `filter_type` | string | no | How to combine filters:  |
-| `filters` | string | no | JSON array of filter objects, e.g. [{ |
-| `field_ids` | string | no | Comma-separated list of field IDs to include in the response. |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_list_rows({
-  table_id = 0
-  limit = 0
-  offset = 0
-})
-```
-
-## baserow_list_tables
-
-List all tables in a Baserow database (application)..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `database_id` | integer | yes | The Baserow database (application) ID. |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_list_tables({
-  database_id = 0
-})
-```
-
-## baserow_update_row
-
-Update an existing row in a Baserow table with the provided field values..
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table_id` | integer | yes | The Baserow table ID. |
-| `row_id` | integer | yes | The row ID to update. |
-| `data` | string | yes | JSON object of field values to update, e.g. { |
-
-### Example
-
-```lua
-local result = app.integrations.baserow.baserow_update_row({
-  table_id = 0
-  row_id = 0
-  data = ""
-})
+print("Logged in as: " .. user.first_name .. " " .. user.last_name)
+print("Email: " .. user.email)
+print("Workspaces: " .. #user.workspaces)
 ```
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple baserow accounts configured, use account-specific namespaces:
+If you have multiple Baserow accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
@@ -257,8 +220,8 @@ app.integrations.baserow.function_name({...})
 app.integrations.baserow.default.function_name({...})
 
 -- Named accounts
-app.integrations.baserow.work.function_name({...})
-app.integrations.baserow.personal.function_name({...})
+app.integrations.baserow.production.function_name({...})
+app.integrations.baserow.staging.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

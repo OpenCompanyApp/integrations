@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to verify site access and retrieve Chargebee site information.
+ * Tool to retrieve the current authenticated user from Chargebee.
  *
- * Used primarily for connection testing and confirming credentials are valid.
+ * Calls GET /v2/users/me to verify credentials and return user information.
  */
 class ChargebeeGetCurrentUser implements Tool
 {
@@ -35,7 +35,7 @@ class ChargebeeGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Verify access to the Chargebee site and retrieve site configuration details. Use this to confirm credentials are working.';
+        return 'Retrieve the current authenticated user information from Chargebee. Use this to verify credentials are working and check user details.';
     }
 
     /**
@@ -47,7 +47,7 @@ class ChargebeeGetCurrentUser implements Tool
     }
 
     /**
-     * Execute the get site info request.
+     * Execute the get current user request.
      *
      * @param  array<string, mixed>  $args  Tool arguments (unused).
      */
@@ -58,11 +58,9 @@ class ChargebeeGetCurrentUser implements Tool
                 return ToolResult::error('Chargebee integration is not configured.');
             }
 
-            $result = $this->service->getSite();
+            $result = $this->service->getCurrentUser();
 
-            $site = $result['site'] ?? $result;
-
-            return ToolResult::success(['site' => $site]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

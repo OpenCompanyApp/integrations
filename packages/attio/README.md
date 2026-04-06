@@ -1,14 +1,14 @@
 # Integration: Attio
 
-> Attio CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage records, objects, lists, notes and more. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Attio CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage records, objects, workspaces and more. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents full access to your Attio CRM. Manage contacts, companies, deals, and custom objects — list, get, create, update, and delete records, browse lists, and attach notes — all through the [Attio API](https://developers.attio.com/).
+Give your AI agents full access to your Attio CRM. Manage contacts, companies, deals, and custom objects — list, get, and create records, browse objects and workspaces — all through the [Attio API](https://developers.attio.com/).
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Attio integration lets AI agents interact with CRM data — looking up contacts, creating companies, updating deal stages, adding notes, and more — giving agents real-time access to your customer relationships.
+This Attio integration lets AI agents interact with CRM data — looking up contacts, creating companies, querying deals, and more — giving agents real-time access to your customer relationships.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This tool requires an Attio API key.
+This integration requires an Attio API access token.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -31,8 +31,8 @@ This tool requires an Attio API key.
 ```php
 return [
     'attio' => [
-        'api_key' => env('ATTIO_API_KEY'),
-        'url'     => env('ATTIO_URL', 'https://api.attio.com/v2'),
+        'access_token' => env('ATTIO_ACCESS_TOKEN'),
+        'base_url'     => env('ATTIO_BASE_URL', 'https://api.attio.com'),
     ],
 ];
 ```
@@ -41,17 +41,12 @@ return [
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `attio_list_records` | read | List records for an object type (people, companies, deals, etc.) |
+| `attio_list_records` | read | List records for an object type with filtering, sorting, and pagination |
 | `attio_get_record` | read | Get a single record by ID |
 | `attio_create_record` | write | Create a new record |
-| `attio_update_record` | write | Update an existing record |
-| `attio_delete_record` | write | Delete a record permanently |
 | `attio_list_objects` | read | List all object types in the workspace |
 | `attio_get_object` | read | Get details for a specific object type |
-| `attio_list_lists` | read | List all lists in the workspace |
-| `attio_get_list` | read | Get details for a specific list |
-| `attio_list_entries` | read | List entries (records) in a specific list |
-| `attio_create_note` | write | Create a note attached to a record |
+| `attio_list_workspaces` | read | List all workspaces accessible to the authenticated user |
 | `attio_get_current_user` | read | Get the authenticated user profile |
 
 ## Quick Start
@@ -76,7 +71,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 12 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -97,8 +92,14 @@ use OpenCompany\Integrations\Attio\AttioService;
 
 $service = app(AttioService::class);
 
-// List companies
-$companies = $service->listRecords('companies', limit: 10);
+// List companies with filtering and sorting
+$companies = $service->listRecords('companies', limit: 10, sorts: [
+    ['attribute' => ['slug' => 'name'], 'direction' => 'asc'],
+], filters: [
+    '$and' => [
+        ['attribute' => ['slug' => 'name'], 'condition' => 'contains', 'value' => 'Acme'],
+    ],
+]);
 
 // Get a specific record
 $record = $service->getRecord('people', 'record-uuid');
@@ -109,25 +110,14 @@ $company = $service->createRecord('companies', [
     'domains' => ['acme.com'],
 ]);
 
-// Update a record
-$updated = $service->updateRecord('companies', 'record-uuid', [
-    'name' => 'Acme Corp (Updated)',
-]);
-
-// Delete a record
-$service->deleteRecord('companies', 'record-uuid');
-
 // List objects in workspace
 $objects = $service->listObjects();
 
-// List lists
-$lists = $service->listLists();
+// Get object details
+$object = $service->getObject('companies');
 
-// List entries in a list
-$entries = $service->listEntries('list-uuid', limit: 10);
-
-// Create a note
-$note = $service->createNote('companies', 'record-uuid', 'Call follow-up scheduled for next week.');
+// List workspaces
+$workspaces = $service->listWorkspaces();
 
 // Get current user
 $user = $service->getCurrentUser();

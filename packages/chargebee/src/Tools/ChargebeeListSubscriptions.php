@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to list subscriptions from Chargebee with optional filtering.
+ * Tool to list subscriptions from Chargebee with optional filtering and pagination.
  *
- * Supports pagination and filtering by status and plan ID.
+ * Supports filtering by subscription state and pagination via cursor-based offsets.
  */
 class ChargebeeListSubscriptions implements Tool
 {
@@ -35,7 +35,7 @@ class ChargebeeListSubscriptions implements Tool
      */
     public function description(): string
     {
-        return 'List subscriptions from Chargebee. Supports filtering by status (active, cancelled, non_renewing, paused, in_trial, future) and plan ID. Returns paginated results.';
+        return 'List subscriptions from Chargebee. Supports filtering by state (active, cancelled, non_renewing, paused, in_trial, future) and pagination. Returns subscription details including plan, status, and billing period.';
     }
 
     /**
@@ -45,9 +45,8 @@ class ChargebeeListSubscriptions implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of subscriptions to return per page (max 100, default 10).'],
-            'offset' => ['type' => 'string', 'description' => 'Pagination offset — pass the value from a previous response to get the next page.'],
-            'status' => ['type' => 'string', 'description' => 'Filter by subscription status: active, cancelled, non_renewing, paused, in_trial, future.'],
-            'plan_id' => ['type' => 'string', 'description' => 'Filter by plan ID to return only subscriptions on a specific plan.'],
+            'page' => ['type' => 'string', 'description' => 'Pagination cursor — pass the value from a previous response to get the next page.'],
+            'state' => ['type' => 'string', 'description' => 'Filter by subscription state: active, cancelled, non_renewing, paused, in_trial, future.'],
         ];
     }
 
@@ -65,9 +64,8 @@ class ChargebeeListSubscriptions implements Tool
 
             $result = $this->service->listSubscriptions(
                 limit: isset($args['limit']) ? (int) $args['limit'] : null,
-                offset: $args['offset'] ?? null,
-                status: $args['status'] ?? null,
-                planId: $args['plan_id'] ?? null,
+                page: $args['page'] ?? null,
+                state: $args['state'] ?? null,
             );
 
             $subscriptions = $result['list'] ?? [];
@@ -83,7 +81,7 @@ class ChargebeeListSubscriptions implements Tool
             ];
 
             if ($nextOffset !== null) {
-                $response['next_offset'] = $nextOffset;
+                $response['next_page'] = $nextOffset;
             }
 
             return ToolResult::success($response);

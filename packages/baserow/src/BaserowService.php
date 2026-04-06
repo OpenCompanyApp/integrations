@@ -5,233 +5,185 @@ namespace OpenCompany\Integrations\Baserow;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * HTTP client for the Baserow API.
- *
- * Wraps all Baserow REST endpoints (rows, tables, fields, databases)
- * with token-based authentication and consistent error handling.
- */
 class BaserowService
 {
-    /**
-     * Create a new BaserowService instance.
-     *
-     * @param string $apiToken Baserow API token (JWT or permanent database token)
-     * @param string $baseUrl  Base URL of the Baserow API (default: https://api.baserow.io/api)
-     */
     public function __construct(
-        private string $apiToken = '',
-        private string $baseUrl = 'https://api.baserow.io/api',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.baserow.io',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the service has been configured with an API token.
+     * Check whether the service has an access token configured.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiToken);
+        return !empty($this->accessToken);
     }
 
-    // ── Rows ──────────────────────────────────────────────────────────────
-
     /**
-     * List rows in a table with optional filtering, searching, and pagination.
+     * List rows in a database table.
      *
-     * @param int   $tableId   Baserow table ID
-     * @param array $params    Query parameters (limit, offset, search, order_by, filter_type, filters, field_ids)
-     * @return array<string, mixed> API response containing 'results' and 'count'
+     * @param  int  $tableId  The Baserow table ID.
+     * @param  int  $page     Page number (1-based).
+     * @param  int  $size     Number of rows per page.
+     * @param  array  $filters  Optional filter parameters.
+     * @return array<string, mixed>
      */
-    public function listRows(int $tableId, array $params = []): array
+    public function listTableRows(int $tableId, int $page = 1, int $size = 100, array $filters = []): array
     {
-        return $this->request('GET', "/database/rows/table/{$tableId}/", $params);
+        $params = array_merge(['page' => $page, 'size' => $size], $filters);
+
+        return $this->request('GET', "/api/database/rows/table/{$tableId}/", $params);
     }
 
     /**
-     * Get a single row by ID.
+     * Get a single row from a database table.
      *
-     * @param int $tableId Baserow table ID
-     * @param int $rowId   Row ID to retrieve
-     * @return array<string, mixed> Row data with field values
+     * @param  int  $tableId  The Baserow table ID.
+     * @param  int  $rowId    The row ID.
+     * @return array<string, mixed>
      */
     public function getRow(int $tableId, int $rowId): array
     {
-        return $this->request('GET', "/database/rows/table/{$tableId}/{$rowId}/");
+        return $this->request('GET', "/api/database/rows/table/{$tableId}/{$rowId}/");
     }
 
     /**
-     * Create a new row in a table.
+     * Create a new row in a database table.
      *
-     * @param int   $tableId Baserow table ID
-     * @param array $data    Flat key-value field data, e.g. {"field_1": "value", "field_2": 42}
-     * @param int|null $before If provided, position the new row before this row ID
-     * @return array<string, mixed> Created row data
+     * @param  int  $tableId  The Baserow table ID.
+     * @param  array<string, mixed>  $data  Row data as field name => value pairs.
+     * @return array<string, mixed>
      */
-    public function createRow(int $tableId, array $data, ?int $before = null): array
+    public function createRow(int $tableId, array $data): array
     {
-        $query = $before !== null ? ['before' => $before] : [];
-
-        return $this->request('POST', "/database/rows/table/{$tableId}/", $data, $query);
+        return $this->request('POST', "/api/database/rows/table/{$tableId}/", $data);
     }
 
     /**
-     * Update an existing row.
+     * Update an existing row in a database table.
      *
-     * @param int   $tableId Baserow table ID
-     * @param int   $rowId   Row ID to update
-     * @param array $data    Flat key-value field data to patch
-     * @return array<string, mixed> Updated row data
+     * @param  int  $tableId  The Baserow table ID.
+     * @param  int  $rowId    The row ID.
+     * @param  array<string, mixed>  $data  Row data as field name => value pairs.
+     * @return array<string, mixed>
      */
     public function updateRow(int $tableId, int $rowId, array $data): array
     {
-        return $this->request('PATCH', "/database/rows/table/{$tableId}/{$rowId}/", $data);
+        return $this->request('PATCH', "/api/database/rows/table/{$tableId}/{$rowId}/", $data);
     }
 
     /**
-     * Delete a row by ID.
+     * Delete a row from a database table.
      *
-     * @param int $tableId Baserow table ID
-     * @param int $rowId   Row ID to delete
-     * @return array<string, mixed> Empty response on success
+     * @param  int  $tableId  The Baserow table ID.
+     * @param  int  $rowId    The row ID.
      */
-    public function deleteRow(int $tableId, int $rowId): array
+    public function deleteRow(int $tableId, int $rowId): void
     {
-        return $this->request('DELETE', "/database/rows/table/{$tableId}/{$rowId}/");
+        $this->request('DELETE', "/api/database/rows/table/{$tableId}/{$rowId}/");
     }
 
     /**
-     * Batch-create multiple rows in a table.
+     * List databases (applications) in the workspace.
      *
-     * @param int   $tableId Baserow table ID
-     * @param array $records Array of row data arrays
-     * @return array<string, mixed> Created rows
+     * @param  int  $page  Page number (1-based).
+     * @param  int  $size  Number of results per page.
+     * @return array<string, mixed>
      */
-    public function batchCreate(int $tableId, array $records): array
+    public function listDatabases(int $page = 1, int $size = 100): array
     {
-        return $this->request('POST', "/database/rows/table/{$tableId}/batch/", ['items' => $records]);
+        return $this->request('GET', '/api/applications/', ['page' => $page, 'size' => $size]);
     }
 
     /**
-     * Batch-update multiple rows in a table.
+     * Get the currently authenticated user.
      *
-     * @param int   $tableId Baserow table ID
-     * @param array $records Array of row data arrays (each must include an 'id' key)
-     * @return array<string, mixed> Updated rows
+     * @return array<string, mixed>
      */
-    public function batchUpdate(int $tableId, array $records): array
+    public function getCurrentUser(): array
     {
-        return $this->request('PATCH', "/database/rows/table/{$tableId}/batch/", ['items' => $records]);
+        return $this->request('GET', '/api/user/');
     }
 
     /**
-     * Batch-delete multiple rows by ID.
+     * Make an API request and return parsed JSON.
      *
-     * @param int   $tableId Baserow table ID
-     * @param array $rowIds  Array of row IDs to delete
-     * @return array<string, mixed> Empty response on success
+     * @param  string  $method  HTTP method (GET, POST, PATCH, DELETE).
+     * @param  string  $path    API endpoint path.
+     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @return array<string, mixed>
      */
-    public function batchDelete(int $tableId, array $rowIds): array
+    private function request(string $method, string $path, array $data = []): array
     {
-        return $this->request('POST', "/database/rows/table/{$tableId}/batch-delete/", ['items' => $rowIds]);
-    }
+        $response = $this->rawRequest($method, $path, $data);
 
-    // ── Tables & Databases ────────────────────────────────────────────────
-
-    /**
-     * List all tables in a Baserow database (application).
-     *
-     * @param int $databaseId Baserow database/application ID
-     * @return array<string, mixed> List of tables
-     */
-    public function listTables(int $databaseId): array
-    {
-        return $this->request('GET', "/database/tables/database/{$databaseId}/");
-    }
-
-    /**
-     * List all databases (applications) accessible to the token.
-     *
-     * @param string|null $type Optional type filter (e.g. "database")
-     * @return array<string, mixed> List of applications
-     */
-    public function listDatabases(?string $type = null): array
-    {
-        $params = $type !== null ? ['type' => $type] : [];
-
-        return $this->request('GET', '/applications/', $params);
-    }
-
-    /**
-     * Get details for a single table.
-     *
-     * @param int $tableId Baserow table ID
-     * @return array<string, mixed> Table metadata
-     */
-    public function getTable(int $tableId): array
-    {
-        return $this->request('GET', "/database/tables/{$tableId}/");
-    }
-
-    /**
-     * List all fields in a table.
-     *
-     * @param int $tableId Baserow table ID
-     * @return array<string, mixed> List of field definitions
-     */
-    public function listFields(int $tableId): array
-    {
-        return $this->request('GET', "/database/fields/table/{$tableId}/");
-    }
-
-    // ── HTTP ──────────────────────────────────────────────────────────────
-
-    /**
-     * Execute an HTTP request against the Baserow API.
-     *
-     * @param string $method  HTTP method (GET, POST, PATCH, DELETE)
-     * @param string $path    API path (e.g. /database/rows/table/1/)
-     * @param array  $body    Request body (for POST/PATCH) or query params (for GET)
-     * @param array  $query   Additional query parameters appended to URL
-     * @return array<string, mixed> Decoded JSON response
-     *
-     * @throws \RuntimeException On connection failure or API error
-     */
-    private function request(string $method, string $path, array $body = [], array $query = []): array
-    {
-        if (! $this->apiToken) {
-            throw new \RuntimeException('Baserow API token is not configured.');
+        if ($response->status() === 204) {
+            return [];
         }
 
-        $url = rtrim($this->baseUrl, '/') . $path;
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Make a raw HTTP request to the Baserow API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path    API endpoint path.
+     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \RuntimeException
+     */
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    {
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Baserow access token is not configured.');
+        }
+
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Token ' . $this->apiToken,
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 
-            // Append extra query parameters to URL
-            if (! empty($query)) {
-                $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
-            }
-
             $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $body),
-                'POST'   => $http->post($url, $body),
-                'PATCH'  => $http->patch($url, $body),
-                'DELETE' => $http->delete($url),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'PATCH' => $http->patch($url, $data),
+                'DELETE' => $http->delete($url, $data),
+                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if ($response->failed()) {
-                $status = $response->status();
-                $error  = $response->body();
-                Log::error("Baserow API error: {$method} {$path}", ['status' => $status, 'body' => $error]);
-                throw new \RuntimeException("Baserow API error ({$status}): {$error}");
+            if (!$response->successful()) {
+                $contentType = $response->header('Content-Type');
+                $body = $response->body();
+
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                    Log::warning("Baserow API returned HTML for {$method} {$path}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("Baserow API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
+                }
+
+                $error = $response->json('error') ?? $response->json('detail') ?? $body;
+                Log::error("Baserow API error: {$method} {$path}", [
+                    'status' => $response->status(),
+                    'error' => $error,
+                ]);
+                throw new \RuntimeException("Baserow API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            return $response->json() ?? [];
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Baserow API connection error: {$method} {$path}", ['error' => $e->getMessage()]);
+            Log::error("Baserow API connection error: {$method} {$path}", [
+                'error' => $e->getMessage(),
+            ]);
             throw new \RuntimeException("Failed to connect to Baserow API: {$e->getMessage()}");
         }
     }

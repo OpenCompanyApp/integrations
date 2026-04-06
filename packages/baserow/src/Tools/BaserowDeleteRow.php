@@ -7,7 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Delete a single row from a Baserow table.
+ * Delete a row from a Baserow database table by its ID.
  */
 class BaserowDeleteRow implements Tool
 {
@@ -22,47 +22,30 @@ class BaserowDeleteRow implements Tool
 
     public function description(): string
     {
-        return 'Delete a single row from a Baserow table by its ID.';
+        return 'Delete a row from a Baserow database table. This action is permanent and cannot be undone.';
     }
 
     public function parameters(): array
     {
         return [
             'table_id' => ['type' => 'integer', 'required' => true, 'description' => 'The Baserow table ID.'],
-            'row_id'   => ['type' => 'integer', 'required' => true, 'description' => 'The row ID to delete.'],
+            'row_id' => ['type' => 'integer', 'required' => true, 'description' => 'The ID of the row to delete.'],
         ];
     }
 
-    /**
-     * Execute the delete row tool.
-     *
-     * @param  array<string, mixed> $args Tool arguments
-     * @return ToolResult
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Baserow integration is not configured.');
             }
 
-            $tableId = $args['table_id'] ?? null;
-            $rowId   = $args['row_id'] ?? null;
+            $tableId = (int) $args['table_id'];
+            $rowId = (int) $args['row_id'];
 
-            if (empty($tableId)) {
-                return ToolResult::error('table_id is required.');
-            }
-            if (empty($rowId)) {
-                return ToolResult::error('row_id is required.');
-            }
+            $this->service->deleteRow($tableId, $rowId);
 
-            $this->service->deleteRow((int) $tableId, (int) $rowId);
-
-            return ToolResult::success([
-                'deleted' => true,
-                'table_id' => (int) $tableId,
-                'row_id' => (int) $rowId,
-            ]);
+            return ToolResult::success("Row {$rowId} has been deleted from table {$tableId}.");
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

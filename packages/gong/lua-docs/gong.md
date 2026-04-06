@@ -179,6 +179,71 @@ end
 
 ---
 
+## list_transcripts
+
+List call transcripts from Gong.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page` | integer | no | Page number for pagination (starting from 1) |
+| `limit` | integer | no | Maximum number of transcripts to return per page |
+| `download_date` | string | no | Filter by download date in ISO 8601 (e.g., `"2025-01-15"`) |
+| `call_type` | string | no | Filter by call type (e.g., `"conference"`, `"webinar"`, `"phone"`) |
+| `status` | string | no | Filter by processing status (e.g., `"completed"`, `"processing"`, `"failed"`) |
+
+### Response
+
+Returns an object with:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `transcripts` | array | Array of transcript objects |
+| `count` | integer | Number of transcripts returned |
+| `totalRecords` | integer | Total matching records (if available) |
+| `cursor` | string | Cursor for the next page (if available) |
+
+### Example
+
+```lua
+local result = app.integrations.gong.list_transcripts({
+  download_date = "2025-01-15",
+  status = "completed"
+})
+
+for _, transcript in ipairs(result.transcripts) do
+  print(transcript.callId .. " — " .. transcript.status)
+end
+```
+
+---
+
+## get_transcript
+
+Get the full transcript of a specific call in Gong.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `transcript_id` | string | yes | The unique transcript identifier |
+
+### Example
+
+```lua
+local result = app.integrations.gong.get_transcript({
+  transcript_id = "1234567890"
+})
+
+print("Call ID: " .. result.callId)
+for _, turn in ipairs(result.transcript) do
+  print(turn.speaker .. ": " .. turn.text)
+end
+```
+
+---
+
 ## get_current_user
 
 Get the currently authenticated Gong user profile.

@@ -39,7 +39,7 @@ class AttioGetRecord implements Tool
     public function parameters(): array
     {
         return [
-            'object' => ['type' => 'string', 'required' => true, 'description' => 'The object slug (e.g. "people", "companies", "deals").'],
+            'object_id' => ['type' => 'string', 'required' => true, 'description' => 'The object slug or ID (e.g. "people", "companies", "deals").'],
             'id' => ['type' => 'string', 'required' => true, 'description' => 'The record UUID.'],
         ];
     }
@@ -56,7 +56,7 @@ class AttioGetRecord implements Tool
                 return ToolResult::error('Attio integration is not configured.');
             }
 
-            $result = $this->service->getRecord($args['object'], $args['id']);
+            $result = $this->service->getRecord($args['object_id'], $args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -23,8 +23,8 @@ class InsightlyServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new InsightlyService(
-                apiKey: $creds->get('insightly', 'api_key', ''),
-                region: $creds->get('insightly', 'region', 'na1'),
+                accessToken: $creds->get('insightly', 'access_token', ''),
+                baseUrl: $creds->get('insightly', 'base_url', 'https://api.na1.insightly.com'),
             );
         });
     }

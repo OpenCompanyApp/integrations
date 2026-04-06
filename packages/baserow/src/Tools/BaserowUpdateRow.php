@@ -7,7 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Update an existing row in a Baserow table.
+ * Update an existing row in a Baserow database table.
+ *
+ * Accepts field data as a JSON object mapping field names (or field IDs)
+ * to their new values. Only the specified fields are updated.
  */
 class BaserowUpdateRow implements Tool
 {
@@ -22,51 +25,38 @@ class BaserowUpdateRow implements Tool
 
     public function description(): string
     {
-        return 'Update an existing row in a Baserow table with the provided field values.';
+        return 'Update an existing row in a Baserow database table. Provide field data as a JSON object with field names and new values. Only specified fields are updated.';
     }
 
     public function parameters(): array
     {
         return [
             'table_id' => ['type' => 'integer', 'required' => true, 'description' => 'The Baserow table ID.'],
-            'row_id'   => ['type' => 'integer', 'required' => true, 'description' => 'The row ID to update.'],
-            'data'     => ['type' => 'string', 'required' => true, 'description' => 'JSON object of field values to update, e.g. {"field_1": "new value", "field_2": 99}.'],
+            'row_id' => ['type' => 'integer', 'required' => true, 'description' => 'The ID of the row to update.'],
+            'data' => ['type' => 'object', 'required' => true, 'description' => 'Updated field data as a JSON object with field names (or field IDs) as keys and their new values. Example: {"Name": "Jane", "Status": "Active"}.'],
         ];
     }
 
-    /**
-     * Execute the update row tool.
-     *
-     * @param  array<string, mixed> $args Tool arguments
-     * @return ToolResult
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Baserow integration is not configured.');
             }
 
-            $tableId = $args['table_id'] ?? null;
-            $rowId   = $args['row_id'] ?? null;
-            $data    = $args['data'] ?? null;
+            $tableId = (int) $args['table_id'];
+            $rowId = (int) $args['row_id'];
+            $data = $args['data'] ?? [];
 
-            if (empty($tableId)) {
-                return ToolResult::error('table_id is required.');
+            if (is_string($data)) {
+                $data = json_decode($data, true) ?? [];
             }
-            if (empty($rowId)) {
-                return ToolResult::error('row_id is required.');
-            }
+
             if (empty($data)) {
-                return ToolResult::error('data is required.');
+                return ToolResult::error('Update data cannot be empty. Provide at least one field to update.');
             }
 
-            $fieldData = is_string($data) ? json_decode($data, true) : $data;
-            if (! is_array($fieldData)) {
-                return ToolResult::error('data must be a valid JSON object.');
-            }
-
-            $result = $this->service->updateRow((int) $tableId, (int) $rowId, $fieldData);
+            $result = $this->service->updateRow($tableId, $rowId, $data);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -1,14 +1,14 @@
 # Integration: Insightly
 
-> Insightly CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage contacts, deals (opportunities), and projects. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Insightly CRM integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage contacts, opportunities, and projects. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to your Insightly CRM. Manage contacts, track deals through pipelines, and browse projects — all through the [Insightly REST API](https://api.na1.insightly.com/v3.1/Help).
+Give your AI agents access to your Insightly CRM. Manage contacts, track opportunities through pipelines, and browse projects — all through the [Insightly REST API](https://api.na1.insightly.com/v3.1/Help).
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Insightly tool lets AI agents search and manage CRM contacts, create and update deals, and browse project information — giving agents data-driven awareness of your sales pipeline and project portfolio.
+This Insightly tool lets AI agents search and manage CRM contacts, create deals, and browse project information — giving agents data-driven awareness of your sales pipeline and project portfolio.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -22,7 +22,7 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 ## Configuration
 
-This integration requires an Insightly API key and your API region.
+This integration requires an Insightly API access token.
 
 **In OpenCompany**, credentials are managed through the Integrations UI.
 
@@ -31,8 +31,8 @@ This integration requires an Insightly API key and your API region.
 ```php
 return [
     'insightly' => [
-        'api_key' => env('INSIGHTLY_API_KEY'),
-        'region'  => env('INSIGHTLY_REGION', 'na1'),
+        'access_token' => env('INSIGHTLY_ACCESS_TOKEN'),
+        'base_url'     => env('INSIGHTLY_BASE_URL', 'https://api.na1.insightly.com'),
     ],
 ];
 ```
@@ -41,30 +41,28 @@ return [
 
 1. Log in to Insightly.
 2. Go to **User Settings** → **API Keys**.
-3. Generate or copy your API key.
+3. Generate or copy your API key — this is used as the Bearer access token.
 
-### Regions
+### Base URL
 
-| Region | Code | API Base URL |
-|--------|------|-------------|
-| North America | `na1` | `https://api.na1.insightly.com/v3.1` |
-| Europe | `eu1` | `https://api.eu1.insightly.com/v3.1` |
-| Australia | `au1` | `https://api.au1.insightly.com/v3.1` |
+The default base URL is `https://api.na1.insightly.com`. If your Insightly instance uses a different region, update the `base_url` accordingly:
 
-Check your Insightly URL (e.g., `https://na1.insightly.com`) to determine your region code.
+| Region | Base URL |
+|--------|----------|
+| North America | `https://api.na1.insightly.com` |
+| Europe | `https://api.eu1.insightly.com` |
+| Australia | `https://api.au1.insightly.com` |
 
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
-| `insightly_list_contacts` | read | List contacts with pagination, ordering, and filtering |
+| `insightly_list_contacts` | read | List contacts with pagination and search |
 | `insightly_get_contact` | read | Get a single contact by ID |
 | `insightly_create_contact` | write | Create a new contact |
-| `insightly_update_contact` | write | Update an existing contact |
-| `insightly_list_deals` | read | List deals (opportunities) with pagination and filtering |
-| `insightly_get_deal` | read | Get a single deal by ID |
-| `insightly_create_deal` | write | Create a new deal (opportunity) |
-| `insightly_list_projects` | read | List projects with pagination and filtering |
+| `insightly_list_opportunities` | read | List opportunities with pagination and status filter |
+| `insightly_get_opportunity` | read | Get a single opportunity by ID |
+| `insightly_list_projects` | read | List projects with pagination and status filter |
 | `insightly_get_current_user` | read | Get the authenticated user's profile |
 
 ## Quick Start
@@ -72,13 +70,13 @@ Check your Insightly URL (e.g., `https://na1.insightly.com`) to determine your r
 ```php
 use OpenCompany\Integrations\Insightly\InsightlyService;
 use OpenCompany\Integrations\Insightly\Tools\InsightlyListContacts;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyCreateDeal;
+use OpenCompany\Integrations\Insightly\Tools\InsightlyCreateContact;
 
 // Create tools
 $service = app(InsightlyService::class);
 $tools = [
     new InsightlyListContacts($service),
-    new InsightlyCreateDeal($service),
+    new InsightlyCreateContact($service),
 ];
 
 // Use with an AI agent
@@ -89,7 +87,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 9 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -111,7 +109,7 @@ use OpenCompany\Integrations\Insightly\InsightlyService;
 $service = app(InsightlyService::class);
 
 // List contacts
-$contacts = $service->listContacts(top: 20, orderBy: 'DATE_CREATED_UTC desc');
+$contacts = $service->listContacts(top: 20, search: 'John');
 
 // Get a specific contact
 $contact = $service->getContact(12345);
@@ -121,23 +119,17 @@ $contact = $service->createContact([
     'FIRST_NAME' => 'Jane',
     'LAST_NAME' => 'Smith',
     'EMAIL_ADDRESS' => 'jane@example.com',
+    'PHONE' => '+1-555-0100',
 ]);
 
-// Update a contact
-$contact = $service->updateContact(12345, ['TITLE' => 'CTO']);
+// List opportunities
+$opportunities = $service->listOpportunities(top: 10, status: 'Open');
 
-// List deals
-$deals = $service->listDeals(top: 10, orderBy: 'BID_AMOUNT desc');
-
-// Create a deal
-$deal = $service->createDeal([
-    'OPPORTUNITY_NAME' => 'Enterprise License',
-    'BID_AMOUNT' => 50000,
-    'BID_CURRENCY' => 'USD',
-]);
+// Get an opportunity
+$opportunity = $service->getOpportunity(67890);
 
 // List projects
-$projects = $service->listProjects(brief: 'true');
+$projects = $service->listProjects(status: 'In Progress');
 
 // Get current user
 $user = $service->getCurrentUser();

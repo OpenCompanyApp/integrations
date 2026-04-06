@@ -23,7 +23,7 @@ class ChargebeeServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new ChargebeeService(
-                apiKey: $creds->get('chargebee', 'api_key', ''),
+                accessToken: $creds->get('chargebee', 'access_token', ''),
                 siteName: $creds->get('chargebee', 'site_name', ''),
             );
         });

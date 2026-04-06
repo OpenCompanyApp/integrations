@@ -1,12 +1,33 @@
 {
     "name": "opencompanyapp/integration-baserow",
-    "description": "Baserow integration for OpenCompany — databases, tables, fields, and rows.",
+    "description": "Baserow database integration for Laravel — list databases, manage table rows, and query user info.",
     "license": "MIT",
-    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
     "keywords": ["tools", "baserow", "database", "opencompany"],
-    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
-    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Baserow\\": "src/"}},
-    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Baserow\\BaserowServiceProvider"]}},
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-baserow": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Baserow\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Baserow\\BaserowServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }

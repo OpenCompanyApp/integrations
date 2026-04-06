@@ -5,116 +5,163 @@ namespace OpenCompany\Integrations\Ashby;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Ashby ATS API service.
+ *
+ * Handles authenticated requests to the Ashby HQ REST API.
+ * All endpoints use POST with JSON bodies. Authentication is via
+ * Bearer token passed in the Authorization header.
+ *
+ * @see https://developers.ashbyhq.com
+ */
 class AshbyService
 {
     public function __construct(
-        private string $apiKey = '',
+        private string $accessToken = '',
         private string $baseUrl = 'https://api.ashbyhq.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the service is configured with an API key.
+     * Check whether the service is configured with an access token.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
+        return !empty($this->accessToken);
     }
 
     /**
-     * List jobs via POST /job.list.
+     * List applications with optional filters.
      *
-     * @param  array  $body  Request body (filters, pagination, etc.).
+     * @param  int|null  $limit   Maximum number of results to return.
+     * @param  int|null  $offset  Number of results to skip.
+     * @param  string|null  $jobId  Filter by job ID.
+     * @param  string|null  $status  Filter by application status.
      * @return array<string, mixed>
      */
-    public function listJobs(array $body = []): array
+    public function listApplications(?int $limit = null, ?int $offset = null, ?string $jobId = null, ?string $status = null): array
     {
-        return $this->request('POST', '/job.list', $body);
+        $body = [];
+        if ($limit !== null) {
+            $body['limit'] = $limit;
+        }
+        if ($offset !== null) {
+            $body['offset'] = $offset;
+        }
+        if ($jobId !== null) {
+            $body['jobId'] = $jobId;
+        }
+        if ($status !== null) {
+            $body['status'] = $status;
+        }
+
+        return $this->request('POST', '/api/v1/application.list', $body);
     }
 
     /**
-     * Get detailed info for a single job via POST /job.getInfo.
+     * Get a single application by ID.
      *
-     * @param  array  $body  Request body containing jobId or similar identifier.
+     * @param  string  $id  The application ID.
      * @return array<string, mixed>
      */
-    public function getJob(array $body): array
+    public function getApplication(string $id): array
     {
-        return $this->request('POST', '/job.getInfo', $body);
+        return $this->request('POST', '/api/v1/application.get', [
+            'id' => $id,
+        ]);
     }
 
     /**
-     * List applications via POST /application.list.
+     * List jobs with optional filters.
      *
-     * @param  array  $body  Request body (filters, pagination, etc.).
+     * @param  int|null  $limit   Maximum number of results to return.
+     * @param  int|null  $offset  Number of results to skip.
+     * @param  string|null  $status  Filter by job status.
      * @return array<string, mixed>
      */
-    public function listApplications(array $body = []): array
+    public function listJobs(?int $limit = null, ?int $offset = null, ?string $status = null): array
     {
-        return $this->request('POST', '/application.list', $body);
+        $body = [];
+        if ($limit !== null) {
+            $body['limit'] = $limit;
+        }
+        if ($offset !== null) {
+            $body['offset'] = $offset;
+        }
+        if ($status !== null) {
+            $body['status'] = $status;
+        }
+
+        return $this->request('POST', '/api/v1/job.list', $body);
     }
 
     /**
-     * Get detailed info for a single application via POST /application.getInfo.
+     * Get a single job by ID.
      *
-     * @param  array  $body  Request body containing applicationId or similar identifier.
+     * @param  string  $id  The job ID.
      * @return array<string, mixed>
      */
-    public function getApplication(array $body): array
+    public function getJob(string $id): array
     {
-        return $this->request('POST', '/application.getInfo', $body);
+        return $this->request('POST', '/api/v1/job.get', [
+            'id' => $id,
+        ]);
     }
 
     /**
-     * List candidates via POST /candidate.list.
+     * List interviews with optional filters.
      *
-     * @param  array  $body  Request body (filters, pagination, etc.).
+     * @param  int|null  $limit          Maximum number of results to return.
+     * @param  int|null  $offset         Number of results to skip.
+     * @param  string|null  $applicationId  Filter by application ID.
      * @return array<string, mixed>
      */
-    public function listCandidates(array $body = []): array
+    public function listInterviews(?int $limit = null, ?int $offset = null, ?string $applicationId = null): array
     {
-        return $this->request('POST', '/candidate.list', $body);
+        $body = [];
+        if ($limit !== null) {
+            $body['limit'] = $limit;
+        }
+        if ($offset !== null) {
+            $body['offset'] = $offset;
+        }
+        if ($applicationId !== null) {
+            $body['applicationId'] = $applicationId;
+        }
+
+        return $this->request('POST', '/api/v1/interview.list', $body);
     }
 
     /**
-     * Create a note via POST /note.create.
+     * Get a single interview by ID.
      *
-     * @param  array  $body  Request body containing subjectId, content, etc.
+     * @param  string  $id  The interview ID.
      * @return array<string, mixed>
      */
-    public function createNote(array $body): array
+    public function getInterview(string $id): array
     {
-        return $this->request('POST', '/note.create', $body);
+        return $this->request('POST', '/api/v1/interview.get', [
+            'id' => $id,
+        ]);
     }
 
     /**
-     * List interviews via POST /interview.list.
-     *
-     * @param  array  $body  Request body (filters, pagination, etc.).
-     * @return array<string, mixed>
-     */
-    public function listInterviews(array $body = []): array
-    {
-        return $this->request('POST', '/interview.list', $body);
-    }
-
-    /**
-     * Get current user info via POST /user.getInfo.
+     * Get the currently authenticated user.
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('POST', '/user.getInfo');
+        return $this->request('POST', '/api/v1/user.me');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (POST, GET, etc.).
-     * @param  string  $path    API endpoint path (e.g., /job.list).
-     * @param  array   $data    Request body for POST requests.
+     * @param  string  $method  HTTP method (POST).
+     * @param  string  $path    API endpoint path.
+     * @param  array<string, mixed>  $data  Request body parameters.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -127,48 +174,34 @@ class AshbyService
     /**
      * Make a raw HTTP request to the Ashby API.
      *
-     * Uses HTTP Basic authentication with the API key as the username and an empty password.
-     *
      * @param  string  $method  HTTP method.
      * @param  string  $path    API endpoint path.
-     * @param  array   $data    Request body.
+     * @param  array<string, mixed>  $data  Request body parameters.
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException When the API key is missing, the connection fails, or the API returns an error.
+     * @throws \RuntimeException
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Ashby API key is not configured.');
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Ashby access token is not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiKey, '')->timeout(30);
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Ashby API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Ashby API endpoint not available (HTTP {$response->status()}). Check the API URL and credentials.");
-                }
-
-                $error = $response->json('errors') ?? $response->json('error') ?? $body;
+                $error = $response->json('errors') ?? $response->json('error') ?? $response->body();
                 Log::error("Ashby API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,

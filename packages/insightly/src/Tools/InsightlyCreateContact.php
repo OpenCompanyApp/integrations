@@ -37,7 +37,7 @@ class InsightlyCreateContact implements Tool
      */
     public function description(): string
     {
-        return 'Create a new contact in Insightly CRM. Provide contact details such as first name, last name, email, phone, and other fields. Returns the created contact with its new ID.';
+        return 'Create a new contact in Insightly CRM. Provide contact details such as first name, last name, email, and phone. Returns the created contact with its new ID.';
     }
 
     /**
@@ -52,10 +52,6 @@ class InsightlyCreateContact implements Tool
             'last_name' => ['type' => 'string', 'description' => 'Last name of the contact.'],
             'email' => ['type' => 'string', 'description' => 'Primary email address.'],
             'phone' => ['type' => 'string', 'description' => 'Primary phone number.'],
-            'title' => ['type' => 'string', 'description' => 'Job title.'],
-            'background' => ['type' => 'string', 'description' => 'Background notes or description.'],
-            'contact_type' => ['type' => 'string', 'description' => 'Contact type (e.g., "Customer", "Partner", "Vendor"). Must match a type defined in Insightly.'],
-            'additional_fields' => ['type' => 'object', 'description' => 'Additional Insightly contact fields as key-value pairs (e.g., {"CONTACTTYPE": "Customer", "INDUSTRY": "Technology"}).'],
         ];
     }
 
@@ -80,29 +76,11 @@ class InsightlyCreateContact implements Tool
             if (isset($args['last_name'])) {
                 $data['LAST_NAME'] = $args['last_name'];
             }
-            if (isset($args['title'])) {
-                $data['TITLE'] = $args['title'];
-            }
-            if (isset($args['background'])) {
-                $data['BACKGROUND'] = $args['background'];
-            }
-            if (isset($args['contact_type'])) {
-                $data['CONTACTTYPE'] = $args['contact_type'];
-            }
-
-            // Build email address record
             if (isset($args['email'])) {
                 $data['EMAIL_ADDRESS'] = $args['email'];
             }
-
-            // Build phone record
             if (isset($args['phone'])) {
                 $data['PHONE'] = $args['phone'];
-            }
-
-            // Merge any additional fields
-            if (isset($args['additional_fields']) && is_array($args['additional_fields'])) {
-                $data = array_merge($data, $args['additional_fields']);
             }
 
             if (empty($data)) {

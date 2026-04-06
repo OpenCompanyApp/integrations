@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-gong",
-    "description": "Gong integration for Laravel — list calls, users, deals, and interactions.",
+    "description": "Gong integration for Laravel — list calls, transcripts, users, deals, and interactions.",
     "license": "MIT",
     "authors": [
         {

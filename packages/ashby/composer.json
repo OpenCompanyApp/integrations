@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-ashby",
-    "description": "AshbyHQ integration for Laravel — manage jobs, applications, candidates, interviews, and notes.",
+    "description": "Ashby ATS integration for Laravel — manage jobs, applications, and interviews.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "ashby", "ats", "recruiting", "opencompany"],
+    "keywords": ["tools", "ashby", "ats", "hr", "recruiting", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

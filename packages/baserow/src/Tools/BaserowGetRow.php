@@ -7,7 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get a single Baserow row by its ID.
+ * Get a single row from a Baserow database table by its ID.
  */
 class BaserowGetRow implements Tool
 {
@@ -22,41 +22,28 @@ class BaserowGetRow implements Tool
 
     public function description(): string
     {
-        return 'Get a single Baserow row by its table and row ID.';
+        return 'Get a single row from a Baserow database table by its row ID. Returns all field values for the row.';
     }
 
     public function parameters(): array
     {
         return [
             'table_id' => ['type' => 'integer', 'required' => true, 'description' => 'The Baserow table ID.'],
-            'row_id'   => ['type' => 'integer', 'required' => true, 'description' => 'The row ID to retrieve.'],
+            'row_id' => ['type' => 'integer', 'required' => true, 'description' => 'The ID of the row to retrieve.'],
         ];
     }
 
-    /**
-     * Execute the get row tool.
-     *
-     * @param  array<string, mixed> $args Tool arguments
-     * @return ToolResult
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Baserow integration is not configured.');
             }
 
-            $tableId = $args['table_id'] ?? null;
-            $rowId   = $args['row_id'] ?? null;
+            $tableId = (int) $args['table_id'];
+            $rowId = (int) $args['row_id'];
 
-            if (empty($tableId)) {
-                return ToolResult::error('table_id is required.');
-            }
-            if (empty($rowId)) {
-                return ToolResult::error('row_id is required.');
-            }
-
-            $result = $this->service->getRow((int) $tableId, (int) $rowId);
+            $result = $this->service->getRow($tableId, $rowId);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

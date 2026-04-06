@@ -93,7 +93,7 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration
 
             return [
                 'success' => true,
-                'message' => "Connected to Airtop API as {$json['email'] ?? 'user'}.",
+                'message' => 'Connected to Airtop API as ' . ($json['email'] ?? 'user') . '.',
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];

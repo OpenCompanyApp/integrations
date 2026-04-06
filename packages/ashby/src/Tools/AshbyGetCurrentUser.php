@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Ashby\AshbyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the currently authenticated Ashby user.
+ *
+ * Useful for verifying API connectivity and displaying
+ * the logged-in user's profile information.
+ */
 class AshbyGetCurrentUser implements Tool
 {
     public function __construct(
@@ -19,7 +25,7 @@ class AshbyGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get information about the currently authenticated Ashby user. Useful for verifying credentials and identifying which user context the API is operating under.';
+        return 'Get the profile of the currently authenticated Ashby user. Use this to verify API access and see user details.';
     }
 
     public function parameters(): array

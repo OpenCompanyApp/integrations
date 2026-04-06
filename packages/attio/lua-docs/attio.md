@@ -2,23 +2,81 @@
 
 ## list_records
 
-List records for an object type in Attio.
+List records for an object type in Attio with filtering, sorting, and pagination.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `object` | string | yes | Object slug (e.g. `"people"`, `"companies"`, `"deals"`) |
+| `object_id` | string | yes | Object slug or ID (e.g. `"people"`, `"companies"`, `"deals"`) |
 | `limit` | integer | no | Max records to return (default: 20, max: 500) |
 | `offset` | integer | no | Records to skip for pagination (default: 0) |
+| `sorts` | array | no | Sort definitions. Each entry: `{attribute = {slug = "name"}, direction = "asc"}` |
+| `filters` | object | no | Filter definitions following Attio's filter grammar (see below) |
+
+### Sort Syntax
+
+Each sort entry is a table with:
+
+- `attribute` — table with `slug` (string) for the attribute to sort on
+- `direction` — `"asc"` or `"desc"`
+
+```lua
+sorts = {
+  { attribute = { slug = "name" }, direction = "asc" }
+}
+```
+
+### Filter Syntax
+
+Filters use a JSON-like structure. Wrap multiple filters with `$and` or `$or`:
+
+```lua
+-- Single filter
+filters = {
+  attribute = { slug = "name" },
+  condition = "contains",
+  value = "Acme"
+}
+
+-- Compound filter
+filters = {
+  ["$and"] = {
+    {
+      attribute = { slug = "name" },
+      condition = "contains",
+      value = "Acme"
+    },
+    {
+      attribute = { slug = "stage" },
+      condition = "equals",
+      value = "lead"
+    }
+  }
+}
+```
+
+Common conditions: `equals`, `not_equals`, `contains`, `not_contains`, `starts_with`, `ends_with`, `is_empty`, `is_not_empty`, `greater_than`, `less_than`, `in`, `not_in`.
 
 ### Example
 
 ```lua
 local result = app.integrations.attio.list_records({
-  object = "companies",
+  object_id = "companies",
   limit = 10,
-  offset = 0
+  offset = 0,
+  sorts = {
+    { attribute = { slug = "name" }, direction = "asc" }
+  },
+  filters = {
+    ["$and"] = {
+      {
+        attribute = { slug = "name" },
+        condition = "contains",
+        value = "Acme"
+      }
+    }
+  }
 })
 
 for _, record in ipairs(result.data) do
@@ -36,14 +94,14 @@ Get a single record by ID.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `object` | string | yes | Object slug (e.g. `"people"`, `"companies"`) |
+| `object_id` | string | yes | Object slug or ID (e.g. `"people"`, `"companies"`) |
 | `id` | string | yes | The record UUID |
 
 ### Example
 
 ```lua
 local result = app.integrations.attio.get_record({
-  object = "companies",
+  object_id = "companies",
   id = "aa1b2c3d-..."
 })
 
@@ -61,14 +119,14 @@ Create a new record for a given object type.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `object` | string | yes | Object slug (e.g. `"people"`, `"companies"`) |
+| `object_id` | string | yes | Object slug or ID (e.g. `"people"`, `"companies"`) |
 | `data` | object | yes | Attribute values keyed by attribute slug |
 
 ### Example
 
 ```lua
 local result = app.integrations.attio.create_record({
-  object = "companies",
+  object_id = "companies",
   data = {
     name = "Acme Corp",
     domains = { "acme.com" },
@@ -77,58 +135,6 @@ local result = app.integrations.attio.create_record({
 })
 
 print("Created company: " .. result.data.id.record_id)
-```
-
----
-
-## update_record
-
-Update an existing record by ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `object` | string | yes | Object slug (e.g. `"people"`, `"companies"`) |
-| `id` | string | yes | The record UUID |
-| `data` | object | yes | Attribute values to update, keyed by attribute slug |
-
-### Example
-
-```lua
-local result = app.integrations.attio.update_record({
-  object = "companies",
-  id = "aa1b2c3d-...",
-  data = {
-    name = "Acme Corp (Updated)"
-  }
-})
-
-print("Updated: " .. result.data.values.name[1].value)
-```
-
----
-
-## delete_record
-
-Delete a record by ID. This action is permanent.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `object` | string | yes | Object slug (e.g. `"people"`, `"companies"`) |
-| `id` | string | yes | The record UUID |
-
-### Example
-
-```lua
-app.integrations.attio.delete_record({
-  object = "companies",
-  id = "aa1b2c3d-..."
-})
-
-print("Record deleted.")
 ```
 
 ---
@@ -161,13 +167,13 @@ Get details for a specific object type, including its attributes.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `object` | string | yes | Object slug or UUID |
+| `id` | string | yes | Object slug or UUID |
 
 ### Example
 
 ```lua
 local result = app.integrations.attio.get_object({
-  object = "companies"
+  id = "companies"
 })
 
 for _, attr in ipairs(result.data.attributes) do
@@ -177,9 +183,9 @@ end
 
 ---
 
-## list_lists
+## list_workspaces
 
-List all lists in the workspace.
+List all workspaces accessible to the authenticated user.
 
 ### Parameters
 
@@ -188,87 +194,11 @@ None.
 ### Example
 
 ```lua
-local result = app.integrations.attio.list_lists()
+local result = app.integrations.attio.list_workspaces()
 
-for _, list in ipairs(result.data) do
-  print(list.id.list_id .. ": " .. list.title)
+for _, ws in ipairs(result.data) do
+  print(ws.id.workspace_id .. ": " .. ws.name)
 end
-```
-
----
-
-## get_list
-
-Get details for a specific list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The list UUID |
-
-### Example
-
-```lua
-local result = app.integrations.attio.get_list({
-  id = "list-uuid-here"
-})
-
-print("List: " .. result.data.title)
-print("Parent object: " .. result.data.parent_object_api_slug)
-```
-
----
-
-## list_entries
-
-List entries (records) in a specific list.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The list UUID |
-| `limit` | integer | no | Max entries to return (default: 20) |
-| `offset` | integer | no | Entries to skip for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.attio.list_entries({
-  id = "list-uuid-here",
-  limit = 10
-})
-
-for _, entry in ipairs(result.data) do
-  print(entry.id.entry_id)
-end
-```
-
----
-
-## create_note
-
-Create a note attached to a record.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `parent_object` | string | yes | Parent object slug (e.g. `"people"`, `"companies"`) |
-| `parent_record_id` | string | yes | UUID of the parent record |
-| `content` | string | yes | Note content (plain text or markdown) |
-
-### Example
-
-```lua
-local result = app.integrations.attio.create_note({
-  parent_object = "companies",
-  parent_record_id = "aa1b2c3d-...",
-  content = "Had a great call with the CEO. Follow up next week."
-})
-
-print("Note created: " .. result.data.id.note_id)
 ```
 
 ---
@@ -298,14 +228,14 @@ If you have multiple Attio workspaces configured, use account-specific namespace
 
 ```lua
 -- Default account (always works)
-app.integrations.attio.list_records({ object = "companies" })
+app.integrations.attio.list_records({ object_id = "companies" })
 
 -- Explicit default (portable across setups)
-app.integrations.attio.default.list_records({ object = "companies" })
+app.integrations.attio.default.list_records({ object_id = "companies" })
 
 -- Named accounts
-app.integrations.attio.production.list_records({ object = "companies" })
-app.integrations.attio.staging.list_records({ object = "companies" })
+app.integrations.attio.production.list_records({ object_id = "companies" })
+app.integrations.attio.staging.list_records({ object_id = "companies" })
 ```
 
 All functions are identical across accounts — only the credentials differ.

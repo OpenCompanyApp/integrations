@@ -8,6 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Tool to retrieve a single subscription from Chargebee by ID.
+ *
+ * Returns detailed subscription information including plan, billing cycle,
+ * status, trial period, and associated customer.
  */
 class ChargebeeGetSubscription implements Tool
 {
@@ -42,7 +45,7 @@ class ChargebeeGetSubscription implements Tool
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscription ID (e.g., "AzI6dGl0bGU9IkpvaG4gRG9lIgtleSI6IkRvZS).'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The subscription ID.'],
         ];
     }
 

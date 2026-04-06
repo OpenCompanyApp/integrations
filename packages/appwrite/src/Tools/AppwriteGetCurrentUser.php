@@ -1,0 +1,68 @@
+<?php
+
+namespace OpenCompany\Integrations\Appwrite\Tools;
+
+use OpenCompany\Integrations\Appwrite\AppwriteService;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
+
+class AppwriteGetCurrentUser implements Tool
+{
+    /**
+     * @param AppwriteService $service The Appwrite service instance.
+     */
+    public function __construct(
+        private AppwriteService $service,
+    ) {}
+
+    /**
+     * Get the tool name identifier.
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return 'appwrite_get_current_user';
+    }
+
+    /**
+     * Get the tool description.
+     *
+     * @return string
+     */
+    public function description(): string
+    {
+        return 'Get the currently authenticated Appwrite user account information.';
+    }
+
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array
+     */
+    public function parameters(): array
+    {
+        return [];
+    }
+
+    /**
+     * Execute the tool with the given arguments.
+     *
+     * @param  array $args The tool arguments (unused).
+     * @return ToolResult The result of the tool execution.
+     */
+    public function execute(array $args): ToolResult
+    {
+        try {
+            if (!$this->service->isConfigured()) {
+                return ToolResult::error('Appwrite integration is not configured.');
+            }
+
+            $result = $this->service->getCurrentUser();
+
+            return ToolResult::success($result);
+        } catch (\Throwable $e) {
+            return ToolResult::error($e->getMessage());
+        }
+    }
+}

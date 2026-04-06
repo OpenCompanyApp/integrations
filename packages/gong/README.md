@@ -1,8 +1,8 @@
 # Integration: Gong
 
-> Gong revenue intelligence integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list calls, users, deals, and interactions. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Gong revenue intelligence integration for the [Laravel AI SDK](https://github.com/laravel/ai) — list calls, transcripts, users, deals, and interactions. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to revenue intelligence data from Gong. Retrieve call recordings, user profiles, deal pipeline data, and customer interactions — all through the Gong REST API.
+Give your AI agents access to revenue intelligence data from Gong. Retrieve call recordings, transcripts, user profiles, deal pipeline data, and customer interactions — all through the Gong REST API.
 
 ## About OpenCompany
 
@@ -46,6 +46,8 @@ Generate API credentials in Gong under **Settings → API → Company API Keys**
 |------|------|-------------|
 | `gong_list_calls` | read | List call recordings with date and participant filters |
 | `gong_get_call` | read | Get detailed information about a specific call |
+| `gong_list_transcripts` | read | List call transcripts with date, type, and status filters |
+| `gong_get_transcript` | read | Get the full transcript of a specific call |
 | `gong_list_users` | read | List users in the Gong workspace |
 | `gong_list_deals` | read | List deals tracked in Gong |
 | `gong_list_interactions` | read | List customer interactions (calls, emails, meetings) |
@@ -73,7 +75,7 @@ $response = Ai::agent()
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 6 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 8 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;

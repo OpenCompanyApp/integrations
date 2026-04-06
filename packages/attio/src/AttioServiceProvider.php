@@ -17,8 +17,8 @@ class AttioServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new AttioService(
-                apiKey: $creds->get('attio', 'api_key', ''),
-                baseUrl: $creds->get('attio', 'url', 'https://api.attio.com/v2'),
+                accessToken: $creds->get('attio', 'access_token', ''),
+                baseUrl: $creds->get('attio', 'base_url', 'https://api.attio.com'),
             );
         });
     }

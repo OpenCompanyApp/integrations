@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-insightly",
-    "description": "Insightly CRM integration for Laravel — manage contacts, deals (opportunities), and projects.",
+    "description": "Insightly CRM integration for Laravel — manage contacts, opportunities, and projects.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "insightly", "crm", "opencompany"],
+    "keywords": ["tools", "insightly", "crm", "sales", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

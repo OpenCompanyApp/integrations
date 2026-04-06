@@ -8,6 +8,8 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Gong\Tools\GongListCalls;
 use OpenCompany\Integrations\Gong\Tools\GongGetCall;
+use OpenCompany\Integrations\Gong\Tools\GongListTranscripts;
+use OpenCompany\Integrations\Gong\Tools\GongGetTranscript;
 use OpenCompany\Integrations\Gong\Tools\GongListUsers;
 use OpenCompany\Integrations\Gong\Tools\GongListDeals;
 use OpenCompany\Integrations\Gong\Tools\GongListInteractions;
@@ -36,7 +38,7 @@ class GongToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, users, deals, interactions',
+            'label' => 'calls, transcripts, users, deals, interactions',
             'description' => 'Revenue intelligence',
             'icon' => 'ph:phone-call',
             'logo' => 'simple-icons:gong',
@@ -53,7 +55,7 @@ class GongToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Revenue intelligence platform — calls, deals, and customer interactions',
             'icon' => 'ph:phone-call',
             'logo' => 'simple-icons:gong',
-            'category' => 'sales',
+            'category' => 'communication',
             'badge' => 'verified',
             'docs_url' => 'https://app.gong.io/settings/api',
         ];
@@ -178,6 +180,20 @@ class GongToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'Get Call',
                 'description' => 'Get detailed information about a specific call.',
                 'icon' => 'ph:phone-call',
+            ],
+            'gong_list_transcripts' => [
+                'class' => GongListTranscripts::class,
+                'type' => 'read',
+                'name' => 'List Transcripts',
+                'description' => 'List call transcripts from Gong.',
+                'icon' => 'ph:document-text',
+            ],
+            'gong_get_transcript' => [
+                'class' => GongGetTranscript::class,
+                'type' => 'read',
+                'name' => 'Get Transcript',
+                'description' => 'Get the full transcript of a specific call.',
+                'icon' => 'ph:document-text',
             ],
             'gong_list_users' => [
                 'class' => GongListUsers::class,

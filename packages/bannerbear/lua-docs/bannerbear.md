@@ -207,6 +207,58 @@ print(result.uid)
 
 ---
 
+## list_images
+
+List previously created Bannerbear images with pagination.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page` | integer | no | Page number (1-based, defaults to 1) |
+| `limit` | integer | no | Results per page (defaults to 20) |
+
+### Example
+
+```lua
+local result = app.integrations.bannerbear.list_images({
+  page = 1,
+  limit = 10
+})
+
+for _, img in ipairs(result) do
+  print(img.uid .. " — " .. img.status)
+end
+```
+
+---
+
+## list_collections
+
+List Bannerbear collections with pagination.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page` | integer | no | Page number (1-based, defaults to 1) |
+| `limit` | integer | no | Results per page (defaults to 20) |
+
+### Example
+
+```lua
+local result = app.integrations.bannerbear.list_collections({
+  page = 1,
+  limit = 10
+})
+
+for _, col in ipairs(result) do
+  print(col.uid .. " — " .. (col.name or "untitled"))
+end
+```
+
+---
+
 ## get_current_user
 
 Get the authenticated Bannerbear account details.

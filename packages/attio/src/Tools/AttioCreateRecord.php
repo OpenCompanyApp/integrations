@@ -39,7 +39,7 @@ class AttioCreateRecord implements Tool
     public function parameters(): array
     {
         return [
-            'object' => ['type' => 'string', 'required' => true, 'description' => 'The object slug (e.g. "people", "companies", "deals").'],
+            'object_id' => ['type' => 'string', 'required' => true, 'description' => 'The object slug or ID (e.g. "people", "companies", "deals").'],
             'data' => ['type' => 'object', 'required' => true, 'description' => 'Record data keyed by attribute slug. Example: {"name": "Acme Corp", "website": "https://acme.com"}. Values depend on the attribute type.'],
         ];
     }
@@ -56,7 +56,7 @@ class AttioCreateRecord implements Tool
                 return ToolResult::error('Attio integration is not configured.');
             }
 
-            $result = $this->service->createRecord($args['object'], $args['data']);
+            $result = $this->service->createRecord($args['object_id'], $args['data']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 /**
  * Insightly CRM API service.
  *
- * Handles authentication and HTTP communication with the Insightly v3.1 REST API.
- * Uses HTTP Basic authentication with the API key as the username and an empty password.
+ * Handles Bearer token authentication and HTTP communication with the Insightly v3.1 REST API.
+ * Uses a configurable base URL (default: https://api.na1.insightly.com).
  *
  * @see https://api.na1.insightly.com/v3.1/Help
  */
@@ -18,38 +18,22 @@ class InsightlyService
     /**
      * Create a new InsightlyService instance.
      *
-     * @param  string  $apiKey  Insightly API key for HTTP Basic authentication.
-     * @param  string  $region  API region code (e.g., "na1", "eu1", "au1").
+     * @param  string  $accessToken  Insightly API access token for Bearer authentication.
+     * @param  string  $baseUrl  Base URL for the Insightly API (e.g., "https://api.na1.insightly.com").
      */
     public function __construct(
-        private string $apiKey = '',
-        private string $region = 'na1',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.na1.insightly.com',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the service is configured with an API key.
+     * Check whether the service is configured with an access token.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey);
-    }
-
-    /**
-     * Get the configured region code.
-     */
-    public function getRegion(): string
-    {
-        return $this->region;
-    }
-
-    /**
-     * Get the base URL for the Insightly API based on the configured region.
-     *
-     * @return string The base URL, e.g. "https://api.na1.insightly.com/v3.1"
-     */
-    public function getBaseUrl(): string
-    {
-        return 'https://api.' . $this->region . '.insightly.com/v3.1';
+        return !empty($this->accessToken);
     }
 
     /**
@@ -57,24 +41,20 @@ class InsightlyService
      *
      * @param  int|null  $top  Maximum number of records to return (Insightly $top parameter).
      * @param  int|null  $skip  Number of records to skip for pagination.
-     * @param  string|null  $brief  Set to "true" to return a reduced payload.
-     * @param  string|null  $orderBy  Order results by a field (e.g., "DATE_CREATED_UTC desc").
-     * @param  string|null  $filter  Insightly filter expression.
+     * @param  string|null  $search  Search term to filter contacts by name or email.
      * @return array<int, array<string, mixed>> List of contact records.
      *
      * @see https://api.na1.insightly.com/v3.1/Help#!/Contacts/GetEntities
      */
-    public function listContacts(?int $top = null, ?int $skip = null, ?string $brief = null, ?string $orderBy = null, ?string $filter = null): array
+    public function listContacts(?int $top = null, ?int $skip = null, ?string $search = null): array
     {
         $params = array_filter([
             'top' => $top,
             'skip' => $skip,
-            'brief' => $brief,
-            'orderby' => $orderBy,
-            'filter' => $filter,
+            'search' => $search,
         ], fn ($value) => $value !== null);
 
-        return $this->request('GET', '/Contacts', $params);
+        return $this->request('GET', '/v3.1/Contacts', $params);
     }
 
     /**
@@ -87,87 +67,54 @@ class InsightlyService
      */
     public function getContact(int $id): array
     {
-        return $this->request('GET', '/Contacts/' . $id);
+        return $this->request('GET', '/v3.1/Contacts/' . $id);
     }
 
     /**
      * Create a new contact in Insightly.
      *
-     * @param  array<string, mixed>  $data  Contact fields (e.g., FIRST_NAME, LAST_NAME, EMAIL, PHONE, etc.).
+     * @param  array<string, mixed>  $data  Contact fields (e.g., FIRST_NAME, LAST_NAME, EMAIL, PHONE).
      * @return array<string, mixed> The created contact record.
      *
      * @see https://api.na1.insightly.com/v3.1/Help#!/Contacts/PostEntity
      */
     public function createContact(array $data): array
     {
-        return $this->request('POST', '/Contacts', $data);
+        return $this->request('POST', '/v3.1/Contacts', $data);
     }
 
     /**
-     * Update an existing contact in Insightly.
-     *
-     * @param  int  $id  The Insightly contact ID to update.
-     * @param  array<string, mixed>  $data  Contact fields to update. Must include CONTACT_ID.
-     * @return array<string, mixed> The updated contact record.
-     *
-     * @see https://api.na1.insightly.com/v3.1/Help#!/Contacts/PutEntity
-     */
-    public function updateContact(int $id, array $data): array
-    {
-        $data['CONTACT_ID'] = $id;
-
-        return $this->request('PUT', '/Contacts/' . $id, $data);
-    }
-
-    /**
-     * List deals (opportunities) with optional pagination and filtering.
+     * List opportunities with optional pagination and filtering.
      *
      * @param  int|null  $top  Maximum number of records to return.
      * @param  int|null  $skip  Number of records to skip for pagination.
-     * @param  string|null  $brief  Set to "true" for a reduced payload.
-     * @param  string|null  $orderBy  Order results by a field.
-     * @param  string|null  $filter  Insightly filter expression.
+     * @param  string|null  $status  Filter by opportunity status (e.g., "Open", "Won", "Lost", "Suspended").
      * @return array<int, array<string, mixed>> List of opportunity records.
      *
      * @see https://api.na1.insightly.com/v3.1/Help#!/Opportunities/GetEntities
      */
-    public function listDeals(?int $top = null, ?int $skip = null, ?string $brief = null, ?string $orderBy = null, ?string $filter = null): array
+    public function listOpportunities(?int $top = null, ?int $skip = null, ?string $status = null): array
     {
         $params = array_filter([
             'top' => $top,
             'skip' => $skip,
-            'brief' => $brief,
-            'orderby' => $orderBy,
-            'filter' => $filter,
+            'status' => $status,
         ], fn ($value) => $value !== null);
 
-        return $this->request('GET', '/Opportunities', $params);
+        return $this->request('GET', '/v3.1/Opportunities', $params);
     }
 
     /**
-     * Get a single deal (opportunity) by its ID.
+     * Get a single opportunity by its ID.
      *
      * @param  int  $id  The Insightly opportunity ID.
      * @return array<string, mixed> The opportunity record.
      *
      * @see https://api.na1.insightly.com/v3.1/Help#!/Opportunities/GetEntity
      */
-    public function getDeal(int $id): array
+    public function getOpportunity(int $id): array
     {
-        return $this->request('GET', '/Opportunities/' . $id);
-    }
-
-    /**
-     * Create a new deal (opportunity) in Insightly.
-     *
-     * @param  array<string, mixed>  $data  Opportunity fields (e.g., OPPORTUNITY_NAME, BID_AMOUNT, etc.).
-     * @return array<string, mixed> The created opportunity record.
-     *
-     * @see https://api.na1.insightly.com/v3.1/Help#!/Opportunities/PostEntity
-     */
-    public function createDeal(array $data): array
-    {
-        return $this->request('POST', '/Opportunities', $data);
+        return $this->request('GET', '/v3.1/Opportunities/' . $id);
     }
 
     /**
@@ -175,24 +122,20 @@ class InsightlyService
      *
      * @param  int|null  $top  Maximum number of records to return.
      * @param  int|null  $skip  Number of records to skip for pagination.
-     * @param  string|null  $brief  Set to "true" for a reduced payload.
-     * @param  string|null  $orderBy  Order results by a field.
-     * @param  string|null  $filter  Insightly filter expression.
+     * @param  string|null  $status  Filter by project status (e.g., "In Progress", "Completed", "Scheduled").
      * @return array<int, array<string, mixed>> List of project records.
      *
      * @see https://api.na1.insightly.com/v3.1/Help#!/Projects/GetEntities
      */
-    public function listProjects(?int $top = null, ?int $skip = null, ?string $brief = null, ?string $orderBy = null, ?string $filter = null): array
+    public function listProjects(?int $top = null, ?int $skip = null, ?string $status = null): array
     {
         $params = array_filter([
             'top' => $top,
             'skip' => $skip,
-            'brief' => $brief,
-            'orderby' => $orderBy,
-            'filter' => $filter,
+            'status' => $status,
         ], fn ($value) => $value !== null);
 
-        return $this->request('GET', '/Projects', $params);
+        return $this->request('GET', '/v3.1/Projects', $params);
     }
 
     /**
@@ -204,14 +147,14 @@ class InsightlyService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/Users/me');
+        return $this->request('GET', '/v3.1/Users/me');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g., "/Contacts").
+     * @param  string  $path  API path (e.g., "/v3.1/Contacts").
      * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PUT).
      * @return array<string, mixed> Parsed JSON response.
      */
@@ -225,27 +168,28 @@ class InsightlyService
     /**
      * Make a raw HTTP request to the Insightly API.
      *
-     * Uses HTTP Basic authentication with the API key as the username and an empty password.
+     * Uses Bearer token authentication with the configured access token.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API path (e.g., "/Contacts").
+     * @param  string  $path  API path (e.g., "/v3.1/Contacts").
      * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PUT).
      * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
-     * @throws \RuntimeException If the API key is missing or the request fails.
+     * @throws \RuntimeException If the access token is missing or the request fails.
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->apiKey) {
-            throw new \RuntimeException('Insightly API key is not configured.');
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Insightly access token is not configured.');
         }
 
-        $url = $this->getBaseUrl() . $path;
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiKey, '')->timeout(30);
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
@@ -263,7 +207,7 @@ class InsightlyService
                     Log::warning("Insightly API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Insightly API endpoint not available (HTTP {$response->status()}). Check your region and API key.");
+                    throw new \RuntimeException("Insightly API endpoint not available (HTTP {$response->status()}). Check your base URL and access token.");
                 }
 
                 $error = $response->json('ErrorMessage') ?? $response->json('error') ?? $body;

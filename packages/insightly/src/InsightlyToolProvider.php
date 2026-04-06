@@ -6,22 +6,20 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyCreateContact;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyCreateDeal;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyGetContact;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyGetDeal;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyGetCurrentUser;
 use OpenCompany\Integrations\Insightly\Tools\InsightlyListContacts;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyListDeals;
+use OpenCompany\Integrations\Insightly\Tools\InsightlyGetContact;
+use OpenCompany\Integrations\Insightly\Tools\InsightlyCreateContact;
+use OpenCompany\Integrations\Insightly\Tools\InsightlyListOpportunities;
+use OpenCompany\Integrations\Insightly\Tools\InsightlyGetOpportunity;
 use OpenCompany\Integrations\Insightly\Tools\InsightlyListProjects;
-use OpenCompany\Integrations\Insightly\Tools\InsightlyUpdateContact;
+use OpenCompany\Integrations\Insightly\Tools\InsightlyGetCurrentUser;
 
 /**
  * Tool provider for the Insightly CRM integration.
  *
  * Implements ConfigurableIntegration for multi-account support with
- * api_key and region configuration. Provides 9 tools for managing
- * contacts, deals (opportunities), projects, and user info.
+ * access_token and base_url configuration. Provides 7 tools for managing
+ * contacts, opportunities, projects, and user info.
  */
 class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -41,7 +39,7 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, deals, projects',
+            'label' => 'contacts, opportunities, projects',
             'description' => 'CRM & project management',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:insightly',
@@ -57,10 +55,10 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Insightly CRM',
-            'description' => 'CRM platform for managing contacts, deals, and projects',
+            'description' => 'CRM platform for managing contacts, opportunities, and projects',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:insightly',
-            'category' => 'crm',
+            'category' => 'sales',
             'badge' => 'verified',
             'docs_url' => 'https://api.na1.insightly.com/v3.1/Help',
         ];
@@ -69,7 +67,7 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     /**
      * Get the configuration schema for the Insightly integration.
      *
-     * Defines the api_key and region fields required to connect to the Insightly API.
+     * Defines the access_token and base_url fields required to connect to the Insightly API.
      *
      * @return array<int, array<string, mixed>> Configuration field definitions.
      */
@@ -77,25 +75,20 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_key',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Insightly API key',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Insightly API access token',
                 'hint' => 'Find your API key in Insightly under <strong>User Settings &gt; API Keys</strong>',
                 'required' => true,
             ],
             [
-                'key' => 'region',
-                'type' => 'select',
-                'label' => 'API Region',
-                'hint' => 'Select the region that matches your Insightly account. Find it in your Insightly URL (e.g., <code>na1</code> from <code>na1.insightly.com</code>).',
-                'required' => true,
-                'default' => 'na1',
-                'options' => [
-                    ['value' => 'na1', 'label' => 'North America (na1)'],
-                    ['value' => 'eu1', 'label' => 'Europe (eu1)'],
-                    ['value' => 'au1', 'label' => 'Australia (au1)'],
-                ],
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.na1.insightly.com',
+                'hint' => 'The base URL for your Insightly API. Defaults to <code>https://api.na1.insightly.com</code>. Change if using a different region.',
+                'default' => 'https://api.na1.insightly.com',
             ],
         ];
     }
@@ -103,24 +96,23 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     /**
      * Test the connection to the Insightly API using the provided configuration.
      *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_key' and 'region'.
+     * @param  array<string, mixed>  $config  Configuration containing 'access_token' and 'base_url'.
      * @return array{success: bool, message?: string, error?: string} Connection test result.
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $region = $config['region'] ?? 'na1';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.na1.insightly.com', '/');
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
-            $baseUrl = 'https://api.' . $region . '.insightly.com/v3.1';
-
             $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->withBasicAuth($apiKey, '')->timeout(10)->get($baseUrl . '/Users/me');
+            ])->timeout(10)->get($baseUrl . '/v3.1/Users/me');
 
             if ($response->successful()) {
                 $user = $response->json();
@@ -128,13 +120,13 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
 
                 return [
                     'success' => true,
-                    'message' => "Connected to Insightly API ({$region}) as {$name}.",
+                    'message' => "Connected to Insightly API as {$name}.",
                 ];
             }
 
             return [
                 'success' => false,
-                'error' => "API returned HTTP {$response->status()}. Check your API key and region.",
+                'error' => "API returned HTTP {$response->status()}. Check your access token and base URL.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -149,8 +141,8 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
-            'region' => 'nullable|string|in:na1,eu1,au1',
+            'access_token' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
@@ -183,33 +175,19 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Create a new contact in Insightly.',
                 'icon' => 'ph:user-plus',
             ],
-            'insightly_update_contact' => [
-                'class' => InsightlyUpdateContact::class,
-                'type' => 'write',
-                'name' => 'Update Contact',
-                'description' => 'Update an existing contact in Insightly.',
-                'icon' => 'ph:pencil',
-            ],
-            'insightly_list_deals' => [
-                'class' => InsightlyListDeals::class,
+            'insightly_list_opportunities' => [
+                'class' => InsightlyListOpportunities::class,
                 'type' => 'read',
-                'name' => 'List Deals',
-                'description' => 'List deals (opportunities) from Insightly.',
+                'name' => 'List Opportunities',
+                'description' => 'List opportunities from Insightly.',
                 'icon' => 'ph:handshake',
             ],
-            'insightly_get_deal' => [
-                'class' => InsightlyGetDeal::class,
+            'insightly_get_opportunity' => [
+                'class' => InsightlyGetOpportunity::class,
                 'type' => 'read',
-                'name' => 'Get Deal',
-                'description' => 'Get a single deal (opportunity) by ID.',
+                'name' => 'Get Opportunity',
+                'description' => 'Get a single opportunity by ID.',
                 'icon' => 'ph:handshake',
-            ],
-            'insightly_create_deal' => [
-                'class' => InsightlyCreateDeal::class,
-                'type' => 'write',
-                'name' => 'Create Deal',
-                'description' => 'Create a new deal (opportunity) in Insightly.',
-                'icon' => 'ph:plus',
             ],
             'insightly_list_projects' => [
                 'class' => InsightlyListProjects::class,
@@ -222,7 +200,7 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => InsightlyGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Insightly user.',
+                'description' => 'Get the authenticated user\'s profile.',
                 'icon' => 'ph:identification-card',
             ],
         ];
@@ -244,8 +222,8 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'region', 'type' => 'select', 'label' => 'API Region', 'required' => true, 'default' => 'na1'],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.na1.insightly.com'],
         ];
     }
 
@@ -272,8 +250,8 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             $service = new InsightlyService(
-                apiKey: $creds->get('insightly', 'api_key', '', $account),
-                region: $creds->get('insightly', 'region', 'na1', $account),
+                accessToken: $creds->get('insightly', 'access_token', '', $account),
+                baseUrl: $creds->get('insightly', 'base_url', 'https://api.na1.insightly.com', $account),
             );
 
             return new $class($service);

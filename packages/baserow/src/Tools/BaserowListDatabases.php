@@ -7,7 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all Baserow databases (applications) accessible to the token.
+ * List all databases (applications) in the Baserow workspace.
+ *
+ * Returns a paginated list of databases including their names, IDs,
+ * and associated workspace information.
  */
 class BaserowListDatabases implements Tool
 {
@@ -22,31 +25,28 @@ class BaserowListDatabases implements Tool
 
     public function description(): string
     {
-        return 'List all Baserow databases (applications) accessible to the current token.';
+        return 'List all databases (applications) in the Baserow workspace. Returns database names, IDs, and types for navigation.';
     }
 
     public function parameters(): array
     {
         return [
-            'type' => ['type' => 'string', 'description' => 'Filter by application type, e.g. "database".'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (1-based). Defaults to 1.'],
+            'size' => ['type' => 'integer', 'description' => 'Number of databases per page. Defaults to 100.'],
         ];
     }
 
-    /**
-     * Execute the list databases tool.
-     *
-     * @param  array<string, mixed> $args Tool arguments
-     * @return ToolResult
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Baserow integration is not configured.');
             }
 
-            $type  = $args['type'] ?? null;
-            $result = $this->service->listDatabases($type);
+            $page = isset($args['page']) ? (int) $args['page'] : 1;
+            $size = isset($args['size']) ? (int) $args['size'] : 100;
+
+            $result = $this->service->listDatabases($page, $size);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Ashby\AshbyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a single application from Ashby ATS.
+ *
+ * Retrieves full application details including candidate information,
+ * application status, and associated job data.
+ */
 class AshbyGetApplication implements Tool
 {
     public function __construct(
@@ -19,13 +25,13 @@ class AshbyGetApplication implements Tool
 
     public function description(): string
     {
-        return 'Get detailed information about a specific application in Ashby, including candidate details, application form answers, current stage, evaluation scores, and activity history.';
+        return 'Get detailed information about a specific job application in Ashby, including candidate details, status, and evaluation data.';
     }
 
     public function parameters(): array
     {
         return [
-            'application_id' => ['type' => 'string', 'required' => true, 'description' => 'The Ashby application ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The application ID.'],
         ];
     }
 
@@ -36,9 +42,11 @@ class AshbyGetApplication implements Tool
                 return ToolResult::error('Ashby integration is not configured.');
             }
 
-            $result = $this->service->getApplication([
-                'applicationId' => $args['application_id'],
-            ]);
+            if (empty($args['id'])) {
+                return ToolResult::error('Application ID is required.');
+            }
+
+            $result = $this->service->getApplication($args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

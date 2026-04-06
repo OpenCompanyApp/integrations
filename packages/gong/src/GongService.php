@@ -103,6 +103,28 @@ class GongService
     }
 
     /**
+     * List transcripts from Gong.
+     *
+     * @param  array  $filters  Optional query parameters (page, limit, downloadDate, callType, status).
+     * @return array The API response containing transcript objects.
+     */
+    public function listTranscripts(array $filters = []): array
+    {
+        return $this->request('GET', '/v1/transcripts', $filters);
+    }
+
+    /**
+     * Get a single transcript by its ID.
+     *
+     * @param  string  $transcriptId  The unique transcript identifier.
+     * @return array The transcript object.
+     */
+    public function getTranscript(string $transcriptId): array
+    {
+        return $this->request('GET', '/v1/transcripts/' . urlencode($transcriptId));
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  The HTTP method (GET, POST, PUT, DELETE).

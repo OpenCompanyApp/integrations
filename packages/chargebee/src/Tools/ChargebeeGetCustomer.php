@@ -8,6 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Tool to retrieve a single customer from Chargebee by ID.
+ *
+ * Returns detailed customer information including contact details,
+ * billing address, and payment method.
  */
 class ChargebeeGetCustomer implements Tool
 {

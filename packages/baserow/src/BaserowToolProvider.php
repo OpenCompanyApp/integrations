@@ -3,28 +3,17 @@
 namespace OpenCompany\Integrations\Baserow;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Baserow\Tools\BaserowBatchCreate;
-use OpenCompany\Integrations\Baserow\Tools\BaserowBatchDelete;
-use OpenCompany\Integrations\Baserow\Tools\BaserowBatchUpdate;
-use OpenCompany\Integrations\Baserow\Tools\BaserowCreateRow;
-use OpenCompany\Integrations\Baserow\Tools\BaserowDeleteRow;
-use OpenCompany\Integrations\Baserow\Tools\BaserowGetRow;
-use OpenCompany\Integrations\Baserow\Tools\BaserowGetTable;
-use OpenCompany\Integrations\Baserow\Tools\BaserowListDatabases;
-use OpenCompany\Integrations\Baserow\Tools\BaserowListFields;
-use OpenCompany\Integrations\Baserow\Tools\BaserowListRows;
 use OpenCompany\Integrations\Baserow\Tools\BaserowListTables;
+use OpenCompany\Integrations\Baserow\Tools\BaserowGetRow;
+use OpenCompany\Integrations\Baserow\Tools\BaserowCreateRow;
 use OpenCompany\Integrations\Baserow\Tools\BaserowUpdateRow;
+use OpenCompany\Integrations\Baserow\Tools\BaserowDeleteRow;
+use OpenCompany\Integrations\Baserow\Tools\BaserowListDatabases;
+use OpenCompany\Integrations\Baserow\Tools\BaserowGetCurrentUser;
 
-/**
- * Registers all Baserow tools and provides integration metadata.
- *
- * Exposes 12 tools covering rows (CRUD + batch), tables, fields,
- * and databases via the ToolProvider contract.
- */
 class BaserowToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -35,8 +24,8 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'databases, tables, rows, fields',
-            'description' => 'Database',
+            'label' => 'databases, tables, rows',
+            'description' => 'Database management',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:baserow',
         ];
@@ -46,7 +35,7 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Baserow',
-            'description' => 'Databases, tables, fields, and rows',
+            'description' => 'No-code database and Airtable alternative',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:baserow',
             'category' => 'database',
@@ -59,178 +48,140 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_token',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'API Token',
-                'placeholder' => 'your-baserow-api-token',
-                'hint' => 'A Baserow API token (JWT or permanent database token). Find it in your profile settings or generate one per database.',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Baserow access token',
+                'hint' => 'Generate a personal access token in your Baserow account settings under "Personal access tokens"',
                 'required' => true,
             ],
             [
-                'key' => 'base_url',
-                'type' => 'text',
-                'label' => 'Base URL',
-                'placeholder' => 'https://api.baserow.io/api',
-                'hint' => 'The base URL of your Baserow instance API. Change this for self-hosted instances.',
-                'required' => false,
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'Instance URL',
+                'placeholder' => 'https://api.baserow.io',
+                'hint' => 'Use <code>https://api.baserow.io</code> for cloud, or your self-hosted API URL',
+                'default' => 'https://api.baserow.io',
             ],
         ];
     }
 
-    /**
-     * Test the Baserow connection using the provided credentials.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_token' and optionally 'base_url'
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
-        $baseUrl  = $config['base_url'] ?? 'https://api.baserow.io/api';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.baserow.io', '/');
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided. Generate one in your Baserow profile or database settings.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
-            $url = rtrim($baseUrl, '/') . '/applications/';
-
             $response = Http::withHeaders([
-                'Authorization' => 'Token ' . $apiToken,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($url);
+            ])->timeout(10)->get($baseUrl . '/api/user/');
 
-            if ($response->failed()) {
+            $json = $response->json();
+
+            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => 'Baserow API error (' . $response->status() . '): ' . $response->body(),
+                    'error' => "Could not reach Baserow API at {$baseUrl}. Check the URL.",
                 ];
             }
 
-            $body   = $response->json() ?? [];
-            $count  = is_array($body) ? count($body) : 0;
+            if (!$response->successful()) {
+                $error = $json['error'] ?? $json['detail'] ?? 'Unknown error';
+                return [
+                    'success' => false,
+                    'error' => "Baserow API error: {$error}",
+                ];
+            }
+
+            $userName = $json['first_name'] ?? $json['username'] ?? $json['email'] ?? 'User';
 
             return [
                 'success' => true,
-                'message' => "Connected to Baserow successfully. Found {$count} application(s).",
+                'message' => "Connected to Baserow API as {$userName}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
-            'api_token' => 'nullable|string',
-            'base_url'  => 'nullable|string|url',
+            'access_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
     public function tools(): array
     {
         return [
-            // Rows
-            'baserow_list_rows' => [
-                'class' => BaserowListRows::class,
+            'baserow_list_tables' => [
+                'class' => BaserowListTables::class,
                 'type' => 'read',
-                'name' => 'List Rows',
-                'description' => 'List rows in a Baserow table with optional filtering and pagination.',
-                'icon' => 'ph:list',
+                'name' => 'List Table Rows',
+                'description' => 'List rows in a Baserow database table with pagination and filtering.',
+                'icon' => 'ph:table',
             ],
             'baserow_get_row' => [
                 'class' => BaserowGetRow::class,
                 'type' => 'read',
                 'name' => 'Get Row',
-                'description' => 'Get a single Baserow row by ID.',
+                'description' => 'Get a single row from a Baserow database table.',
                 'icon' => 'ph:rows',
             ],
             'baserow_create_row' => [
                 'class' => BaserowCreateRow::class,
                 'type' => 'write',
                 'name' => 'Create Row',
-                'description' => 'Create a new row in a Baserow table.',
-                'icon' => 'ph:plus-circle',
+                'description' => 'Create a new row in a Baserow database table.',
+                'icon' => 'ph:plus',
             ],
             'baserow_update_row' => [
                 'class' => BaserowUpdateRow::class,
                 'type' => 'write',
                 'name' => 'Update Row',
-                'description' => 'Update an existing Baserow row.',
-                'icon' => 'ph:pencil-simple',
+                'description' => 'Update an existing row in a Baserow database table.',
+                'icon' => 'ph:pencil',
             ],
             'baserow_delete_row' => [
                 'class' => BaserowDeleteRow::class,
                 'type' => 'write',
                 'name' => 'Delete Row',
-                'description' => 'Delete a Baserow row.',
+                'description' => 'Delete a row from a Baserow database table.',
                 'icon' => 'ph:trash',
-            ],
-            // Batch operations
-            'baserow_batch_create' => [
-                'class' => BaserowBatchCreate::class,
-                'type' => 'write',
-                'name' => 'Batch Create Rows',
-                'description' => 'Create multiple rows in a Baserow table at once.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'baserow_batch_update' => [
-                'class' => BaserowBatchUpdate::class,
-                'type' => 'write',
-                'name' => 'Batch Update Rows',
-                'description' => 'Update multiple rows in a Baserow table at once.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'baserow_batch_delete' => [
-                'class' => BaserowBatchDelete::class,
-                'type' => 'write',
-                'name' => 'Batch Delete Rows',
-                'description' => 'Delete multiple rows from a Baserow table at once.',
-                'icon' => 'ph:trash',
-            ],
-            // Tables & Databases
-            'baserow_list_tables' => [
-                'class' => BaserowListTables::class,
-                'type' => 'read',
-                'name' => 'List Tables',
-                'description' => 'List all tables in a Baserow database.',
-                'icon' => 'ph:table',
             ],
             'baserow_list_databases' => [
                 'class' => BaserowListDatabases::class,
                 'type' => 'read',
                 'name' => 'List Databases',
-                'description' => 'List all Baserow databases (applications).',
+                'description' => 'List all databases (applications) in the Baserow workspace.',
                 'icon' => 'ph:database',
             ],
-            'baserow_get_table' => [
-                'class' => BaserowGetTable::class,
+            'baserow_get_current_user' => [
+                'class' => BaserowGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Table',
-                'description' => 'Get details for a Baserow table.',
-                'icon' => 'ph:table',
-            ],
-            'baserow_list_fields' => [
-                'class' => BaserowListFields::class,
-                'type' => 'read',
-                'name' => 'List Fields',
-                'description' => 'List all fields in a Baserow table.',
-                'icon' => 'ph:columns',
+                'name' => 'Get Current User',
+                'description' => 'Get the currently authenticated Baserow user profile.',
+                'icon' => 'ph:user',
             ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
-        return dirname(__DIR__) . '/lua-docs/baserow.md';
+        return __DIR__ . '/../lua-docs/baserow.md';
     }
 
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-            ['key' => 'base_url', 'type' => 'text', 'label' => 'Base URL', 'required' => false],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Baserow API URL', 'required' => false, 'default' => 'https://api.baserow.io'],
         ];
     }
 
@@ -239,36 +190,21 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /**
-     * Create a tool instance with an injected service.
-     *
-     * @param  string $class  Fully-qualified tool class name
-     * @param  array<string, mixed> $context Optional context (supports 'account' for multi-tenant)
-     * @return Tool
-     */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the BaserowService, with optional account-specific credentials.
-     *
-     * @param  array<string, mixed>  $context
-     */
-    private function resolveService(array $context = []): BaserowService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new BaserowService(
-                apiToken: $creds->get('baserow', 'api_token', '', $account),
-                baseUrl:  $creds->get('baserow', 'base_url', 'https://api.baserow.io/api', $account),
+            $service = new BaserowService(
+                accessToken: $creds->get('baserow', 'access_token', '', $account),
+                baseUrl: $creds->get('baserow', 'url', 'https://api.baserow.io', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(BaserowService::class);
+        return new $class(app(BaserowService::class));
     }
 }

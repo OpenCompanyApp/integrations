@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Ashby\AshbyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List jobs from Ashby ATS.
+ *
+ * Supports pagination and filtering by status. Returns job postings
+ * with titles, departments, and application counts.
+ */
 class AshbyListJobs implements Tool
 {
     public function __construct(
@@ -19,16 +25,15 @@ class AshbyListJobs implements Tool
 
     public function description(): string
     {
-        return 'List jobs from Ashby. Returns job postings with their titles, statuses, departments, and locations. Supports filtering by status, department, and pagination.';
+        return 'List job postings in Ashby. Returns open and closed positions with department, location, and application count. Filter by status to find active openings.';
     }
 
     public function parameters(): array
     {
         return [
-            'status' => ['type' => 'string', 'description' => 'Filter by job status: "open", "closed", "draft", "archived". Omit to list all.'],
-            'department_id' => ['type' => 'string', 'description' => 'Filter by department ID.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of jobs to return per page (default: 50, max: 200).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of jobs to return (default: 100).'],
             'offset' => ['type' => 'integer', 'description' => 'Number of results to skip for pagination.'],
+            'status' => ['type' => 'string', 'description' => 'Filter by job status (e.g., "open", "closed", "draft").'],
         ];
     }
 
@@ -39,22 +44,11 @@ class AshbyListJobs implements Tool
                 return ToolResult::error('Ashby integration is not configured.');
             }
 
-            $body = [];
-
-            if (isset($args['status'])) {
-                $body['status'] = $args['status'];
-            }
-            if (isset($args['department_id'])) {
-                $body['departmentId'] = $args['department_id'];
-            }
-            if (isset($args['limit'])) {
-                $body['limit'] = (int) $args['limit'];
-            }
-            if (isset($args['offset'])) {
-                $body['offset'] = (int) $args['offset'];
-            }
-
-            $result = $this->service->listJobs($body);
+            $result = $this->service->listJobs(
+                limit: isset($args['limit']) ? (int) $args['limit'] : null,
+                offset: isset($args['offset']) ? (int) $args['offset'] : null,
+                status: $args['status'] ?? null,
+            );
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

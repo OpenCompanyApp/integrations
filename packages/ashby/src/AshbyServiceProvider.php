@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Laravel service provider for the Ashby ATS integration.
+ *
+ * Registers the AshbyService singleton and bootstraps the tool provider
+ * into the ToolProviderRegistry for auto-discovery.
+ */
 class AshbyServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -14,7 +20,7 @@ class AshbyServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new AshbyService(
-                apiKey: $creds->get('ashby', 'api_key', ''),
+                accessToken: $creds->get('ashby', 'access_token', ''),
                 baseUrl: $creds->get('ashby', 'url', 'https://api.ashbyhq.com'),
             );
         });

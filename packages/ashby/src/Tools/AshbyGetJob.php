@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Ashby\AshbyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a single job from Ashby ATS.
+ *
+ * Retrieves full job details including title, description,
+ * department, location, compensation, and application stats.
+ */
 class AshbyGetJob implements Tool
 {
     public function __construct(
@@ -19,13 +25,13 @@ class AshbyGetJob implements Tool
 
     public function description(): string
     {
-        return 'Get detailed information about a specific job in Ashby, including description, requirements, compensation, and application form configuration.';
+        return 'Get detailed information about a specific job in Ashby, including full description, requirements, compensation, and hiring team.';
     }
 
     public function parameters(): array
     {
         return [
-            'job_id' => ['type' => 'string', 'required' => true, 'description' => 'The Ashby job ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The job ID.'],
         ];
     }
 
@@ -36,9 +42,11 @@ class AshbyGetJob implements Tool
                 return ToolResult::error('Ashby integration is not configured.');
             }
 
-            $result = $this->service->getJob([
-                'jobId' => $args['job_id'],
-            ]);
+            if (empty($args['id'])) {
+                return ToolResult::error('Job ID is required.');
+            }
+
+            $result = $this->service->getJob($args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

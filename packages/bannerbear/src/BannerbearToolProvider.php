@@ -13,6 +13,8 @@ use OpenCompany\Integrations\Bannerbear\Tools\BannerbearGetCurrentUser;
 use OpenCompany\Integrations\Bannerbear\Tools\BannerbearGetImage;
 use OpenCompany\Integrations\Bannerbear\Tools\BannerbearGetTemplate;
 use OpenCompany\Integrations\Bannerbear\Tools\BannerbearGetVideo;
+use OpenCompany\Integrations\Bannerbear\Tools\BannerbearListCollections;
+use OpenCompany\Integrations\Bannerbear\Tools\BannerbearListImages;
 use OpenCompany\Integrations\Bannerbear\Tools\BannerbearListTemplates;
 
 class BannerbearToolProvider implements ToolProvider, ConfigurableIntegration
@@ -39,7 +41,7 @@ class BannerbearToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Automated image, video, and GIF generation from templates',
             'icon' => 'ph:image',
             'logo' => 'simple-icons:bannerbear',
-            'category' => 'design',
+            'category' => 'media',
             'badge' => 'verified',
             'docs_url' => 'https://developers.bannerbear.com/',
         ];
@@ -134,6 +136,20 @@ class BannerbearToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'Get Image',
                 'description' => 'Retrieve the status and URL of a previously created image.',
                 'icon' => 'ph:image',
+            ],
+            'bannerbear_list_images' => [
+                'class' => BannerbearListImages::class,
+                'type' => 'read',
+                'name' => 'List Images',
+                'description' => 'List previously created Bannerbear images with pagination.',
+                'icon' => 'ph:images',
+            ],
+            'bannerbear_list_collections' => [
+                'class' => BannerbearListCollections::class,
+                'type' => 'read',
+                'name' => 'List Collections',
+                'description' => 'List Bannerbear collections with pagination.',
+                'icon' => 'ph:folder',
             ],
             'bannerbear_create_video' => [
                 'class' => BannerbearCreateVideo::class,

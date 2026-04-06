@@ -43,6 +43,8 @@ return [
 |------|------|-------------|
 | `bannerbear_create_image` | write | Generate an image from a template with custom modifications |
 | `bannerbear_get_image` | read | Check image status and get download URL |
+| `bannerbear_list_images` | read | List previously created images with pagination |
+| `bannerbear_list_collections` | read | List Bannerbear collections with pagination |
 | `bannerbear_create_video` | write | Generate a video from a template |
 | `bannerbear_get_video` | read | Check video status and get download URL |
 | `bannerbear_list_templates` | read | List all available templates |

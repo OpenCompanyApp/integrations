@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to list invoices from Chargebee with optional filtering.
+ * Tool to list invoices from Chargebee with optional filtering and pagination.
  *
- * Supports pagination and filtering by status and date range.
+ * Supports filtering by invoice status and cursor-based pagination.
  */
 class ChargebeeListInvoices implements Tool
 {
@@ -35,7 +35,7 @@ class ChargebeeListInvoices implements Tool
      */
     public function description(): string
     {
-        return 'List invoices from Chargebee. Supports filtering by status (paid, posted, payment_due, not_paid, voided, pending) and date range.';
+        return 'List invoices from Chargebee. Supports filtering by status (paid, posted, payment_due, not_paid, voided, pending) and pagination.';
     }
 
     /**
@@ -45,10 +45,8 @@ class ChargebeeListInvoices implements Tool
     {
         return [
             'limit' => ['type' => 'integer', 'description' => 'Number of invoices to return per page (max 100, default 10).'],
-            'offset' => ['type' => 'string', 'description' => 'Pagination offset — pass the value from a previous response to get the next page.'],
+            'page' => ['type' => 'string', 'description' => 'Pagination cursor — pass the value from a previous response to get the next page.'],
             'status' => ['type' => 'string', 'description' => 'Filter by invoice status: paid, posted, payment_due, not_paid, voided, pending.'],
-            'date_after' => ['type' => 'string', 'description' => 'Filter invoices on or after this date (YYYY-MM-DD or Unix timestamp).'],
-            'date_before' => ['type' => 'string', 'description' => 'Filter invoices on or before this date (YYYY-MM-DD or Unix timestamp).'],
         ];
     }
 
@@ -66,10 +64,8 @@ class ChargebeeListInvoices implements Tool
 
             $result = $this->service->listInvoices(
                 limit: isset($args['limit']) ? (int) $args['limit'] : null,
-                offset: $args['offset'] ?? null,
+                page: $args['page'] ?? null,
                 status: $args['status'] ?? null,
-                dateAfter: $args['date_after'] ?? null,
-                dateBefore: $args['date_before'] ?? null,
             );
 
             $invoices = $result['list'] ?? [];
@@ -85,7 +81,7 @@ class ChargebeeListInvoices implements Tool
             ];
 
             if ($nextOffset !== null) {
-                $response['next_offset'] = $nextOffset;
+                $response['next_page'] = $nextOffset;
             }
 
             return ToolResult::success($response);

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-wrike",
-    "description": "Wrike integration for OpenCompany — tasks, folders, spaces, contacts, and comments.",
+    "description": "Wrike integration for OpenCompany — tasks, projects, and folders.",
     "license": "MIT",
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
     "keywords": ["tools", "wrike", "tasks", "project-management", "opencompany"],

@@ -6,54 +6,31 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Tool to list all Netlify sites the authenticated user has access to.
- *
- * Returns an array of site objects including id, name, url, and other metadata.
- */
 class NetlifyListSites implements Tool
 {
-    /**
-     * Create a new NetlifyListSites tool instance.
-     */
     public function __construct(
         private NetlifyService $service,
     ) {}
 
-    /**
-     * Get the tool name used for registration and invocation.
-     */
     public function name(): string
     {
         return 'netlify_list_sites';
     }
 
-    /**
-     * Get the tool description shown to AI agents.
-     */
     public function description(): string
     {
-        return 'List all Netlify sites the authenticated user has access to. Returns site IDs, names, URLs, and deployment status.';
+        return 'List all Netlify sites. Returns site IDs, names, URLs, and build status. Use this to discover site identifiers needed for deploy and form operations.';
     }
 
-    /**
-     * Get the tool parameter definitions.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based, default: 1).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of sites per page (max 100, default: 20).'],
+            'name' => ['type' => 'string', 'description' => 'Filter by site name.'],
+            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of sites per page (default: 30).'],
         ];
     }
 
-    /**
-     * Execute the tool and return the result.
-     *
-     * @param  array<string, mixed>  $args
-     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -61,12 +38,38 @@ class NetlifyListSites implements Tool
                 return ToolResult::error('Netlify integration is not configured.');
             }
 
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
-            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 20;
+            $params = [];
+            if (isset($args['name'])) {
+                $params['name'] = $args['name'];
+            }
+            if (isset($args['page'])) {
+                $params['page'] = (int) $args['page'];
+            }
+            if (isset($args['per_page'])) {
+                $params['per_page'] = (int) $args['per_page'];
+            }
 
-            $result = $this->service->listSites($page, $perPage);
+            $result = $this->service->listSites($params);
 
-            return ToolResult::success($result);
+            $sites = array_map(function (array $site): array {
+                return [
+                    'id' => $site['id'] ?? null,
+                    'name' => $site['name'] ?? null,
+                    'url' => $site['url'] ?? null,
+                    'ssl_url' => $site['ssl_url'] ?? null,
+                    'state' => $site['state'] ?? null,
+                    'updated_at' => $site['updated_at'] ?? null,
+                    'build_settings' => [
+                        'repo' => $site['build_settings']['repo_url'] ?? null,
+                        'branch' => $site['build_settings']['repo_branch'] ?? null,
+                    ],
+                ];
+            }, is_array($result) ? $result : []);
+
+            return ToolResult::success([
+                'sites' => $sites,
+                'total' => count($sites),
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

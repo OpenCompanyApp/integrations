@@ -6,55 +6,31 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Tool to list deploys for a Netlify site.
- *
- * Returns an array of deploy objects with status, branch, commit info, and timestamps.
- */
 class NetlifyListDeploys implements Tool
 {
-    /**
-     * Create a new NetlifyListDeploys tool instance.
-     */
     public function __construct(
         private NetlifyService $service,
     ) {}
 
-    /**
-     * Get the tool name used for registration and invocation.
-     */
     public function name(): string
     {
         return 'netlify_list_deploys';
     }
 
-    /**
-     * Get the tool description shown to AI agents.
-     */
     public function description(): string
     {
-        return 'List deploys for a Netlify site. Returns deploy status, branch, commit SHA, and timestamps for each deployment.';
+        return 'List deploys for a Netlify site. Returns deploy IDs, states, branches, and commit references.';
     }
 
-    /**
-     * Get the tool parameter definitions.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
-            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The Netlify site ID.'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-based, default: 1).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of deploys per page (max 100, default: 20).'],
+            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The site identifier.'],
+            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of deploys per page (default: 30).'],
         ];
     }
 
-    /**
-     * Execute the tool and return the result.
-     *
-     * @param  array<string, mixed>  $args
-     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -62,13 +38,38 @@ class NetlifyListDeploys implements Tool
                 return ToolResult::error('Netlify integration is not configured.');
             }
 
-            $siteId = $args['site_id'];
-            $page = isset($args['page']) ? (int) $args['page'] : 1;
-            $perPage = isset($args['per_page']) ? (int) $args['per_page'] : 20;
+            $siteId = $args['site_id'] ?? '';
+            if (empty($siteId)) {
+                return ToolResult::error('site_id is required.');
+            }
 
-            $result = $this->service->listDeploys($siteId, $page, $perPage);
+            $params = [];
+            if (isset($args['page'])) {
+                $params['page'] = (int) $args['page'];
+            }
+            if (isset($args['per_page'])) {
+                $params['per_page'] = (int) $args['per_page'];
+            }
 
-            return ToolResult::success($result);
+            $result = $this->service->listDeploys($siteId, $params);
+
+            $deploys = array_map(function (array $deploy): array {
+                return [
+                    'id' => $deploy['id'] ?? null,
+                    'state' => $deploy['state'] ?? null,
+                    'branch' => $deploy['branch'] ?? null,
+                    'commit_ref' => $deploy['commit_ref'] ?? null,
+                    'title' => $deploy['title'] ?? null,
+                    'created_at' => $deploy['created_at'] ?? null,
+                    'updated_at' => $deploy['updated_at'] ?? null,
+                    'deploy_time' => $deploy['deploy_time'] ?? null,
+                ];
+            }, is_array($result) ? $result : []);
+
+            return ToolResult::success([
+                'deploys' => $deploys,
+                'total' => count($deploys),
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

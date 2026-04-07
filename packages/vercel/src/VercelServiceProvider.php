@@ -3,8 +3,8 @@
 namespace OpenCompany\Integrations\Vercel;
 
 use Illuminate\Support\ServiceProvider;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
+use OpenCompany\Integrations\Core\Contracts\CredentialResolver;
+use OpenCompany\Integrations\Core\Support\ToolProviderRegistry;
 
 class VercelServiceProvider extends ServiceProvider
 {
@@ -12,19 +12,14 @@ class VercelServiceProvider extends ServiceProvider
     {
         $this->app->singleton(VercelService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
-
-            return new VercelService(
-                accessToken: $creds->get('vercel', 'access_token', ''),
-                baseUrl: $creds->get('vercel', 'base_url', 'https://api.vercel.com'),
-            );
+            return new VercelService(token: $creds->get('vercel', 'token', ''));
         });
     }
 
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new VercelToolProvider());
+            $this->app->make(ToolProviderRegistry::class)->register(new VercelToolProvider());
         }
     }
 }

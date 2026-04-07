@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-netlify",
-    "description": "Netlify integration for Laravel — manage sites, deploys, and forms via the Netlify API.",
+    "description": "Netlify integration for Laravel — manage sites, deploys, forms, and DNS zones.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "netlify", "hosting", "deploy", "opencompany"],
+    "keywords": ["tools", "netlify", "deployment", "productivity", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

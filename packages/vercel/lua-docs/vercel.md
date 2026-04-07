@@ -1,223 +1,151 @@
-# Vercel — Lua API Reference
+# Vercel Integration
 
-## list_deployments
+The Vercel integration provides tools to manage your Vercel projects, deployments, domains, and teams.
 
-List deployments from Vercel. Optionally filter by project or state.
+## Authentication
 
-### Parameters
+You need a **Vercel API token** (Bearer token). Generate one at [vercel.com/account/tokens](https://vercel.com/account/tokens).
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | string | no | Filter deployments to a specific project |
-| `state` | string | no | Filter by state: QUEUED, BUILDING, READY, ERROR, CANCELED |
-| `limit` | integer | no | Max results (default: 20, max: 100) |
-| `from` | string | no | Pagination cursor from a previous response |
-
-### Examples
-
-```lua
--- List recent deployments
-local result = app.integrations.vercel.list_deployments({
-  limit = 10
-})
-
-for _, deploy in ipairs(result.deployments) do
-  print(deploy.id .. " - " .. deploy.state .. " - " .. deploy.url)
-end
-
--- Filter by project
-local result = app.integrations.vercel.list_deployments({
-  project_id = "my-project-id",
-  limit = 5
-})
-
--- Filter by state
-local result = app.integrations.vercel.list_deployments({
-  state = "ERROR",
-  limit = 10
-})
-```
+The token is sent as a `Bearer` header on every request. Ensure it has the scopes required for the operations you plan to use.
 
 ---
 
-## get_deployment
+## Projects
 
-Get detailed information about a specific deployment.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The deployment ID (e.g., `"dpl_xxxxxxxxxxxxxxxxxxxx"`) |
-
-### Examples
+### List Projects
 
 ```lua
-local result = app.integrations.vercel.get_deployment({
-  id = "dpl_xxxxxxxxxxxxxxxxxxxx"
-})
-
-print("State: " .. result.state)
-print("URL: " .. result.url)
-print("Framework: " .. (result.framework or "none"))
-```
-
----
-
-## list_projects
-
-List all Vercel projects.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 20, max: 100) |
-| `from` | string | no | Pagination cursor from a previous response |
-
-### Examples
-
-```lua
-local result = app.integrations.vercel.list_projects({
-  limit = 50
-})
-
-for _, project in ipairs(result.projects) do
-  print(project.id .. " - " .. project.name .. " (" .. (project.framework or "static") .. ")")
-end
-```
-
----
-
-## get_project
-
-Get detailed information about a specific Vercel project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The project ID or name |
-
-### Examples
-
-```lua
-local result = app.integrations.vercel.get_project({
-  id = "my-project-id"
-})
-
-print("Name: " .. result.name)
-print("Framework: " .. (result.framework or "none"))
-print("Link: " .. (result.link.repo or "none"))
-```
-
----
-
-## create_deployment
-
-Create a new deployment on Vercel.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Project name (must match existing Vercel project) |
-| `files` | array | no* | Array of file objects with `file` (path) and `content` (base64 or sha+size) |
-| `git_source` | object | no* | Git source reference, e.g. `{type="github", ref="main", repoId=12345}` |
-| `target` | string | no | `"production"` or `"preview"` (default: `"preview"`) |
-| `framework` | string | no | Framework slug (e.g., `"nextjs"`, `"remix"`, `"nuxtjs"`) |
-| `regions` | array | no | Region codes, e.g. `{"iad1", "sfo1"}` |
-| `project_settings` | object | no | Override project settings (buildCommand, outputDirectory, etc.) |
-
-*Either `files` or `git_source` should be provided.
-
-### Examples
-
-```lua
--- Deploy from Git
-local result = app.integrations.vercel.create_deployment({
-  name = "my-project",
-  target = "production",
-  git_source = {
-    type = "github",
-    ref = "main",
-    repoId = 12345
-  }
-})
-
-print("Deployment ID: " .. result.id)
-print("URL: " .. result.url)
-
--- Deploy with direct files
-local result = app.integrations.vercel.create_deployment({
-  name = "my-static-site",
-  target = "preview",
-  files = {
-    { file = "index.html", content = "<html><body>Hello</body></html>" }
-  }
+local projects = app.integrations.vercel.vercel_list_projects({
+    limit = 20,
+    team_id = "team_xxx"   -- optional
 })
 ```
 
----
+| Parameter | Type     | Required | Description                                 |
+|-----------|----------|----------|---------------------------------------------|
+| `limit`   | integer  | No       | Max projects to return (default 20, max 100)|
+| `team_id` | string   | No       | Scope to a specific team                    |
 
-## list_domains
-
-List all domains configured for a Vercel project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | string | yes | The project ID or name |
-
-### Examples
+### Get Project
 
 ```lua
-local result = app.integrations.vercel.list_domains({
-  project_id = "my-project-id"
+local project = app.integrations.vercel.vercel_get_project({
+    id = "prj_xxx"
 })
-
-for _, domain in ipairs(result.domains) do
-  print(domain.name .. " - verified: " .. tostring(domain.verified))
-end
 ```
+
+| Parameter | Type   | Required | Description                       |
+|-----------|--------|----------|-----------------------------------|
+| `id`      | string | Yes      | The project ID                    |
+| `team_id` | string | No       | Team ID if project belongs to team|
 
 ---
 
-## get_current_user
+## Deployments
 
-Get the profile of the currently authenticated Vercel user.
-
-### Parameters
-
-None.
-
-### Examples
+### List Deployments
 
 ```lua
-local result = app.integrations.vercel.get_current_user({})
-
-print("Username: " .. result.user.username)
-print("Email: " .. result.user.email)
-print("Name: " .. (result.user.name or "N/A"))
+local deployments = app.integrations.vercel.vercel_list_deployments({
+    project_id = "prj_xxx",        -- optional
+    state = "READY",                -- optional: READY, ERROR, BUILDING, QUEUED
+    target = "production",          -- optional: production, preview, development
+    limit = 20,
+    team_id = "team_xxx"            -- optional
+})
 ```
 
+| Parameter    | Type    | Required | Description                                              |
+|--------------|---------|----------|----------------------------------------------------------|
+| `project_id` | string  | No       | Filter by project ID                                     |
+| `state`      | string  | No       | Filter by state (READY, ERROR, BUILDING, QUEUED)         |
+| `target`     | string  | No       | Filter by target (production, preview, development)      |
+| `limit`      | integer | No       | Max deployments to return (default 20, max 100)          |
+| `team_id`    | string  | No       | Scope to a specific team                                 |
+
+### Get Deployment
+
+```lua
+local deployment = app.integrations.vercel.vercel_get_deployment({
+    id = "dpl_xxx"
+})
+```
+
+| Parameter | Type   | Required | Description                            |
+|-----------|--------|----------|----------------------------------------|
+| `id`      | string | Yes      | The deployment ID                      |
+| `team_id` | string | No       | Team ID if deployment belongs to team  |
+
 ---
+
+## Domains
+
+### List Domains
+
+```lua
+local domains = app.integrations.vercel.vercel_list_domains({
+    limit = 20,
+    team_id = "team_xxx"   -- optional
+})
+```
+
+| Parameter | Type     | Required | Description                                |
+|-----------|----------|----------|--------------------------------------------|
+| `limit`   | integer  | No       | Max domains to return (default 20, max 100)|
+| `team_id` | string   | No       | Scope to a specific team                   |
+
+---
+
+## Teams
+
+### List Teams
+
+```lua
+local teams = app.integrations.vercel.vercel_list_teams({
+    limit = 20
+})
+```
+
+| Parameter | Type     | Required | Description                             |
+|-----------|----------|----------|-----------------------------------------|
+| `limit`   | integer  | No       | Max teams to return (default 20, max 100)|
+
+---
+
+## User
+
+### Get Current User
+
+```lua
+local user = app.integrations.vercel.vercel_get_current_user({})
+```
+
+Returns the authenticated user profile including username, email, and plan details. No parameters required.
+
+---
+
+## Pagination
+
+List endpoints (`list_projects`, `list_deployments`, `list_domains`, `list_teams`) support a `limit` parameter. Use smaller limits for faster responses. Vercel may return a `pagination` object with `next` cursors for fetching additional pages.
+
+---
+
+## Notes
+
+- All API calls use the Vercel v2 REST API (`https://api.vercel.com/v2`).
+- Token scopes determine which resources are accessible. A **Full Account** token provides access to all endpoints.
+- The `team_id` parameter is optional for personal accounts but required when accessing team-scoped resources.
 
 ## Multi-Account Usage
 
-If you have multiple Vercel accounts configured, use account-specific namespaces:
+You can configure multiple Vercel accounts (e.g., personal and team):
 
 ```lua
--- Default account (always works)
-app.integrations.vercel.list_deployments({limit = 5})
+-- Default account
+local projects = app.integrations.vercel.vercel_list_projects({})
 
--- Explicit default (portable across setups)
-app.integrations.vercel.default.list_deployments({limit = 5})
-
--- Named accounts
-app.integrations.vercel.work.list_deployments({limit = 5})
-app.integrations.vercel.staging.list_deployments({limit = 5})
+-- Named account
+local projects = app.integrations.vercel.vercel_list_projects({
+    account = "my-team"
+})
 ```
-
-All functions are identical across accounts — only the credentials differ.

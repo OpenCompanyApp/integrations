@@ -11,10 +11,12 @@ use OpenCompany\Integrations\Wrike\Tools\WrikeCreateFolder;
 use OpenCompany\Integrations\Wrike\Tools\WrikeCreateTask;
 use OpenCompany\Integrations\Wrike\Tools\WrikeGetCurrentUser;
 use OpenCompany\Integrations\Wrike\Tools\WrikeGetFolder;
+use OpenCompany\Integrations\Wrike\Tools\WrikeGetProject;
 use OpenCompany\Integrations\Wrike\Tools\WrikeGetSpace;
 use OpenCompany\Integrations\Wrike\Tools\WrikeGetTask;
 use OpenCompany\Integrations\Wrike\Tools\WrikeListContacts;
 use OpenCompany\Integrations\Wrike\Tools\WrikeListFolders;
+use OpenCompany\Integrations\Wrike\Tools\WrikeListProjects;
 use OpenCompany\Integrations\Wrike\Tools\WrikeListSpaces;
 use OpenCompany\Integrations\Wrike\Tools\WrikeListTasks;
 use OpenCompany\Integrations\Wrike\Tools\WrikeUpdateTask;
@@ -22,8 +24,8 @@ use OpenCompany\Integrations\Wrike\Tools\WrikeUpdateTask;
 /**
  * Registers all Wrike tools and provides integration metadata.
  *
- * Exposes 12 tools covering tasks, folders, spaces, contacts,
- * and comments via the ToolProvider contract.
+ * Exposes 14 tools covering tasks, projects, folders, spaces,
+ * contacts, comments, and the current user via the ToolProvider contract.
  */
 class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -35,7 +37,7 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, folders, spaces, and contacts',
+            'label' => 'tasks, projects, folders, and spaces',
             'description' => 'Project Management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:wrike',
@@ -46,7 +48,7 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Wrike',
-            'description' => 'Tasks, folders, spaces, contacts, and comments',
+            'description' => 'Tasks, projects, folders, and spaces',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:wrike',
             'category' => 'productivity',
@@ -62,8 +64,8 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Your Wrike OAuth2 or Permanent Token',
-                'hint' => 'Generate at <code>https://www.wrike.com/frontend/apps/#/api</code> under "Permanent Token" or configure OAuth2.',
+                'placeholder' => 'Your Wrike Permanent Token',
+                'hint' => 'Generate at <code>https://www.wrike.com/frontend/apps/#/api</code> under "Permanent Token".',
                 'required' => true,
             ],
         ];
@@ -91,15 +93,14 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
 
             if ($response->successful()) {
                 $data = $response->json('data') ?? [];
-                $user = is_array($data) && isset($data[0]) ? $data[0] : $data;
-                $firstName = $user['firstName'] ?? '';
-                $lastName = $user['lastName'] ?? '';
-                $name = trim("{$firstName} {$lastName}") ?: 'Unknown';
-                $email = $user['email'] ?? $user['profiles'][0]['email'] ?? '';
+                $entry = $data[0] ?? [];
+                $firstName = $entry['firstName'] ?? 'Unknown';
+                $lastName = $entry['lastName'] ?? '';
+                $email = $entry['email'] ?? '';
 
                 return [
                     'success' => true,
-                    'message' => "Connected to Wrike as {$name}" . ($email ? " ({$email})" : '') . '.',
+                    'message' => "Connected to Wrike as {$firstName} {$lastName}" . ($email ? " ({$email})" : '') . '.',
                 ];
             }
 
@@ -124,12 +125,12 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             // Tasks
-            'wrike_list_tasks' => [
-                'class' => WrikeListTasks::class,
-                'type' => 'read',
-                'name' => 'List Tasks',
-                'description' => 'List tasks in Wrike with optional filters.',
-                'icon' => 'ph:list-checks',
+            'wrike_create_task' => [
+                'class' => WrikeCreateTask::class,
+                'type' => 'write',
+                'name' => 'Create Task',
+                'description' => 'Create a new task in Wrike.',
+                'icon' => 'ph:plus-circle',
             ],
             'wrike_get_task' => [
                 'class' => WrikeGetTask::class,
@@ -138,13 +139,6 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get detailed information about a Wrike task.',
                 'icon' => 'ph:note',
             ],
-            'wrike_create_task' => [
-                'class' => WrikeCreateTask::class,
-                'type' => 'write',
-                'name' => 'Create Task',
-                'description' => 'Create a new task in a Wrike folder.',
-                'icon' => 'ph:plus-circle',
-            ],
             'wrike_update_task' => [
                 'class' => WrikeUpdateTask::class,
                 'type' => 'write',
@@ -152,21 +146,36 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Update an existing Wrike task.',
                 'icon' => 'ph:pencil-simple',
             ],
-            // Folders
-            'wrike_list_folders' => [
-                'class' => WrikeListFolders::class,
+            'wrike_list_tasks' => [
+                'class' => WrikeListTasks::class,
                 'type' => 'read',
-                'name' => 'List Folders',
-                'description' => 'List folders in Wrike with optional filters.',
-                'icon' => 'ph:folders',
+                'name' => 'List Tasks',
+                'description' => 'List tasks in Wrike with optional filters.',
+                'icon' => 'ph:list-checks',
             ],
-            'wrike_get_folder' => [
-                'class' => WrikeGetFolder::class,
+            'wrike_add_comment' => [
+                'class' => WrikeAddComment::class,
+                'type' => 'write',
+                'name' => 'Add Comment',
+                'description' => 'Add a comment to a Wrike task.',
+                'icon' => 'ph:chat-circle-text',
+            ],
+            // Projects
+            'wrike_get_project' => [
+                'class' => WrikeGetProject::class,
                 'type' => 'read',
-                'name' => 'Get Folder',
-                'description' => 'Get detailed information about a Wrike folder.',
+                'name' => 'Get Project',
+                'description' => 'Get detailed information about a Wrike project.',
                 'icon' => 'ph:folder-open',
             ],
+            'wrike_list_projects' => [
+                'class' => WrikeListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List projects in Wrike with optional filters.',
+                'icon' => 'ph:folders',
+            ],
+            // Folders
             'wrike_create_folder' => [
                 'class' => WrikeCreateFolder::class,
                 'type' => 'write',
@@ -174,20 +183,34 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Create a new folder in Wrike.',
                 'icon' => 'ph:folder-plus',
             ],
-            // Spaces
-            'wrike_list_spaces' => [
-                'class' => WrikeListSpaces::class,
+            'wrike_get_folder' => [
+                'class' => WrikeGetFolder::class,
                 'type' => 'read',
-                'name' => 'List Spaces',
-                'description' => 'List spaces in Wrike.',
-                'icon' => 'ph:squares-four',
+                'name' => 'Get Folder',
+                'description' => 'Get detailed information about a Wrike folder.',
+                'icon' => 'ph:folder',
             ],
+            'wrike_list_folders' => [
+                'class' => WrikeListFolders::class,
+                'type' => 'read',
+                'name' => 'List Folders',
+                'description' => 'List folders in Wrike with optional filters.',
+                'icon' => 'ph:folder-simple',
+            ],
+            // Spaces
             'wrike_get_space' => [
                 'class' => WrikeGetSpace::class,
                 'type' => 'read',
                 'name' => 'Get Space',
                 'description' => 'Get detailed information about a Wrike space.',
-                'icon' => 'ph:square',
+                'icon' => 'ph:folder-open',
+            ],
+            'wrike_list_spaces' => [
+                'class' => WrikeListSpaces::class,
+                'type' => 'read',
+                'name' => 'List Spaces',
+                'description' => 'List spaces in Wrike.',
+                'icon' => 'ph:folders',
             ],
             // Contacts
             'wrike_list_contacts' => [
@@ -197,15 +220,6 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'List contacts in Wrike.',
                 'icon' => 'ph:users',
             ],
-            // Comments
-            'wrike_add_comment' => [
-                'class' => WrikeAddComment::class,
-                'type' => 'write',
-                'name' => 'Add Comment',
-                'description' => 'Add a comment to a Wrike task.',
-                'icon' => 'ph:chat-circle-text',
-            ],
-            // User
             'wrike_get_current_user' => [
                 'class' => WrikeGetCurrentUser::class,
                 'type' => 'read',

@@ -3,279 +3,256 @@
 namespace OpenCompany\Integrations\Supabase;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseCountRows;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseDeleteRow;
 use OpenCompany\Integrations\Supabase\Tools\SupabaseGetCurrentUser;
+use OpenCompany\Integrations\Supabase\Tools\SupabaseGetProject;
 use OpenCompany\Integrations\Supabase\Tools\SupabaseGetRow;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseInsertBatch;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseInsertRow;
+use OpenCompany\Integrations\Supabase\Tools\SupabaseGetTable;
+use OpenCompany\Integrations\Supabase\Tools\SupabaseListProjects;
 use OpenCompany\Integrations\Supabase\Tools\SupabaseListRows;
 use OpenCompany\Integrations\Supabase\Tools\SupabaseListTables;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseQuerySql;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseRpc;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseUpdateRow;
-use OpenCompany\Integrations\Supabase\Tools\SupabaseUpsertRow;
 
-/**
- * Registers all Supabase tools and provides integration metadata, configuration schema, and connection testing.
- */
 class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration
 {
+    /**
+     * Get the integration app name identifier.
+     *
+     * @return string
+     */
     public function appName(): string
     {
         return 'supabase';
     }
 
+    /**
+     * Get metadata for the app display.
+     *
+     * @return array
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'database, auth, storage',
-            'description' => 'Backend-as-a-Service',
+            'label' => 'projects, tables, rows',
+            'description' => 'Backend-as-a-service',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:supabase',
         ];
     }
 
+    /**
+     * Get integration metadata for marketplace display.
+     *
+     * @return array
+     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Supabase',
-            'description' => 'Tables, rows, RPC, SQL queries, and auth',
+            'description' => 'Open-source backend-as-a-service for databases, auth, and storage',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:supabase',
-            'category' => 'database',
+            'category' => 'data',
             'badge' => 'verified',
-            'docs_url' => 'https://supabase.com/docs/reference/javascript/introduction',
+            'docs_url' => 'https://supabase.com/docs/reference/api',
         ];
     }
 
+    /**
+     * Get the configuration schema for this integration.
+     *
+     * @return array
+     */
     public function configSchema(): array
     {
         return [
             [
-                'key' => 'api_key',
+                'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'eyJhbGciOiJIUzI1NiIs...',
-                'hint' => 'Supabase anon key or service_role key from <a href="https://app.supabase.com" target="_blank">Project Settings → API</a>.',
+                'label' => 'Access Token',
+                'placeholder' => 'Enter your Supabase access token',
+                'hint' => 'Generate an access token in your Supabase dashboard under "Access Tokens"',
                 'required' => true,
             ],
             [
-                'key' => 'project_url',
-                'type' => 'string',
-                'label' => 'Project URL',
-                'placeholder' => 'https://xyzproject.supabase.co',
-                'hint' => 'Your Supabase project URL from Project Settings → API.',
-                'required' => true,
-            ],
-            [
-                'key' => 'bearer_token',
-                'type' => 'secret',
-                'label' => 'Bearer Token (optional)',
-                'placeholder' => 'Leave empty to use API key as bearer token',
-                'hint' => 'Optional bearer token for authenticated requests. Defaults to the API key.',
-                'required' => false,
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API URL',
+                'placeholder' => 'https://api.supabase.com/v1',
+                'hint' => 'Use <code>https://api.supabase.com/v1</code> for the default Supabase Management API',
+                'default' => 'https://api.supabase.com/v1',
             ],
         ];
     }
 
     /**
-     * Test the Supabase connection using the provided credentials.
+     * Test the connection to Supabase using the provided configuration.
      *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_key' and 'project_url'
-     * @return array{success: bool, message?: string, error?: string}
+     * @param  array $config The configuration values to test.
+     * @return array Result array with 'success' bool and 'message' or 'error' string.
      */
     public function testConnection(array $config): array
     {
-        $apiKey = $config['api_key'] ?? '';
-        $projectUrl = $config['project_url'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.supabase.com/v1', '/');
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided. Find it in Supabase → Project Settings → API.'];
-        }
-
-        if (empty($projectUrl)) {
-            return ['success' => false, 'error' => 'No project URL provided. Find it in Supabase → Project Settings → API.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'apikey' => $apiKey,
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get(rtrim($projectUrl, '/') . '/rest/v1/');
+            $response = Http::withToken($accessToken)
+                ->timeout(10)
+                ->get($baseUrl . '/profile');
 
             if ($response->successful()) {
                 return [
                     'success' => true,
-                    'message' => 'Connected to Supabase successfully.',
+                    'message' => "Connected to Supabase at {$baseUrl}.",
                 ];
             }
 
-            $error = $response->body();
+            $json = $response->json();
+            $error = $json['message'] ?? $json['msg'] ?? "HTTP {$response->status()}";
 
             return [
                 'success' => false,
-                'error' => 'Supabase API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'error' => "Supabase returned an error: {$error}",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string> */
+    /**
+     * Get validation rules for the configuration.
+     *
+     * @return array
+     */
     public function validationRules(): array
     {
         return [
-            'api_key' => 'nullable|string',
-            'project_url' => 'nullable|string|url',
-            'bearer_token' => 'nullable|string',
+            'access_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
+    /**
+     * Get the list of tools provided by this integration.
+     *
+     * @return array
+     */
     public function tools(): array
     {
         return [
-            // Rows
+            'supabase_list_projects' => [
+                'class' => SupabaseListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List all Supabase projects in the organization.',
+                'icon' => 'ph:folders',
+            ],
+            'supabase_get_project' => [
+                'class' => SupabaseGetProject::class,
+                'type' => 'read',
+                'name' => 'Get Project',
+                'description' => 'Get details of a specific Supabase project.',
+                'icon' => 'ph:folder-open',
+            ],
+            'supabase_list_tables' => [
+                'class' => SupabaseListTables::class,
+                'type' => 'read',
+                'name' => 'List Tables',
+                'description' => 'List all tables in a Supabase project.',
+                'icon' => 'ph:table',
+            ],
+            'supabase_get_table' => [
+                'class' => SupabaseGetTable::class,
+                'type' => 'read',
+                'name' => 'Get Table',
+                'description' => 'Get details of a specific table in a project.',
+                'icon' => 'ph:table',
+            ],
             'supabase_list_rows' => [
                 'class' => SupabaseListRows::class,
                 'type' => 'read',
                 'name' => 'List Rows',
-                'description' => 'List rows from a Supabase table with filtering, ordering, and pagination.',
-                'icon' => 'ph:list',
+                'description' => 'List rows in a Supabase table.',
+                'icon' => 'ph:list-dashes',
             ],
             'supabase_get_row' => [
                 'class' => SupabaseGetRow::class,
                 'type' => 'read',
                 'name' => 'Get Row',
-                'description' => 'Get a single row by its primary key id.',
-                'icon' => 'ph:record',
+                'description' => 'Get a single row by ID.',
+                'icon' => 'ph:file-text',
             ],
-            'supabase_insert_row' => [
-                'class' => SupabaseInsertRow::class,
-                'type' => 'write',
-                'name' => 'Insert Row',
-                'description' => 'Insert a single row into a Supabase table.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'supabase_update_row' => [
-                'class' => SupabaseUpdateRow::class,
-                'type' => 'write',
-                'name' => 'Update Row',
-                'description' => 'Update an existing row by its primary key id.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'supabase_delete_row' => [
-                'class' => SupabaseDeleteRow::class,
-                'type' => 'write',
-                'name' => 'Delete Row',
-                'description' => 'Delete a row by its primary key id.',
-                'icon' => 'ph:trash',
-            ],
-            // Batch
-            'supabase_insert_batch' => [
-                'class' => SupabaseInsertBatch::class,
-                'type' => 'write',
-                'name' => 'Insert Batch',
-                'description' => 'Insert multiple rows in a single batch request.',
-                'icon' => 'ph:stack-plus',
-            ],
-            // Upsert
-            'supabase_upsert_row' => [
-                'class' => SupabaseUpsertRow::class,
-                'type' => 'write',
-                'name' => 'Upsert Row',
-                'description' => 'Insert or update a row based on unique constraint.',
-                'icon' => 'ph:arrows-clockwise',
-            ],
-            // RPC & SQL
-            'supabase_rpc' => [
-                'class' => SupabaseRpc::class,
-                'type' => 'action',
-                'name' => 'Call RPC',
-                'description' => 'Call a remote procedure (RPC function) defined in the database.',
-                'icon' => 'ph:lightning',
-            ],
-            'supabase_query_sql' => [
-                'class' => SupabaseQuerySql::class,
-                'type' => 'action',
-                'name' => 'Query SQL',
-                'description' => 'Execute a raw SQL query via the exec_sql RPC function.',
-                'icon' => 'ph:code',
-            ],
-            // Schema
-            'supabase_list_tables' => [
-                'class' => SupabaseListTables::class,
-                'type' => 'read',
-                'name' => 'List Tables',
-                'description' => 'List available tables in the Supabase database.',
-                'icon' => 'ph:table',
-            ],
-            'supabase_count_rows' => [
-                'class' => SupabaseCountRows::class,
-                'type' => 'read',
-                'name' => 'Count Rows',
-                'description' => 'Count rows in a table with optional filtering.',
-                'icon' => 'ph:hash',
-            ],
-            // Auth
             'supabase_get_current_user' => [
                 'class' => SupabaseGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the current authenticated user from Supabase Auth.',
+                'description' => 'Get the currently authenticated Supabase user profile.',
                 'icon' => 'ph:user-circle',
             ],
         ];
     }
 
+    /**
+     * Get the path to the Lua documentation file.
+     *
+     * @return string|null
+     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/supabase.md';
     }
 
+    /**
+     * Get the credential fields for this integration.
+     *
+     * @return array
+     */
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'project_url', 'type' => 'string', 'label' => 'Project URL', 'required' => true],
-            ['key' => 'bearer_token', 'type' => 'secret', 'label' => 'Bearer Token', 'required' => false],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API URL', 'required' => false, 'default' => 'https://api.supabase.com/v1'],
         ];
     }
 
+    /**
+     * Whether this class represents an integration.
+     *
+     * @return bool
+     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /** @param  array<string, mixed>  $context */
-    public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
     /**
-     * Resolve the SupabaseService, with optional account-specific credentials.
+     * Create a tool instance with the appropriate service injected.
      *
-     * @param  array<string, mixed>  $context
+     * @param  string $class   The tool class name.
+     * @param  array  $context Optional context including the account.
+     * @return Tool The instantiated tool.
      */
-    private function resolveService(array $context = []): SupabaseService
+    public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new SupabaseService(
-                apiKey: $creds->get('supabase', 'api_key', '', $account),
-                projectUrl: $creds->get('supabase', 'project_url', '', $account),
-                bearerToken: $creds->get('supabase', 'bearer_token', '', $account),
+            $service = new SupabaseService(
+                accessToken: $creds->get('supabase', 'access_token', '', $account),
+                baseUrl: $creds->get('supabase', 'url', 'https://api.supabase.com/v1', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(SupabaseService::class);
+        return new $class(app(SupabaseService::class));
     }
 }

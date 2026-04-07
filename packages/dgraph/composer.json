@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-dgraph",
+    "description": "Dgraph integration for OpenCompany — GraphQL schema, types, indexes, nodes, mutations, queries, and auth.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "dgraph", "graphql", "database", "graph", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Dgraph\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Dgraph\\DgraphServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

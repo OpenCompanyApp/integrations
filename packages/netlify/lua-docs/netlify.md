@@ -2,26 +2,32 @@
 
 ## list_sites
 
-List all Netlify sites the authenticated user has access to.
+List all Netlify sites.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `page` | integer | no | Page number for pagination (1-based, default: 1) |
-| `per_page` | integer | no | Number of sites per page (max 100, default: 20) |
+| `name` | string | no | Filter by site name |
+| `page` | integer | no | Page number for pagination (default: 1) |
+| `per_page` | integer | no | Number of sites per page (default: 30) |
 
 ### Examples
 
 ```lua
-local result = app.integrations.netlify.list_sites({
-  page = 1,
-  per_page = 10
-})
+-- List all sites
+local result = app.integrations.netlify.list_sites({})
 
-for _, site in ipairs(result) do
-  print(site.name .. " — " .. site.url .. " (id: " .. site.id .. ")")
+for _, site in ipairs(result.sites) do
+  print(site.name .. " (" .. site.state .. ") - " .. site.url)
 end
+```
+
+```lua
+-- Filter by name
+local result = app.integrations.netlify.list_sites({
+  name = "my-site"
+})
 ```
 
 ---
@@ -34,7 +40,7 @@ Get detailed information about a specific Netlify site.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `site_id` | string | yes | The Netlify site ID |
+| `site_id` | string | yes | The site identifier or site name (e.g., "abc123" or "mysite.netlify.app") |
 
 ### Examples
 
@@ -44,72 +50,9 @@ local result = app.integrations.netlify.get_site({
 })
 
 print("Site: " .. result.name)
-print("URL: " .. result.url)
-print("SSL: " .. tostring(result.ssl_enabled))
-```
-
----
-
-## create_site
-
-Create a new Netlify site.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Name for the site (used as default subdomain) |
-| `custom_domain` | string | no | Custom domain to assign |
-| `repo` | object | no | Repository configuration for CI/CD |
-| `body` | object | no | Additional site configuration |
-
-### Examples
-
-```lua
--- Create a simple site
-local result = app.integrations.netlify.create_site({
-  name = "my-awesome-site"
-})
-print("Created: " .. result.url)
-
--- Create with custom domain
-local result = app.integrations.netlify.create_site({
-  name = "my-site",
-  custom_domain = "www.example.com"
-})
-
--- Create with Git repo
-local result = app.integrations.netlify.create_site({
-  name = "my-site",
-  repo = {
-    provider = "github",
-    repo = "myorg/myrepo",
-    branch = "main",
-    cmd = "npm run build",
-    dir = "dist"
-  }
-})
-```
-
----
-
-## delete_site
-
-Delete a Netlify site permanently. This cannot be undone.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `site_id` | string | yes | The Netlify site ID to delete |
-
-### Examples
-
-```lua
-local result = app.integrations.netlify.delete_site({
-  site_id = "abc123-def456"
-})
-print(result)
+print("URL: " .. result.ssl_url)
+print("State: " .. result.state)
+print("Custom domain: " .. (result.custom_domain or "none"))
 ```
 
 ---
@@ -122,55 +65,45 @@ List deploys for a Netlify site.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `site_id` | string | yes | The Netlify site ID |
-| `page` | integer | no | Page number (1-based, default: 1) |
-| `per_page` | integer | no | Results per page (max 100, default: 20) |
+| `site_id` | string | yes | The site identifier |
+| `page` | integer | no | Page number for pagination (default: 1) |
+| `per_page` | integer | no | Number of deploys per page (default: 30) |
 
 ### Examples
 
 ```lua
 local result = app.integrations.netlify.list_deploys({
-  site_id = "abc123-def456",
-  per_page = 5
+  site_id = "abc123-def456"
 })
 
-for _, deploy in ipairs(result) do
-  print(deploy.branch .. " @ " .. deploy.commit_ref .. " — " .. deploy.state)
+for _, deploy in ipairs(result.deploys) do
+  print(deploy.state .. " - " .. (deploy.branch or "unknown") .. " @ " .. deploy.created_at)
 end
 ```
 
 ---
 
-## create_deploy
+## get_deploy
 
-Trigger a new deploy for a Netlify site.
+Get detailed information about a specific Netlify deploy.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `site_id` | string | yes | The Netlify site ID |
-| `title` | string | no | Title for the deploy |
-| `branch` | string | no | Branch to deploy (default: production branch) |
-| `framework` | string | no | Framework override (e.g., "nextjs", "nuxt", "hugo") |
-| `body` | object | no | Additional deploy configuration |
+| `deploy_id` | string | yes | The deploy identifier |
 
 ### Examples
 
 ```lua
--- Trigger a production deploy
-local result = app.integrations.netlify.create_deploy({
-  site_id = "abc123-def456",
-  title = "Deploy from AI agent"
+local result = app.integrations.netlify.get_deploy({
+  deploy_id = "789xyz"
 })
-print("Deploy created: " .. result.id)
 
--- Deploy a specific branch
-local result = app.integrations.netlify.create_deploy({
-  site_id = "abc123-def456",
-  branch = "staging",
-  title = "Staging deploy"
-})
+print("State: " .. result.state)
+print("Branch: " .. (result.branch or "unknown"))
+print("Deploy time: " .. (result.deploy_time or 0) .. "s")
+print("URL: " .. (result.deploy_url or "N/A"))
 ```
 
 ---
@@ -183,7 +116,7 @@ List all forms for a Netlify site.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `site_id` | string | yes | The Netlify site ID |
+| `site_id` | string | yes | The site identifier |
 
 ### Examples
 
@@ -192,40 +125,42 @@ local result = app.integrations.netlify.list_forms({
   site_id = "abc123-def456"
 })
 
-for _, form in ipairs(result) do
-  print(form.name .. " — " .. form.submission_count .. " submissions")
+for _, form in ipairs(result.forms) do
+  print(form.name .. " - " .. form.submission_count .. " submissions")
 end
 ```
 
 ---
 
-## get_form
+## list_dns_zones
 
-Get details for a specific Netlify form.
+List all DNS zones configured in Netlify.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `form_id` | string | yes | The Netlify form ID |
+| `page` | integer | no | Page number for pagination |
+| `per_page` | integer | no | Number of DNS zones per page |
 
 ### Examples
 
 ```lua
-local result = app.integrations.netlify.get_form({
-  form_id = "5e1a5c20-81c9-4c41-b0f0-251a6d7a7d6f"
-})
+local result = app.integrations.netlify.list_dns_zones({})
 
-print("Form: " .. result.name)
-print("Path: " .. result.path)
-print("Submissions: " .. result.submission_count)
+for _, zone in ipairs(result.dns_zones) do
+  print(zone.name .. " (" .. (zone.domain or "N/A") .. ")")
+  for _, ns in ipairs(zone.nameservers) do
+    print("  NS: " .. ns)
+  end
+end
 ```
 
 ---
 
 ## get_current_user
 
-Get the currently authenticated Netlify user profile.
+Get details of the currently authenticated Netlify user.
 
 ### Parameters
 
@@ -236,8 +171,9 @@ None.
 ```lua
 local result = app.integrations.netlify.get_current_user({})
 
-print("User: " .. result.full_name .. " (" .. result.email .. ")")
-print("Accounts: " .. #result.accounts)
+print("User: " .. (result.full_name or result.email))
+print("Email: " .. result.email)
+print("Sites: " .. (result.site_count or 0))
 ```
 
 ---
@@ -248,14 +184,14 @@ If you have multiple Netlify accounts configured, use account-specific namespace
 
 ```lua
 -- Default account (always works)
-app.integrations.netlify.list_sites({})
+app.integrations.netlify.function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.netlify.default.list_sites({})
+app.integrations.netlify.default.function_name({...})
 
 -- Named accounts
-app.integrations.netlify.production.list_sites({})
-app.integrations.netlify.staging.list_sites({})
+app.integrations.netlify.production.function_name({...})
+app.integrations.netlify.staging.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

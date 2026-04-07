@@ -40,3 +40,8 @@ Create a new glossary.
 - `source_lang` (string, required) — Source language code.
 - `target_lang` (string, required) — Target language code.
 - `entries` (string, required) — Tab-separated entries (source\ttarget), one per line.
+
+### deepl_get_current_user
+Get current DeepL account information and usage statistics.
+
+**Parameters:** None.

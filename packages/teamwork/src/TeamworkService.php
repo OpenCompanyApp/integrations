@@ -2,292 +2,189 @@
 
 namespace OpenCompany\Integrations\Teamwork;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * HTTP client for the Teamwork Projects API v3.
+ * Client for the Teamwork REST API v1.
  *
- * Uses HTTP Basic Auth with the API key as the username and "X" as the password.
- * Base URL pattern: https://{hostname}/projects/api/v3
+ * Wraps HTTP calls to Teamwork's REST endpoints for projects, tasks,
+ * timers, and user management.
+ *
+ * Authentication uses a Bearer token sent in the Authorization header.
  */
 class TeamworkService
 {
+    private const BASE_URL = 'https://api.teamwork.com/v1';
+
     /**
-     * Create a new TeamworkService instance.
-     *
-     * @param string $apiKey   Teamwork API key (used as Basic Auth username).
-     * @param string $hostname Teamwork installation hostname (e.g., "myteam.teamwork.com").
+     * @param  string  $apiToken  Teamwork API token
      */
     public function __construct(
-        private string $apiKey = '',
-        private string $hostname = '',
-    ) {
-        $this->hostname = rtrim($this->hostname, '/');
-    }
+        private string $apiToken = '',
+    ) {}
 
-    /**
-     * Check whether the service has enough configuration to make requests.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->apiKey) && !empty($this->hostname);
+        return ! empty($this->apiToken);
     }
 
+    // ── Connection ──────────────────────────────────────────
+
     /**
-     * Build the full base URL for API v3 requests.
+     * Test the connection by fetching the current user profile.
      *
-     * @return string e.g. "https://myteam.teamwork.com/projects/api/v3"
+     * @return array<string, mixed>
      */
-    public function getBaseUrl(): string
+    public function testConnection(): array
     {
-        $host = $this->hostname;
-
-        if (!str_starts_with($host, 'http://') && !str_starts_with($host, 'https://')) {
-            $host = 'https://' . $host;
-        }
-
-        return rtrim($host, '/') . '/projects/api/v3';
+        return $this->request('GET', '/me.json');
     }
 
-    // ─── Projects ───────────────────────────────────────────────
+    // ── Projects ────────────────────────────────────────────
 
     /**
-     * List projects.
+     * List projects with optional filters.
      *
-     * @param array $params Query parameters (e.g. page, pageSize, search).
-     * @return array parsed JSON response
+     * @param  array<string, mixed>  $params  Query params (status, includePeople, page, pageSize)
+     * @return array<string, mixed>
      */
     public function listProjects(array $params = []): array
     {
-        return $this->request('GET', '/projects', $params);
+        return $this->request('GET', '/projects.json', $params);
     }
 
     /**
-     * Get a single project by ID.
+     * Get a project by ID.
      *
-     * @param int $projectId
-     * @return array
+     * @param  int  $id  Project ID
+     * @return array<string, mixed>
      */
-    public function getProject(int $projectId): array
+    public function getProject(int $id): array
     {
-        return $this->request('GET', "/projects/{$projectId}");
+        return $this->request('GET', "/projects/{$id}.json");
     }
 
+    // ── Tasks ───────────────────────────────────────────────
+
     /**
-     * Create a new project.
+     * List tasks with optional filters.
      *
-     * @param string $name        Project name.
-     * @param string $description Optional project description.
-     * @param array  $extra       Additional project fields.
-     * @return array
+     * @param  array<string, mixed>  $params  Query params (projectId, include, page, pageSize, filter, sort)
+     * @return array<string, mixed>
      */
-    public function createProject(string $name, string $description = '', array $extra = []): array
+    public function listTasks(array $params = []): array
     {
-        return $this->request('POST', '/projects', array_merge([
-            'name' => $name,
-            'description' => $description,
-        ], $extra));
+        $projectId = $params['projectId'] ?? null;
+        unset($params['projectId']);
+
+        if ($projectId) {
+            return $this->request('GET', "/projects/{$projectId}/tasks.json", $params);
+        }
+
+        return $this->request('GET', '/tasks.json', $params);
     }
 
-    // ─── Tasks ──────────────────────────────────────────────────
-
     /**
-     * List tasks for a project.
+     * Get a task by ID.
      *
-     * @param int   $projectId
-     * @param array $params    Query parameters.
-     * @return array
+     * @param  int  $id  Task ID
+     * @return array<string, mixed>
      */
-    public function listTasks(int $projectId, array $params = []): array
+    public function getTask(int $id): array
     {
-        return $this->request('GET', "/projects/{$projectId}/tasks", $params);
+        return $this->request('GET', "/tasks/{$id}.json");
     }
 
     /**
-     * Get a single task by ID.
+     * Create a new task.
      *
-     * @param int $taskId
-     * @return array
+     * @param  array<string, mixed>  $data  Task fields (name, description, projectId, assigneeId, dueDate, priority, etc.)
+     * @return array<string, mixed>
      */
-    public function getTask(int $taskId): array
+    public function createTask(array $data): array
     {
-        return $this->request('GET', "/tasks/{$taskId}");
+        $projectId = $data['projectId'] ?? null;
+        unset($data['projectId']);
+
+        if ($projectId) {
+            return $this->request('POST', "/projects/{$projectId}/tasks.json", ['todo-item' => $data]);
+        }
+
+        return $this->request('POST', '/tasks.json', ['todo-item' => $data]);
     }
 
+    // ── Timers ──────────────────────────────────────────────
+
     /**
-     * Create a task in a project.
+     * List timers for the authenticated user.
      *
-     * @param int    $projectId
-     * @param string $name      Task name.
-     * @param array  $extra     Additional task fields (description, assigneeIds, etc.).
-     * @return array
+     * @param  array<string, mixed>  $params  Query params (page, pageSize)
+     * @return array<string, mixed>
      */
-    public function createTask(int $projectId, string $name, array $extra = []): array
+    public function listTimers(array $params = []): array
     {
-        return $this->request('POST', "/projects/{$projectId}/tasks", array_merge([
-            'name' => $name,
-        ], $extra));
+        return $this->request('GET', '/timers.json', $params);
     }
 
-    /**
-     * Update a task.
-     *
-     * @param int   $taskId
-     * @param array $data   Fields to update.
-     * @return array
-     */
-    public function updateTask(int $taskId, array $data): array
-    {
-        return $this->request('PUT', "/tasks/{$taskId}", $data);
-    }
+    // ── Users ───────────────────────────────────────────────
 
     /**
-     * Mark a task as complete.
+     * Get the current authenticated user.
      *
-     * @param int $taskId
-     * @return array
-     */
-    public function completeTask(int $taskId): array
-    {
-        return $this->request('PUT', "/tasks/{$taskId}/complete");
-    }
-
-    // ─── Teams ──────────────────────────────────────────────────
-
-    /**
-     * List teams.
-     *
-     * @param array $params Query parameters.
-     * @return array
-     */
-    public function listTeams(array $params = []): array
-    {
-        return $this->request('GET', '/teams', $params);
-    }
-
-    /**
-     * Get a single team by ID.
-     *
-     * @param int $teamId
-     * @return array
-     */
-    public function getTeam(int $teamId): array
-    {
-        return $this->request('GET', "/teams/{$teamId}");
-    }
-
-    // ─── Time Entries ───────────────────────────────────────────
-
-    /**
-     * List time entries for a project.
-     *
-     * @param int   $projectId
-     * @param array $params    Query parameters.
-     * @return array
-     */
-    public function listTimeEntries(int $projectId, array $params = []): array
-    {
-        return $this->request('GET', "/projects/{$projectId}/time", $params);
-    }
-
-    /**
-     * Create a time entry for a project.
-     *
-     * @param int   $projectId
-     * @param array $data      Time entry fields (hours, minutes, date, description, etc.).
-     * @return array
-     */
-    public function createTimeEntry(int $projectId, array $data): array
-    {
-        return $this->request('POST', "/projects/{$projectId}/time", $data);
-    }
-
-    // ─── User ───────────────────────────────────────────────────
-
-    /**
-     * Get the currently authenticated user.
-     *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/me');
+        return $this->request('GET', '/me.json');
     }
 
-    // ─── HTTP Layer ─────────────────────────────────────────────
+    // ── HTTP ─────────────────────────────────────────────────
 
     /**
-     * Make an API request and return parsed JSON.
+     * Make an API request to Teamwork.
      *
-     * @param string $method HTTP method (GET, POST, PUT, DELETE).
-     * @param string $path   API path relative to base URL (e.g. "/projects").
-     * @param array  $data   Query params (GET) or body data (POST/PUT).
-     * @return array
+     * Sends the Bearer token in the Authorization header.  For POST
+     * requests the payload is sent as JSON.  For GET requests the
+     * params are sent as query parameters.
      *
-     * @throws \RuntimeException on connection or API errors.
+     * @param  string                 $method  HTTP method (GET, POST)
+     * @param  string                 $path    API path (e.g. /projects.json)
+     * @param  array<string, mixed>   $data    Query or body params
+     * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Teamwork API.
-     *
-     * @param string $method HTTP method.
-     * @param string $path   API path relative to base URL.
-     * @param array  $data   Query params or body data.
-     * @return Response
-     *
-     * @throws \RuntimeException on configuration, connection, or API errors.
-     */
-    private function rawRequest(string $method, string $path, array $data = []): Response
-    {
-        if (!$this->apiKey || !$this->hostname) {
-            throw new \RuntimeException('Teamwork API key and hostname are not configured.');
+        if (! $this->isConfigured()) {
+            throw new \RuntimeException('Teamwork API token is not configured.');
         }
 
-        $url = $this->getBaseUrl() . $path;
+        $url = self::BASE_URL . $path;
 
         try {
-            $http = Http::withBasicAuth($this->apiKey, 'X')
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->timeout(30);
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiToken,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET'   => $http->get($url, $data),
-                'POST'  => $http->post($url, $data),
-                'PUT'   => $http->put($url, $data),
-                'DELETE'=> $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET'    => $http->get($url, $data),
+                'POST'   => $http->post($url, $data),
+                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains((string) $contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Teamwork API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Teamwork API endpoint not available (HTTP {$response->status()}). Check the hostname and API path.");
-                }
-
-                $error = $response->json('error') ?? $response->json('message') ?? $body;
+            if (! $response->successful()) {
                 Log::error("Teamwork API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error'  => $error,
+                    'body'   => $response->body(),
                 ]);
-                throw new \RuntimeException("Teamwork API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException("Teamwork API error ({$response->status()}): {$response->body()}");
             }
 
-            return $response;
-        } catch (ConnectionException $e) {
+            return $response->json() ?? [];
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Teamwork API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);

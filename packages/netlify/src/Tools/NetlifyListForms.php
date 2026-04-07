@@ -6,53 +6,29 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Tool to list forms for a Netlify site.
- *
- * Returns an array of form objects including names, paths, and submission counts.
- */
 class NetlifyListForms implements Tool
 {
-    /**
-     * Create a new NetlifyListForms tool instance.
-     */
     public function __construct(
         private NetlifyService $service,
     ) {}
 
-    /**
-     * Get the tool name used for registration and invocation.
-     */
     public function name(): string
     {
         return 'netlify_list_forms';
     }
 
-    /**
-     * Get the tool description shown to AI agents.
-     */
     public function description(): string
     {
-        return 'List all forms for a Netlify site. Returns form names, paths, and submission counts.';
+        return 'List all forms for a Netlify site. Returns form IDs, names, paths, and submission counts.';
     }
 
-    /**
-     * Get the tool parameter definitions.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
-            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The Netlify site ID.'],
+            'site_id' => ['type' => 'string', 'required' => true, 'description' => 'The site identifier.'],
         ];
     }
 
-    /**
-     * Execute the tool and return the result.
-     *
-     * @param  array<string, mixed>  $args
-     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -60,9 +36,28 @@ class NetlifyListForms implements Tool
                 return ToolResult::error('Netlify integration is not configured.');
             }
 
-            $result = $this->service->listForms($args['site_id']);
+            $siteId = $args['site_id'] ?? '';
+            if (empty($siteId)) {
+                return ToolResult::error('site_id is required.');
+            }
 
-            return ToolResult::success($result);
+            $result = $this->service->listForms($siteId);
+
+            $forms = array_map(function (array $form): array {
+                return [
+                    'id' => $form['id'] ?? null,
+                    'site_id' => $form['site_id'] ?? null,
+                    'name' => $form['name'] ?? null,
+                    'paths' => $form['paths'] ?? [],
+                    'submission_count' => $form['submission_count'] ?? 0,
+                    'created_at' => $form['created_at'] ?? null,
+                ];
+            }, is_array($result) ? $result : []);
+
+            return ToolResult::success([
+                'forms' => $forms,
+                'total' => count($forms),
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

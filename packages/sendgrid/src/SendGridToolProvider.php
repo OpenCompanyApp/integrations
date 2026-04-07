@@ -1,31 +1,19 @@
 <?php
 
-namespace OpenCompany\Integrations\SendGrid;
+namespace OpenCompany\Integrations\Sendgrid;
 
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridAddContact;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridAddContactToList;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridAddSuppression;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridCreateList;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridDeleteContact;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridGetContactByEmail;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridGetEmailStats;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridGetTemplates;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridListContacts;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridListLists;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridListSenderIdentities;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridListSuppressions;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridRemoveContactFromList;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridSearchContacts;
-use OpenCompany\Integrations\SendGrid\Tools\SendGridSendEmail;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridListEmails;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridSendEmail;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridListTemplates;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridGetTemplate;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridListContacts;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridGetContact;
+use OpenCompany\Integrations\Sendgrid\Tools\SendgridGetCurrentUser;
 
-/**
- * Registers all SendGrid tools and provides integration metadata, configuration schema, and connection testing.
- */
-class SendGridToolProvider implements ToolProvider, ConfigurableIntegration
+class SendgridToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
     {
@@ -35,9 +23,9 @@ class SendGridToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'SendGrid',
-            'description' => 'Email delivery and marketing platform — send emails, manage contacts, lists, and templates.',
-            'icon' => 'ph:envelope-simple',
+            'label' => 'email, templates, contacts',
+            'description' => 'Email delivery & communication',
+            'icon' => 'ph:envelope',
             'logo' => 'simple-icons:sendgrid',
         ];
     }
@@ -46,10 +34,10 @@ class SendGridToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'SendGrid',
-            'description' => 'Connect SendGrid to send emails, manage contacts, marketing lists, templates, and view statistics.',
-            'icon' => 'ph:envelope-simple',
+            'description' => 'Email delivery service for transactional and marketing emails, templates, and contact management',
+            'icon' => 'ph:envelope',
             'logo' => 'simple-icons:sendgrid',
-            'category' => 'productivity',
+            'category' => 'communication',
             'badge' => 'verified',
             'docs_url' => 'https://docs.sendgrid.com/api-reference',
         ];
@@ -59,159 +47,97 @@ class SendGridToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'name' => 'api_key',
+                'key' => 'api_key',
+                'type' => 'secret',
                 'label' => 'API Key',
-                'type' => 'text',
+                'placeholder' => 'Enter your SendGrid API key',
+                'hint' => 'Generate an API key in your SendGrid account under Settings > API Keys',
                 'required' => true,
-                'description' => 'Your SendGrid API key with the necessary permissions.',
-                'placeholder' => 'SG.xxxxxxxxxxxxxxxxxxxxxx',
             ],
         ];
     }
 
-    /** @param array<string, mixed> $config */
     public function testConnection(array $config): array
     {
+        $apiKey = $config['api_key'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No API key provided'];
+        }
+
         try {
-            $apiKey = $config['api_key'] ?? '';
-            $service = new SendGridService(apiKey: $apiKey);
+            $service = new SendgridService(apiKey: $apiKey);
+            $profile = $service->getCurrentUser();
 
-            if (! $service->isConfigured()) {
-                return [
-                    'success' => false,
-                    'error' => 'SendGrid API key is not configured.',
-                ];
-            }
-
-            $result = $service->getUserProfile();
+            $email = $profile['email'] ?? 'unknown';
 
             return [
                 'success' => true,
-                'message' => sprintf(
-                    'Connected to SendGrid account "%s".',
-                    $result['email'] ?? 'Unknown',
-                ),
+                'message' => "Connected to SendGrid as {$email}.",
             ];
-        } catch (\Throwable $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage(),
-            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
     public function validationRules(): array
     {
-        return ['api_key' => 'nullable|string'];
+        return [
+            'api_key' => 'nullable|string',
+        ];
     }
 
     public function tools(): array
     {
         return [
+            'sendgrid_list_emails' => [
+                'class' => SendgridListEmails::class,
+                'type' => 'read',
+                'name' => 'List Emails',
+                'description' => 'List emails in your SendGrid account with optional filtering and pagination.',
+                'icon' => 'ph:envelope',
+            ],
             'sendgrid_send_email' => [
-                'class' => SendGridSendEmail::class,
+                'class' => SendgridSendEmail::class,
                 'type' => 'write',
                 'name' => 'Send Email',
-                'description' => 'Send an email via SendGrid.',
+                'description' => 'Send an email via SendGrid with support for HTML and text content.',
                 'icon' => 'ph:paper-plane-tilt',
             ],
+            'sendgrid_list_templates' => [
+                'class' => SendgridListTemplates::class,
+                'type' => 'read',
+                'name' => 'List Templates',
+                'description' => 'List email templates in your SendGrid account.',
+                'icon' => 'ph:file',
+            ],
+            'sendgrid_get_template' => [
+                'class' => SendgridGetTemplate::class,
+                'type' => 'read',
+                'name' => 'Get Template',
+                'description' => 'Get details of a specific email template by its ID.',
+                'icon' => 'ph:file-text',
+            ],
             'sendgrid_list_contacts' => [
-                'class' => SendGridListContacts::class,
+                'class' => SendgridListContacts::class,
                 'type' => 'read',
                 'name' => 'List Contacts',
-                'description' => 'List marketing contacts in SendGrid.',
+                'description' => 'List contacts in your SendGrid marketing contacts database.',
                 'icon' => 'ph:users',
             ],
-            'sendgrid_add_contact' => [
-                'class' => SendGridAddContact::class,
-                'type' => 'write',
-                'name' => 'Add Contact',
-                'description' => 'Add or update a contact in SendGrid.',
-                'icon' => 'ph:user-plus',
-            ],
-            'sendgrid_search_contacts' => [
-                'class' => SendGridSearchContacts::class,
+            'sendgrid_get_contact' => [
+                'class' => SendgridGetContact::class,
                 'type' => 'read',
-                'name' => 'Search Contacts',
-                'description' => 'Search SendGrid marketing contacts with a query.',
-                'icon' => 'ph:magnifying-glass',
+                'name' => 'Get Contact',
+                'description' => 'Get details of a specific contact by their ID.',
+                'icon' => 'ph:user',
             ],
-            'sendgrid_delete_contact' => [
-                'class' => SendGridDeleteContact::class,
-                'type' => 'write',
-                'name' => 'Delete Contact',
-                'description' => 'Delete one or more contacts from SendGrid.',
-                'icon' => 'ph:user-minus',
-            ],
-            'sendgrid_get_contact_by_email' => [
-                'class' => SendGridGetContactByEmail::class,
+            'sendgrid_get_current_user' => [
+                'class' => SendgridGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Contact by Email',
-                'description' => 'Look up a SendGrid contact by their email address.',
-                'icon' => 'ph:at',
-            ],
-            'sendgrid_list_lists' => [
-                'class' => SendGridListLists::class,
-                'type' => 'read',
-                'name' => 'List Lists',
-                'description' => 'List all SendGrid marketing lists.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'sendgrid_create_list' => [
-                'class' => SendGridCreateList::class,
-                'type' => 'write',
-                'name' => 'Create List',
-                'description' => 'Create a new SendGrid marketing list.',
-                'icon' => 'ph:plus',
-            ],
-            'sendgrid_add_contact_to_list' => [
-                'class' => SendGridAddContactToList::class,
-                'type' => 'write',
-                'name' => 'Add Contact to List',
-                'description' => 'Add one or more contacts to a SendGrid marketing list.',
-                'icon' => 'ph:user-plus',
-            ],
-            'sendgrid_remove_contact_from_list' => [
-                'class' => SendGridRemoveContactFromList::class,
-                'type' => 'write',
-                'name' => 'Remove Contact from List',
-                'description' => 'Remove one or more contacts from a SendGrid marketing list.',
-                'icon' => 'ph:user-minus',
-            ],
-            'sendgrid_list_sender_identities' => [
-                'class' => SendGridListSenderIdentities::class,
-                'type' => 'read',
-                'name' => 'List Sender Identities',
-                'description' => 'List all verified sender identities in SendGrid.',
+                'name' => 'Get Current User',
+                'description' => 'Get the profile of the currently authenticated SendGrid user.',
                 'icon' => 'ph:identification-card',
-            ],
-            'sendgrid_get_email_stats' => [
-                'class' => SendGridGetEmailStats::class,
-                'type' => 'read',
-                'name' => 'Get Email Stats',
-                'description' => 'Get email delivery statistics from SendGrid.',
-                'icon' => 'ph:chart-bar',
-            ],
-            'sendgrid_list_suppressions' => [
-                'class' => SendGridListSuppressions::class,
-                'type' => 'read',
-                'name' => 'List Suppressions',
-                'description' => 'List bounce suppressions from SendGrid.',
-                'icon' => 'ph:prohibit',
-            ],
-            'sendgrid_add_suppression' => [
-                'class' => SendGridAddSuppression::class,
-                'type' => 'write',
-                'name' => 'Add Suppression',
-                'description' => 'Add email addresses to the SendGrid suppression list.',
-                'icon' => 'ph:prohibit-insert',
-            ],
-            'sendgrid_get_templates' => [
-                'class' => SendGridGetTemplates::class,
-                'type' => 'read',
-                'name' => 'Get Templates',
-                'description' => 'List SendGrid email templates.',
-                'icon' => 'ph:file',
             ],
         ];
     }
@@ -224,12 +150,7 @@ class SendGridToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            'api_key' => [
-                'label' => 'API Key',
-                'type' => 'text',
-                'required' => true,
-                'description' => 'Your SendGrid API key.',
-            ],
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
         ];
     }
 
@@ -238,24 +159,20 @@ class SendGridToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /** @param array<string, mixed> $context */
     public function createTool(string $class, array $context = []): Tool
     {
-        return new $class($this->resolveService($context));
-    }
-
-    /** @param array<string, mixed> $context */
-    private function resolveService(array $context = []): SendGridService
-    {
         $account = $context['account'] ?? null;
-        if ($account !== null) {
-            $creds = app(CredentialResolver::class);
 
-            return new SendGridService(
+        if ($account !== null) {
+            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+
+            $service = new SendgridService(
                 apiKey: $creds->get('sendgrid', 'api_key', '', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(SendGridService::class);
+        return new $class(app(SendgridService::class));
     }
 }

@@ -1,19 +1,15 @@
 <?php
 
-namespace OpenCompany\Integrations\SendGrid\Tools;
+namespace OpenCompany\Integrations\Sendgrid\Tools;
 
+use OpenCompany\Integrations\Sendgrid\SendgridService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\SendGrid\SendGridService;
 
-/**
- * List marketing contacts from SendGrid.
- */
-class SendGridListContacts implements Tool
+class SendgridListContacts implements Tool
 {
-    /** @param SendGridService $service The SendGrid API client */
     public function __construct(
-        private SendGridService $service,
+        private SendgridService $service,
     ) {}
 
     public function name(): string
@@ -23,34 +19,33 @@ class SendGridListContacts implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List marketing contacts from SendGrid. Returns contact records with IDs, emails,
-        names, and custom fields. Use the limit parameter to control page size.
-        MD;
+        return 'List contacts in your SendGrid marketing contacts database. Supports pagination.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => [
-                'type' => 'integer',
-                'description' => 'Maximum number of contacts to return.',
-                'default' => 100,
-            ],
+            'page_size' => ['type' => 'integer', 'description' => 'Number of contacts to return per page (default: 50, max: 100).'],
+            'page_token' => ['type' => 'string', 'description' => 'Token for the next page of results.'],
         ];
     }
 
-    /** @param array<string, mixed> $args Tool arguments */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('SendGrid integration is not configured.');
             }
 
-            $result = $this->service->listContacts(
-                limit: (int) ($args['limit'] ?? 100),
-            );
+            $params = [];
+            if (isset($args['page_size'])) {
+                $params['page_size'] = (int) $args['page_size'];
+            }
+            if (isset($args['page_token'])) {
+                $params['page_token'] = $args['page_token'];
+            }
+
+            $result = $this->service->listContacts($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

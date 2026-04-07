@@ -1,0 +1,21 @@
+{
+    "name": "opencompanyapp/integration-n8n",
+    "description": "n8n integration for OpenCompany — workflows, executions, credentials, and user management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "n8n", "workflow", "automation", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {"OpenCompany\\Integrations\\N8n\\": "src/"}
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["OpenCompany\\Integrations\\N8n\\N8nServiceProvider"]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -6,90 +6,67 @@ use OpenCompany\Integrations\Supabase\SupabaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Discover available tables in the Supabase database via the OpenAPI spec.
- */
 class SupabaseListTables implements Tool
 {
     /**
-     * @param  SupabaseService  $service  The Supabase API client
+     * @param SupabaseService $service The Supabase service instance.
      */
     public function __construct(
         private SupabaseService $service,
     ) {}
 
+    /**
+     * Get the tool name identifier.
+     *
+     * @return string
+     */
     public function name(): string
     {
         return 'supabase_list_tables';
     }
 
+    /**
+     * Get the tool description.
+     *
+     * @return string
+     */
     public function description(): string
     {
-        return <<<'MD'
-        List available tables in the Supabase database by querying the PostgREST
-        OpenAPI spec endpoint. Returns table names with their column definitions.
-        MD;
-    }
-
-    public function parameters(): array
-    {
-        return [];
+        return 'List all tables in a Supabase project. Returns table IDs, names, and schemas.';
     }
 
     /**
-     * List all available tables and their schemas.
+     * Get the tool parameter definitions.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
+     * @return array
+     */
+    public function parameters(): array
+    {
+        return [
+            'project_ref' => ['type' => 'string', 'required' => true, 'description' => 'The project reference ID.'],
+        ];
+    }
+
+    /**
+     * Execute the tool with the given arguments.
+     *
+     * @param  array $args The tool arguments.
+     * @return ToolResult The result of the tool execution.
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Supabase integration is not configured.');
             }
 
-            $spec = $this->service->listTables();
-
-            if (empty($spec)) {
-                return ToolResult::success('No tables found or OpenAPI spec unavailable.');
+            if (empty($args['project_ref'])) {
+                return ToolResult::error('Project reference ID is required.');
             }
 
-            // Extract table info from the OpenAPI spec paths
-            $tables = [];
-            $paths = $spec['paths'] ?? [];
-            $definitions = $spec['definitions'] ?? [];
+            $result = $this->service->listTables($args['project_ref']);
 
-            foreach ($paths as $path => $methods) {
-                // Paths like "/tablename" (without slashes other than leading)
-                $trimmed = trim($path, '/');
-                if ($trimmed !== '' && ! str_contains($trimmed, '/')) {
-                    $tableInfo = [
-                        'name' => $trimmed,
-                    ];
-
-                    // Try to extract columns from definitions
-                    $defKey = $trimmed;
-                    if (isset($definitions[$defKey]['properties'])) {
-                        $columns = [];
-                        foreach ($definitions[$defKey]['properties'] as $colName => $colDef) {
-                            $columns[$colName] = $colDef['type'] ?? $colDef['format'] ?? 'unknown';
-                        }
-                        $tableInfo['columns'] = $columns;
-                    }
-
-                    $tables[] = $tableInfo;
-                }
-            }
-
-            if (empty($tables)) {
-                // Fallback: return raw spec if parsing didn't yield tables
-                return ToolResult::success($spec);
-            }
-
-            return ToolResult::success([
-                'count' => count($tables),
-                'tables' => $tables,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

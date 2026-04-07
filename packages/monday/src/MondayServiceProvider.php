@@ -7,9 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Monday.com integration.
- *
- * Registers the MondayService singleton and bootstraps the Monday tool provider.
+ * Laravel service provider that registers the MondayService singleton and bootstraps Monday.com tools.
  */
 class MondayServiceProvider extends ServiceProvider
 {

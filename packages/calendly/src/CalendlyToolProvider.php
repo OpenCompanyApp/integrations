@@ -6,24 +6,19 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyCancelEvent;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyCreateOneOff;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyCreateSingleUseLink;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyGetEvent;
+use OpenCompany\Integrations\Calendly\Tools\CalendlyCreateBooking;
+use OpenCompany\Integrations\Calendly\Tools\CalendlyGetCurrentUser;
 use OpenCompany\Integrations\Calendly\Tools\CalendlyGetEventType;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyGetInvitee;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyGetOrganization;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyGetUser;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyListEvents;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyListInvitees;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyListOrganizationMemberships;
-use OpenCompany\Integrations\Calendly\Tools\CalendlyGetEventTypes;
+use OpenCompany\Integrations\Calendly\Tools\CalendlyListBookings;
+use OpenCompany\Integrations\Calendly\Tools\CalendlyListEventTypes;
+use OpenCompany\Integrations\Calendly\Tools\CalendlyListOrganizations;
+use OpenCompany\Integrations\Calendly\Tools\CalendlyListUsers;
 
 /**
  * Registers all Calendly tools and provides integration metadata.
  *
- * Exposes 12 tools covering users, event types, scheduled events,
- * invitees, organizations, and scheduling links via the ToolProvider contract.
+ * Exposes 7 tools covering event types, bookings, organizations,
+ * and users via the ToolProvider contract.
  */
 class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -43,7 +38,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'event types, scheduled events, invitees',
+            'label' => 'event types, bookings, organizations',
             'description' => 'Scheduling',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calendly',
@@ -59,7 +54,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Calendly',
-            'description' => 'Event types, scheduled events, invitees, and organizations',
+            'description' => 'Event types, bookings, organizations, and users',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calendly',
             'category' => 'productivity',
@@ -77,7 +72,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'api_token',
+                'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Personal Access Token',
                 'placeholder' => 'your-calendly-personal-access-token',
@@ -92,22 +87,22 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
      *
      * Calls GET /users/me and returns the user's name and email.
      *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_token'
+     * @param  array<string, mixed>  $config  Configuration containing 'access_token'
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
-        $apiToken = $config['api_token'] ?? '';
+        $accessToken = $config['access_token'] ?? '';
 
-        if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided. Generate a Personal Access Token in your Calendly integrations settings.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided. Generate a Personal Access Token in your Calendly integrations settings.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiToken,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.calendly.com/users/me');
+            ])->timeout(10)->get('https://api.calendly.com/v2/users/me');
 
             $body = $response->json() ?? [];
 
@@ -140,7 +135,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function validationRules(): array
     {
         return [
-            'api_token' => 'nullable|string',
+            'access_token' => 'nullable|string',
         ];
     }
 
@@ -152,20 +147,11 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function tools(): array
     {
         return [
-            // User
-            'calendly_get_user' => [
-                'class' => CalendlyGetUser::class,
+            'calendly_list_event_types' => [
+                'class' => CalendlyListEventTypes::class,
                 'type' => 'read',
-                'name' => 'Get User',
-                'description' => 'Get the authenticated Calendly user profile.',
-                'icon' => 'ph:user',
-            ],
-            // Event Types
-            'calendly_get_event_types' => [
-                'class' => CalendlyGetEventTypes::class,
-                'type' => 'read',
-                'name' => 'Get Event Types',
-                'description' => 'List event types for a Calendly user.',
+                'name' => 'List Event Types',
+                'description' => 'List event types for a Calendly user or organization.',
                 'icon' => 'ph:calendar-blank',
             ],
             'calendly_get_event_type' => [
@@ -175,73 +161,40 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get a single Calendly event type by UUID.',
                 'icon' => 'ph:calendar-blank',
             ],
-            // Scheduled Events
-            'calendly_list_events' => [
-                'class' => CalendlyListEvents::class,
+            'calendly_create_booking' => [
+                'class' => CalendlyCreateBooking::class,
+                'type' => 'write',
+                'name' => 'Create Booking',
+                'description' => 'Create a booking in Calendly by generating a one-off event type with a scheduling URL.',
+                'icon' => 'ph:calendar-plus',
+            ],
+            'calendly_list_bookings' => [
+                'class' => CalendlyListBookings::class,
                 'type' => 'read',
-                'name' => 'List Events',
-                'description' => 'List scheduled Calendly events.',
+                'name' => 'List Bookings',
+                'description' => 'List scheduled Calendly bookings (events) with optional filters.',
                 'icon' => 'ph:calendar-dots',
             ],
-            'calendly_get_event' => [
-                'class' => CalendlyGetEvent::class,
+            'calendly_list_organizations' => [
+                'class' => CalendlyListOrganizations::class,
                 'type' => 'read',
-                'name' => 'Get Event',
-                'description' => 'Get a single Calendly scheduled event by UUID.',
-                'icon' => 'ph:calendar-check',
-            ],
-            'calendly_cancel_event' => [
-                'class' => CalendlyCancelEvent::class,
-                'type' => 'write',
-                'name' => 'Cancel Event',
-                'description' => 'Cancel a scheduled Calendly event.',
-                'icon' => 'ph:calendar-x',
-            ],
-            // Invitees
-            'calendly_list_invitees' => [
-                'class' => CalendlyListInvitees::class,
-                'type' => 'read',
-                'name' => 'List Invitees',
-                'description' => 'List invitees for a scheduled Calendly event.',
-                'icon' => 'ph:users',
-            ],
-            'calendly_get_invitee' => [
-                'class' => CalendlyGetInvitee::class,
-                'type' => 'read',
-                'name' => 'Get Invitee',
-                'description' => 'Get a single invitee for a Calendly event.',
-                'icon' => 'ph:user-focus',
-            ],
-            // One-Off Event Types
-            'calendly_create_one_off' => [
-                'class' => CalendlyCreateOneOff::class,
-                'type' => 'write',
-                'name' => 'Create One-Off Event Type',
-                'description' => 'Create a one-off Calendly event type.',
-                'icon' => 'ph:plus-circle',
-            ],
-            // Organizations
-            'calendly_list_organization_memberships' => [
-                'class' => CalendlyListOrganizationMemberships::class,
-                'type' => 'read',
-                'name' => 'List Organization Memberships',
-                'description' => 'List memberships in a Calendly organization.',
+                'name' => 'List Organizations',
+                'description' => 'List Calendly organizations the authenticated user belongs to.',
                 'icon' => 'ph:buildings',
             ],
-            'calendly_get_organization' => [
-                'class' => CalendlyGetOrganization::class,
+            'calendly_list_users' => [
+                'class' => CalendlyListUsers::class,
                 'type' => 'read',
-                'name' => 'Get Organization',
-                'description' => 'Get a Calendly organization by UUID.',
-                'icon' => 'ph:building',
+                'name' => 'List Users',
+                'description' => 'List users (organization memberships) in a Calendly organization.',
+                'icon' => 'ph:users',
             ],
-            // Scheduling Links
-            'calendly_create_single_use_link' => [
-                'class' => CalendlyCreateSingleUseLink::class,
-                'type' => 'write',
-                'name' => 'Create Single-Use Scheduling Link',
-                'description' => 'Create a single-use Calendly scheduling link.',
-                'icon' => 'ph:link',
+            'calendly_get_current_user' => [
+                'class' => CalendlyGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated Calendly user profile.',
+                'icon' => 'ph:user',
             ],
         ];
     }
@@ -262,7 +215,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'api_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
         ];
     }
 
@@ -289,7 +242,6 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
      * Resolve the CalendlyService, with optional account-specific credentials.
      *
      * @param  array<string, mixed>  $context  Optional context with 'account' key
-     * @return CalendlyService
      */
     private function resolveService(array $context = []): CalendlyService
     {
@@ -299,7 +251,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
             return new CalendlyService(
-                apiToken: $creds->get('calendly', 'api_token', '', $account),
+                accessToken: $creds->get('calendly', 'access_token', '', $account),
             );
         }
 

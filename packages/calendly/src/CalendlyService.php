@@ -8,51 +8,64 @@ use Illuminate\Support\Facades\Log;
 /**
  * Client for the Calendly API v2.
  *
- * Wraps HTTP calls to Calendly's REST endpoints for users, event types,
- * scheduled events, invitees, organizations, and scheduling links.
+ * Wraps HTTP calls to Calendly's REST endpoints for event types,
+ * bookings (scheduled events), organizations, and users.
  *
  * @see https://developer.calendly.com/api-docs
  */
 class CalendlyService
 {
-    private const BASE_URL = 'https://api.calendly.com';
+    private const BASE_URL = 'https://api.calendly.com/v2';
 
     /**
-     * @param  string  $apiToken  Calendly Personal Access Token
+     * @param  string  $accessToken  Calendly Personal Access Token
      */
     public function __construct(
-        private string $apiToken = '',
+        private string $accessToken = '',
     ) {}
 
     /**
-     * Check whether the API token has been configured.
+     * Check whether the access token has been configured.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiToken);
+        return ! empty($this->accessToken);
     }
 
-    // ── User ────────────────────────────────────────────────
+    // ── Current User ────────────────────────────────────────
 
     /**
      * Get the authenticated user's profile (GET /users/me).
      *
      * @return array<string, mixed>
      */
-    public function getUser(): array
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/users/me');
+    }
+
+    // ── Users ───────────────────────────────────────────────
+
+    /**
+     * List users (organization memberships) (GET /organization_memberships).
+     *
+     * @param  array<string, mixed>  $params  Query parameters (organization, user, page_token, count)
+     * @return array<string, mixed>
+     */
+    public function listUsers(array $params = []): array
+    {
+        return $this->request('GET', '/organization_memberships', $params);
     }
 
     // ── Event Types ─────────────────────────────────────────
 
     /**
-     * List event types for a user (GET /event_types).
+     * List event types (GET /event_types).
      *
-     * @param  array<string, mixed>  $params  Query parameters (user, active, page_token)
+     * @param  array<string, mixed>  $params  Query parameters (user, active, organization, page_token, count)
      * @return array<string, mixed>
      */
-    public function getEventTypes(array $params = []): array
+    public function listEventTypes(array $params = []): array
     {
         return $this->request('GET', '/event_types', $params);
     }
@@ -68,82 +81,30 @@ class CalendlyService
         return $this->request('GET', "/event_types/{$uuid}");
     }
 
-    // ── Scheduled Events ────────────────────────────────────
+    // ── Bookings (Scheduled Events) ─────────────────────────
 
     /**
-     * List scheduled events (GET /scheduled_events).
+     * List scheduled events / bookings (GET /scheduled_events).
      *
-     * @param  array<string, mixed>  $params  Query parameters (user, status, min_start_time, max_start_time, page_token, count)
+     * @param  array<string, mixed>  $params  Query parameters (user, organization, status, min_start_time, max_start_time, page_token, count)
      * @return array<string, mixed>
      */
-    public function listEvents(array $params = []): array
+    public function listBookings(array $params = []): array
     {
         return $this->request('GET', '/scheduled_events', $params);
     }
 
     /**
-     * Get a single scheduled event by UUID (GET /scheduled_events/{uuid}).
+     * Create a booking by creating a one-off event type (POST /one_off_event_types).
      *
-     * @param  string  $uuid  The scheduled event UUID
-     * @return array<string, mixed>
-     */
-    public function getEvent(string $uuid): array
-    {
-        return $this->request('GET', "/scheduled_events/{$uuid}");
-    }
-
-    /**
-     * Cancel a scheduled event (POST /scheduled_events/{uuid}/cancellation).
-     *
-     * @param  string  $uuid    The scheduled event UUID
-     * @param  string  $reason  Cancellation reason
-     * @return array<string, mixed>
-     */
-    public function cancelEvent(string $uuid, string $reason = ''): array
-    {
-        $data = [];
-        if ($reason !== '') {
-            $data['reason'] = $reason;
-        }
-
-        return $this->request('POST', "/scheduled_events/{$uuid}/cancellation", $data);
-    }
-
-    // ── Invitees ────────────────────────────────────────────
-
-    /**
-     * List invitees for a scheduled event (GET /scheduled_events/{uuid}/invitees).
-     *
-     * @param  string  $uuid  The scheduled event UUID
-     * @param  array<string, mixed>  $params  Query parameters (page_token, count)
-     * @return array<string, mixed>
-     */
-    public function listInvitees(string $uuid, array $params = []): array
-    {
-        return $this->request('GET', "/scheduled_events/{$uuid}/invitees", $params);
-    }
-
-    /**
-     * Get a single invitee (GET /scheduled_events/{eventUuid}/invitees/{inviteeUuid}).
-     *
-     * @param  string  $eventUuid    The scheduled event UUID
-     * @param  string  $inviteeUuid  The invitee UUID
-     * @return array<string, mixed>
-     */
-    public function getInvitee(string $eventUuid, string $inviteeUuid): array
-    {
-        return $this->request('GET', "/scheduled_events/{$eventUuid}/invitees/{$inviteeUuid}");
-    }
-
-    // ── One-Off Event Types ─────────────────────────────────
-
-    /**
-     * Create a one-off event type (POST /one_off_event_types).
+     * Calendly does not have a direct "create booking" API. Instead, bookings
+     * are created through scheduling URLs. This method creates a one-off event
+     * type that generates a scheduling URL the invitee can use to book.
      *
      * @param  array<string, mixed>  $data  Body parameters (host, start_time, end_time, location, name)
      * @return array<string, mixed>
      */
-    public function createOneOff(array $data): array
+    public function createBooking(array $data): array
     {
         return $this->request('POST', '/one_off_event_types', $data);
     }
@@ -151,39 +112,14 @@ class CalendlyService
     // ── Organizations ───────────────────────────────────────
 
     /**
-     * Get an organization by UUID (GET /organizations/{uuid}).
+     * List organizations the authenticated user belongs to (GET /organizations).
      *
-     * @param  string  $uuid  The organization UUID
-     * @return array<string, mixed>
-     */
-    public function getOrganization(string $uuid): array
-    {
-        return $this->request('GET', "/organizations/{$uuid}");
-    }
-
-    /**
-     * List organization memberships (GET /organizations/{uuid}/memberships).
-     *
-     * @param  string  $uuid  The organization UUID
      * @param  array<string, mixed>  $params  Query parameters (page_token)
      * @return array<string, mixed>
      */
-    public function listOrganizationMemberships(string $uuid, array $params = []): array
+    public function listOrganizations(array $params = []): array
     {
-        return $this->request('GET', "/organizations/{$uuid}/memberships", $params);
-    }
-
-    // ── Scheduling Links ────────────────────────────────────
-
-    /**
-     * Create a single-use scheduling link (POST /scheduling_links).
-     *
-     * @param  array<string, mixed>  $data  Body parameters (owner_uri, max_event_count, link_type)
-     * @return array<string, mixed>
-     */
-    public function createSingleUseLink(array $data): array
-    {
-        return $this->request('POST', '/scheduling_links', $data);
+        return $this->request('GET', '/organizations', $params);
     }
 
     // ── HTTP ─────────────────────────────────────────────────
@@ -200,15 +136,15 @@ class CalendlyService
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        if (! $this->apiToken) {
-            throw new \RuntimeException('Calendly API token is not configured.');
+        if (! $this->accessToken) {
+            throw new \RuntimeException('Calendly access token is not configured.');
         }
 
         $url = self::BASE_URL . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiToken,
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
             ])->timeout(30);
 

@@ -2,21 +2,15 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
+use OpenCompany\Integrations\Core\Contracts\Tool;
+use OpenCompany\Integrations\Core\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List domains for a Vercel project.
- *
- * Returns domain names, verification status, and DNS configuration.
- * Wraps <code>GET /v9/projects/{id}/domains</code>.
- */
 class VercelListDomains implements Tool
 {
-    public function __construct(
-        private VercelService $service,
-    ) {}
+    public function __construct(private VercelService $service)
+    {
+    }
 
     public function name(): string
     {
@@ -25,28 +19,42 @@ class VercelListDomains implements Tool
 
     public function description(): string
     {
-        return 'List all domains configured for a Vercel project, including verification status and DNS records.';
+        return 'List all domains configured in Vercel, including verification and DNS status.';
     }
 
     public function parameters(): array
     {
         return [
-            'project_id' => ['type' => 'string', 'required' => true, 'description' => 'The project ID or name to list domains for.'],
+            'limit' => [
+                'type' => 'integer',
+                'required' => false,
+                'description' => 'Maximum number of domains to return (default 20, max 100).',
+            ],
+            'team_id' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team ID to scope domains to a specific team.',
+            ],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Vercel integration is not configured.');
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Vercel is not configured. Please set your API token.');
             }
 
-            $result = $this->service->listDomains($args['project_id']);
+            $params = array_filter([
+                'limit' => $args['limit'] ?? null,
+                'teamId' => $args['team_id'] ?? null,
+            ], fn ($v) => $v !== null);
+
+            $result = $this->service->listDomains($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
+            return ToolResult::error('Failed to list Vercel domains: ' . $e->getMessage());
         }
     }
 }

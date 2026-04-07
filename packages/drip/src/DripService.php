@@ -32,6 +32,16 @@ class DripService
     }
 
     /**
+     * Fetch a single campaign by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCampaign(string $id): array
+    {
+        return $this->request('GET', "/v2/{$this->accountId}/campaigns/{$id}");
+    }
+
+    /**
      * List subscribers for the configured account.
      *
      * @param  int  $page  Page number (1-based).
@@ -89,18 +99,28 @@ class DripService
     }
 
     /**
-     * List orders for the configured account.
+     * List workflows for the configured account.
      *
      * @param  int  $page  Page number (1-based).
      * @param  int  $perPage  Results per page (max 1000).
      * @return array<string, mixed>
      */
-    public function listOrders(int $page = 1, int $perPage = 100): array
+    public function listWorkflows(int $page = 1, int $perPage = 100): array
     {
-        return $this->request('GET', "/v2/{$this->accountId}/orders", [
+        return $this->request('GET', "/v2/{$this->accountId}/workflows", [
             'page' => $page,
             'per_page' => $perPage,
         ]);
+    }
+
+    /**
+     * Fetch a single workflow by ID.
+     *
+     * @return array<string, mixed>
+     */
+    public function getWorkflow(string $id): array
+    {
+        return $this->request('GET', "/v2/{$this->accountId}/workflows/{$id}");
     }
 
     /**

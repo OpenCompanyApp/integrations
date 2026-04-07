@@ -7,12 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: teamwork_get_current_user
- *
  * Get the currently authenticated Teamwork user.
  */
 class TeamworkGetCurrentUser implements Tool
 {
+    /**
+     * @param  TeamworkService  $service  The Teamwork API client
+     */
     public function __construct(
         private TeamworkService $service,
     ) {}
@@ -24,7 +25,7 @@ class TeamworkGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get information about the currently authenticated Teamwork user. Useful to verify credentials and see user details.';
+        return 'Get the currently authenticated Teamwork user.';
     }
 
     public function parameters(): array
@@ -32,16 +33,21 @@ class TeamworkGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Retrieve the current authenticated user profile.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (none)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Teamwork integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
+            $user = $this->service->getCurrentUser();
 
-            return ToolResult::success($result);
+            return ToolResult::success($user);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

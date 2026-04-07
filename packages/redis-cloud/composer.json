@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-redis-cloud",
+    "description": "Redis Cloud integration for Laravel — manage subscriptions, databases, accounts, and teams via the Redis Cloud REST API.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "redis", "redis-cloud", "cloud", "databases", "hosting", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\RedisCloud\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\RedisCloud\\RedisCloudServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,19 +1,15 @@
 <?php
 
-namespace OpenCompany\Integrations\SendGrid\Tools;
+namespace OpenCompany\Integrations\Sendgrid\Tools;
 
+use OpenCompany\Integrations\Sendgrid\SendgridService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\SendGrid\SendGridService;
 
-/**
- * Send an email via the SendGrid Mail Send API.
- */
-class SendGridSendEmail implements Tool
+class SendgridSendEmail implements Tool
 {
-    /** @param SendGridService $service The SendGrid API client */
     public function __construct(
-        private SendGridService $service,
+        private SendgridService $service,
     ) {}
 
     public function name(): string
@@ -23,100 +19,72 @@ class SendGridSendEmail implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Send an email through SendGrid. Supports HTML and plain-text content, CC, BCC,
-        reply-to, categories, and custom arguments for webhook tracking.
-        Returns a success indicator — SendGrid responds with 202 Accepted and no body.
-        MD;
+        return 'Send an email via SendGrid. Specify sender, recipients, subject, and HTML or text content.';
     }
 
     public function parameters(): array
     {
         return [
-            'to' => [
-                'type' => 'string',
-                'required' => true,
-                'description' => 'Recipient email address.',
-            ],
-            'from' => [
-                'type' => 'string',
-                'required' => true,
-                'description' => 'Sender email address (must be a verified sender identity).',
-            ],
-            'subject' => [
-                'type' => 'string',
-                'required' => true,
-                'description' => 'Email subject line.',
-            ],
-            'html_content' => [
-                'type' => 'string',
-                'description' => 'HTML body content.',
-            ],
-            'plain_content' => [
-                'type' => 'string',
-                'description' => 'Plain-text body content.',
-            ],
-            'reply_to' => [
-                'type' => 'string',
-                'description' => 'Reply-to email address.',
-            ],
-            'cc' => [
-                'type' => 'array',
-                'description' => 'CC recipient email addresses.',
-                'items' => ['type' => 'string'],
-            ],
-            'bcc' => [
-                'type' => 'array',
-                'description' => 'BCC recipient email addresses.',
-                'items' => ['type' => 'string'],
-            ],
-            'categories' => [
-                'type' => 'array',
-                'description' => 'Categories to attach to the email for analytics.',
-                'items' => ['type' => 'string'],
-            ],
-            'custom_args' => [
-                'type' => 'object',
-                'description' => 'Custom arguments for event webhooks (key-value pairs).',
-            ],
+            'from' => ['type' => 'object', 'required' => true, 'description' => 'Sender details as an object with "email" and optionally "name" keys, e.g. {"email": "noreply@example.com", "name": "My App"}.'],
+            'to' => ['type' => 'array', 'required' => true, 'description' => 'Array of recipient objects, each with "email" and optionally "name", e.g. [{"email": "user@example.com", "name": "John"}].'],
+            'subject' => ['type' => 'string', 'required' => true, 'description' => 'The email subject line.'],
+            'htmlContent' => ['type' => 'string', 'description' => 'HTML body of the email.'],
+            'textContent' => ['type' => 'string', 'description' => 'Plain text body of the email.'],
         ];
     }
 
-    /** @param array<string, mixed> $args Tool arguments */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('SendGrid integration is not configured.');
             }
 
-            $to = $args['to'] ?? '';
-            if (empty($to)) {
-                return ToolResult::error('The "to" parameter is required.');
-            }
-
-            $from = $args['from'] ?? '';
-            if (empty($from)) {
-                return ToolResult::error('The "from" parameter is required.');
-            }
-
+            $from = $args['from'] ?? [];
+            $to = $args['to'] ?? [];
             $subject = $args['subject'] ?? '';
-            if (empty($subject)) {
-                return ToolResult::error('The "subject" parameter is required.');
+
+            if (empty($from) || empty($from['email'])) {
+                return ToolResult::error('Sender with an email address is required.');
             }
 
-            $result = $this->service->sendEmail(
-                to: $to,
-                from: $from,
-                subject: $subject,
-                htmlContent: $args['html_content'] ?? null,
-                plainContent: $args['plain_content'] ?? null,
-                replyTo: $args['reply_to'] ?? null,
-                cc: $args['cc'] ?? [],
-                bcc: $args['bcc'] ?? [],
-                categories: $args['categories'] ?? [],
-                customArgs: $args['custom_args'] ?? [],
-            );
+            if (empty($to)) {
+                return ToolResult::error('At least one recipient is required.');
+            }
+
+            if (empty($subject)) {
+                return ToolResult::error('Subject is required.');
+            }
+
+            $content = [];
+            if (isset($args['htmlContent'])) {
+                $content[] = ['type' => 'text/html', 'value' => $args['htmlContent']];
+            }
+            if (isset($args['textContent'])) {
+                $content[] = ['type' => 'text/plain', 'value' => $args['textContent']];
+            }
+
+            if (empty($content)) {
+                return ToolResult::error('Either htmlContent or textContent must be provided.');
+            }
+
+            $data = [
+                'from' => $from,
+                'personalizations' => [
+                    [
+                        'to' => array_map(function ($recipient) {
+                            return array_filter([
+                                'email' => $recipient['email'] ?? '',
+                                'name' => $recipient['name'] ?? null,
+                            ], fn($v) => $v !== null);
+                        }, $to),
+                    ],
+                ],
+                'subject' => $subject,
+                'content' => $content,
+            ];
+
+            $result = $this->service->sendEmail($data);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

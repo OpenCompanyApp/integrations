@@ -1,88 +1,196 @@
-# Mailgun Integration
+# Mailgun — Lua API Reference
 
-## Authentication
+## list_messages
 
-The Mailgun integration uses an API key and a sending domain. The API key is sent as a Bearer token in the `Authorization` header on every request.
+List message events in your Mailgun domain with optional filtering and pagination.
 
-Find your API key: **Mailgun Dashboard → Sending → Domain Settings → API Keys**
+### Parameters
 
-Your sending domain is the domain you configured in Mailgun (e.g. `mg.example.com`).
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Maximum number of events to return (default: 300, max: 300) |
+| `page` | string | no | Pagination cursor from a previous response |
+| `event` | string | no | Filter by event type (e.g., "stored", "delivered", "failed", "rejected") |
+| `begin` | string | no | Start of time range in RFC 2822 or epoch format |
+| `end` | string | no | End of time range in RFC 2822 or epoch format |
+| `ascending` | boolean | no | Sort results in ascending order (default: no / descending) |
+| `recipient` | string | no | Filter by recipient email address |
+| `subject` | string | no | Filter by email subject |
 
-## Base URL
+### Example
 
-- US region: `https://api.mailgun.net/v3` (default)
-- EU region: `https://api.eu.mailgun.net/v3`
+```lua
+local result = app.integrations.mailgun.list_messages({
+  limit = 10,
+  event = "delivered"
+})
 
-## Response Format
-
-Mailgun API responses typically wrap data in a top-level object. For example, the domains list returns:
-
-```json
-{
-  "total_count": 2,
-  "items": [
-    {
-      "name": "mg.example.com",
-      "state": "active",
-      "created_at": "Mon, 01 Jan 2024 00:00:00 UTC"
-    }
-  ]
-}
+for _, item in ipairs(result.items) do
+  print(item.event .. ": " .. item.message.headers.subject)
+end
 ```
 
-Events return an `items` array with a `paging` object for navigation.
+---
 
-## Pagination
+## send_email
 
-List endpoints support `limit` and `page` parameters. The `page` value is a URL or token from the previous response's `paging.next` or `paging.previous` field.
+Send an email via Mailgun.
 
-## Common Workflows
+### Parameters
 
-### Send a tracked email
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `from` | string | yes | Sender email address, e.g. `"My App <noreply@example.com>"` |
+| `to` | array | yes | Array of recipient email addresses, e.g. `{"user@example.com"}` |
+| `subject` | string | yes | The email subject line |
+| `text` | string | no | Plain text body of the email (required unless `html` provided) |
+| `html` | string | no | HTML body of the email (required unless `text` provided) |
+| `cc` | array | no | Array of CC recipient email addresses |
+| `bcc` | array | no | Array of BCC recipient email addresses |
+| `tag` | array | no | Array of tag strings for categorization |
+| `reply_to` | string | no | Reply-to email address |
 
-1. `mailgun_send_email` — Send an email with to, from, subject, and text or html body. Add tags for tracking.
+### Example
 
-### Monitor email delivery
+```lua
+local result = app.integrations.mailgun.send_email({
+  from = "My App <noreply@example.com>",
+  to = { "user@example.com" },
+  subject = "Welcome!",
+  html = "<h1>Hello!</h1><p>Welcome to our service.</p>",
+  text = "Hello! Welcome to our service."
+})
 
-1. `mailgun_get_events` — Filter by event type (accepted, delivered, failed, bounced) and recipient.
-2. `mailgun_get_stats` — Get aggregate stats by day, hour, or month.
+print("Message ID: " .. result.id)
+print("Queued: " .. tostring(result.message))
+```
 
-### Manage mailing lists
+---
 
-1. `mailgun_list_mailing_lists` — See all lists.
-2. `mailgun_create_mailing_list` — Create a new list.
-3. `mailgun_list_members` — View members of a list.
-4. `mailgun_add_member` — Add a subscriber to a list.
+## list_domains
 
-### Handle bounces
+List all domains in your Mailgun account.
 
-1. `mailgun_get_suppressions` — View bounced addresses for a domain.
-2. `mailgun_create_suppression` — Manually suppress an address to prevent future delivery.
+### Parameters
 
-### Domain management
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Maximum number of domains to return (default: 100, max: 1000) |
+| `skip` | integer | no | Number of domains to skip for pagination |
 
-1. `mailgun_list_domains` — List all domains in the account.
-2. `mailgun_get_domain` — Get DNS records and state for a specific domain.
+### Example
 
-## Event Types
+```lua
+local result = app.integrations.mailgun.list_domains({
+  limit = 20
+})
 
-Common event types for filtering:
-- `accepted` — Mailgun accepted the message
-- `delivered` — Message was delivered to the recipient's server
-- `failed` — Permanent delivery failure
-- `bounced` — Message bounced
-- `opened` — Recipient opened the message (requires tracking)
-- `clicked` — Recipient clicked a tracked link
+for _, domain in ipairs(result.items) do
+  print(domain.name .. " (state: " .. domain.state .. ")")
+end
+```
 
-## Tags
+---
 
-You can attach tags to outgoing emails for categorization and filtering. Pass `tags` as a comma-separated string when sending an email. Tags are used for analytics and event filtering.
+## get_domain
+
+Get details and DNS records for a specific domain.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `domain` | string | no | The domain name to retrieve. Defaults to the configured sending domain. |
+
+### Example
+
+```lua
+local result = app.integrations.mailgun.get_domain({
+  domain = "mg.example.com"
+})
+
+print("Domain: " .. result.domain.name)
+print("State: " .. result.domain.state)
+
+for _, record in ipairs(result.sending_dns_records) do
+  print(record.record_type .. ": " .. record.value)
+end
+```
+
+---
+
+## list_routes
+
+List all routes in your Mailgun account.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `limit` | integer | no | Maximum number of routes to return (default: 100, max: 1000) |
+| `skip` | integer | no | Number of routes to skip for pagination |
+
+### Example
+
+```lua
+local result = app.integrations.mailgun.list_routes({
+  limit = 20
+})
+
+for _, route in ipairs(result.items) do
+  print(route.id .. ": " .. route.expression .. " -> " .. route.description)
+end
+```
+
+---
+
+## list_webhooks
+
+List all webhooks configured for a domain.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `domain` | string | no | The domain name. Defaults to the configured sending domain. |
+
+### Example
+
+```lua
+local result = app.integrations.mailgun.list_webhooks()
+
+for event, urls in pairs(result.webhooks) do
+  print(event .. ": " .. urls.url)
+end
+```
+
+---
+
+## get_current_user
+
+Verify the Mailgun API connection and retrieve basic account info by listing domains.
+
+### Parameters
+
+None.
+
+### Example
+
+```lua
+local result = app.integrations.mailgun.get_current_user()
+
+print("Total domains: " .. result.total_count)
+
+for _, domain in ipairs(result.items) do
+  print(domain.name .. " - " .. domain.state)
+end
+```
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple mailgun accounts configured, use account-specific namespaces:
+If you have multiple Mailgun accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)

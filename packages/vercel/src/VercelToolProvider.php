@@ -2,17 +2,17 @@
 
 namespace OpenCompany\Integrations\Vercel;
 
-use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Vercel\Tools\VercelListDeployments;
-use OpenCompany\Integrations\Vercel\Tools\VercelGetDeployment;
-use OpenCompany\Integrations\Vercel\Tools\VercelListProjects;
-use OpenCompany\Integrations\Vercel\Tools\VercelGetProject;
-use OpenCompany\Integrations\Vercel\Tools\VercelCreateDeployment;
-use OpenCompany\Integrations\Vercel\Tools\VercelListDomains;
+use OpenCompany\Integrations\Core\Contracts\ConfigurableIntegration;
+use OpenCompany\Integrations\Core\Contracts\Tool;
+use OpenCompany\Integrations\Core\Contracts\ToolProvider;
+use OpenCompany\Integrations\Core\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetCurrentUser;
+use OpenCompany\Integrations\Vercel\Tools\VercelGetDeployment;
+use OpenCompany\Integrations\Vercel\Tools\VercelGetProject;
+use OpenCompany\Integrations\Vercel\Tools\VercelListDeployments;
+use OpenCompany\Integrations\Vercel\Tools\VercelListDomains;
+use OpenCompany\Integrations\Vercel\Tools\VercelListProjects;
+use OpenCompany\Integrations\Vercel\Tools\VercelListTeams;
 
 class VercelToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -24,22 +24,24 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'deployments, projects, domains',
-            'description' => 'Deployment & hosting platform',
-            'icon' => 'ph:cloud-arrow-up',
+            'label' => 'Vercel',
+            'description' => 'Deployments, projects, domains, and team management on Vercel.',
+            'icon' => 'ph:cloud-arrow-up-bold',
             'logo' => 'simple-icons:vercel',
         ];
     }
+
+    /* ---------- ConfigurableIntegration ---------- */
 
     public function integrationMeta(): array
     {
         return [
             'name' => 'Vercel',
-            'description' => 'Deploy and manage web applications, view deployments, projects, and domains',
-            'icon' => 'ph:cloud-arrow-up',
+            'description' => 'Manage your Vercel projects, deployments, domains, and teams.',
+            'icon' => 'ph:cloud-arrow-up-bold',
             'logo' => 'simple-icons:vercel',
-            'category' => 'devtools',
-            'badge' => 'verified',
+            'category' => 'productivity',
+            'badge' => 'Official',
             'docs_url' => 'https://vercel.com/docs/api',
         ];
     }
@@ -48,132 +50,93 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'access_token',
-                'type' => 'secret',
-                'label' => 'Access Token',
-                'placeholder' => 'Enter your Vercel access token',
-                'hint' => 'Generate a token in your Vercel account under Settings → API Tokens',
+                'name' => 'token',
+                'label' => 'Vercel API Token',
+                'type' => 'password',
                 'required' => true,
-            ],
-            [
-                'key' => 'base_url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://api.vercel.com',
-                'hint' => 'Use <code>https://api.vercel.com</code> for Vercel Cloud, or a custom endpoint',
-                'default' => 'https://api.vercel.com',
+                'description' => 'A Vercel API token (Bearer token) with the required scopes.',
+                'docs_link' => 'https://vercel.com/account/tokens',
             ],
         ];
     }
 
     public function testConnection(array $config): array
     {
-        $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['base_url'] ?? 'https://api.vercel.com', '/');
-
-        if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
-        }
-
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/v2/user');
+            $service = new VercelService(token: $config['token'] ?? '');
+            $user = $service->getCurrentUser();
 
-            $json = $response->json();
-
-            if ($json === null) {
-                return [
-                    'success' => false,
-                    'error' => "Could not reach Vercel API at {$baseUrl}. Check the URL.",
-                ];
+            if (isset($user['user'])) {
+                return ['success' => true, 'message' => "Connected as {$user['user']['username']}"];
             }
 
-            $username = $json['user']['username'] ?? $json['user']['name'] ?? 'unknown';
-
-            return [
-                'success' => true,
-                'message' => "Connected to Vercel API as {$username}.",
-            ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
+            return ['success' => false, 'message' => 'Unexpected response from Vercel API.'];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
     public function validationRules(): array
     {
         return [
-            'access_token' => 'nullable|string',
-            'base_url' => 'nullable|url',
+            'token' => ['required', 'string', 'min:1'],
         ];
     }
+
+    /* ---------- ToolProvider ---------- */
 
     public function tools(): array
     {
         return [
-            'vercel_list_deployments' => [
-                'class' => VercelListDeployments::class,
-                'type' => 'read',
-                'name' => 'List Deployments',
-                'description' => 'List deployments across projects or for a specific project.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'vercel_get_deployment' => [
-                'class' => VercelGetDeployment::class,
-                'type' => 'read',
-                'name' => 'Get Deployment',
-                'description' => 'Get details for a specific deployment by ID.',
-                'icon' => 'ph:rocket',
-            ],
             'vercel_list_projects' => [
                 'class' => VercelListProjects::class,
                 'type' => 'read',
                 'name' => 'List Projects',
                 'description' => 'List all Vercel projects.',
-                'icon' => 'ph:folder',
+                'icon' => 'ph:folder-bold',
             ],
             'vercel_get_project' => [
                 'class' => VercelGetProject::class,
                 'type' => 'read',
                 'name' => 'Get Project',
                 'description' => 'Get details for a specific Vercel project.',
-                'icon' => 'ph:folder-open',
+                'icon' => 'ph:folder-open-bold',
             ],
-            'vercel_create_deployment' => [
-                'class' => VercelCreateDeployment::class,
-                'type' => 'write',
-                'name' => 'Create Deployment',
-                'description' => 'Create a new deployment for a project.',
-                'icon' => 'ph:cloud-arrow-up',
+            'vercel_list_deployments' => [
+                'class' => VercelListDeployments::class,
+                'type' => 'read',
+                'name' => 'List Deployments',
+                'description' => 'List deployments across your Vercel projects.',
+                'icon' => 'ph:rocket-launch-bold',
+            ],
+            'vercel_get_deployment' => [
+                'class' => VercelGetDeployment::class,
+                'type' => 'read',
+                'name' => 'Get Deployment',
+                'description' => 'Get details for a specific Vercel deployment.',
+                'icon' => 'ph:rocket-bold',
             ],
             'vercel_list_domains' => [
                 'class' => VercelListDomains::class,
                 'type' => 'read',
                 'name' => 'List Domains',
-                'description' => 'List domains for a Vercel project.',
-                'icon' => 'ph:globe',
+                'description' => 'List all domains configured in Vercel.',
+                'icon' => 'ph:globe-bold',
+            ],
+            'vercel_list_teams' => [
+                'class' => VercelListTeams::class,
+                'type' => 'read',
+                'name' => 'List Teams',
+                'description' => 'List all Vercel teams you belong to.',
+                'icon' => 'ph:users-three-bold',
             ],
             'vercel_get_current_user' => [
                 'class' => VercelGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the currently authenticated Vercel user profile.',
-                'icon' => 'ph:user',
+                'icon' => 'ph:user-bold',
             ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/vercel.md';
-    }
-
-    public function credentialFields(): array
-    {
-        return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.vercel.com'],
         ];
     }
 
@@ -184,19 +147,30 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function createTool(string $class, array $context = []): Tool
     {
-        $account = $context['account'] ?? null;
+        return new $class($this->resolveService($context));
+    }
 
-        if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__ . '/../lua-docs/vercel.md';
+    }
 
-            $service = new VercelService(
-                accessToken: $creds->get('vercel', 'access_token', '', $account),
-                baseUrl: $creds->get('vercel', 'base_url', 'https://api.vercel.com', $account),
-            );
+    public function credentialFields(): array
+    {
+        return [
+            'token' => 'Vercel API Token',
+        ];
+    }
 
-            return new $class($service);
+    /* ---------- internal ---------- */
+
+    private function resolveService(array $context = []): VercelService
+    {
+        if (! empty($context['account'])) {
+            $creds = app(\OpenCompany\Integrations\Core\Contracts\CredentialResolver::class);
+            return new VercelService(token: $creds->get('vercel', 'token', '', $context['account']));
         }
 
-        return new $class(app(VercelService::class));
+        return app(VercelService::class);
     }
 }

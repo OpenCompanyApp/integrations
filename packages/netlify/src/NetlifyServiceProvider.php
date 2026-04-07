@@ -8,9 +8,6 @@ use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 class NetlifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the NetlifyService singleton.
-     */
     public function register(): void
     {
         $this->app->singleton(NetlifyService::class, function ($app) {
@@ -23,9 +20,6 @@ class NetlifyServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Boot the service provider and register the tool provider.
-     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

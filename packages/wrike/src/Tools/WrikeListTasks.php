@@ -31,18 +31,18 @@ class WrikeListTasks implements Tool
     public function parameters(): array
     {
         return [
-            'folder_id'   => ['type' => 'string',  'description' => 'Folder ID to filter tasks by.'],
-            'space_id'    => ['type' => 'string',  'description' => 'Space ID to filter tasks by.'],
-            'status'      => ['type' => 'string',  'description' => 'Task status to filter by (e.g. Active, Completed, Deferred).'],
-            'limit'       => ['type' => 'integer', 'description' => 'Max number of tasks to return.'],
-            'page_token'  => ['type' => 'string',  'description' => 'Token for pagination from a previous response.'],
+            'folderId'  => ['type' => 'string',  'description' => 'Folder ID to list tasks from.'],
+            'status'    => ['type' => 'string',  'description' => 'Filter by status (e.g. Active, Completed, Deferred).'],
+            'importance' => ['type' => 'string', 'description' => 'Filter by importance (e.g. High, Normal, Low).'],
+            'limit'     => ['type' => 'integer', 'description' => 'Max number of tasks to return.'],
+            'nextPageToken' => ['type' => 'string', 'description' => 'Cursor for pagination from a previous response.'],
         ];
     }
 
     /**
      * Retrieve a list of tasks with optional filters.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (folder_id, space_id, status, limit, page_token)
+     * @param  array<string, mixed>  $args  Tool arguments (folderId, status, importance, limit, nextPageToken)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,20 +53,20 @@ class WrikeListTasks implements Tool
 
             $params = [];
 
-            if (isset($args['folder_id'])) {
-                $params['folderId'] = $args['folder_id'];
-            }
-            if (isset($args['space_id'])) {
-                $params['spaceId'] = $args['space_id'];
+            if (isset($args['folderId'])) {
+                $params['folderId'] = $args['folderId'];
             }
             if (isset($args['status'])) {
                 $params['status'] = $args['status'];
             }
+            if (isset($args['importance'])) {
+                $params['importance'] = $args['importance'];
+            }
             if (isset($args['limit'])) {
                 $params['limit'] = (int) $args['limit'];
             }
-            if (isset($args['page_token'])) {
-                $params['pageToken'] = $args['page_token'];
+            if (isset($args['nextPageToken'])) {
+                $params['nextPageToken'] = $args['nextPageToken'];
             }
 
             $tasks = $this->service->listTasks($params);

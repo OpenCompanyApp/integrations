@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Postmark\PostmarkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the current Postmark server info.
+ *
+ * Returns server details including name, color, bounce hook URL, and delivery stats.
+ */
 class PostmarkGetCurrentUser implements Tool
 {
+    /**
+     * @param  PostmarkService  $service  The Postmark API client
+     */
     public function __construct(
         private PostmarkService $service,
     ) {}
@@ -19,7 +27,7 @@ class PostmarkGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get information about the current Postmark server, including name, color, and delivery settings.';
+        return 'Get the current Postmark server info including name, settings, and delivery stats. Useful as a health check.';
     }
 
     public function parameters(): array
@@ -27,14 +35,19 @@ class PostmarkGetCurrentUser implements Tool
         return [];
     }
 
+    /**
+     * Get the current Postmark server info.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (none)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Postmark integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
+            $result = $this->service->getCurrentServer();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

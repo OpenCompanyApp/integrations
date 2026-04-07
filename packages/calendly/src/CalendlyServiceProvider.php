@@ -25,7 +25,7 @@ class CalendlyServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new CalendlyService(
-                apiToken: $creds->get('calendly', 'api_token', ''),
+                accessToken: $creds->get('calendly', 'access_token', ''),
             );
         });
     }

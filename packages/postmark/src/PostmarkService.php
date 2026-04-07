@@ -5,182 +5,209 @@ namespace OpenCompany\Integrations\Postmark;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Client for the Postmark REST API covering email sending, messages, templates, and servers.
+ *
+ * Wraps HTTP calls to Postmark's API endpoints with Bearer token authentication
+ * passed via the X-Postmark-Server-Token header on every request.
+ */
 class PostmarkService
 {
+    /**
+     * @param  string  $serverToken  Postmark Server API token
+     * @param  string  $baseUrl      Postmark API base URL
+     */
     public function __construct(
         private string $serverToken = '',
         private string $baseUrl = 'https://api.postmarkapp.com',
-    ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
-    }
+    ) {}
 
+    /**
+     * Check whether the service has the minimum required configuration.
+     */
     public function isConfigured(): bool
     {
-        return !empty($this->serverToken);
+        return ! empty($this->serverToken);
+    }
+
+    // ── Connection ──────────────────────────────────────────
+
+    /**
+     * Test the connection by fetching the current server info.
+     *
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(): array
+    {
+        try {
+            $result = $this->request('GET', '/server');
+            $name = $result['Name'] ?? 'Unknown';
+
+            return [
+                'success' => true,
+                'message' => "Connected to Postmark server: {$name}.",
+            ];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    // ── Messages ────────────────────────────────────────────
+
+    /**
+     * List outbound messages.
+     *
+     * @param  array<string, mixed>  $params  Query params (count, offset, recipient, fromemail, subject, status, tag)
+     * @return array<string, mixed>
+     */
+    public function listMessages(array $params = []): array
+    {
+        return $this->request('GET', '/messages/outbound', $params);
     }
 
     /**
-     * Send a single email.
+     * Get details for a single outbound message.
      *
-     * @param  array  $params  Email parameters (From, To, Subject, HtmlBody, TextBody, Tag, etc.)
-     * @return array API response
+     * @param  string  $messageId  Postmark message ID
+     * @return array<string, mixed>
+     */
+    public function getMessage(string $messageId): array
+    {
+        return $this->request('GET', "/messages/outbound/{$messageId}/details");
+    }
+
+    // ── Email ───────────────────────────────────────────────
+
+    /**
+     * Send an email through Postmark.
+     *
+     * @param  array<string, mixed>  $params  Email parameters (To, From, Subject, TextBody, HtmlBody, Cc, Bcc, Tag, ReplyTo)
+     * @return array<string, mixed>
      */
     public function sendEmail(array $params): array
     {
         return $this->request('POST', '/email', $params);
     }
 
+    // ── Templates ───────────────────────────────────────────
+
     /**
-     * Send an email using a template.
+     * List all templates.
      *
-     * @param  array  $params  Template email parameters (TemplateId or TemplateAlias, From, To, TemplateModel, etc.)
-     * @return array API response
+     * @param  array<string, mixed>  $params  Query params (count, offset)
+     * @return array<string, mixed>
+     */
+    public function listTemplates(array $params = []): array
+    {
+        return $this->request('GET', '/templates', $params);
+    }
+
+    /**
+     * Get details for a single template.
+     *
+     * @param  string  $templateId  Postmark template ID
+     * @return array<string, mixed>
+     */
+    public function getTemplate(string $templateId): array
+    {
+        return $this->request('GET', "/templates/{$templateId}");
+    }
+
+    // ── Template Email ──────────────────────────────────────
+
+    /**
+     * Send an email using a Postmark template.
+     *
+     * @param  array<string, mixed>  $params  Email parameters (From, To, TemplateId or TemplateAlias, TemplateModel)
+     * @return array<string, mixed>
      */
     public function sendTemplateEmail(array $params): array
     {
         return $this->request('POST', '/email/withTemplate', $params);
     }
 
+    // ── Delivery Stats ──────────────────────────────────────
+
     /**
      * Get delivery statistics for the server.
      *
-     * @return array Delivery stats
+     * @return array<string, mixed>
      */
     public function getDeliveryStats(): array
     {
-        return $this->request('GET', '/deliverystats');
+        return $this->request('GET', '/stats/outbound');
     }
 
+    // ── Servers ─────────────────────────────────────────────
+
     /**
-     * List outbound messages.
+     * List servers (requires Account API token).
      *
-     * @param  int  $count  Number of messages to return (default 100, max 500)
-     * @param  int  $offset  Offset for pagination
-     * @param  string|null  $recipient  Filter by recipient email
-     * @param  string|null  $status  Filter by status (queued, sent, bounced, etc.)
-     * @return array Messages list
+     * @param  array<string, mixed>  $params  Query params (count, offset, name)
+     * @return array<string, mixed>
      */
-    public function listMessages(int $count = 100, int $offset = 0, ?string $recipient = null, ?string $status = null): array
+    public function listServers(array $params = []): array
     {
-        $params = [
-            'count' => $count,
-            'offset' => $offset,
-        ];
-
-        if ($recipient !== null) {
-            $params['recipient'] = $recipient;
-        }
-
-        if ($status !== null) {
-            $params['status'] = $status;
-        }
-
-        return $this->request('GET', '/messages/outbound', $params);
+        return $this->request('GET', '/servers', $params);
     }
 
-    /**
-     * Get details of a specific outbound message.
-     *
-     * @param  string  $messageId  The message ID
-     * @return array Message details
-     */
-    public function getMessage(string $messageId): array
-    {
-        return $this->request('GET', '/messages/outbound/' . urlencode($messageId));
-    }
+    // ── Account / Server Info ───────────────────────────────
 
     /**
-     * List email templates.
+     * Get the current server info (associated with the server token).
      *
-     * @param  int  $count  Number of templates to return (default 100, max 500)
-     * @param  int  $offset  Offset for pagination
-     * @return array Templates list
+     * @return array<string, mixed>
      */
-    public function listTemplates(int $count = 100, int $offset = 0): array
-    {
-        return $this->request('GET', '/templates', [
-            'count' => $count,
-            'offset' => $offset,
-        ]);
-    }
-
-    /**
-     * Get server (account) information for the current user.
-     *
-     * @return array Server details
-     */
-    public function getCurrentUser(): array
+    public function getCurrentServer(): array
     {
         return $this->request('GET', '/server');
     }
 
+    // ── HTTP ─────────────────────────────────────────────────
+
     /**
-     * Make an API request and return parsed JSON.
+     * Make an API request to Postmark.
      *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API path
-     * @param  array  $data  Request data (body for POST, query for GET)
-     * @return array Parsed JSON response
+     * Sends Bearer token via X-Postmark-Server-Token header on every request.
+     *
+     * @param  string                 $method  HTTP method (GET, POST, PUT, DELETE)
+     * @param  string                 $path    API path (e.g. /email, /messages/outbound)
+     * @param  array<string, mixed>  $data    Query params (GET) or JSON body (POST/PUT)
+     * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Postmark API.
-     *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API path
-     * @param  array  $data  Request data
-     * @return \Illuminate\Http\Client\Response Raw response
-     *
-     * @throws \RuntimeException On connection or API errors
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->serverToken) {
+        if (! $this->isConfigured()) {
             throw new \RuntimeException('Postmark server token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $baseUrl = rtrim($this->baseUrl, '/');
+        $url = $baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
                 'X-Postmark-Server-Token' => $this->serverToken,
-                'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
+                'GET'    => $http->get($url, $data),
+                'POST'   => $http->post($url, $data),
+                'PUT'    => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
-
-                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Postmark API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Postmark API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect or the server token may be invalid.");
-                }
-
-                $error = $response->json('Message') ?? $response->json('error') ?? $body;
+            if (! $response->successful()) {
                 Log::error("Postmark API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'body'   => $response->body(),
                 ]);
-                throw new \RuntimeException("Postmark API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException("Postmark API error ({$response->status()}): {$response->body()}");
             }
 
-            return $response;
+            return $response->json() ?? [];
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Postmark API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

@@ -7,12 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 class NetlifyService
 {
-    /**
-     * Create a new NetlifyService instance.
-     *
-     * @param  string  $accessToken  Netlify personal access token or OAuth token.
-     * @param  string  $baseUrl  Netlify API base URL.
-     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.netlify.com/api/v1',
@@ -20,38 +14,27 @@ class NetlifyService
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
-    /**
-     * Check whether the service is configured with an access token.
-     */
     public function isConfigured(): bool
     {
         return !empty($this->accessToken);
     }
 
     /**
-     * List all sites the authenticated user has access to.
+     * List all sites.
      *
-     * @param  int  $page  Page number for pagination (1-based).
-     * @param  int  $perPage  Number of results per page (max 100).
+     * @param  array<string, mixed>  $params  Query parameters (e.g., name, page, per_page).
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/listSites
      */
-    public function listSites(int $page = 1, int $perPage = 20): array
+    public function listSites(array $params = []): array
     {
-        return $this->request('GET', '/sites', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        return $this->request('GET', '/sites', $params);
     }
 
     /**
-     * Get details for a single site.
+     * Get details for a specific site.
      *
-     * @param  string  $siteId  The site ID (Netlify site identifier).
+     * @param  string  $siteId  The site identifier.
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/getSite
      */
     public function getSite(string $siteId): array
     {
@@ -59,72 +42,33 @@ class NetlifyService
     }
 
     /**
-     * Create a new site.
-     *
-     * @param  string  $name  Human-readable name for the site (used as subdomain unless custom domain is set).
-     * @param  array<string, mixed>  $body  Additional site configuration (e.g., custom_domain, repo, etc.).
-     * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/createSite
-     */
-    public function createSite(string $name, array $body = []): array
-    {
-        $payload = array_merge(['name' => $name], $body);
-
-        return $this->request('POST', '/sites', $payload);
-    }
-
-    /**
-     * Delete a site permanently.
-     *
-     * @param  string  $siteId  The site ID to delete.
-     *
-     * @see https://open-api.netlify.com/#operation/deleteSite
-     */
-    public function deleteSite(string $siteId): void
-    {
-        $this->request('DELETE', '/sites/' . urlencode($siteId));
-    }
-
-    /**
      * List deploys for a site.
      *
-     * @param  string  $siteId  The site ID.
-     * @param  int  $page  Page number for pagination (1-based).
-     * @param  int  $perPage  Number of results per page (max 100).
+     * @param  string  $siteId  The site identifier.
+     * @param  array<string, mixed>  $params  Query parameters (e.g., page, per_page).
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/listSiteDeploys
      */
-    public function listDeploys(string $siteId, int $page = 1, int $perPage = 20): array
+    public function listDeploys(string $siteId, array $params = []): array
     {
-        return $this->request('GET', '/sites/' . urlencode($siteId) . '/deploys', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
+        return $this->request('GET', '/sites/' . urlencode($siteId) . '/deploys', $params);
     }
 
     /**
-     * Create a new deploy for a site.
+     * Get details for a specific deploy.
      *
-     * @param  string  $siteId  The site ID.
-     * @param  array<string, mixed>  $body  Deploy payload (e.g., title, branch, framework, etc.).
+     * @param  string  $deployId  The deploy identifier.
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/createSiteDeploy
      */
-    public function createDeploy(string $siteId, array $body = []): array
+    public function getDeploy(string $deployId): array
     {
-        return $this->request('POST', '/sites/' . urlencode($siteId) . '/deploys', $body);
+        return $this->request('GET', '/deploys/' . urlencode($deployId));
     }
 
     /**
      * List forms for a site.
      *
-     * @param  string  $siteId  The site ID.
+     * @param  string  $siteId  The site identifier.
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/listSiteForms
      */
     public function listForms(string $siteId): array
     {
@@ -132,24 +76,20 @@ class NetlifyService
     }
 
     /**
-     * Get details for a single form.
+     * List DNS zones.
      *
-     * @param  string  $formId  The form ID.
+     * @param  array<string, mixed>  $params  Query parameters.
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/getForm
      */
-    public function getForm(string $formId): array
+    public function listDnsZones(array $params = []): array
     {
-        return $this->request('GET', '/forms/' . urlencode($formId));
+        return $this->request('GET', '/dns_zones', $params);
     }
 
     /**
-     * Get the currently authenticated user.
+     * Get the current authenticated user.
      *
      * @return array<string, mixed>
-     *
-     * @see https://open-api.netlify.com/#operation/getCurrentUser
      */
     public function getCurrentUser(): array
     {
@@ -160,15 +100,20 @@ class NetlifyService
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path (e.g., "/sites").
-     * @param  array<string, mixed>  $data  Query params (GET) or JSON body (POST/PUT/DELETE).
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $data  Request data (query params for GET, body for POST/PUT).
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
+        $json = $response->json();
 
-        return $response->json() ?? [];
+        if (!is_array($json)) {
+            return [];
+        }
+
+        return $json;
     }
 
     /**
@@ -179,7 +124,7 @@ class NetlifyService
      * @param  array<string, mixed>  $data  Request data.
      * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException When the API key is missing or the request fails.
+     * @throws \RuntimeException
      */
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
@@ -211,15 +156,17 @@ class NetlifyService
                     Log::warning("Netlify API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Netlify API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the access token may be invalid.");
+                    throw new \RuntimeException("Netlify API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
                 }
 
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
+                $json = $response->json();
+                $message = $json['message'] ?? $json['error'] ?? $body;
+
                 Log::error("Netlify API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'error' => $message,
                 ]);
-                throw new \RuntimeException("Netlify API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+                throw new \RuntimeException("Netlify API error ({$response->status()}): {$message}");
             }
 
             return $response;

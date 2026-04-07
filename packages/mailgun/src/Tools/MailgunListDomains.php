@@ -6,16 +6,8 @@ use OpenCompany\Integrations\Mailgun\MailgunService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List all domains in the Mailgun account.
- *
- * Supports pagination via limit and page parameters.
- */
 class MailgunListDomains implements Tool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
     public function __construct(
         private MailgunService $service,
     ) {}
@@ -27,37 +19,28 @@ class MailgunListDomains implements Tool
 
     public function description(): string
     {
-        return 'List all domains in the Mailgun account. Supports pagination.';
+        return 'List all domains in your Mailgun account with optional pagination.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of domains to return (default 100).'],
-            'page'  => ['type' => 'string', 'description' => 'Page URL or token for pagination.'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of domains to return (default: 100, max: 1000).'],
+            'skip' => ['type' => 'integer', 'description' => 'Number of domains to skip for pagination.'],
         ];
     }
 
-    /**
-     * List all domains in the Mailgun account.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, page)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mailgun integration is not configured.');
             }
 
-            $params = [];
-
-            if (! empty($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (! empty($args['page'])) {
-                $params['page'] = $args['page'];
-            }
+            $params = array_filter([
+                'limit' => $args['limit'] ?? null,
+                'skip' => $args['skip'] ?? null,
+            ], fn($value) => $value !== null);
 
             $result = $this->service->listDomains($params);
 

@@ -2,21 +2,15 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
+use OpenCompany\Integrations\Core\Contracts\Tool;
+use OpenCompany\Integrations\Core\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List all Vercel projects.
- *
- * Returns project names, IDs, frameworks, and linked repositories.
- * Wraps <code>GET /v9/projects</code>.
- */
 class VercelListProjects implements Tool
 {
-    public function __construct(
-        private VercelService $service,
-    ) {}
+    public function __construct(private VercelService $service)
+    {
+    }
 
     public function name(): string
     {
@@ -25,39 +19,42 @@ class VercelListProjects implements Tool
 
     public function description(): string
     {
-        return 'List all Vercel projects. Returns project names, IDs, framework, linked Git repository, and deployment URLs.';
+        return 'List all Vercel projects. Returns project names, IDs, framework, and deployment status.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of projects to return (default: 20, max: 100).'],
-            'from' => ['type' => 'string', 'description' => 'Pagination cursor — continue from a previous response.'],
+            'limit' => [
+                'type' => 'integer',
+                'required' => false,
+                'description' => 'Maximum number of projects to return (default 20, max 100).',
+            ],
+            'team_id' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team ID to scope projects to a specific team.',
+            ],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Vercel integration is not configured.');
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Vercel is not configured. Please set your API token.');
             }
 
-            $params = [];
-
-            if (isset($args['limit'])) {
-                $params['limit'] = min((int) $args['limit'], 100);
-            }
-
-            if (isset($args['from'])) {
-                $params['from'] = $args['from'];
-            }
+            $params = array_filter([
+                'limit' => $args['limit'] ?? null,
+                'teamId' => $args['team_id'] ?? null,
+            ], fn ($v) => $v !== null);
 
             $result = $this->service->listProjects($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
+            return ToolResult::error('Failed to list Vercel projects: ' . $e->getMessage());
         }
     }
 }

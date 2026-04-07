@@ -1,22 +1,19 @@
 <?php
 
-namespace OpenCompany\Integrations\SendGrid;
+namespace OpenCompany\Integrations\Sendgrid;
 
 use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-/**
- * Laravel service provider that registers the SendGridService singleton and bootstraps SendGrid tools.
- */
-class SendGridServiceProvider extends ServiceProvider
+class SendgridServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(SendGridService::class, function ($app) {
+        $this->app->singleton(SendgridService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
-            return new SendGridService(
+            return new SendgridService(
                 apiKey: $creds->get('sendgrid', 'api_key', ''),
             );
         });
@@ -26,7 +23,7 @@ class SendGridServiceProvider extends ServiceProvider
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new SendGridToolProvider());
+                ->register(new SendgridToolProvider());
         }
     }
 }

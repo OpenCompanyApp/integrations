@@ -6,87 +6,88 @@ use OpenCompany\Integrations\Supabase\SupabaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List rows from a Supabase table with optional filtering, ordering, and pagination.
- */
 class SupabaseListRows implements Tool
 {
     /**
-     * @param  SupabaseService  $service  The Supabase API client
+     * @param SupabaseService $service The Supabase service instance.
      */
     public function __construct(
         private SupabaseService $service,
     ) {}
 
+    /**
+     * Get the tool name identifier.
+     *
+     * @return string
+     */
     public function name(): string
     {
         return 'supabase_list_rows';
     }
 
+    /**
+     * Get the tool description.
+     *
+     * @return string
+     */
     public function description(): string
     {
-        return <<<'MD'
-        List rows from a Supabase table. Supports column selection, filtering,
-        ordering, and pagination. Filters use PostgREST syntax (e.g., "eq.value",
-        "like.*pattern*"). Example filter: {"status": "eq.active", "name": "like.*john*"}.
-        MD;
+        return 'List rows in a Supabase table. Returns row data and metadata.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array
+     */
     public function parameters(): array
     {
         return [
-            'table' => ['type' => 'string', 'required' => true, 'description' => 'Table name.'],
-            'select' => ['type' => 'string', 'description' => 'Comma-separated column names (default "*").'],
-            'filter' => ['type' => 'string', 'description' => 'JSON object of PostgREST filter params, e.g. {"status": "eq.active"}.'],
-            'order' => ['type' => 'string', 'description' => 'Order clause, e.g., "created_at.desc.nullsfirst".'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of rows to return.'],
-            'offset' => ['type' => 'integer', 'description' => 'Number of rows to skip.'],
-            'count' => ['type' => 'string', 'description' => 'Count mode: "exact" or "planned".'],
+            'project_ref' => ['type' => 'string', 'required' => true, 'description' => 'The project reference ID.'],
+            'table_name' => ['type' => 'string', 'required' => true, 'description' => 'The table name or ID.'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of rows to return (default: 100).'],
+            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
+            'select' => ['type' => 'string', 'description' => 'Comma-separated list of columns to select.'],
+            'order' => ['type' => 'string', 'description' => 'Column to order by, with optional direction (e.g. "id.desc").'],
         ];
     }
 
     /**
-     * List rows from the specified table with optional filters and pagination.
+     * Execute the tool with the given arguments.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (table, select, filter, order, limit, offset, count)
+     * @param  array $args The tool arguments.
+     * @return ToolResult The result of the tool execution.
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Supabase integration is not configured.');
             }
 
-            $table = $args['table'] ?? '';
-            if (empty($table)) {
-                return ToolResult::error('table is required.');
+            if (empty($args['project_ref'])) {
+                return ToolResult::error('Project reference ID is required.');
             }
 
-            $select = $args['select'] ?? '*';
-            $order = $args['order'] ?? '';
-            $limit = isset($args['limit']) ? (int) $args['limit'] : null;
-            $offset = isset($args['offset']) ? (int) $args['offset'] : null;
-            $count = $args['count'] ?? null;
-
-            $filter = [];
-            if (isset($args['filter'])) {
-                $raw = $args['filter'];
-                if (is_string($raw)) {
-                    $decoded = json_decode($raw, true);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        return ToolResult::error('Invalid JSON in filter: ' . json_last_error_msg());
-                    }
-                    $filter = $decoded;
-                } elseif (is_array($raw)) {
-                    $filter = $raw;
-                }
+            if (empty($args['table_name'])) {
+                return ToolResult::error('Table name is required.');
             }
 
-            $result = $this->service->listRows($table, $select, $filter, $order, $limit, $offset, $count);
-
-            if (empty($result)) {
-                return ToolResult::success('No rows found.');
+            $params = [];
+            if (isset($args['limit'])) {
+                $params['limit'] = (int) $args['limit'];
             }
+            if (isset($args['offset'])) {
+                $params['offset'] = (int) $args['offset'];
+            }
+            if (isset($args['select'])) {
+                $params['select'] = $args['select'];
+            }
+            if (isset($args['order'])) {
+                $params['order'] = $args['order'];
+            }
+
+            $result = $this->service->listRows($args['project_ref'], $args['table_name'], $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

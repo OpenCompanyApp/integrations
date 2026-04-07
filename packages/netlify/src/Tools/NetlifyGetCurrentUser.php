@@ -6,51 +6,27 @@ use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Tool to get the currently authenticated Netlify user.
- *
- * Returns user details including email, name, and account information.
- */
 class NetlifyGetCurrentUser implements Tool
 {
-    /**
-     * Create a new NetlifyGetCurrentUser tool instance.
-     */
     public function __construct(
         private NetlifyService $service,
     ) {}
 
-    /**
-     * Get the tool name used for registration and invocation.
-     */
     public function name(): string
     {
         return 'netlify_get_current_user';
     }
 
-    /**
-     * Get the tool description shown to AI agents.
-     */
     public function description(): string
     {
-        return 'Get the currently authenticated Netlify user profile, including email, name, and account details.';
+        return 'Get details of the currently authenticated Netlify user. Returns user ID, email, name, and account info.';
     }
 
-    /**
-     * Get the tool parameter definitions.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [];
     }
 
-    /**
-     * Execute the tool and return the result.
-     *
-     * @param  array<string, mixed>  $args
-     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -58,9 +34,17 @@ class NetlifyGetCurrentUser implements Tool
                 return ToolResult::error('Netlify integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
+            $user = $this->service->getCurrentUser();
 
-            return ToolResult::success($result);
+            return ToolResult::success([
+                'id' => $user['id'] ?? null,
+                'email' => $user['email'] ?? null,
+                'full_name' => $user['full_name'] ?? null,
+                'avatar_url' => $user['avatar_url'] ?? null,
+                'created_at' => $user['created_at'] ?? null,
+                'affiliate_id' => $user['affiliate_id'] ?? null,
+                'site_count' => $user['site_count'] ?? null,
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

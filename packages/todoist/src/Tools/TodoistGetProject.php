@@ -2,54 +2,38 @@
 
 namespace OpenCompany\Integrations\Todoist\Tools;
 
+use OpenCompany\Integrations\Todoist\TodoistService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\Todoist\TodoistService;
 
-/**
- * Retrieve a single Todoist project by its ID.
- */
 class TodoistGetProject implements Tool
 {
-    /**
-     * @param TodoistService $service The Todoist API service instance.
-     */
     public function __construct(
         private TodoistService $service,
     ) {}
 
-    public function name(): string
-    {
-        return 'todoist_get_project';
-    }
-
-    public function description(): string
-    {
-        return 'Retrieve a single Todoist project by its ID.';
-    }
+    public function name(): string { return 'todoist_get_project'; }
+    public function description(): string { return 'Get detailed information about a Todoist project.'; }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'The unique ID of the project to retrieve.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The project ID.'],
         ];
     }
 
-    /**
-     * Retrieve a Todoist project by ID.
-     *
-     * @param array<string, mixed> $args Must contain 'id' with the project ID.
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Todoist integration is not configured.');
             }
-
-            $result = $this->service->getProject($args['id']);
-
-            return ToolResult::success($result);
+            $id = $args['id'] ?? '';
+            if (empty($id)) {
+                return ToolResult::error('id is required.');
+            }
+            $project = $this->service->getProject($id);
+            return ToolResult::success($project);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

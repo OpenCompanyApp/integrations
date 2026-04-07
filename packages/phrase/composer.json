@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-phrase",
+    "description": "Phrase localization platform integration for OpenCompany — projects, keys, translations, and locales.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "phrase", "localization", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Phrase\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Phrase\\PhraseServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

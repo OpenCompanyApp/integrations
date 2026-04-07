@@ -1,8 +1,8 @@
-# Client for the Wrike REST API v4 — Lua API Reference
+# Client for the Wrike REST API — Lua API Reference
 
 ## wrike_add_comment
 
-Add a comment to a Wrike task..
+Add a comment to a Wrike task.
 
 ### Parameters
 
@@ -22,7 +22,7 @@ local result = app.integrations.wrike.wrike_add_comment({
 
 ## wrike_create_folder
 
-Create a new folder in Wrike..
+Create a new folder in Wrike.
 
 ### Parameters
 
@@ -37,32 +37,31 @@ Create a new folder in Wrike..
 ```lua
 local result = app.integrations.wrike.wrike_create_folder({
   title = ""
-  parent_id = ""
   description = ""
 })
 ```
 
 ## wrike_create_task
 
-Create a new task in a Wrike folder..
+Create a new task in Wrike.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `folder_id` | string | yes | The folder ID to create the task in. |
+| `folderId` | string | yes | Folder ID to create the task in. |
 | `title` | string | yes | Title of the task. |
 | `description` | string | no | Detailed description of the task. |
-| `importance` | string | no | Task importance: High, Normal, or Low. |
-| `dates_start` | string | no | Start date in YYYY-MM-DD format. |
-| `dates_due` | string | no | Due date in YYYY-MM-DD format. |
-| `assignees` | array | no | Array of contact IDs to assign the task to. |
+| `importance` | string | no | Task importance (High, Normal, Low). |
+| `status` | string | no | Task status (Active, Completed, Deferred). |
+| `dates` | object | no | Date settings object (start, due, type). |
+| `assignees` | array | no | Array of user IDs to assign the task to. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wrike.wrike_create_task({
-  folder_id = ""
+  folderId = ""
   title = ""
   description = ""
 })
@@ -70,7 +69,7 @@ local result = app.integrations.wrike.wrike_create_task({
 
 ## wrike_get_current_user
 
-Get the currently authenticated Wrike user..
+Get the currently authenticated Wrike user.
 
 ### Example
 
@@ -81,7 +80,7 @@ local result = app.integrations.wrike.wrike_get_current_user({
 
 ## wrike_get_folder
 
-Get detailed information about a Wrike folder..
+Get detailed information about a Wrike folder.
 
 ### Parameters
 
@@ -97,9 +96,27 @@ local result = app.integrations.wrike.wrike_get_folder({
 })
 ```
 
+## wrike_get_project
+
+Get detailed information about a Wrike project.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | The project ID. |
+
+### Example
+
+```lua
+local result = app.integrations.wrike.wrike_get_project({
+  id = ""
+})
+```
+
 ## wrike_get_space
 
-Get detailed information about a Wrike space..
+Get detailed information about a Wrike space.
 
 ### Parameters
 
@@ -117,25 +134,25 @@ local result = app.integrations.wrike.wrike_get_space({
 
 ## wrike_get_task
 
-Get detailed information about a Wrike task..
+Get detailed information about a Wrike task.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `task_id` | string | yes | The task ID. |
+| `id` | string | yes | The task ID. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wrike.wrike_get_task({
-  task_id = ""
+  id = ""
 })
 ```
 
 ## wrike_list_contacts
 
-List contacts in Wrike..
+List contacts in Wrike.
 
 ### Parameters
 
@@ -147,35 +164,50 @@ List contacts in Wrike..
 
 ```lua
 local result = app.integrations.wrike.wrike_list_contacts({
-  limit = 0
 })
 ```
 
 ## wrike_list_folders
 
-List folders in Wrike with optional filters..
+List folders in Wrike with optional filters.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `space_id` | string | no | Space ID to filter folders by. |
 | `limit` | integer | no | Max number of folders to return. |
-| `page_token` | string | no | Token for pagination from a previous response. |
+| `nextPageToken` | string | no | Cursor for pagination from a previous response. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wrike.wrike_list_folders({
-  space_id = ""
-  limit = 0
-  page_token = ""
+})
+```
+
+## wrike_list_projects
+
+List projects in Wrike with optional filters.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `status` | string | no | Filter by project status (Active, Completed, Deferred). |
+| `limit` | integer | no | Max number of projects to return. |
+| `nextPageToken` | string | no | Cursor for pagination from a previous response. |
+
+### Example
+
+```lua
+local result = app.integrations.wrike.wrike_list_projects({
+  status = ""
 })
 ```
 
 ## wrike_list_spaces
 
-List spaces in Wrike..
+List spaces in Wrike.
 
 ### Parameters
 
@@ -187,37 +219,35 @@ List spaces in Wrike..
 
 ```lua
 local result = app.integrations.wrike.wrike_list_spaces({
-  limit = 0
 })
 ```
 
 ## wrike_list_tasks
 
-List tasks in Wrike with optional filters..
+List tasks in Wrike with optional filters.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `folder_id` | string | no | Folder ID to filter tasks by. |
-| `space_id` | string | no | Space ID to filter tasks by. |
-| `status` | string | no | Task status to filter by (e.g. Active, Completed, Deferred). |
+| `folderId` | string | no | Folder ID to list tasks from. |
+| `status` | string | no | Filter by status (e.g. Active, Completed, Deferred). |
+| `importance` | string | no | Filter by importance (e.g. High, Normal, Low). |
 | `limit` | integer | no | Max number of tasks to return. |
-| `page_token` | string | no | Token for pagination from a previous response. |
+| `nextPageToken` | string | no | Cursor for pagination from a previous response. |
 
 ### Example
 
 ```lua
 local result = app.integrations.wrike.wrike_list_tasks({
-  folder_id = ""
-  space_id = ""
+  folderId = ""
   status = ""
 })
 ```
 
 ## wrike_update_task
 
-Update an existing Wrike task..
+Update an existing Wrike task.
 
 ### Parameters
 

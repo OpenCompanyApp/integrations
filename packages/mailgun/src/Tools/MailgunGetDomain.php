@@ -6,16 +6,8 @@ use OpenCompany\Integrations\Mailgun\MailgunService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Get details for a single Mailgun domain.
- *
- * Returns domain info including DNS records, state, and created_at timestamp.
- */
 class MailgunGetDomain implements Tool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
     public function __construct(
         private MailgunService $service,
     ) {}
@@ -27,35 +19,34 @@ class MailgunGetDomain implements Tool
 
     public function description(): string
     {
-        return 'Get details for a Mailgun domain including DNS records, state, and created_at timestamp.';
+        return 'Get details and DNS records for a specific Mailgun domain.';
     }
 
     public function parameters(): array
     {
         return [
-            'domain' => ['type' => 'string', 'required' => true, 'description' => 'Domain name to look up (e.g. mg.example.com).'],
+            'domain' => ['type' => 'string', 'description' => 'The domain name to retrieve. Defaults to the configured sending domain.'],
         ];
     }
 
-    /**
-     * Get details for a Mailgun domain.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (domain)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mailgun integration is not configured.');
             }
 
-            $domain = $args['domain'] ?? '';
+            $domainName = $args['domain'] ?? '';
 
-            if (empty($domain)) {
-                return ToolResult::error('domain is required.');
+            if (empty($domainName)) {
+                $domainName = $this->service->getDomain();
             }
 
-            $result = $this->service->getDomain($domain);
+            if (empty($domainName)) {
+                return ToolResult::error('Domain name is required. Pass the "domain" parameter or configure a default sending domain.');
+            }
+
+            $result = $this->service->getDomain($domainName);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -1,33 +1,12 @@
 {
     "name": "opencompanyapp/integration-vercel",
-    "description": "Vercel integration for Laravel — manage deployments, projects, and domains.",
+    "description": "Vercel integration for OpenCompany — projects, deployments, domains, and teams.",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "OpenCompany",
-            "homepage": "https://github.com/OpenCompanyApp"
-        }
-    ],
-    "keywords": ["tools", "vercel", "deployments", "devtools", "opencompany"],
-    "require": {
-        "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-vercel": "self.version"
-    },
-    "autoload": {
-        "psr-4": {
-            "OpenCompany\\Integrations\\Vercel\\": "src/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "OpenCompany\\Integrations\\Vercel\\VercelServiceProvider"
-            ]
-        }
-    },
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "vercel", "deployment", "productivity", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Vercel\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Vercel\\VercelServiceProvider"]}},
     "minimum-stability": "stable",
     "prefer-stable": true
 }

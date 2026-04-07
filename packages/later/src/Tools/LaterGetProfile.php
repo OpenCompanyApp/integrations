@@ -1,0 +1,52 @@
+<?php
+
+namespace OpenCompany\Integrations\Later\Tools;
+
+use OpenCompany\Integrations\Later\LaterService;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
+
+/**
+ * Get a single social media profile by ID in Later.
+ *
+ * Returns detailed information about a specific social media profile,
+ * including platform type, display name, and account metadata.
+ */
+class LaterGetProfile implements Tool
+{
+    public function __construct(
+        private LaterService $service,
+    ) {}
+
+    public function name(): string
+    {
+        return 'later_get_profile';
+    }
+
+    public function description(): string
+    {
+        return 'Get details of a specific social media profile in Later by its ID. Returns profile platform type, display name, and account metadata.';
+    }
+
+    public function parameters(): array
+    {
+        return [
+            'profileId' => ['type' => 'string', 'required' => true, 'description' => 'The social profile ID to retrieve.'],
+        ];
+    }
+
+    public function execute(array $args): ToolResult
+    {
+        try {
+            if (!$this->service->isConfigured()) {
+                return ToolResult::error('Later integration is not configured.');
+            }
+
+            $result = $this->service->getProfile($args['profileId']);
+
+            return ToolResult::success($result);
+        } catch (\Throwable $e) {
+            return ToolResult::error($e->getMessage());
+        }
+    }
+}

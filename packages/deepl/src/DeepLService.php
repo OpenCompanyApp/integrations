@@ -109,6 +109,16 @@ class DeepLService
     }
 
     /**
+     * Get current user / account information.
+     *
+     * @return array<string, mixed> The API response containing account details.
+     */
+    public function getCurrentUser(): array
+    {
+        return $this->request('GET', '/v2/usage');
+    }
+
+    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).

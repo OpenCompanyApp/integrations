@@ -7,10 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List items on a Monday.com board.
- *
- * Uses the `items_page` query on boards to retrieve items with
- * optional pagination and filtering.
+ * List items on a Monday.com board with pagination.
  */
 class MondayListItems implements Tool
 {
@@ -28,23 +25,26 @@ class MondayListItems implements Tool
 
     public function description(): string
     {
-        return 'List items on a Monday.com board with optional filtering.';
+        return <<<'MD'
+        List items on a Monday.com board with pagination. Returns item name,
+        state, group, creator, and timestamps. Use monday_list_boards or
+        monday_get_board to discover board IDs.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'board_id' => ['type' => 'integer', 'required' => true,  'description' => 'The ID of the board to list items from.'],
-            'limit'    => ['type' => 'integer', 'description' => 'Maximum number of items to return (default 25, max 500).'],
-            'page'     => ['type' => 'integer', 'description' => 'Page number for pagination (starts at 1).'],
-            'query'    => ['type' => 'string',  'description' => 'Search query to filter items by name.'],
+            'board_id' => ['type' => 'integer', 'required' => true, 'description' => 'Board ID to list items for.'],
+            'limit' => ['type' => 'integer', 'description' => 'Results per page. Default: 25.'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (1-based). Default: 1.'],
         ];
     }
 
     /**
-     * Retrieve a paginated list of items from a board.
+     * List items on a Monday.com board.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (board_id, limit, page, query)
+     * @param  array<string, mixed>  $args  Tool arguments
      */
     public function execute(array $args): ToolResult
     {
@@ -53,62 +53,44 @@ class MondayListItems implements Tool
                 return ToolResult::error('Monday.com integration is not configured.');
             }
 
-            $boardId = $args['board_id'] ?? null;
-
+            $boardId = $args['board_id'] ?? '';
             if (empty($boardId)) {
                 return ToolResult::error('board_id is required.');
             }
 
-            $limit = $args['limit'] ?? 25;
-            $page = $args['page'] ?? 1;
+            $limit = (int) ($args['limit'] ?? 25);
+            $page = (int) ($args['page'] ?? 1);
 
-            $params = "limit: {$limit}";
+            $result = $this->service->listItems((int) $boardId, $limit, $page);
+            $boards = $result['data']['boards'] ?? [];
+            $items = $boards[0]['items'] ?? [];
 
-            if (isset($args['query']) && ! empty($args['query'])) {
-                $escapedQuery = $this->escapeGraphQL($args['query']);
-                $params .= ", query_params: { rules: [{ column_id: \"name\", compare_value: \"{$escapedQuery}\", operator: any_of }] }";
-            }
+            $nodes = array_map(function (array $item) {
+                return [
+                    'id' => $item['id'] ?? '',
+                    'name' => $item['name'] ?? '',
+                    'state' => $item['state'] ?? '',
+                    'group' => isset($item['group']) ? [
+                        'id' => $item['group']['id'] ?? '',
+                        'title' => $item['group']['title'] ?? '',
+                    ] : null,
+                    'creator' => isset($item['creator']) ? [
+                        'id' => $item['creator']['id'] ?? '',
+                        'name' => $item['creator']['name'] ?? '',
+                    ] : null,
+                    'created_at' => $item['created_at'] ?? '',
+                    'updated_at' => $item['updated_at'] ?? '',
+                ];
+            }, $items);
 
-            $query = <<<GRAPHQL
-            query {
-                boards (ids: [{$boardId}]) {
-                    items_page ({$params}) {
-                        cursor
-                        items {
-                            id
-                            name
-                            state
-                            group { id title }
-                            column_values { id text value type }
-                        }
-                    }
-                }
-            }
-            GRAPHQL;
-
-            $result = $this->service->graphql($query);
-
-            $boards = $result['boards'] ?? [];
-            $itemsPage = $boards[0]['items_page'] ?? [];
-
-            return ToolResult::success($itemsPage);
+            return ToolResult::success([
+                'items' => $nodes,
+                'total' => count($nodes),
+                'page' => $page,
+                'limit' => $limit,
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }
-    }
-
-    /**
-     * Escape a string for safe embedding in a GraphQL query.
-     *
-     * @param  string  $value  The raw string value
-     * @return string  The escaped string
-     */
-    private function escapeGraphQL(string $value): string
-    {
-        return str_replace(
-            ['\\', '"', "\n", "\r", "\t"],
-            ['\\\\', '\\"', '\\n', '\\r', '\\t'],
-            $value,
-        );
     }
 }

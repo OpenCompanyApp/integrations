@@ -1,9 +1,9 @@
 {
     "name": "opencompanyapp/integration-monday",
-    "description": "Monday.com integration for OpenCompany — boards, items, updates, workspaces, and users.",
+    "description": "Monday.com integration for OpenCompany — boards, items, workspaces, and users.",
     "license": "MIT",
     "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
-    "keywords": ["tools", "monday", "project-management", "opencompany"],
+    "keywords": ["tools", "monday", "monday-com", "work-os", "productivity", "opencompany"],
     "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
     "autoload": {"psr-4": {"OpenCompany\\Integrations\\Monday\\": "src/"}},
     "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Monday\\MondayServiceProvider"]}},

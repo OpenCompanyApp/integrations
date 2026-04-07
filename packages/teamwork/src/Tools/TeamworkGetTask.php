@@ -7,12 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: teamwork_get_task
- *
- * Get details for a single Teamwork task.
+ * Get detailed information about a Teamwork task.
  */
 class TeamworkGetTask implements Tool
 {
+    /**
+     * @param  TeamworkService  $service  The Teamwork API client
+     */
     public function __construct(
         private TeamworkService $service,
     ) {}
@@ -24,26 +25,37 @@ class TeamworkGetTask implements Tool
 
     public function description(): string
     {
-        return 'Get detailed information about a single Teamwork task, including description, status, assignees, dates, and subtasks.';
+        return 'Get detailed information about a Teamwork task.';
     }
 
     public function parameters(): array
     {
         return [
-            'task_id' => ['type' => 'integer', 'required' => true, 'description' => 'The task ID.'],
+            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The task ID.'],
         ];
     }
 
+    /**
+     * Retrieve a task by its ID.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (id)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Teamwork integration is not configured.');
             }
 
-            $result = $this->service->getTask((int) $args['task_id']);
+            $id = $args['id'] ?? '';
 
-            return ToolResult::success($result);
+            if (empty($id)) {
+                return ToolResult::error('id is required.');
+            }
+
+            $task = $this->service->getTask((int) $id);
+
+            return ToolResult::success($task);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

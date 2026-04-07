@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-make-com",
+    "description": "Make.com integration for OpenCompany — scenarios, executions, connections, and teams.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "make", "make-com", "automation", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\MakeCom\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\MakeCom\\MakeComServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

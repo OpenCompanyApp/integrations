@@ -1,400 +1,174 @@
 <?php
 
-namespace OpenCompany\Integrations\SendGrid;
+namespace OpenCompany\Integrations\Sendgrid;
 
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Client for the SendGrid v3 REST API covering email delivery, marketing contacts, lists,
- * sender identities, statistics, suppressions, and templates.
- *
- * Authentication uses a Bearer API key via the Authorization header.
- */
-class SendGridService
+class SendgridService
 {
-    private const BASE_URL = 'https://api.sendgrid.com/v3';
+    private string $baseUrl = 'https://api.sendgrid.com/v3';
 
-    /** @param string $apiKey SendGrid API key */
     public function __construct(
         private string $apiKey = '',
     ) {}
 
     /**
-     * Check whether the API key is configured.
-     *
-     * @return bool
+     * Check whether the SendGrid service is configured with an API key.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey);
+        return !empty($this->apiKey);
     }
 
-    // ── Email ───────────────────────────────────────────
-
     /**
-     * Send an email via the SendGrid Mail Send API.
+     * List emails with optional filtering and pagination.
      *
-     * POST /mail/send returns 202 Accepted with no body — this method returns a success indicator.
-     *
-     * @param  string                $to           Recipient email address.
-     * @param  string                $from         Sender email address.
-     * @param  string                $subject      Email subject line.
-     * @param  string|null           $htmlContent  HTML body content.
-     * @param  string|null           $plainContent Plain-text body content.
-     * @param  string|null           $replyTo      Reply-to email address.
-     * @param  array<int, string>    $cc           CC recipient email addresses.
-     * @param  array<int, string>    $bcc          BCC recipient email addresses.
-     * @param  array<int, string>    $categories   Categories to attach to the email.
-     * @param  array<string, mixed>  $customArgs   Custom arguments for event webhooks.
-     * @return array<string, mixed>  Success indicator.
+     * @param  array  $params  Query parameters (limit, query, etc.)
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function sendEmail(
-        string $to,
-        string $from,
-        string $subject,
-        ?string $htmlContent = null,
-        ?string $plainContent = null,
-        ?string $replyTo = null,
-        array $cc = [],
-        array $bcc = [],
-        array $categories = [],
-        array $customArgs = [],
-    ): array {
-        $payload = [
-            'personalizations' => [
-                array_filter([
-                    'to' => [['email' => $to]],
-                    'cc' => array_map(fn (string $e) => ['email' => $e], $cc) ?: null,
-                    'bcc' => array_map(fn (string $e) => ['email' => $e], $bcc) ?: null,
-                ]),
-            ],
-            'from' => ['email' => $from],
-            'subject' => $subject,
-        ];
-
-        $content = [];
-        if ($plainContent !== null) {
-            $content[] = ['type' => 'text/plain', 'value' => $plainContent];
-        }
-        if ($htmlContent !== null) {
-            $content[] = ['type' => 'text/html', 'value' => $htmlContent];
-        }
-        if (! empty($content)) {
-            $payload['content'] = $content;
-        }
-
-        if ($replyTo !== null) {
-            $payload['reply_to'] = ['email' => $replyTo];
-        }
-        if (! empty($categories)) {
-            $payload['categories'] = $categories;
-        }
-        if (! empty($customArgs)) {
-            $payload['custom_args'] = $customArgs;
-        }
-
-        $this->request('POST', '/mail/send', $payload, true);
-
-        return ['success' => true, 'message' => 'Email sent successfully.'];
-    }
-
-    // ── Contacts ────────────────────────────────────────
-
-    /**
-     * List marketing contacts.
-     *
-     * @param  int  $limit  Maximum number of contacts to return.
-     * @return array<string, mixed>
-     */
-    public function listContacts(int $limit = 100): array
+    public function listEmails(array $params = []): array
     {
-        return $this->request('GET', '/marketing/contacts', ['page_size' => $limit]);
+        return $this->request('GET', '/messages', $params);
     }
 
     /**
-     * Add or update a contact (upsert via PUT).
+     * Send an email via the SendGrid mail send API.
      *
-     * @param  string                $email         Contact email address.
-     * @param  string|null           $firstName     Contact first name.
-     * @param  string|null           $lastName      Contact last name.
-     * @param  array<string, mixed>  $customFields  Custom field values.
-     * @param  array<int, string>    $listIds       List IDs to add the contact to.
-     * @return array<string, mixed>
+     * @param  array  $data  Email payload (from, to, subject, content, etc.)
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function addContact(
-        string $email,
-        ?string $firstName = null,
-        ?string $lastName = null,
-        array $customFields = [],
-        array $listIds = [],
-    ): array {
-        $contact = array_filter([
-            'email' => $email,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-        ]);
-
-        if (! empty($customFields)) {
-            $contact['custom_fields'] = $customFields;
-        }
-
-        $payload = ['contacts' => [$contact]];
-
-        if (! empty($listIds)) {
-            $payload['list_ids'] = $listIds;
-        }
-
-        return $this->request('PUT', '/marketing/contacts', $payload);
-    }
-
-    /**
-     * Search marketing contacts with a query.
-     *
-     * @param  string  $query  Search query (e.g., "email LIKE '%@example.com'").
-     * @return array<string, mixed>
-     */
-    public function searchContacts(string $query): array
+    public function sendEmail(array $data): array
     {
-        return $this->request('POST', '/marketing/contacts/search', ['query' => $query]);
+        return $this->request('POST', '/mail/send', $data);
     }
 
     /**
-     * Delete one or more contacts by ID.
+     * List email templates with optional pagination.
      *
-     * @param  array<int, string>  $ids  Contact IDs to delete.
-     * @return array<string, mixed>
+     * @param  array  $params  Query parameters (page_size, page_token, etc.)
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function deleteContact(array $ids): array
+    public function listTemplates(array $params = []): array
     {
-        $idsParam = implode(',', $ids);
-
-        return $this->request('DELETE', '/marketing/contacts', ['ids' => $idsParam]);
+        return $this->request('GET', '/templates', $params);
     }
 
     /**
-     * Get a contact by email address.
+     * Get a specific template by its ID.
      *
-     * @param  string  $email  The contact's email address.
-     * @return array<string, mixed>
+     * @param  string  $id  The template ID.
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function getContactByEmail(string $email): array
+    public function getTemplate(string $id): array
     {
-        return $this->request('POST', '/marketing/contacts/search', [
-            'query' => "email = '{$email}'",
-        ]);
+        return $this->request('GET', '/templates/' . urlencode($id));
     }
 
-    // ── Lists ───────────────────────────────────────────
-
     /**
-     * List marketing lists.
+     * List contacts with optional pagination.
      *
-     * @param  int  $limit  Maximum number of lists to return.
-     * @return array<string, mixed>
+     * @param  array  $params  Query parameters (page_size, page_token, etc.)
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function listLists(int $limit = 100): array
+    public function listContacts(array $params = []): array
     {
-        return $this->request('GET', '/marketing/lists', ['page_size' => $limit]);
+        return $this->request('GET', '/marketing/contacts', $params);
     }
 
     /**
-     * Create a new marketing list.
+     * Get a contact's details by their ID.
      *
-     * @param  string  $name  The list name.
-     * @return array<string, mixed>
+     * @param  string  $id  The contact ID.
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function createList(string $name): array
+    public function getContact(string $id): array
     {
-        return $this->request('POST', '/marketing/lists', ['name' => $name]);
+        return $this->request('GET', '/marketing/contacts/' . urlencode($id));
     }
 
     /**
-     * Add contacts to a marketing list.
+     * Get the current authenticated user's profile.
      *
-     * @param  string              $listId      The list ID.
-     * @param  array<int, string>  $contactIds  Contact IDs to add.
-     * @return array<string, mixed>
+     * @return array The parsed JSON response from SendGrid.
      */
-    public function addContactToList(string $listId, array $contactIds): array
-    {
-        return $this->request('PUT', "/marketing/lists/{$listId}/contacts", [
-            'contact_ids' => implode(',', $contactIds),
-        ]);
-    }
-
-    /**
-     * Remove contacts from a marketing list.
-     *
-     * @param  string              $listId      The list ID.
-     * @param  array<int, string>  $contactIds  Contact IDs to remove.
-     * @return array<string, mixed>
-     */
-    public function removeContactFromList(string $listId, array $contactIds): array
-    {
-        $idsParam = implode(',', $contactIds);
-
-        return $this->request('DELETE', "/marketing/lists/{$listId}/contacts", ['contact_ids' => $idsParam]);
-    }
-
-    // ── Sender Identities ───────────────────────────────
-
-    /**
-     * List all verified sender identities.
-     *
-     * @return array<string, mixed>
-     */
-    public function listSenderIdentities(): array
-    {
-        return $this->request('GET', '/senders');
-    }
-
-    // ── Stats ───────────────────────────────────────────
-
-    /**
-     * Get email statistics.
-     *
-     * @param  string       $startDate    Start date in YYYY-MM-DD format.
-     * @param  string|null  $endDate      End date in YYYY-MM-DD format.
-     * @param  string|null  $aggregatedBy Aggregation period: day, week, or month.
-     * @return array<string, mixed>
-     */
-    public function getEmailStats(string $startDate, ?string $endDate = null, ?string $aggregatedBy = null): array
-    {
-        $params = ['start_date' => $startDate];
-        if ($endDate !== null) {
-            $params['end_date'] = $endDate;
-        }
-        if ($aggregatedBy !== null) {
-            $params['aggregated_by'] = $aggregatedBy;
-        }
-
-        return $this->request('GET', '/stats', $params);
-    }
-
-    // ── Suppressions ────────────────────────────────────
-
-    /**
-     * List bounce suppressions.
-     *
-     * @param  int|null     $startTime  Start time as a Unix timestamp.
-     * @param  int|null     $endTime    End time as a Unix timestamp.
-     * @param  int|null     $limit      Maximum number of results to return.
-     * @return array<string, mixed>
-     */
-    public function listSuppressions(?int $startTime = null, ?int $endTime = null, ?int $limit = null): array
-    {
-        $params = [];
-        if ($startTime !== null) {
-            $params['start_time'] = $startTime;
-        }
-        if ($endTime !== null) {
-            $params['end_time'] = $endTime;
-        }
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-
-        return $this->request('GET', '/suppression/bounces', $params);
-    }
-
-    /**
-     * Add email addresses to the suppression list.
-     *
-     * @param  array<int, string>  $emails  Email addresses to suppress.
-     * @return array<string, mixed>
-     */
-    public function addSuppression(array $emails): array
-    {
-        return $this->request('POST', '/asm/suppressions', [
-            'recipient_emails' => $emails,
-        ]);
-    }
-
-    // ── Templates ───────────────────────────────────────
-
-    /**
-     * List email templates.
-     *
-     * @param  int  $limit  Maximum number of templates to return.
-     * @return array<string, mixed>
-     */
-    public function getTemplates(int $limit = 100): array
-    {
-        return $this->request('GET', '/templates', ['page_size' => $limit]);
-    }
-
-    // ── User / Connection Test ──────────────────────────
-
-    /**
-     * Get the authenticated user's profile.
-     *
-     * @return array<string, mixed>
-     */
-    public function getUserProfile(): array
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/user/profile');
     }
 
-    // ── HTTP ────────────────────────────────────────────
+    /**
+     * Make an API request and return parsed JSON.
+     *
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path    API endpoint path (e.g. "/messages").
+     * @param  array   $data    Query parameters (GET) or JSON body (POST/PUT).
+     * @return array The parsed JSON response body.
+     */
+    private function request(string $method, string $path, array $data = []): array
+    {
+        $response = $this->rawRequest($method, $path, $data);
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        return $response->json() ?? [];
+    }
 
     /**
-     * Send an authenticated request to the SendGrid API.
+     * Make a raw HTTP request to the SendGrid API.
      *
-     * @param  string                $method       HTTP method (GET, POST, PUT, PATCH, DELETE).
-     * @param  string                $path         API path (e.g. /mail/send).
-     * @param  array<string, mixed>  $data         Query params (GET/DELETE) or JSON body (POST/PUT/PATCH).
-     * @param  bool                  $acceptNoBody If true, treat 202 with empty body as success.
-     * @return array<string, mixed>
+     * SendGrid authenticates via Bearer token in the Authorization header.
+     *
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path    API endpoint path.
+     * @param  array   $data    Query parameters or JSON body.
+     * @return \Illuminate\Http\Client\Response The raw HTTP response.
      *
      * @throws \RuntimeException If the API key is missing or the request fails.
      */
-    private function request(string $method, string $path, array $data = [], bool $acceptNoBody = false): array
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (! $this->isConfigured()) {
+        if (!$this->apiKey) {
             throw new \RuntimeException('SendGrid API key is not configured.');
         }
 
-        $url = self::BASE_URL . $path;
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withToken($this->apiKey)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->timeout(30);
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
                 'PUT' => $http->put($url, $data),
-                'PATCH' => $http->patch($url, $data),
                 'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if ($response->failed()) {
-                $body = $response->json();
-                $message = $body['errors'][0]['message'] ?? $response->body();
+            if (!$response->successful()) {
+                $body = $response->body();
+                $error = $response->json('errors.0.message') ?? $body;
 
-                Log::error('SendGrid API error', [
-                    'method' => $method,
-                    'path' => $path,
+                Log::error("SendGrid API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'body' => $body,
+                    'error' => $error,
                 ]);
 
-                throw new \RuntimeException("SendGrid API error ({$response->status()}): {$message}");
+                throw new \RuntimeException("SendGrid API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            // POST /mail/send returns 202 with no body
-            if ($acceptNoBody && ($response->status() === 202 || empty($response->body()))) {
-                return [];
-            }
-
-            return $response->json() ?? [];
-        } catch (ConnectionException $e) {
-            Log::error('SendGrid connection error', ['method' => $method, 'path' => $path, 'error' => $e->getMessage()]);
-            throw new \RuntimeException("SendGrid connection error: {$e->getMessage()}");
+            return $response;
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error("SendGrid API connection error: {$method} {$path}", [
+                'error' => $e->getMessage(),
+            ]);
+            throw new \RuntimeException("Failed to connect to SendGrid API: {$e->getMessage()}");
         }
     }
 }

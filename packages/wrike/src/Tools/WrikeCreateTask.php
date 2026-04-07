@@ -7,7 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create a new task in a Wrike folder.
+ * Create a new task in Wrike.
  */
 class WrikeCreateTask implements Tool
 {
@@ -25,26 +25,26 @@ class WrikeCreateTask implements Tool
 
     public function description(): string
     {
-        return 'Create a new task in a Wrike folder.';
+        return 'Create a new task in Wrike.';
     }
 
     public function parameters(): array
     {
         return [
-            'folder_id'     => ['type' => 'string', 'required' => true,  'description' => 'The folder ID to create the task in.'],
-            'title'         => ['type' => 'string', 'required' => true,  'description' => 'Title of the task.'],
-            'description'   => ['type' => 'string', 'description' => 'Detailed description of the task.'],
-            'importance'    => ['type' => 'string', 'description' => 'Task importance: High, Normal, or Low.'],
-            'dates_start'   => ['type' => 'string', 'description' => 'Start date in YYYY-MM-DD format.'],
-            'dates_due'     => ['type' => 'string', 'description' => 'Due date in YYYY-MM-DD format.'],
-            'assignees'     => ['type' => 'array',  'description' => 'Array of contact IDs to assign the task to.'],
+            'folderId'    => ['type' => 'string', 'required' => true,  'description' => 'Folder ID to create the task in.'],
+            'title'       => ['type' => 'string', 'required' => true,  'description' => 'Title of the task.'],
+            'description' => ['type' => 'string', 'description' => 'Detailed description of the task.'],
+            'importance'  => ['type' => 'string', 'description' => 'Task importance (High, Normal, Low).'],
+            'status'      => ['type' => 'string', 'description' => 'Task status (Active, Completed, Deferred).'],
+            'dates'       => ['type' => 'object', 'description' => 'Date settings object (start, due, type).'],
+            'assignees'   => ['type' => 'array',  'description' => 'Array of user IDs to assign the task to.'],
         ];
     }
 
     /**
      * Create a new task with the given details.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (folder_id, title, description, importance, dates_start, dates_due, assignees)
+     * @param  array<string, mixed>  $args  Tool arguments (folderId, title, description, importance, status, dates, assignees)
      */
     public function execute(array $args): ToolResult
     {
@@ -53,12 +53,14 @@ class WrikeCreateTask implements Tool
                 return ToolResult::error('Wrike integration is not configured.');
             }
 
-            $folderId = $args['folder_id'] ?? '';
-            $title = $args['title'] ?? '';
+            $folderId = $args['folderId'] ?? '';
 
             if (empty($folderId)) {
-                return ToolResult::error('folder_id is required.');
+                return ToolResult::error('folderId is required.');
             }
+
+            $title = $args['title'] ?? '';
+
             if (empty($title)) {
                 return ToolResult::error('title is required.');
             }
@@ -71,18 +73,12 @@ class WrikeCreateTask implements Tool
             if (isset($args['importance'])) {
                 $data['importance'] = $args['importance'];
             }
-
-            $dates = [];
-            if (isset($args['dates_start'])) {
-                $dates['start'] = $args['dates_start'];
+            if (isset($args['status'])) {
+                $data['status'] = $args['status'];
             }
-            if (isset($args['dates_due'])) {
-                $dates['due'] = $args['dates_due'];
+            if (isset($args['dates'])) {
+                $data['dates'] = $args['dates'];
             }
-            if (! empty($dates)) {
-                $data['dates'] = $dates;
-            }
-
             if (isset($args['assignees'])) {
                 $data['responsibles'] = $args['assignees'];
             }

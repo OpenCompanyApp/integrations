@@ -1,14 +1,14 @@
 # Integration: Netlify
 
-> Netlify integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage sites, deploys, and forms via the Netlify API. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
+> Netlify integration for the [Laravel AI SDK](https://github.com/laravel/ai) — manage sites, deploys, forms, and DNS zones. Part of the [OpenCompany](https://github.com/OpenCompanyApp) integration ecosystem.
 
-Give your AI agents access to Netlify's hosting platform. List and manage sites, trigger deployments, and inspect forms — all through the [Netlify API](https://open-api.netlify.com/).
+Give your AI agents access to Netlify's modern web deployment and hosting platform. List and inspect sites, review deploy history, check form submissions, and manage DNS zones — all through the [Netlify API](https://docs.netlify.com/api/get-started/).
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This Netlify tool lets AI agents manage web hosting, trigger deployments, and monitor form submissions — giving agents full lifecycle management of web properties.
+This Netlify tool lets AI agents inspect site deployments, review build statuses, and monitor form submissions — giving agents deployment awareness and hosting management capabilities.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
@@ -37,43 +37,48 @@ return [
 ];
 ```
 
+### Creating a Personal Access Token
+
+1. Go to your [Netlify User Settings](https://app.netlify.com/user/applications#personal-access-tokens)
+2. Click **New access token**
+3. Give it a description and click **Generate token**
+4. Copy the token value
+
 ## Available Tools
 
 | Tool | Type | Description |
 |------|------|-------------|
 | `netlify_list_sites` | read | List all Netlify sites |
 | `netlify_get_site` | read | Get details for a specific site |
-| `netlify_create_site` | write | Create a new Netlify site |
-| `netlify_delete_site` | write | Delete a site permanently |
 | `netlify_list_deploys` | read | List deploys for a site |
-| `netlify_create_deploy` | write | Trigger a new deploy |
+| `netlify_get_deploy` | read | Get details for a specific deploy |
 | `netlify_list_forms` | read | List forms for a site |
-| `netlify_get_form` | read | Get details for a specific form |
-| `netlify_get_current_user` | read | Get the authenticated user profile |
+| `netlify_list_dns_zones` | read | List all DNS zones |
+| `netlify_get_current_user` | read | Get the currently authenticated user |
 
 ## Quick Start
 
 ```php
 use OpenCompany\Integrations\Netlify\NetlifyService;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyListSites;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateDeploy;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyGetSite;
 
 // Create tools
 $service = app(NetlifyService::class);
 $tools = [
     new NetlifyListSites($service),
-    new NetlifyCreateDeploy($service),
+    new NetlifyGetSite($service),
 ];
 
 // Use with an AI agent
 $response = Ai::agent()
     ->tools($tools)
-    ->prompt('List all my Netlify sites and deploy the staging branch for example.com');
+    ->prompt('List all my Netlify sites and their latest deploys');
 ```
 
 ### Via ToolProvider (recommended)
 
-If you have `integration-core` installed, all 9 tools auto-register with the `ToolProviderRegistry`:
+If you have `integration-core` installed, all 7 tools auto-register with the `ToolProviderRegistry`:
 
 ```php
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
@@ -97,24 +102,22 @@ $service = app(NetlifyService::class);
 // List sites
 $sites = $service->listSites();
 
-// Get a specific site
+// Get site details
 $site = $service->getSite('abc123-def456');
 
-// Create a site
-$site = $service->createSite('my-site', [
-    'custom_domain' => 'www.example.com',
-]);
+// List deploys
+$deploys = $service->listDeploys('abc123-def456');
 
-// Trigger a deploy
-$deploy = $service->createDeploy('abc123-def456', [
-    'branch' => 'main',
-    'title' => 'Production deploy',
-]);
+// Get deploy details
+$deploy = $service->getDeploy('789xyz');
 
 // List forms
 $forms = $service->listForms('abc123-def456');
 
-// Get current user
+// List DNS zones
+$zones = $service->listDnsZones();
+
+// Current user
 $user = $service->getCurrentUser();
 ```
 
@@ -130,7 +133,7 @@ $user = $service->getCurrentUser();
 - PHP 8.2+
 - Laravel 11 or 12
 - [Laravel AI SDK](https://github.com/laravel/ai) ^0.1
-- A [Netlify](https://netlify.com) account with a personal access token
+- A [Netlify](https://www.netlify.com/) account with API access
 
 ## License
 

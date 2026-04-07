@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Drip\Tools\DripListCampaigns;
+use OpenCompany\Integrations\Drip\Tools\DripGetCampaign;
 use OpenCompany\Integrations\Drip\Tools\DripListSubscribers;
 use OpenCompany\Integrations\Drip\Tools\DripGetSubscriber;
-use OpenCompany\Integrations\Drip\Tools\DripCreateSubscriber;
-use OpenCompany\Integrations\Drip\Tools\DripListCampaigns;
-use OpenCompany\Integrations\Drip\Tools\DripListOrders;
+use OpenCompany\Integrations\Drip\Tools\DripListWorkflows;
+use OpenCompany\Integrations\Drip\Tools\DripGetWorkflow;
 use OpenCompany\Integrations\Drip\Tools\DripGetCurrentUser;
 
 class DripToolProvider implements ToolProvider, ConfigurableIntegration
@@ -23,7 +24,7 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'subscribers, campaigns, orders',
+            'label' => 'subscribers, campaigns, workflows',
             'description' => 'Email marketing automation',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:drip',
@@ -34,10 +35,10 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Drip',
-            'description' => 'Email marketing automation platform — manage subscribers, campaigns, and orders',
+            'description' => 'Email marketing automation platform — manage subscribers, campaigns, and workflows',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:drip',
-            'category' => 'email',
+            'category' => 'marketing',
             'badge' => 'verified',
             'docs_url' => 'https://developer.drip.com/',
         ];
@@ -118,6 +119,20 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration
     public function tools(): array
     {
         return [
+            'drip_list_campaigns' => [
+                'class' => DripListCampaigns::class,
+                'type' => 'read',
+                'name' => 'List Campaigns',
+                'description' => 'List email campaigns in your Drip account.',
+                'icon' => 'ph:envelope',
+            ],
+            'drip_get_campaign' => [
+                'class' => DripGetCampaign::class,
+                'type' => 'read',
+                'name' => 'Get Campaign',
+                'description' => 'Fetch a single email campaign by ID.',
+                'icon' => 'ph:envelope',
+            ],
             'drip_list_subscribers' => [
                 'class' => DripListSubscribers::class,
                 'type' => 'read',
@@ -132,26 +147,19 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Fetch a single subscriber by ID or email.',
                 'icon' => 'ph:user',
             ],
-            'drip_create_subscriber' => [
-                'class' => DripCreateSubscriber::class,
-                'type' => 'write',
-                'name' => 'Create Subscriber',
-                'description' => 'Create or update a subscriber in Drip.',
-                'icon' => 'ph:user-plus',
-            ],
-            'drip_list_campaigns' => [
-                'class' => DripListCampaigns::class,
+            'drip_list_workflows' => [
+                'class' => DripListWorkflows::class,
                 'type' => 'read',
-                'name' => 'List Campaigns',
-                'description' => 'List email campaigns in your Drip account.',
-                'icon' => 'ph:envelope',
+                'name' => 'List Workflows',
+                'description' => 'List workflows in your Drip account.',
+                'icon' => 'ph:flow-arrow',
             ],
-            'drip_list_orders' => [
-                'class' => DripListOrders::class,
+            'drip_get_workflow' => [
+                'class' => DripGetWorkflow::class,
                 'type' => 'read',
-                'name' => 'List Orders',
-                'description' => 'List orders recorded in your Drip account.',
-                'icon' => 'ph:shopping-cart',
+                'name' => 'Get Workflow',
+                'description' => 'Fetch a single workflow by ID.',
+                'icon' => 'ph:flow-arrow',
             ],
             'drip_get_current_user' => [
                 'class' => DripGetCurrentUser::class,

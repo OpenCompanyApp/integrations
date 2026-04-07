@@ -6,16 +6,8 @@ use OpenCompany\Integrations\Mailgun\MailgunService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Get Mailgun account info by fetching the domains list.
- *
- * This serves as a health check and returns the list of domains associated with the account.
- */
 class MailgunGetCurrentUser implements Tool
 {
-    /**
-     * @param  MailgunService  $service  The Mailgun API client
-     */
     public function __construct(
         private MailgunService $service,
     ) {}
@@ -27,7 +19,7 @@ class MailgunGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get Mailgun account info (domains list). Useful as a health check for the Mailgun connection.';
+        return 'Verify the Mailgun API connection and retrieve basic account info by listing domains.';
     }
 
     public function parameters(): array
@@ -35,15 +27,10 @@ class MailgunGetCurrentUser implements Tool
         return [];
     }
 
-    /**
-     * Get Mailgun account info by fetching the domains list.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mailgun integration is not configured.');
             }
 

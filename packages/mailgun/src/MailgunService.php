@@ -6,100 +6,66 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Client for the Mailgun REST API covering email sending, events, stats, domains, mailing lists, and suppressions.
+ * Mailgun API service — handles HTTP communication with the Mailgun v3 REST API.
  *
- * Wraps HTTP calls to Mailgun's v3 API endpoints with Bearer token authentication
- * passed via the Authorization header on every request.
+ * Uses HTTP Basic Auth with the API key as the username and an empty password.
  */
 class MailgunService
 {
-    /**
-     * @param  string  $apiKey   Mailgun API key
-     * @param  string  $domain   Mailgun sending domain (e.g. mg.example.com)
-     * @param  string  $baseUrl  Mailgun API base URL
-     */
+    private string $baseUrl = 'https://api.mailgun.net/v3';
+
     public function __construct(
         private string $apiKey = '',
         private string $domain = '',
-        private string $baseUrl = 'https://api.mailgun.net/v3',
     ) {}
 
     /**
-     * Check whether the service has the minimum required configuration.
+     * Check whether the Mailgun service is configured with an API key.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey) && ! empty($this->domain);
+        return !empty($this->apiKey);
     }
-
-    // ── Connection ──────────────────────────────────────────
 
     /**
-     * Test the connection by fetching the list of domains and returning the count.
-     *
-     * @return array{success: bool, message?: string, error?: string}
+     * Get the configured sending domain.
      */
-    public function testConnection(): array
+    public function getDomain(): string
     {
-        try {
-            $result = $this->request('GET', '/domains');
-            $total = $result['total_count'] ?? count($result['items'] ?? []);
-
-            return [
-                'success' => true,
-                'message' => "Connected to Mailgun. {$total} domain(s) found.",
-            ];
-        } catch (\Throwable $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
+        return $this->domain;
     }
-
-    // ── Email ───────────────────────────────────────────────
 
     /**
-     * Send an email through Mailgun.
+     * List stored messages for a domain with optional pagination.
      *
-     * @param  array<string, mixed>  $params  Email parameters (to, from, subject, text, html, cc, bcc, tags)
-     * @return array<string, mixed>
+     * @param  array  $params  Query parameters (limit, page, etc.)
+     * @return array The parsed JSON response from Mailgun.
      */
-    public function sendEmail(array $params): array
+    public function listMessages(array $params = []): array
     {
-        return $this->request('POST', "/{$this->domain}/messages", $params);
-    }
+        $domain = $this->domain;
 
-    // ── Events ──────────────────────────────────────────────
+        return $this->request('GET', "/{$domain}/events", $params);
+    }
 
     /**
-     * Get events for the domain.
+     * Send an email message.
      *
-     * @param  array<string, mixed>  $params  Query params (event, limit, begin, end, recipient)
-     * @return array<string, mixed>
+     * @param  array  $data  Email payload (from, to, subject, text, html, etc.)
+     * @return array The parsed JSON response from Mailgun.
      */
-    public function getEvents(array $params = []): array
+    public function sendEmail(array $data): array
     {
-        return $this->request('GET', "/{$this->domain}/events", $params);
+        $domain = $this->domain;
+
+        return $this->request('POST', "/{$domain}/messages", $data, true);
     }
-
-    // ── Stats ───────────────────────────────────────────────
-
-    /**
-     * Get total stats for the domain.
-     *
-     * @param  array<string, mixed>  $params  Query params (event, start, end, resolution)
-     * @return array<string, mixed>
-     */
-    public function getStats(array $params = []): array
-    {
-        return $this->request('GET', "/{$this->domain}/stats/total", $params);
-    }
-
-    // ── Domains ─────────────────────────────────────────────
 
     /**
      * List all domains in the Mailgun account.
      *
-     * @param  array<string, mixed>  $params  Query params (limit, page)
-     * @return array<string, mixed>
+     * @param  array  $params  Query parameters (limit, skip, etc.)
+     * @return array The parsed JSON response from Mailgun.
      */
     public function listDomains(array $params = []): array
     {
@@ -107,164 +73,123 @@ class MailgunService
     }
 
     /**
-     * Get details for a single domain.
+     * Get details of a specific domain.
      *
-     * @param  string  $name  Domain name (e.g. mg.example.com)
-     * @return array<string, mixed>
+     * @param  string  $domainName  The domain name to retrieve.
+     * @return array The parsed JSON response from Mailgun.
      */
-    public function getDomain(string $name): array
+    public function getDomain(string $domainName): array
     {
-        return $this->request('GET', "/domains/{$name}");
-    }
-
-    // ── Mailing Lists ───────────────────────────────────────
-
-    /**
-     * List all mailing lists.
-     *
-     * @param  array<string, mixed>  $params  Query params (limit, page)
-     * @return array<string, mixed>
-     */
-    public function listMailingLists(array $params = []): array
-    {
-        return $this->request('GET', '/lists', $params);
+        return $this->request('GET', "/domains/{$domainName}");
     }
 
     /**
-     * Create a new mailing list.
+     * List all routes in the Mailgun account.
      *
-     * @param  array<string, mixed>  $data  List fields (address, name, description)
-     * @return array<string, mixed>
+     * @param  array  $params  Query parameters (limit, skip, etc.)
+     * @return array The parsed JSON response from Mailgun.
      */
-    public function createMailingList(array $data): array
+    public function listRoutes(array $params = []): array
     {
-        return $this->request('POST', '/lists', $data);
+        return $this->request('GET', '/routes', $params);
     }
 
     /**
-     * List members of a mailing list.
+     * List all webhooks for a domain.
      *
-     * @param  string                 $listAddress  Mailing list address
-     * @param  array<string, mixed>   $params       Query params (limit)
-     * @return array<string, mixed>
+     * @param  string  $domainName  The domain name (defaults to configured domain).
+     * @return array The parsed JSON response from Mailgun.
      */
-    public function listMembers(string $listAddress, array $params = []): array
+    public function listWebhooks(string $domainName = ''): array
     {
-        return $this->request('GET', "/lists/{$listAddress}/members", $params);
+        $domain = $domainName ?: $this->domain;
+
+        return $this->request('GET', "/domains/{$domain}/webhooks");
     }
 
     /**
-     * Add a member to a mailing list.
+     * Get the current authenticated user / account info via domain listing.
      *
-     * @param  string                 $listAddress  Mailing list address
-     * @param  array<string, mixed>   $data         Member fields (address, name, vars)
-     * @return array<string, mixed>
-     */
-    public function addMember(string $listAddress, array $data): array
-    {
-        return $this->request('POST', "/lists/{$listAddress}/members", $data);
-    }
-
-    /**
-     * Add multiple members to a mailing list in bulk.
-     *
-     * Uses upsert mode — existing members are updated.
-     *
-     * @param  string                   $listAddress  Mailing list address
-     * @param  array<int, mixed>        $members      Array of member objects, each with at least an "address" key
-     * @return array<string, mixed>
-     */
-    public function addMemberBulk(string $listAddress, array $members): array
-    {
-        return $this->request('POST', "/lists/{$listAddress}/members.json", [
-            'members' => json_encode($members),
-            'upsert'  => 'true',
-        ]);
-    }
-
-    // ── Suppressions ────────────────────────────────────────
-
-    /**
-     * Get bounces (suppressions) for a domain.
-     *
-     * @param  string                 $domain  Domain name
-     * @param  array<string, mixed>   $params  Query params (limit)
-     * @return array<string, mixed>
-     */
-    public function getSuppressions(string $domain, array $params = []): array
-    {
-        return $this->request('GET', "/{$domain}/bounces", $params);
-    }
-
-    /**
-     * Create a bounce (suppression) for an address on a domain.
-     *
-     * @param  string                 $domain  Domain name
-     * @param  array<string, mixed>   $data    Suppression fields (address, code, error)
-     * @return array<string, mixed>
-     */
-    public function createSuppression(string $domain, array $data): array
-    {
-        return $this->request('POST', "/{$domain}/bounces", $data);
-    }
-
-    // ── User / Account ──────────────────────────────────────
-
-    /**
-     * Get current account info (domains list used as a health check).
-     *
-     * @return array<string, mixed>
+     * @return array The parsed JSON response from Mailgun.
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/domains');
+        return $this->request('GET', '/domains', ['limit' => 1]);
     }
 
-    // ── HTTP ─────────────────────────────────────────────────
-
     /**
-     * Make an API request to Mailgun.
+     * Make an API request and return parsed JSON.
      *
-     * Sends Bearer token via Authorization header on every request.
-     *
-     * @param  string                 $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string                 $path    API path (e.g. /{domain}/messages, /domains)
-     * @param  array<string, mixed>  $data    Query params (GET) or form body (POST/PUT)
-     * @return array<string, mixed>
+     * @param  string  $method     HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path       API endpoint path (e.g. "/domains").
+     * @param  array   $data       Query parameters (GET) or form body (POST).
+     * @param  bool    $asForm     Whether to send data as form-encoded (for message sending).
+     * @return array The parsed JSON response body.
      */
-    private function request(string $method, string $path, array $data = []): array
+    private function request(string $method, string $path, array $data = [], bool $asForm = false): array
     {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('Mailgun API key and domain are not configured.');
+        $response = $this->rawRequest($method, $path, $data, $asForm);
+
+        if ($response->status() === 204) {
+            return [];
         }
 
-        $baseUrl = rtrim($this->baseUrl, '/');
-        $url = $baseUrl . $path;
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Make a raw HTTP request to the Mailgun API.
+     *
+     * Mailgun authenticates via HTTP Basic Auth with the API key as the username.
+     *
+     * @param  string  $method     HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path       API endpoint path.
+     * @param  array   $data       Query parameters or form body.
+     * @param  bool    $asForm     Whether to send data as form-encoded.
+     * @return \Illuminate\Http\Client\Response The raw HTTP response.
+     *
+     * @throws \RuntimeException If the API key is missing or the request fails.
+     */
+    private function rawRequest(string $method, string $path, array $data = [], bool $asForm = false): \Illuminate\Http\Client\Response
+    {
+        if (!$this->apiKey) {
+            throw new \RuntimeException('Mailgun API key is not configured.');
+        }
+
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept' => 'application/json',
-            ])->timeout(30);
+            $http = Http::withBasicAuth($this->apiKey, '')
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                ])
+                ->timeout(30);
 
-            $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $data),
-                'POST'   => $http->asForm()->post($url, $data),
-                'PUT'    => $http->asForm()->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
-
-            if (! $response->successful()) {
-                Log::error("Mailgun API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
-                ]);
-
-                throw new \RuntimeException("Mailgun API error ({$response->status()}): {$response->body()}");
+            if ($asForm) {
+                $http = $http->asForm();
             }
 
-            return $response->json() ?? [];
+            $response = match (strtoupper($method)) {
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
+                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            };
+
+            if (!$response->successful()) {
+                $body = $response->body();
+                $error = $response->json('message') ?? $body;
+
+                Log::error("Mailgun API error: {$method} {$path}", [
+                    'status' => $response->status(),
+                    'error' => $error,
+                ]);
+
+                throw new \RuntimeException("Mailgun API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+            }
+
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Mailgun API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

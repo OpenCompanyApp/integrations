@@ -12,6 +12,7 @@ use OpenCompany\Integrations\DeepL\Tools\DeepLGetUsage;
 use OpenCompany\Integrations\DeepL\Tools\DeepLListGlossaries;
 use OpenCompany\Integrations\DeepL\Tools\DeepLGetGlossary;
 use OpenCompany\Integrations\DeepL\Tools\DeepLCreateGlossary;
+use OpenCompany\Integrations\DeepL\Tools\DeepLGetCurrentUser;
 
 class DeepLToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -37,7 +38,7 @@ class DeepLToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'AI-powered language translation with glossary support',
             'icon' => 'ph:translate',
             'logo' => 'simple-icons:deepl',
-            'category' => 'ai',
+            'category' => 'productivity',
             'badge' => 'verified',
             'docs_url' => 'https://developers.deepl.com/docs',
         ];
@@ -153,6 +154,13 @@ class DeepLToolProvider implements ToolProvider, ConfigurableIntegration
                 'name' => 'Create Glossary',
                 'description' => 'Create a new glossary.',
                 'icon' => 'ph:plus-circle',
+            ],
+            'deepl_get_current_user' => [
+                'class' => DeepLGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get current DeepL account information.',
+                'icon' => 'ph:user',
             ],
         ];
     }

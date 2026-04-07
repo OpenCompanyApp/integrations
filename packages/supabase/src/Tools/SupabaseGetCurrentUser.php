@@ -6,46 +6,55 @@ use OpenCompany\Integrations\Supabase\SupabaseService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * Get the current authenticated user from the Supabase Auth API.
- */
 class SupabaseGetCurrentUser implements Tool
 {
     /**
-     * @param  SupabaseService  $service  The Supabase API client
+     * @param SupabaseService $service The Supabase service instance.
      */
     public function __construct(
         private SupabaseService $service,
     ) {}
 
+    /**
+     * Get the tool name identifier.
+     *
+     * @return string
+     */
     public function name(): string
     {
         return 'supabase_get_current_user';
     }
 
+    /**
+     * Get the tool description.
+     *
+     * @return string
+     */
     public function description(): string
     {
-        return <<<'MD'
-        Get the current authenticated user from the Supabase Auth API.
-        Requires a valid service_role key or a valid user JWT token.
-        Returns user details including id, email, and metadata.
-        MD;
+        return 'Get the currently authenticated Supabase user profile information.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array
+     */
     public function parameters(): array
     {
         return [];
     }
 
     /**
-     * Retrieve the current authenticated user from the Supabase Auth endpoint.
+     * Execute the tool with the given arguments.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
+     * @param  array $args The tool arguments (unused).
+     * @return ToolResult The result of the tool execution.
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Supabase integration is not configured.');
             }
 

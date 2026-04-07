@@ -7,10 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List boards on Monday.com.
- *
- * Retrieves boards accessible to the authenticated user, with optional
- * pagination and workspace filtering.
+ * List Monday.com boards the authenticated user has access to.
  */
 class MondayListBoards implements Tool
 {
@@ -28,22 +25,25 @@ class MondayListBoards implements Tool
 
     public function description(): string
     {
-        return 'List boards on Monday.com with optional filters.';
+        return <<<'MD'
+        List Monday.com boards the authenticated user has access to.
+        Optionally filter by workspace. Returns board name, kind, workspace,
+        owner, and item count. Use monday_list_workspaces to discover workspace IDs.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'limit'        => ['type' => 'integer', 'description' => 'Maximum number of boards to return (default 25).'],
-            'page'         => ['type' => 'integer', 'description' => 'Page number for pagination (starts at 1).'],
-            'workspace_id' => ['type' => 'integer', 'description' => 'The ID of the workspace to filter boards by.'],
+            'limit' => ['type' => 'integer', 'description' => 'Max boards to return. Default: 25.'],
+            'workspace_id' => ['type' => 'integer', 'description' => 'Filter boards by workspace ID.'],
         ];
     }
 
     /**
-     * Retrieve a list of boards with optional filters.
+     * List Monday.com boards.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, page, workspace_id)
+     * @param  array<string, mixed>  $args  Tool arguments
      */
     public function execute(array $args): ToolResult
     {
@@ -52,30 +52,36 @@ class MondayListBoards implements Tool
                 return ToolResult::error('Monday.com integration is not configured.');
             }
 
-            $limit = $args['limit'] ?? 25;
-            $page = $args['page'] ?? 1;
+            $limit = (int) ($args['limit'] ?? 25);
+            $workspaceId = isset($args['workspace_id']) ? (int) $args['workspace_id'] : null;
 
-            $params = "limit: {$limit}, page: {$page}";
+            $result = $this->service->listBoards($limit, $workspaceId);
+            $boards = $result['data']['boards'] ?? [];
 
-            if (isset($args['workspace_id']) && ! empty($args['workspace_id'])) {
-                $params .= ", workspace_ids: [{$args['workspace_id']}]";
-            }
+            $nodes = array_map(function (array $board) {
+                return [
+                    'id' => $board['id'] ?? '',
+                    'name' => $board['name'] ?? '',
+                    'description' => $board['description'] ?? '',
+                    'board_kind' => $board['board_kind'] ?? '',
+                    'workspace' => isset($board['workspace']) ? [
+                        'id' => $board['workspace']['id'] ?? '',
+                        'name' => $board['workspace']['name'] ?? '',
+                    ] : null,
+                    'owner' => isset($board['owner']) ? [
+                        'id' => $board['owner']['id'] ?? '',
+                        'name' => $board['owner']['name'] ?? '',
+                    ] : null,
+                    'items_count' => $board['items_count'] ?? 0,
+                    'created_at' => $board['created_at'] ?? '',
+                    'updated_at' => $board['updated_at'] ?? '',
+                ];
+            }, $boards);
 
-            $query = <<<GRAPHQL
-            query {
-                boards ({$params}) {
-                    id
-                    name
-                    state
-                    board_kind
-                    workspace { id name }
-                }
-            }
-            GRAPHQL;
-
-            $result = $this->service->graphql($query);
-
-            return ToolResult::success($result['boards'] ?? []);
+            return ToolResult::success([
+                'boards' => $nodes,
+                'total' => count($nodes),
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

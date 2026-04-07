@@ -6,8 +6,16 @@ use OpenCompany\Integrations\Postmark\PostmarkService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Send an email through Postmark.
+ *
+ * Supports To, From, Subject, TextBody, HtmlBody, Cc, Bcc, Tag, and ReplyTo.
+ */
 class PostmarkSendEmail implements Tool
 {
+    /**
+     * @param  PostmarkService  $service  The Postmark API client
+     */
     public function __construct(
         private PostmarkService $service,
     ) {}
@@ -19,95 +27,78 @@ class PostmarkSendEmail implements Tool
 
     public function description(): string
     {
-        return 'Send an email through Postmark. Supports HTML and/or plain text bodies. Optionally tag the email for analytics tracking.';
+        return 'Send an email through Postmark. Requires To, From, and Subject. Provide either TextBody or HtmlBody.';
     }
 
     public function parameters(): array
     {
         return [
-            'From' => ['type' => 'string', 'required' => true, 'description' => 'Sender email address (must be a verified sender signature). Example: "sender@example.com" or "Sender Name <sender@example.com>".'],
-            'To' => ['type' => 'string', 'required' => true, 'description' => 'Recipient email address. Multiple recipients separated by commas. Example: "recipient@example.com" or "Name <recipient@example.com>".'],
-            'Subject' => ['type' => 'string', 'required' => true, 'description' => 'Email subject line.'],
-            'HtmlBody' => ['type' => 'string', 'description' => 'HTML email body. Provide this or TextBody (or both).'],
-            'TextBody' => ['type' => 'string', 'description' => 'Plain text email body. Provide this or HtmlBody (or both).'],
-            'Tag' => ['type' => 'string', 'description' => 'Tag for categorization and analytics (e.g., "welcome", "invoice").'],
-            'Cc' => ['type' => 'string', 'description' => 'CC recipients (comma-separated).'],
-            'Bcc' => ['type' => 'string', 'description' => 'BCC recipients (comma-separated).'],
-            'ReplyTo' => ['type' => 'string', 'description' => 'Reply-to email address.'],
-            'Headers' => ['type' => 'array', 'description' => 'Custom email headers as array of {"Name": "...", "Value": "..."} objects.'],
-            'TrackOpens' => ['type' => 'boolean', 'description' => 'Enable open tracking (default: server setting).'],
-            'TrackLinks' => ['type' => 'string', 'description' => 'Link tracking mode: "None", "HtmlAndText", "HtmlOnly", "TextOnly".'],
-            'Attachments' => ['type' => 'array', 'description' => 'Array of attachments with Name, Content (base64), ContentType.'],
+            'To'        => ['type' => 'string', 'required' => true, 'description' => 'Recipient email address.'],
+            'From'      => ['type' => 'string', 'required' => true, 'description' => 'Sender email address (must be a verified sender signature).'],
+            'Subject'   => ['type' => 'string', 'required' => true, 'description' => 'Email subject line.'],
+            'TextBody'  => ['type' => 'string', 'description' => 'Plain-text body of the email.'],
+            'HtmlBody'  => ['type' => 'string', 'description' => 'HTML body of the email.'],
+            'Cc'        => ['type' => 'string', 'description' => 'CC recipient(s), comma-separated.'],
+            'Bcc'       => ['type' => 'string', 'description' => 'BCC recipient(s), comma-separated.'],
+            'Tag'       => ['type' => 'string', 'description' => 'Tag for categorization and tracking.'],
+            'ReplyTo'   => ['type' => 'string', 'description' => 'Reply-To email address.'],
         ];
     }
 
+    /**
+     * Send an email through Postmark.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (To, From, Subject, TextBody, HtmlBody, Cc, Bcc, Tag, ReplyTo)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Postmark integration is not configured.');
             }
 
-            if (empty($args['HtmlBody']) && empty($args['TextBody'])) {
-                return ToolResult::error('At least one of HtmlBody or TextBody is required to send an email.');
+            $to = $args['To'] ?? '';
+            $from = $args['From'] ?? '';
+            $subject = $args['Subject'] ?? '';
+
+            if (empty($to)) {
+                return ToolResult::error('To is required.');
+            }
+            if (empty($from)) {
+                return ToolResult::error('From is required.');
+            }
+            if (empty($subject)) {
+                return ToolResult::error('Subject is required.');
             }
 
-            $params = [
-                'From' => $args['From'],
-                'To' => $args['To'],
-                'Subject' => $args['Subject'],
+            $data = [
+                'To'      => $to,
+                'From'    => $from,
+                'Subject' => $subject,
             ];
 
-            // Optional body fields
-            if (isset($args['HtmlBody'])) {
-                $params['HtmlBody'] = $args['HtmlBody'];
+            if (! empty($args['TextBody'])) {
+                $data['TextBody'] = $args['TextBody'];
             }
-            if (isset($args['TextBody'])) {
-                $params['TextBody'] = $args['TextBody'];
+            if (! empty($args['HtmlBody'])) {
+                $data['HtmlBody'] = $args['HtmlBody'];
             }
-
-            // Optional metadata
-            if (isset($args['Tag'])) {
-                $params['Tag'] = $args['Tag'];
+            if (! empty($args['Cc'])) {
+                $data['Cc'] = $args['Cc'];
             }
-            if (isset($args['Cc'])) {
-                $params['Cc'] = $args['Cc'];
+            if (! empty($args['Bcc'])) {
+                $data['Bcc'] = $args['Bcc'];
             }
-            if (isset($args['Bcc'])) {
-                $params['Bcc'] = $args['Bcc'];
+            if (! empty($args['Tag'])) {
+                $data['Tag'] = $args['Tag'];
             }
-            if (isset($args['ReplyTo'])) {
-                $params['ReplyTo'] = $args['ReplyTo'];
-            }
-            if (isset($args['Headers'])) {
-                $params['Headers'] = $args['Headers'];
+            if (! empty($args['ReplyTo'])) {
+                $data['ReplyTo'] = $args['ReplyTo'];
             }
 
-            // Optional tracking
-            if (isset($args['TrackOpens'])) {
-                $params['TrackOpens'] = (bool) $args['TrackOpens'];
-            }
-            if (isset($args['TrackLinks'])) {
-                $params['TrackLinks'] = $args['TrackLinks'];
-            }
+            $result = $this->service->sendEmail($data);
 
-            // Optional attachments
-            if (isset($args['Attachments'])) {
-                $params['Attachments'] = $args['Attachments'];
-            }
-
-            $result = $this->service->sendEmail($params);
-
-            if (isset($result['ErrorCode']) && $result['ErrorCode'] !== 0) {
-                return ToolResult::error("Postmark error ({$result['ErrorCode']}): " . ($result['Message'] ?? 'Unknown error'));
-            }
-
-            return ToolResult::success([
-                'message' => 'Email sent successfully.',
-                'message_id' => $result['MessageID'] ?? null,
-                'submitted_at' => $result['SubmittedAt'] ?? null,
-                'to' => $result['To'] ?? $args['To'],
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

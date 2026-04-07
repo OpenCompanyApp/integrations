@@ -7,9 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List workspaces on Monday.com.
- *
- * Retrieves all workspaces accessible to the authenticated user.
+ * List Monday.com workspaces the authenticated user has access to.
  */
 class MondayListWorkspaces implements Tool
 {
@@ -27,20 +25,24 @@ class MondayListWorkspaces implements Tool
 
     public function description(): string
     {
-        return 'List workspaces on Monday.com.';
+        return <<<'MD'
+        List Monday.com workspaces the authenticated user has access to.
+        Returns workspace name, kind, description, and subscriber counts.
+        Use workspace IDs to filter boards in monday_list_boards.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of workspaces to return (default 25).'],
+            'limit' => ['type' => 'integer', 'description' => 'Max workspaces to return. Default: 50.'],
         ];
     }
 
     /**
-     * Retrieve a list of workspaces.
+     * List Monday.com workspaces.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit)
+     * @param  array<string, mixed>  $args  Tool arguments
      */
     public function execute(array $args): ToolResult
     {
@@ -49,22 +51,28 @@ class MondayListWorkspaces implements Tool
                 return ToolResult::error('Monday.com integration is not configured.');
             }
 
-            $limit = $args['limit'] ?? 25;
+            $limit = (int) ($args['limit'] ?? 50);
 
-            $query = <<<GRAPHQL
-            query {
-                workspaces (limit: {$limit}) {
-                    id
-                    name
-                    state
-                    kind
-                }
-            }
-            GRAPHQL;
+            $result = $this->service->listWorkspaces($limit);
+            $workspaces = $result['data']['workspaces'] ?? [];
 
-            $result = $this->service->graphql($query);
+            $nodes = array_map(function (array $ws) {
+                return [
+                    'id' => $ws['id'] ?? '',
+                    'name' => $ws['name'] ?? '',
+                    'description' => $ws['description'] ?? '',
+                    'kind' => $ws['kind'] ?? '',
+                    'owners_count' => $ws['owners_count'] ?? 0,
+                    'subscribers_count' => $ws['subscribers_count'] ?? 0,
+                    'is_deleted' => $ws['is_deleted'] ?? false,
+                    'created_at' => $ws['created_at'] ?? '',
+                ];
+            }, $workspaces);
 
-            return ToolResult::success($result['workspaces'] ?? []);
+            return ToolResult::success([
+                'workspaces' => $nodes,
+                'total' => count($nodes),
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

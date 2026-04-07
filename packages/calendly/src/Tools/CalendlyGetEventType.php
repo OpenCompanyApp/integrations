@@ -10,7 +10,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  * Get a single Calendly event type by UUID.
  *
  * Retrieves the full details of an event type including its name,
- * duration, location, color, and scheduling URL.
+ * duration, scheduling URL, color, and location settings.
  */
 class CalendlyGetEventType implements Tool
 {

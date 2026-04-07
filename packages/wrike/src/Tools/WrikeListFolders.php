@@ -31,16 +31,15 @@ class WrikeListFolders implements Tool
     public function parameters(): array
     {
         return [
-            'space_id'    => ['type' => 'string',  'description' => 'Space ID to filter folders by.'],
-            'limit'       => ['type' => 'integer', 'description' => 'Max number of folders to return.'],
-            'page_token'  => ['type' => 'string',  'description' => 'Token for pagination from a previous response.'],
+            'limit'         => ['type' => 'integer', 'description' => 'Max number of folders to return.'],
+            'nextPageToken' => ['type' => 'string',  'description' => 'Cursor for pagination from a previous response.'],
         ];
     }
 
     /**
      * Retrieve a list of folders with optional filters.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (space_id, limit, page_token)
+     * @param  array<string, mixed>  $args  Tool arguments (limit, nextPageToken)
      */
     public function execute(array $args): ToolResult
     {
@@ -51,14 +50,11 @@ class WrikeListFolders implements Tool
 
             $params = [];
 
-            if (isset($args['space_id'])) {
-                $params['spaceId'] = $args['space_id'];
-            }
             if (isset($args['limit'])) {
                 $params['limit'] = (int) $args['limit'];
             }
-            if (isset($args['page_token'])) {
-                $params['pageToken'] = $args['page_token'];
+            if (isset($args['nextPageToken'])) {
+                $params['nextPageToken'] = $args['nextPageToken'];
             }
 
             $folders = $this->service->listFolders($params);

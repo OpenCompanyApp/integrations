@@ -1,207 +1,83 @@
-# Postmark — Lua API Reference
+# Postmark Integration
 
-## send_email
+## Authentication
 
-Send an email through Postmark.
+The Postmark integration uses a Server API token. The token is sent via the `X-Postmark-Server-Token` header on every request.
 
-### Parameters
+Find your Server API token: **Postmark Dashboard → Server → API Tokens**
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `From` | string | yes | Sender email address (must be verified) |
-| `To` | string | yes | Recipient email (comma-separated for multiple) |
-| `Subject` | string | yes | Email subject line |
-| `HtmlBody` | string | no* | HTML email body |
-| `TextBody` | string | no* | Plain text email body |
-| `Tag` | string | no | Tag for categorization (e.g., "welcome") |
-| `Cc` | string | no | CC recipients (comma-separated) |
-| `Bcc` | string | no | BCC recipients (comma-separated) |
-| `ReplyTo` | string | no | Reply-to email address |
-| `TrackOpens` | boolean | no | Enable open tracking |
-| `TrackLinks` | string | no | Link tracking: "None", "HtmlAndText", "HtmlOnly", "TextOnly" |
+For account-level operations (listing servers), you may need an Account API token.
 
-*At least one of `HtmlBody` or `TextBody` is required.
+## Base URL
 
-### Example
+- Default: `https://api.postmarkapp.com`
 
-```lua
-local result = app.integrations.postmark.send_email({
-  From = "hello@example.com",
-  To = "john@example.com",
-  Subject = "Welcome!",
-  HtmlBody = "<h1>Welcome, John!</h1><p>Thanks for signing up.</p>",
-  TextBody = "Welcome, John!\n\nThanks for signing up.",
-  Tag = "welcome"
-})
+## Response Format
 
-print("Message ID: " .. result.message_id)
-print("Submitted at: " .. result.submitted_at)
+Postmark API responses return JSON. For example, the message list returns:
+
+```json
+{
+  "TotalCount": 100,
+  "Messages": [
+    {
+      "MessageID": "abc-123",
+      "MessageStream": "outbound",
+      "To": ["user@example.com"],
+      "From": "sender@example.com",
+      "Subject": "Hello",
+      "Status": "Sent",
+      "CreatedAt": "2024-01-01T00:00:00.0000000-00:00"
+    }
+  ]
+}
 ```
 
----
+## Pagination
 
-## send_template
+List endpoints support `count` and `offset` parameters for pagination.
 
-Send an email using a Postmark template.
+- `count` — Number of records to return (default 100, max 500)
+- `offset` — Number of records to skip
 
-### Parameters
+## Common Workflows
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `From` | string | yes | Sender email address |
-| `To` | string | yes | Recipient email |
-| `TemplateId` | integer | no* | Template ID (use this or TemplateAlias) |
-| `TemplateAlias` | string | no* | Template alias (use this or TemplateId) |
-| `TemplateModel` | array | no | Key-value pairs for template variables |
-| `Tag` | string | no | Tag for categorization |
-| `Cc` | string | no | CC recipients |
-| `Bcc` | string | no | BCC recipients |
-| `ReplyTo` | string | no | Reply-to email |
-| `TrackOpens` | boolean | no | Enable open tracking |
-| `TrackLinks` | string | no | Link tracking mode |
+### Send an email
 
-*Either `TemplateId` or `TemplateAlias` is required.
+1. `postmark_send_email` — Send an email with To, From, Subject, and TextBody or HtmlBody. Optionally add Cc, Bcc, Tag, and ReplyTo.
 
-### Example
+### Track messages
 
-```lua
-local result = app.integrations.postmark.send_template({
-  From = "hello@example.com",
-  To = "john@example.com",
-  TemplateAlias = "welcome-email",
-  TemplateModel = {
-    name = "John",
-    company = "Acme Corp"
-  },
-  Tag = "welcome"
-})
+1. `postmark_list_messages` — List outbound messages. Filter by recipient, sender, subject, status, or tag.
+2. `postmark_get_message` — Get full details for a specific message by MessageID.
 
-print("Message ID: " .. result.message_id)
-```
+### Manage templates
 
----
+1. `postmark_list_templates` — Browse all templates in the account.
+2. `postmark_get_template` — View template content including subject, HTML, and text body.
 
-## get_delivery_stats
+### Server management
 
-Get email delivery statistics for the server.
+1. `postmark_list_servers` — List servers in the account. Filter by name.
+2. `postmark_get_current_user` — Get current server info and settings. Useful as a health check.
 
-### Parameters
+## Message Statuses
 
-None.
+Common message statuses for filtering:
+- `queued` — Message is queued for delivery
+- `sent` — Message was delivered to the recipient's server
+- `bounced` — Message bounced
+- `inbound` — Message was received inbound
+- `opened` — Recipient opened the message (requires open tracking)
+- `clicked` — Recipient clicked a tracked link
 
-### Example
+## Tags
 
-```lua
-local result = app.integrations.postmark.get_delivery_stats()
+You can attach a tag to outgoing emails for categorization. Pass a `Tag` string when sending an email. Tags can be used to filter messages in `postmark_list_messages`.
 
-print("Sent: " .. result.Sent)
-print("Bounced: " .. result.Bounced)
-print("Spam complaints: " .. result.SpamComplaint)
-```
+## Sender Signatures
 
----
-
-## list_messages
-
-List outbound email messages with optional filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `count` | integer | no | Number of messages (default: 100, max: 500) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-| `recipient` | string | no | Filter by recipient email |
-| `status` | string | no | Filter by status: "queued", "sent", "delivered", "bounced", etc. |
-
-### Example
-
-```lua
-local result = app.integrations.postmark.list_messages({
-  count = 25,
-  status = "sent"
-})
-
-for _, msg in ipairs(result.Messages) do
-  print(msg.To .. " - " .. msg.Subject .. " (" .. msg.Status .. ")")
-end
-```
-
-### Filter by recipient
-
-```lua
-local result = app.integrations.postmark.list_messages({
-  recipient = "john@example.com",
-  count = 10
-})
-```
-
----
-
-## get_message
-
-Get details of a specific outbound message.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | The message ID |
-
-### Example
-
-```lua
-local result = app.integrations.postmark.get_message({
-  id = "0a1296ee-8a12-4c4e-8b0c-3abcd1234567"
-})
-
-print("Subject: " .. result.Subject)
-print("Status: " .. result.Status)
-print("To: " .. result.To[1].Email)
-```
-
----
-
-## list_templates
-
-List email templates available in the server.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `count` | integer | no | Number of templates (default: 100, max: 500) |
-| `offset` | integer | no | Offset for pagination (default: 0) |
-
-### Example
-
-```lua
-local result = app.integrations.postmark.list_templates()
-
-for _, tpl in ipairs(result.Templates) do
-  print(tpl.Name .. " (Alias: " .. (tpl.Alias or "N/A") .. ", ID: " .. tpl.TemplateId .. ")")
-end
-```
-
----
-
-## get_current_user
-
-Get Postmark server information.
-
-### Parameters
-
-None.
-
-### Example
-
-```lua
-local result = app.integrations.postmark.get_current_user()
-
-print("Server: " .. result.Name)
-print("ID: " .. result.ID)
-print("Color: " .. result.Color)
-```
+The `From` email address must correspond to a verified Sender Signature in your Postmark account. Create and verify sender signatures in the Postmark Dashboard.
 
 ---
 
@@ -211,14 +87,14 @@ If you have multiple Postmark accounts configured, use account-specific namespac
 
 ```lua
 -- Default account (always works)
-app.integrations.postmark.send_email({...})
+app.integrations.postmark.function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.postmark.default.send_email({...})
+app.integrations.postmark.default.function_name({...})
 
 -- Named accounts
-app.integrations.postmark.transactional.send_email({...})
-app.integrations.postmark.marketing.send_email({...})
+app.integrations.postmark.production.function_name({...})
+app.integrations.postmark.staging.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

@@ -27,7 +27,7 @@ Collection responses include `collection` and `pagination`:
   "collection": [...],
   "pagination": {
     "count": 20,
-    "next_page": "https://api.calendly.com/scheduled_events?page_token=..."
+    "next_page": "https://api.calendly.com/v2/event_types?page_token=..."
   }
 }
 ```
@@ -40,30 +40,20 @@ List endpoints use `page_token` for cursor-based pagination. Pass the `page_toke
 
 ## Tools
 
-### calendly_get_user
+### calendly_list_event_types
 
-Get the authenticated user's profile (name, email, scheduling URL, timezone, organization).
-
-```lua
-local user = app.integrations.calendly.get_user()
-print(user.resource.name, user.resource.email)
-```
-
----
-
-### calendly_get_event_types
-
-List event types for a user.
+List event types for a user or organization.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `user` | string | no | User URI to filter by |
+| `organization` | string | no | Organization URI to filter by |
 | `active` | boolean | no | Filter by active status |
 | `page_token` | string | no | Pagination token |
+| `count` | integer | no | Results per page (default 20, max 100) |
 
 ```lua
-local result = app.integrations.calendly.get_event_types({
-  user = "https://api.calendly.com/users/abc-123",
+local result = app.integrations.calendly.list_event_types({
   active = true
 })
 
@@ -89,121 +79,20 @@ print(et.resource.name, et.resource.duration)
 
 ---
 
-### calendly_list_events
+### calendly_create_booking
 
-List scheduled events with optional filters.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `user` | string | no | User URI to filter by |
-| `status` | string | no | `"active"` or `"canceled"` |
-| `min_start_time` | string | no | ISO 8601 lower bound |
-| `max_start_time` | string | no | ISO 8601 upper bound |
-| `page_token` | string | no | Pagination token |
-| `count` | integer | no | Results per page (default 20, max 100) |
-
-```lua
-local result = app.integrations.calendly.list_events({
-  status = "active",
-  min_start_time = "2024-01-01T00:00:00Z",
-  max_start_time = "2024-12-31T23:59:59Z"
-})
-
-for _, event in ipairs(result.collection) do
-  print(event.name, event.start_time, event.end_time)
-end
-```
-
----
-
-### calendly_get_event
-
-Get a single scheduled event by UUID.
+Create a booking by generating a one-off event type with a scheduling URL.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `uuid` | string | yes | Scheduled event UUID |
-
-```lua
-local event = app.integrations.calendly.get_event({ uuid = "evt-123" })
-print(event.resource.name, event.resource.start_time)
-```
-
----
-
-### calendly_cancel_event
-
-Cancel a scheduled event.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `uuid` | string | yes | Scheduled event UUID |
-| `reason` | string | no | Cancellation reason |
-
-```lua
-local result = app.integrations.calendly.cancel_event({
-  uuid = "evt-123",
-  reason = "Rescheduling"
-})
-```
-
----
-
-### calendly_list_invitees
-
-List invitees for a scheduled event.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `event_uuid` | string | yes | Scheduled event UUID |
-| `page_token` | string | no | Pagination token |
-| `count` | integer | no | Results per page (default 20, max 100) |
-
-```lua
-local result = app.integrations.calendly.list_invitees({
-  event_uuid = "evt-123"
-})
-
-for _, invitee in ipairs(result.collection) do
-  print(invitee.name, invitee.email, invitee.status)
-end
-```
-
----
-
-### calendly_get_invitee
-
-Get a single invitee for an event.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `event_uuid` | string | yes | Scheduled event UUID |
-| `invitee_uuid` | string | yes | Invitee UUID |
-
-```lua
-local inv = app.integrations.calendly.get_invitee({
-  event_uuid = "evt-123",
-  invitee_uuid = "inv-456"
-})
-print(inv.resource.name, inv.resource.email)
-```
-
----
-
-### calendly_create_one_off
-
-Create a one-off event type for a specific time window.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `host` | string | yes | Host user URI |
+| `host` | string | yes | Host user URI (e.g. https://api.calendly.com/users/...) |
 | `start_time` | string | yes | ISO 8601 start time |
 | `end_time` | string | yes | ISO 8601 end time |
 | `location` | object | no | Location object (type + location) |
-| `name` | string | no | Event type name |
+| `name` | string | no | Name for the booking |
 
 ```lua
-local result = app.integrations.calendly.create_one_off({
+local result = app.integrations.calendly.create_booking({
   host = "https://api.calendly.com/users/abc-123",
   start_time = "2024-06-15T10:00:00Z",
   end_time = "2024-06-15T11:00:00Z",
@@ -215,19 +104,66 @@ print(result.resource.scheduling_url)
 
 ---
 
-### calendly_list_organization_memberships
+### calendly_list_bookings
 
-List members of a Calendly organization.
+List scheduled bookings (events) with optional filters.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `organization_uuid` | string | yes | Organization UUID |
+| `user` | string | no | User URI to filter by |
+| `organization` | string | no | Organization URI to filter by |
+| `status` | string | no | `"active"` or `"canceled"` |
+| `min_start_time` | string | no | ISO 8601 lower bound |
+| `max_start_time` | string | no | ISO 8601 upper bound |
 | `page_token` | string | no | Pagination token |
-| `count` | integer | no | Results per page |
+| `count` | integer | no | Results per page (default 20, max 100) |
 
 ```lua
-local result = app.integrations.calendly.list_organization_memberships({
-  organization_uuid = "org-123"
+local result = app.integrations.calendly.list_bookings({
+  status = "active",
+  min_start_time = "2024-01-01T00:00:00Z",
+  max_start_time = "2024-12-31T23:59:59Z"
+})
+
+for _, booking in ipairs(result.collection) do
+  print(booking.name, booking.start_time, booking.end_time)
+end
+```
+
+---
+
+### calendly_list_organizations
+
+List organizations the authenticated user belongs to.
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `page_token` | string | no | Pagination token |
+
+```lua
+local result = app.integrations.calendly.list_organizations({})
+
+for _, org in ipairs(result.collection) do
+  print(org.name, org.slug)
+end
+```
+
+---
+
+### calendly_list_users
+
+List users (organization memberships) in a Calendly organization.
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `organization` | string | no | Organization URI to filter by |
+| `user` | string | no | User URI to filter by |
+| `page_token` | string | no | Pagination token |
+| `count` | integer | no | Results per page (default 20, max 100) |
+
+```lua
+local result = app.integrations.calendly.list_users({
+  organization = "https://api.calendly.com/organizations/org-123"
 })
 
 for _, member in ipairs(result.collection) do
@@ -237,38 +173,13 @@ end
 
 ---
 
-### calendly_get_organization
+### calendly_get_current_user
 
-Get an organization by UUID.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `uuid` | string | yes | Organization UUID |
+Get the authenticated user's profile (name, email, scheduling URL, timezone, organization).
 
 ```lua
-local org = app.integrations.calendly.get_organization({ uuid = "org-123" })
-print(org.resource.name, org.resource.slug)
-```
-
----
-
-### calendly_create_single_use_link
-
-Create a single-use or multi-use scheduling link.
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `owner_uri` | string | yes | Event type or user URI |
-| `max_event_count` | integer | no | Max bookings via this link (default 1) |
-| `link_type` | string | no | `"singe_use"` or `"multi_use"` (default `"singe_use"`) |
-
-```lua
-local result = app.integrations.calendly.create_single_use_link({
-  owner_uri = "https://api.calendly.com/event_types/abc-123",
-  max_event_count = 1,
-  link_type = "singe_use"
-})
-print(result.resource.booking_url)
+local user = app.integrations.calendly.get_current_user()
+print(user.resource.name, user.resource.email)
 ```
 
 ---
@@ -277,30 +188,26 @@ print(result.resource.booking_url)
 
 ### Check upcoming meetings for the current user
 
-1. `calendly_get_user` — Get the authenticated user's URI
-2. `calendly_list_events` — Filter by `user` URI and `status = "active"` with a `min_start_time` of now
+1. `calendly_get_current_user` — Get the authenticated user's URI
+2. `calendly_list_bookings` — Filter by `user` URI and `status = "active"` with a `min_start_time` of now
 
-### Cancel an event and notify the invitee
+### Find available event types and create a booking link
 
-1. `calendly_list_events` — Find the event
-2. `calendly_list_invitees` — Get invitee details (name, email)
-3. `calendly_cancel_event` — Cancel with a reason
+1. `calendly_list_event_types` — Find available event types
+2. `calendly_get_event_type` — Get details for a specific event type
+3. `calendly_create_booking` — Create a one-off event type with a scheduling URL
 
-### Create a quick booking link
+### Explore organization structure
 
-1. `calendly_get_event_types` — Find the desired event type URI
-2. `calendly_create_single_use_link` — Generate a shareable link for that event type
-
-### Set up a one-off meeting
-
-1. `calendly_create_one_off` — Create a temporary event type for a specific time window
-2. Share the resulting `scheduling_url` with the participant
+1. `calendly_get_current_user` — Get user profile with organization info
+2. `calendly_list_organizations` — See all organizations
+3. `calendly_list_users` — List members within an organization
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple calendly accounts configured, use account-specific namespaces:
+If you have multiple Calendly accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)

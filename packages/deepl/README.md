@@ -25,6 +25,7 @@ composer require opencompanyapp/integration-deepl
 | `deepl_list_glossaries` | read | List all glossaries. |
 | `deepl_get_glossary` | read | Get details of a specific glossary. |
 | `deepl_create_glossary` | write | Create a new glossary with custom term translations. |
+| `deepl_get_current_user` | read | Get current DeepL account information and usage statistics. |
 
 ## Authentication
 

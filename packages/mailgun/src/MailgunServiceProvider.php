@@ -6,11 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-/**
- * Laravel service provider for the Mailgun integration.
- *
- * Registers the MailgunService singleton and bootstraps the Mailgun tool provider.
- */
 class MailgunServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -21,7 +16,6 @@ class MailgunServiceProvider extends ServiceProvider
             return new MailgunService(
                 apiKey: $creds->get('mailgun', 'api_key', ''),
                 domain: $creds->get('mailgun', 'domain', ''),
-                baseUrl: $creds->get('mailgun', 'base_url', 'https://api.mailgun.net/v3'),
             );
         });
     }

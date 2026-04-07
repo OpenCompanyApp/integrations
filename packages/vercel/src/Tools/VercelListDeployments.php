@@ -2,21 +2,15 @@
 
 namespace OpenCompany\Integrations\Vercel\Tools;
 
+use OpenCompany\Integrations\Core\Contracts\Tool;
+use OpenCompany\Integrations\Core\Support\ToolResult;
 use OpenCompany\Integrations\Vercel\VercelService;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Support\ToolResult;
 
-/**
- * List deployments from Vercel.
- *
- * Supports optional filtering by project ID, state, and pagination.
- * Wraps <code>GET /v13/deployments</code>.
- */
 class VercelListDeployments implements Tool
 {
-    public function __construct(
-        private VercelService $service,
-    ) {}
+    public function __construct(private VercelService $service)
+    {
+    }
 
     public function name(): string
     {
@@ -25,49 +19,60 @@ class VercelListDeployments implements Tool
 
     public function description(): string
     {
-        return 'List deployments from Vercel. Optionally filter by project ID or deployment state (QUEUED, BUILDING, READY, ERROR, CANCELED). Returns deployment IDs, states, URLs, and creation timestamps.';
+        return 'List deployments across your Vercel projects. Filter by project, state, or target.';
     }
 
     public function parameters(): array
     {
         return [
-            'project_id' => ['type' => 'string', 'description' => 'Filter deployments to a specific project ID.'],
-            'state' => ['type' => 'string', 'description' => 'Filter by deployment state: QUEUED, BUILDING, READY, ERROR, or CANCELED.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of deployments to return (default: 20, max: 100).'],
-            'from' => ['type' => 'string', 'description' => 'Pagination cursor — deployment ID from a previous response to start after.'],
+            'project_id' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Filter deployments by project ID.',
+            ],
+            'state' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Filter by deployment state (e.g., READY, ERROR, BUILDING, QUEUED).',
+            ],
+            'target' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Filter by target environment (e.g., production, preview, development).',
+            ],
+            'limit' => [
+                'type' => 'integer',
+                'required' => false,
+                'description' => 'Maximum number of deployments to return (default 20, max 100).',
+            ],
+            'team_id' => [
+                'type' => 'string',
+                'required' => false,
+                'description' => 'Optional team ID to scope deployments to a specific team.',
+            ],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
-                return ToolResult::error('Vercel integration is not configured.');
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Vercel is not configured. Please set your API token.');
             }
 
-            $params = [];
-
-            if (isset($args['project_id'])) {
-                $params['projectId'] = $args['project_id'];
-            }
-
-            if (isset($args['state'])) {
-                $params['state'] = $args['state'];
-            }
-
-            if (isset($args['limit'])) {
-                $params['limit'] = min((int) $args['limit'], 100);
-            }
-
-            if (isset($args['from'])) {
-                $params['from'] = $args['from'];
-            }
+            $params = array_filter([
+                'projectId' => $args['project_id'] ?? null,
+                'state' => $args['state'] ?? null,
+                'target' => $args['target'] ?? null,
+                'limit' => $args['limit'] ?? null,
+                'teamId' => $args['team_id'] ?? null,
+            ], fn ($v) => $v !== null);
 
             $result = $this->service->listDeployments($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {
-            return ToolResult::error($e->getMessage());
+            return ToolResult::error('Failed to list Vercel deployments: ' . $e->getMessage());
         }
     }
 }

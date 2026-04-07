@@ -5,370 +5,173 @@ namespace OpenCompany\Integrations\Supabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Client for the Supabase PostgREST API covering tables, rows, RPC, SQL queries, and auth.
- *
- * Wraps HTTP calls to Supabase's REST v1 endpoints and handles authentication
- * via apikey header and bearer token, request routing, and error reporting.
- */
 class SupabaseService
 {
     /**
-     * @param  string  $apiKey       Supabase anon key or service_role key
-     * @param  string  $projectUrl   Supabase project URL (e.g., https://xyzproject.supabase.co)
-     * @param  string  $bearerToken  Optional bearer token; defaults to apiKey when empty
+     * Create a new Supabase service instance.
+     *
+     * @param string $accessToken The Supabase access token (used as Bearer auth).
+     * @param string $baseUrl     The Supabase Management API base URL.
      */
     public function __construct(
-        private string $apiKey = '',
-        private string $projectUrl = '',
-        private string $bearerToken = '',
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.supabase.com/v1',
     ) {
-        if (empty($this->bearerToken)) {
-            $this->bearerToken = $this->apiKey;
-        }
+        $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
+    /**
+     * Check whether the service is properly configured.
+     *
+     * @return bool True if the access token is set.
+     */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey) && ! empty($this->projectUrl);
+        return !empty($this->accessToken);
     }
 
     /**
-     * Get the base REST URL for the project.
+     * List all projects in the organization.
      *
-     * @return string
+     * @return array The parsed JSON response containing projects.
      */
-    private function baseUrl(): string
+    public function listProjects(): array
     {
-        return rtrim($this->projectUrl, '/') . '/rest/v1';
+        return $this->request('GET', '/projects');
     }
 
-    // ── Rows ───────────────────────────────────────────────
-
     /**
-     * List rows from a table with optional filtering, ordering, and pagination.
+     * Get a project by its ID.
      *
-     * @param  string  $table    Table name
-     * @param  string  $select   Comma-separated column names (default "*")
-     * @param  array<string, mixed>  $filter  Query filter params (e.g., ["column" => "eq.value"])
-     * @param  string  $order    Order clause (e.g., "created_at.desc")
-     * @param  int|null  $limit  Maximum number of rows to return
-     * @param  int|null  $offset Number of rows to skip
-     * @param  string|null  $count  Count mode: "exact" or "planned" or null
-     * @return array<string, mixed>
+     * @param  string $id The project reference ID.
+     * @return array The parsed JSON response containing the project.
      */
-    public function listRows(string $table, string $select = '*', array $filter = [], string $order = '', ?int $limit = null, ?int $offset = null, ?string $count = null): array
+    public function getProject(string $id): array
     {
-        $params = array_merge($filter, ['select' => $select]);
-
-        if ($order !== '') {
-            $params['order'] = $order;
-        }
-        if ($limit !== null) {
-            $params['limit'] = $limit;
-        }
-        if ($offset !== null) {
-            $params['offset'] = $offset;
-        }
-
-        $headers = [];
-        if ($count !== null) {
-            $headers['Prefer'] = 'count=' . $count;
-        }
-
-        return $this->request('GET', '/' . urlencode($table), $params, [], $headers);
+        return $this->request('GET', '/projects/' . urlencode($id));
     }
 
     /**
-     * Get a single row by its primary key id.
+     * List all tables in a project.
      *
-     * @param  string  $table   Table name
-     * @param  string  $id      Primary key value
-     * @param  string  $select  Comma-separated column names (default "*")
-     * @return array<string, mixed>
+     * @param  string $projectRef The project reference ID.
+     * @return array The parsed JSON response containing tables.
      */
-    public function getRow(string $table, string $id, string $select = '*'): array
+    public function listTables(string $projectRef): array
     {
-        return $this->request('GET', '/' . urlencode($table), [
-            'id' => 'eq.' . $id,
-            'select' => $select,
-        ]);
+        return $this->request('GET', '/projects/' . urlencode($projectRef) . '/tables');
     }
 
     /**
-     * Insert a single row into a table.
+     * Get a table by its ID in a project.
      *
-     * @param  string  $table      Table name
-     * @param  array<string, mixed>  $data  Column name → value pairs
-     * @param  string  $returning  Return mode: "representation" or "minimal"
-     * @param  bool  $upsert       Whether to perform an upsert on conflict
-     * @return array<string, mixed>
+     * @param  string $projectRef The project reference ID.
+     * @param  string $tableId    The table ID.
+     * @return array The parsed JSON response containing the table.
      */
-    public function insertRow(string $table, array $data, string $returning = 'representation', bool $upsert = false): array
+    public function getTable(string $projectRef, string $tableId): array
     {
-        $prefer = 'return=' . $returning;
-        if ($upsert) {
-            $prefer .= ',resolution=merge-duplicates';
-        }
-
-        return $this->request('POST', '/' . urlencode($table), [], $data, [
-            'Prefer' => $prefer,
-        ]);
+        return $this->request('GET', '/projects/' . urlencode($projectRef) . '/tables/' . urlencode($tableId));
     }
 
     /**
-     * Update a row by its primary key id.
+     * List rows in a table.
      *
-     * @param  string  $table      Table name
-     * @param  string  $id         Primary key value
-     * @param  array<string, mixed>  $data  Column name → value pairs to update
-     * @param  string  $returning  Return mode: "representation" or "minimal"
-     * @return array<string, mixed>
+     * @param  string $projectRef The project reference ID.
+     * @param  string $tableName  The table name or ID.
+     * @param  array  $params     Query parameters: limit, offset, select, order.
+     * @return array The parsed JSON response containing rows.
      */
-    public function updateRow(string $table, string $id, array $data, string $returning = 'representation'): array
+    public function listRows(string $projectRef, string $tableName, array $params = []): array
     {
-        return $this->request('PATCH', '/' . urlencode($table) . '?id=eq.' . urlencode($id), [], $data, [
-            'Prefer' => 'return=' . $returning,
-        ]);
+        return $this->request('GET', '/projects/' . urlencode($projectRef) . '/tables/' . urlencode($tableName) . '/rows', $params);
     }
 
     /**
-     * Delete a row by its primary key id.
+     * Get a single row by its ID.
      *
-     * @param  string  $table      Table name
-     * @param  string  $id         Primary key value
-     * @param  string  $returning  Return mode: "representation" or "minimal"
-     * @return array<string, mixed>
+     * @param  string $projectRef The project reference ID.
+     * @param  string $tableName  The table name or ID.
+     * @param  string $rowId      The row ID.
+     * @return array The parsed JSON response containing the row.
      */
-    public function deleteRow(string $table, string $id, string $returning = 'representation'): array
+    public function getRow(string $projectRef, string $tableName, string $rowId): array
     {
-        return $this->request('DELETE', '/' . urlencode($table) . '?id=eq.' . urlencode($id), [], [], [
-            'Prefer' => 'return=' . $returning,
-        ]);
+        return $this->request('GET', '/projects/' . urlencode($projectRef) . '/tables/' . urlencode($tableName) . '/rows/' . urlencode($rowId));
     }
 
     /**
-     * Insert multiple rows in a single batch request.
+     * Get the currently authenticated user profile.
      *
-     * @param  string  $table      Table name
-     * @param  array<int, array<string, mixed>>  $records  Array of row data
-     * @param  string  $returning  Return mode: "representation" or "minimal"
-     * @param  bool  $upsert       Whether to perform an upsert on conflict
-     * @return array<string, mixed>
-     */
-    public function insertBatch(string $table, array $records, string $returning = 'representation', bool $upsert = false): array
-    {
-        $prefer = 'return=' . $returning;
-        if ($upsert) {
-            $prefer .= ',resolution=merge-duplicates';
-        }
-
-        return $this->request('POST', '/' . urlencode($table), [], $records, [
-            'Prefer' => $prefer,
-        ]);
-    }
-
-    // ── Upsert ─────────────────────────────────────────────
-
-    /**
-     * Upsert a row — insert or merge on conflict.
-     *
-     * @param  string  $table        Table name
-     * @param  array<string, mixed>  $data  Column name → value pairs
-     * @param  string  $onConflict   Comma-separated column names that define the unique constraint
-     * @param  string  $returning    Return mode: "representation" or "minimal"
-     * @return array<string, mixed>
-     */
-    public function upsertRow(string $table, array $data, string $onConflict = '', string $returning = 'representation'): array
-    {
-        $queryParams = [];
-        if ($onConflict !== '') {
-            $queryParams['on_conflict'] = $onConflict;
-        }
-
-        $path = '/' . urlencode($table);
-        if (! empty($queryParams)) {
-            $path .= '?' . http_build_query($queryParams);
-        }
-
-        return $this->request('POST', $path, [], $data, [
-            'Prefer' => 'return=' . $returning . ',resolution=merge-duplicates',
-        ]);
-    }
-
-    // ── RPC ────────────────────────────────────────────────
-
-    /**
-     * Call a remote procedure (RPC function).
-     *
-     * @param  string  $function  Function name
-     * @param  array<string, mixed>  $params  Parameters to pass to the function
-     * @return array<string, mixed>
-     */
-    public function rpc(string $function, array $params = []): array
-    {
-        return $this->request('POST', '/rpc/' . urlencode($function), [], $params);
-    }
-
-    // ── Schema Discovery ───────────────────────────────────
-
-    /**
-     * List available tables via the OpenAPI spec endpoint.
-     *
-     * @return array<string, mixed>
-     */
-    public function listTables(): array
-    {
-        return $this->request('GET', '/', [], [], [
-            'Accept' => 'application/json',
-        ]);
-    }
-
-    // ── Count ──────────────────────────────────────────────
-
-    /**
-     * Count rows in a table, optionally filtered.
-     *
-     * Returns the count from the Content-Range header when using Prefer: count=exact.
-     *
-     * @param  string  $table    Table name
-     * @param  array<string, mixed>  $filter  Query filter params
-     * @return array<string, mixed>
-     */
-    public function countRows(string $table, array $filter = []): array
-    {
-        $params = array_merge($filter, ['select' => 'count']);
-
-        return $this->request('GET', '/' . urlencode($table), $params, [], [
-            'Prefer' => 'count=exact',
-        ]);
-    }
-
-    // ── SQL Query ──────────────────────────────────────────
-
-    /**
-     * Execute a raw SQL query via the exec_sql RPC function.
-     *
-     * Note: This requires the exec_sql function to be defined in the Supabase database.
-     *
-     * @param  string  $query  SQL query string
-     * @return array<string, mixed>
-     */
-    public function querySql(string $query): array
-    {
-        return $this->rpc('exec_sql', ['query' => $query]);
-    }
-
-    // ── Auth ───────────────────────────────────────────────
-
-    /**
-     * Get the current authenticated user from the Supabase Auth API.
-     *
-     * Uses the service_role key to fetch user details from the auth endpoint.
-     *
-     * @return array<string, mixed>
+     * @return array The parsed JSON response containing the user profile.
      */
     public function getCurrentUser(): array
     {
-        if (! $this->apiKey) {
-            throw new \RuntimeException('Supabase API key is not configured.');
-        }
-        if (! $this->projectUrl) {
-            throw new \RuntimeException('Supabase project URL is not configured.');
-        }
-
-        $url = rtrim($this->projectUrl, '/') . '/auth/v1/user';
-
-        try {
-            $response = Http::withHeaders([
-                'apikey' => $this->apiKey,
-                'Authorization' => 'Bearer ' . $this->bearerToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30)->get($url);
-
-            if (! $response->successful()) {
-                $body = $response->json() ?? [];
-                $err = $body['msg'] ?? $body['message'] ?? $body['error_description'] ?? $response->body();
-
-                Log::error('Supabase Auth API error: GET /auth/v1/user', [
-                    'status' => $response->status(),
-                    'error' => $err,
-                ]);
-
-                $msg = is_string($err) ? $err : json_encode($err);
-
-                throw new \RuntimeException('Supabase Auth API error (' . $response->status() . '): ' . $msg);
-            }
-
-            return $response->json() ?? [];
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error('Supabase Auth API connection error', [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException('Failed to connect to Supabase Auth API: ' . $e->getMessage());
-        }
+        return $this->request('GET', '/profile');
     }
 
-    // ── HTTP ───────────────────────────────────────────────
+    /**
+     * Make an API request and return parsed JSON.
+     *
+     * @param  string $method The HTTP method (GET, POST, PUT, DELETE).
+     * @param  string $path   The API endpoint path.
+     * @param  array  $data   Request data (query params for GET, body for POST/PUT).
+     * @return array The parsed JSON response.
+     */
+    private function request(string $method, string $path, array $data = []): array
+    {
+        $response = $this->rawRequest($method, $path, $data);
+        return $response->json() ?? [];
+    }
 
     /**
-     * Make an API request to the Supabase PostgREST endpoint.
+     * Make a raw HTTP request to the Supabase Management API.
      *
-     * @param  string  $method        HTTP method (GET, POST, PATCH, DELETE)
-     * @param  string  $path          URL path relative to the REST base URL
-     * @param  array<string, mixed>  $queryParams  Query string parameters
-     * @param  array<string, mixed>  $body         JSON body payload
-     * @param  array<string, string>  $extraHeaders Additional headers (e.g., Prefer)
-     * @return array<string, mixed>
+     * @param  string $method The HTTP method (GET, POST, PUT, DELETE).
+     * @param  string $path   The API endpoint path.
+     * @param  array  $data   Request data (query params for GET, body for POST/PUT).
+     * @return \Illuminate\Http\Client\Response The raw HTTP response.
+     *
+     * @throws \RuntimeException If the access token is missing or the request fails.
      */
-    private function request(string $method, string $path, array $queryParams = [], array $body = [], array $extraHeaders = []): array
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (! $this->apiKey) {
-            throw new \RuntimeException('Supabase API key is not configured.');
-        }
-        if (! $this->projectUrl) {
-            throw new \RuntimeException('Supabase project URL is not configured.');
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Supabase access token is not configured.');
         }
 
-        $url = $this->baseUrl() . $path;
+        $url = $this->baseUrl . $path;
 
         try {
-            $headers = array_merge([
-                'apikey' => $this->apiKey,
-                'Authorization' => 'Bearer ' . $this->bearerToken,
-                'Content-Type' => 'application/json',
-            ], $extraHeaders);
-
-            $http = Http::withHeaders($headers)->timeout(30);
+            $http = Http::withToken($this->accessToken)
+                ->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $queryParams),
-                'POST' => $http->withQueryParameters($queryParams)->post($url, $body),
-                'PATCH' => $http->withQueryParameters($queryParams)->patch($url, $body),
-                'DELETE' => $http->withQueryParameters($queryParams)->delete($url, $body),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (! $response->successful()) {
-                $respBody = $response->json() ?? [];
-                $err = $respBody['message'] ?? $respBody['msg'] ?? $respBody['details'] ?? $response->body();
+            if (!$response->successful()) {
+                $json = $response->json();
+                $error = $json['message'] ?? $json['msg'] ?? $response->body();
 
                 Log::error("Supabase API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $err,
+                    'error' => $error,
                 ]);
 
-                $msg = is_string($err) ? $err : json_encode($err);
-
-                throw new \RuntimeException('Supabase API error (' . $response->status() . '): ' . $msg);
+                throw new \RuntimeException("Supabase API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            return $response->json() ?? [];
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Supabase API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),
             ]);
-            throw new \RuntimeException('Failed to connect to Supabase API: ' . $e->getMessage());
+            throw new \RuntimeException("Failed to connect to Supabase API: {$e->getMessage()}");
         }
     }
 }

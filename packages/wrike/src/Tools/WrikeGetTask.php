@@ -31,14 +31,14 @@ class WrikeGetTask implements Tool
     public function parameters(): array
     {
         return [
-            'task_id' => ['type' => 'string', 'required' => true, 'description' => 'The task ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The task ID.'],
         ];
     }
 
     /**
      * Retrieve a task by its ID.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (task_id)
+     * @param  array<string, mixed>  $args  Tool arguments (id)
      */
     public function execute(array $args): ToolResult
     {
@@ -47,13 +47,13 @@ class WrikeGetTask implements Tool
                 return ToolResult::error('Wrike integration is not configured.');
             }
 
-            $taskId = $args['task_id'] ?? '';
+            $id = $args['id'] ?? '';
 
-            if (empty($taskId)) {
-                return ToolResult::error('task_id is required.');
+            if (empty($id)) {
+                return ToolResult::error('id is required.');
             }
 
-            $task = $this->service->getTask($taskId);
+            $task = $this->service->getTask($id);
 
             return ToolResult::success($task);
         } catch (\Throwable $e) {

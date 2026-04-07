@@ -7,12 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool: teamwork_list_projects
- *
- * List projects from Teamwork.
+ * List projects in Teamwork with optional filters.
  */
 class TeamworkListProjects implements Tool
 {
+    /**
+     * @param  TeamworkService  $service  The Teamwork API client
+     */
     public function __construct(
         private TeamworkService $service,
     ) {}
@@ -24,33 +25,45 @@ class TeamworkListProjects implements Tool
 
     public function description(): string
     {
-        return 'List projects in Teamwork. Returns project names, statuses, and IDs you can use to query tasks, time entries, and more.';
+        return 'List projects in Teamwork with optional filters.';
     }
 
     public function parameters(): array
     {
         return [
-            'page'     => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
-            'pageSize' => ['type' => 'integer', 'description' => 'Number of results per page (default: 50).'],
-            'search'   => ['type' => 'string',  'description' => 'Filter projects by name.'],
+            'status'  => ['type' => 'string',  'description' => 'Filter by project status (e.g. "active", "late", "completed").'],
+            'page'    => ['type' => 'integer', 'description' => 'Page number for pagination.'],
+            'pageSize' => ['type' => 'integer', 'description' => 'Number of projects per page (max 500).'],
         ];
     }
 
+    /**
+     * Retrieve a list of projects with optional filters.
+     *
+     * @param  array<string, mixed>  $args  Tool arguments (status, page, pageSize)
+     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Teamwork integration is not configured.');
             }
 
             $params = [];
-            if (isset($args['page']))     $params['page']     = (int) $args['page'];
-            if (isset($args['pageSize'])) $params['pageSize'] = (int) $args['pageSize'];
-            if (isset($args['search']))   $params['search']   = $args['search'];
 
-            $result = $this->service->listProjects($params);
+            if (isset($args['status'])) {
+                $params['status'] = $args['status'];
+            }
+            if (isset($args['page'])) {
+                $params['page'] = (int) $args['page'];
+            }
+            if (isset($args['pageSize'])) {
+                $params['pageSize'] = (int) $args['pageSize'];
+            }
 
-            return ToolResult::success($result);
+            $projects = $this->service->listProjects($params);
+
+            return ToolResult::success($projects);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -8,71 +8,51 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyListSites;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyGetSite;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateSite;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyDeleteSite;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyListDeploys;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateDeploy;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyGetDeploy;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyListForms;
-use OpenCompany\Integrations\Netlify\Tools\NetlifyGetForm;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyListDnsZones;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyGetCurrentUser;
 
 class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration
 {
-    /**
-     * Get the application name used for registration.
-     */
     public function appName(): string
     {
         return 'netlify';
     }
 
-    /**
-     * Get metadata for the application sidebar / UI.
-     *
-     * @return array<string, mixed>
-     */
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, deploys, forms',
-            'description' => 'Web hosting & deploys',
-            'icon' => 'ph:cloud-arrow-up',
+            'label' => 'sites, deploys, forms, dns',
+            'description' => 'Deployment & hosting platform',
+            'icon' => 'ph:rocket',
             'logo' => 'simple-icons:netlify',
         ];
     }
 
-    /**
-     * Get integration metadata for the marketplace / integrations UI.
-     *
-     * @return array<string, mixed>
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Netlify',
-            'description' => 'Web hosting, continuous deployment, and serverless functions',
-            'icon' => 'ph:cloud-arrow-up',
+            'description' => 'Modern web deployment and hosting platform',
+            'icon' => 'ph:rocket',
             'logo' => 'simple-icons:netlify',
-            'category' => 'hosting',
+            'category' => 'productivity',
             'badge' => 'verified',
-            'docs_url' => 'https://open-api.netlify.com/',
+            'docs_url' => 'https://docs.netlify.com/api/get-started/',
         ];
     }
 
-    /**
-     * Get the configuration schema for this integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function configSchema(): array
     {
         return [
             [
                 'key' => 'access_token',
                 'type' => 'secret',
-                'label' => 'Access Token',
+                'label' => 'Personal Access Token',
                 'placeholder' => 'Enter your Netlify personal access token',
-                'hint' => 'Generate a personal access token in Netlify under <strong>User Settings → Applications → Personal access tokens</strong>',
+                'hint' => 'Create a personal access token in Netlify under User Settings → Applications → Personal access tokens',
                 'required' => true,
             ],
             [
@@ -80,18 +60,12 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.netlify.com/api/v1',
-                'hint' => 'The Netlify API base URL. Change only if using a proxy or custom endpoint.',
+                'hint' => 'Use the default Netlify API URL, or a custom endpoint if using a compatible API',
                 'default' => 'https://api.netlify.com/api/v1',
             ],
         ];
     }
 
-    /**
-     * Test the connection using the provided configuration.
-     *
-     * @param  array<string, mixed>  $config
-     * @return array<string, mixed>
-     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
@@ -116,31 +90,25 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration
                 ];
             }
 
-            if (!$response->successful()) {
-                $error = $json['message'] ?? $response->body();
-
+            if ($response->successful() && isset($json['id'])) {
+                $email = $json['email'] ?? 'unknown';
                 return [
-                    'success' => false,
-                    'error' => is_string($error) ? $error : json_encode($error),
+                    'success' => true,
+                    'message' => "Connected to Netlify API as {$email}.",
                 ];
             }
 
-            $email = $json['email'] ?? 'unknown';
+            $message = $json['message'] ?? $json['error'] ?? 'Authentication failed.';
 
             return [
-                'success' => true,
-                'message' => "Connected to Netlify API as {$email}.",
+                'success' => false,
+                'error' => $message,
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get validation rules for the configuration.
-     *
-     * @return array<string, mixed>
-     */
     public function validationRules(): array
     {
         return [
@@ -149,11 +117,6 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
-     * Get the available tools provided by this integration.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function tools(): array
     {
         return [
@@ -171,32 +134,18 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get details for a specific Netlify site.',
                 'icon' => 'ph:globe',
             ],
-            'netlify_create_site' => [
-                'class' => NetlifyCreateSite::class,
-                'type' => 'write',
-                'name' => 'Create Site',
-                'description' => 'Create a new Netlify site.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'netlify_delete_site' => [
-                'class' => NetlifyDeleteSite::class,
-                'type' => 'write',
-                'name' => 'Delete Site',
-                'description' => 'Delete a Netlify site permanently.',
-                'icon' => 'ph:trash',
-            ],
             'netlify_list_deploys' => [
                 'class' => NetlifyListDeploys::class,
                 'type' => 'read',
                 'name' => 'List Deploys',
                 'description' => 'List deploys for a Netlify site.',
-                'icon' => 'ph:rocket-launch',
+                'icon' => 'ph:list-dashes',
             ],
-            'netlify_create_deploy' => [
-                'class' => NetlifyCreateDeploy::class,
-                'type' => 'write',
-                'name' => 'Create Deploy',
-                'description' => 'Trigger a new deploy for a Netlify site.',
+            'netlify_get_deploy' => [
+                'class' => NetlifyGetDeploy::class,
+                'type' => 'read',
+                'name' => 'Get Deploy',
+                'description' => 'Get details for a specific deploy.',
                 'icon' => 'ph:rocket-launch',
             ],
             'netlify_list_forms' => [
@@ -204,60 +153,43 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration
                 'type' => 'read',
                 'name' => 'List Forms',
                 'description' => 'List forms for a Netlify site.',
-                'icon' => 'ph:form',
+                'icon' => 'ph:notebook',
             ],
-            'netlify_get_form' => [
-                'class' => NetlifyGetForm::class,
+            'netlify_list_dns_zones' => [
+                'class' => NetlifyListDnsZones::class,
                 'type' => 'read',
-                'name' => 'Get Form',
-                'description' => 'Get details for a specific Netlify form.',
-                'icon' => 'ph:form',
+                'name' => 'List DNS Zones',
+                'description' => 'List all DNS zones in Netlify.',
+                'icon' => 'ph:dns',
             ],
             'netlify_get_current_user' => [
                 'class' => NetlifyGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Netlify user.',
-                'icon' => 'ph:user-circle',
+                'description' => 'Get the currently authenticated user.',
+                'icon' => 'ph:user',
             ],
         ];
     }
 
-    /**
-     * Get the path to the Lua docs file for this integration.
-     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/netlify.md';
     }
 
-    /**
-     * Get the credential fields for this integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Personal Access Token', 'required' => true],
             ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.netlify.com/api/v1'],
         ];
     }
 
-    /**
-     * Indicate this is a full integration.
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance, optionally using account-specific credentials.
-     *
-     * @param  class-string<Tool>  $class
-     * @param  array<string, mixed>  $context
-     */
     public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;

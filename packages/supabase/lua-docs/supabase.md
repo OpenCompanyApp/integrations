@@ -1,328 +1,189 @@
 # Supabase — Lua API Reference
 
-All tools are accessed via `app.integrations.supabase.{tool_key}({params})`.
+## list_projects
+
+List all Supabase projects in the organization.
+
+### Parameters
+
+None.
+
+### Example
+
+```lua
+local result = app.integrations.supabase.list_projects({})
+
+for _, project in ipairs(result) do
+  print(project.id .. ": " .. project.name .. " (" .. project.region .. ")")
+end
+```
 
 ---
 
-## supabase_list_rows
+## get_project
 
-List rows from a Supabase table. Supports column selection, filtering, ordering, and pagination. Filters use PostgREST syntax (e.g., `"eq.value"`, `"like.*pattern*"`).
+Get details of a specific Supabase project.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `select` | string | no | Comma-separated column names (default `"*"`) |
-| `filter` | string | no | JSON object of PostgREST filter params, e.g. `{"status": "eq.active"}` |
-| `order` | string | no | Order clause, e.g. `"created_at.desc.nullsfirst"` |
-| `limit` | integer | no | Maximum number of rows to return |
-| `offset` | integer | no | Number of rows to skip |
-| `count` | string | no | Count mode: `"exact"` or `"planned"` |
+| `project_ref` | string | yes | The project reference ID |
 
 ### Example
 
 ```lua
-local result = app.integrations.supabase.supabase_list_rows({
-  table = "users",
-  select = "id, name, email",
-  filter = '{"status": "eq.active"}',
-  order = "created_at.desc",
-  limit = 10
+local result = app.integrations.supabase.get_project({
+  project_ref = "my_project_ref"
+})
+
+print("Project: " .. result.name)
+print("Region: " .. result.region)
+print("Status: " .. result.status)
+```
+
+---
+
+## list_tables
+
+List all tables in a Supabase project.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `project_ref` | string | yes | The project reference ID |
+
+### Example
+
+```lua
+local result = app.integrations.supabase.list_tables({
+  project_ref = "my_project_ref"
+})
+
+for _, table in ipairs(result) do
+  print(table.id .. ": " .. table.name)
+end
+```
+
+---
+
+## get_table
+
+Get details of a specific table in a project.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `project_ref` | string | yes | The project reference ID |
+| `table_id` | string | yes | The table ID |
+
+### Example
+
+```lua
+local result = app.integrations.supabase.get_table({
+  project_ref = "my_project_ref",
+  table_id = "my_table_id"
+})
+
+print("Table: " .. result.name)
+```
+
+---
+
+## list_rows
+
+List rows in a Supabase table.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `project_ref` | string | yes | The project reference ID |
+| `table_name` | string | yes | The table name or ID |
+| `limit` | integer | no | Maximum number of rows to return (default: 100) |
+| `offset` | integer | no | Offset for pagination (default: 0) |
+| `select` | string | no | Comma-separated list of columns to select |
+| `order` | string | no | Column to order by, with optional direction (e.g. `"id.desc"`) |
+
+### Example
+
+```lua
+local result = app.integrations.supabase.list_rows({
+  project_ref = "my_project_ref",
+  table_name = "users",
+  limit = 10,
+  order = "created_at.desc"
 })
 
 for _, row in ipairs(result) do
-  print(row.id .. ": " .. row.name .. " <" .. row.email .. ">")
+  print(row.id .. ": " .. (row.name or "unnamed"))
 end
 ```
 
 ---
 
-## supabase_get_row
+## get_row
 
-Retrieve a single row from a Supabase table by its primary key id.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `id` | string | yes | Primary key value of the row |
-| `select` | string | no | Comma-separated column names (default `"*"`) |
-
-### Example
-
-```lua
-local row = app.integrations.supabase.supabase_get_row({
-  table = "users",
-  id = "42",
-  select = "id, name, email"
-})
-
-print(row.name)
-```
-
----
-
-## supabase_insert_row
-
-Insert a single row into a Supabase table. Provide column values as a JSON object. Optionally enable upsert mode to merge duplicates on conflict.
+Get a single row by its ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `data` | string | yes | JSON object of column name → value pairs |
-| `returning` | string | no | Return mode: `"representation"` (default) or `"minimal"` |
-| `upsert` | boolean | no | Set to `true` to merge duplicates on conflict |
+| `project_ref` | string | yes | The project reference ID |
+| `table_name` | string | yes | The table name or ID |
+| `row_id` | string | yes | The row ID |
 
 ### Example
 
 ```lua
-local result = app.integrations.supabase.supabase_insert_row({
-  table = "users",
-  data = '{"name": "Alice", "email": "alice@example.com", "status": "active"}'
+local result = app.integrations.supabase.get_row({
+  project_ref = "my_project_ref",
+  table_name = "users",
+  row_id = "my_row_id"
 })
 
-print(result.id)
-```
-
----
-
-## supabase_update_row
-
-Update an existing row in a Supabase table by its primary key id.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `id` | string | yes | Primary key value of the row to update |
-| `data` | string | yes | JSON object of column name → value pairs to update |
-| `returning` | string | no | Return mode: `"representation"` (default) or `"minimal"` |
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_update_row({
-  table = "users",
-  id = "42",
-  data = '{"status": "inactive", "updated_at": "2026-04-05T10:00:00Z"}'
-})
-
-print(result.status)
-```
-
----
-
-## supabase_delete_row
-
-Delete a row from a Supabase table by its primary key id.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `id` | string | yes | Primary key value of the row to delete |
-| `returning` | string | no | Return mode: `"representation"` (default) or `"minimal"` |
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_delete_row({
-  table = "users",
-  id = "42"
-})
-
-print("Row deleted")
-```
-
----
-
-## supabase_insert_batch
-
-Insert multiple rows into a Supabase table in a single batch request. Optionally enable upsert mode to merge duplicates.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `records` | string | yes | JSON array of row objects, each containing column name → value pairs |
-| `returning` | string | no | Return mode: `"representation"` (default) or `"minimal"` |
-| `upsert` | boolean | no | Set to `true` to merge duplicates on conflict |
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_insert_batch({
-  table = "users",
-  records = '[{"name": "Alice", "email": "alice@example.com"}, {"name": "Bob", "email": "bob@example.com"}]'
-})
-
-for _, row in ipairs(result) do
-  print(row.id .. ": " .. row.name)
+for key, value in pairs(result) do
+  print("  " .. key .. " = " .. tostring(value))
 end
 ```
 
 ---
 
-## supabase_upsert_row
+## get_current_user
 
-Upsert a row into a Supabase table. If a row with the same unique key exists, it will be merged (updated); otherwise a new row is inserted.
+Get the currently authenticated Supabase user profile.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `data` | string | yes | JSON object of column name → value pairs |
-| `on_conflict` | string | no | Comma-separated column names that define the unique constraint (e.g. `"email,id"`) |
-| `returning` | string | no | Return mode: `"representation"` (default) or `"minimal"` |
+None.
 
 ### Example
 
 ```lua
-local result = app.integrations.supabase.supabase_upsert_row({
-  table = "users",
-  data = '{"email": "alice@example.com", "name": "Alice Updated", "status": "active"}',
-  on_conflict = "email"
-})
+local result = app.integrations.supabase.get_current_user({})
 
-print(result.name)
-```
-
----
-
-## supabase_rpc
-
-Call a remote procedure (RPC function) defined in the Supabase database.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `function_name` | string | yes | Name of the RPC function to call |
-| `params` | string | no | JSON object of parameters to pass to the function |
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_rpc({
-  function_name = "get_user_stats",
-  params = '{"user_id": "42"}'
-})
-
-print(result.total_orders)
-```
-
----
-
-## supabase_query_sql
-
-Execute a raw SQL query on the Supabase database via the `exec_sql` RPC function. Requires the `exec_sql` function to be defined in the Supabase database. Use for advanced queries that cannot be expressed through standard PostgREST filters.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | SQL query string to execute |
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_query_sql({
-  query = "SELECT id, name FROM users WHERE status = 'active' ORDER BY created_at DESC LIMIT 5"
-})
-
-for _, row in ipairs(result) do
-  print(row.id .. ": " .. row.name)
-end
-```
-
----
-
-## supabase_list_tables
-
-List available tables in the Supabase database by querying the PostgREST OpenAPI spec endpoint. Returns table names with their column definitions.
-
-### Parameters
-
-This tool takes no parameters.
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_list_tables()
-
-print("Found " .. result.count .. " tables:")
-for _, tbl in ipairs(result.tables) do
-  print("  " .. tbl.name)
-end
-```
-
----
-
-## supabase_count_rows
-
-Count rows in a Supabase table, optionally filtered. Uses PostgREST `count=exact` with a `select=count` query. Filters use PostgREST syntax.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `table` | string | yes | Table name |
-| `filter` | string | no | JSON object of PostgREST filter params, e.g. `{"status": "eq.active"}` |
-
-### Example
-
-```lua
-local result = app.integrations.supabase.supabase_count_rows({
-  table = "users",
-  filter = '{"status": "eq.active"}'
-})
-
-print("Active users: " .. result.count)
-```
-
----
-
-## supabase_get_current_user
-
-Get the current authenticated user from the Supabase Auth API. Requires a valid service_role key or a valid user JWT token. Returns user details including id, email, and metadata.
-
-### Parameters
-
-This tool takes no parameters.
-
-### Example
-
-```lua
-local user = app.integrations.supabase.supabase_get_current_user()
-
-print("User ID: " .. user.id)
-print("Email: " .. user.email)
+print("User: " .. result.email)
 ```
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple supabase accounts configured, use account-specific namespaces:
+If you have multiple Supabase accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.supabase.function_name({...})
+app.integrations.supabase.list_projects({})
 
 -- Explicit default (portable across setups)
-app.integrations.supabase.default.function_name({...})
+app.integrations.supabase.default.list_projects({})
 
 -- Named accounts
-app.integrations.supabase.work.function_name({...})
-app.integrations.supabase.personal.function_name({...})
+app.integrations.supabase.production.list_projects({})
+app.integrations.supabase.staging.list_projects({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

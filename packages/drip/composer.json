@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-drip",
-    "description": "Drip email marketing integration for Laravel — manage subscribers, campaigns, and orders.",
+    "description": "Drip email marketing integration for Laravel — manage subscribers, campaigns, and workflows.",
     "license": "MIT",
     "authors": [
         {

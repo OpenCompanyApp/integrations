@@ -1,69 +1,66 @@
 <?php
 
-namespace OpenCompany\Integrations\LinkedIn\Tools;
+namespace OpenCompany\Integrations\Linkedin\Tools;
 
-use OpenCompany\Integrations\LinkedIn\LinkedInService;
+use OpenCompany\Integrations\Linkedin\LinkedinService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to retrieve the authenticated user's basic LinkedIn identity.
+ * Retrieve the currently authenticated LinkedIn user profile.
  *
- * Returns the current user's LinkedIn profile information — useful for
- * verifying authentication and getting the user's basic identity.
+ * Returns the user's ID, name, and profile information.
  */
-class LinkedInGetCurrentUser implements Tool
+class LinkedinGetCurrentUser implements Tool
 {
     /**
-     * Create a new LinkedInGetCurrentUser tool instance.
-     *
-     * @param  LinkedInService  $service  The LinkedIn API service.
+     * @param  LinkedinService  $service  The LinkedIn API client
      */
     public function __construct(
-        private LinkedInService $service,
+        private LinkedinService $service,
     ) {}
 
-    /**
-     * Get the tool name identifier.
-     */
     public function name(): string
     {
         return 'linkedin_get_current_user';
     }
 
-    /**
-     * Get the tool description for AI agent consumption.
-     */
     public function description(): string
     {
-        return "Get the authenticated user's LinkedIn identity. Returns basic profile information from the /me endpoint — useful for verifying who is authenticated.";
+        return <<<'MD'
+        Retrieve the currently authenticated LinkedIn user profile.
+        Returns the user's ID, localized name, and profile metadata.
+        Useful for identifying which account or token is in use.
+        MD;
     }
 
-    /**
-     * Get the tool parameter schema.
-     *
-     * @return array<string, array{type: string, description?: string}>
-     */
     public function parameters(): array
     {
         return [];
     }
 
     /**
-     * Execute the tool and return the current user's data.
+     * Retrieve the currently authenticated LinkedIn user.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (none required).
+     * @param  array<string, mixed>  $args  Tool arguments (none)
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('LinkedIn integration is not configured.');
             }
 
-            $result = $this->service->getCurrentUser();
+            $result = $this->service->getMe();
 
-            return ToolResult::success($result);
+            return ToolResult::success([
+                'id' => $result['id'] ?? '',
+                'localized_first_name' => $result['localizedFirstName'] ?? '',
+                'localized_last_name' => $result['localizedLastName'] ?? '',
+                'first_name' => $result['firstName'] ?? [],
+                'last_name' => $result['lastName'] ?? [],
+                'profile_picture' => $result['profilePicture'] ?? [],
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

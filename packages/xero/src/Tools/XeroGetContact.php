@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a single Xero contact by ID.
+ * Retrieve a Xero contact by ID.
  *
- * Returns full contact details including email, phone, and addresses.
+ * Returns the contact's ID, name, email, phone, and addresses.
  */
 class XeroGetContact implements Tool
 {
@@ -28,15 +28,15 @@ class XeroGetContact implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Retrieve a single Xero contact by ID.
-        Returns full contact details including email, phone, and addresses.
+        Retrieve a Xero contact by its ID.
+        Returns the contact's ID, name, email, phone, addresses, and status.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'contact_id' => ['type' => 'string', 'required' => true, 'description' => 'Xero contact GUID.'],
+            'contact_id' => ['type' => 'string', 'required' => true, 'description' => 'Xero contact ID (UUID).'],
         ];
     }
 
@@ -52,23 +52,26 @@ class XeroGetContact implements Tool
                 return ToolResult::error('Xero integration is not configured.');
             }
 
-            $contactId = $args['contact_id'] ?? '';
-            if (empty($contactId)) {
+            $id = $args['contact_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('contact_id is required.');
             }
 
-            $result = $this->service->getContact($contactId);
-            $contact = $result['Contacts'][0] ?? [];
+            $result = $this->service->getContact($id);
+
+            $contact = $result['Contacts'][0] ?? $result;
 
             return ToolResult::success([
                 'id' => $contact['ContactID'] ?? '',
                 'name' => $contact['Name'] ?? '',
-                'email' => $contact['EmailAddress'] ?? '',
                 'first_name' => $contact['FirstName'] ?? '',
                 'last_name' => $contact['LastName'] ?? '',
+                'email' => $contact['EmailAddress'] ?? '',
                 'status' => $contact['ContactStatus'] ?? '',
                 'is_supplier' => $contact['IsSupplier'] ?? false,
-                'is_customer' => $contact['IsCustomer'] ?? false,
+                'is_customer' => $contact['IsCustomer'] ?? true,
+                'addresses' => $contact['Addresses'] ?? [],
+                'phones' => $contact['Phones'] ?? [],
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

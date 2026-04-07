@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Client for the Intercom REST API covering contacts, conversations, admins, tags, notes, and companies.
+ * Client for the Intercom REST API covering conversations, contacts, and companies.
  *
  * Wraps the Intercom API v2.11 with Bearer token authentication, request routing, and error reporting.
  */
@@ -14,11 +14,11 @@ class IntercomService
 {
     /**
      * @param  string  $accessToken  Intercom personal access token
-     * @param  string  $baseUrl      Intercom API base URL (default: https://api.intercom.io)
+     * @param  string  $baseUrl      Intercom API base URL (default: https://api.intercom.io/v1)
      */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.intercom.io',
+        private string $baseUrl = 'https://api.intercom.io/v1',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -28,96 +28,7 @@ class IntercomService
         return ! empty($this->accessToken);
     }
 
-    // ── Contacts ───────────────────────────────────────────
-
-    /**
-     * Create a contact.
-     *
-     * @param  array<string, mixed>  $data  Contact fields (email, name, phone, role, custom_attributes)
-     * @return array<string, mixed>
-     */
-    public function createContact(array $data): array
-    {
-        return $this->request('POST', '/contacts', $data);
-    }
-
-    /**
-     * Get a contact by ID.
-     *
-     * @return array<string, mixed>
-     */
-    public function getContact(string $id): array
-    {
-        return $this->request('GET', "/contacts/{$id}");
-    }
-
-    /**
-     * Update a contact by ID.
-     *
-     * @param  array<string, mixed>  $data  Fields to update (name, email, phone, custom_attributes)
-     * @return array<string, mixed>
-     */
-    public function updateContact(string $id, array $data): array
-    {
-        return $this->request('PUT', "/contacts/{$id}", $data);
-    }
-
-    /**
-     * List contacts with optional pagination.
-     *
-     * @param  array<string, mixed>  $params  Query params: limit, starting_after
-     * @return array<string, mixed>
-     */
-    public function listContacts(array $params = []): array
-    {
-        return $this->request('GET', '/contacts', $params);
-    }
-
-    /**
-     * Search contacts using Intercom query structure.
-     *
-     * @param  array<string, mixed>  $body  Search body with query, pagination
-     * @return array<string, mixed>
-     */
-    public function searchContacts(array $body = []): array
-    {
-        return $this->request('POST', '/contacts/search', $body);
-    }
-
-    /**
-     * Delete a contact by ID.
-     *
-     * @return array<string, mixed>
-     */
-    public function deleteContact(string $id): array
-    {
-        return $this->request('DELETE', "/contacts/{$id}");
-    }
-
     // ── Conversations ──────────────────────────────────────
-
-    /**
-     * Create a conversation.
-     *
-     * @param  array<string, mixed>  $data  Conversation fields (user_id, body)
-     * @return array<string, mixed>
-     */
-    public function createConversation(array $data): array
-    {
-        return $this->request('POST', '/conversations', $data);
-    }
-
-    /**
-     * Reply to a conversation.
-     *
-     * @param  string  $id     Conversation ID
-     * @param  array<string, mixed>  $data  Reply fields (message_type, body, admin_id)
-     * @return array<string, mixed>
-     */
-    public function replyConversation(string $id, array $data): array
-    {
-        return $this->request('POST', "/conversations/{$id}/reply", $data);
-    }
 
     /**
      * List conversations with optional pagination, sorting, and status filter.
@@ -140,52 +51,38 @@ class IntercomService
         return $this->request('GET', "/conversations/{$id}");
     }
 
-    // ── Admins ─────────────────────────────────────────────
-
     /**
-     * List admins.
+     * Create a conversation.
      *
+     * @param  array<string, mixed>  $data  Conversation fields (from, body)
      * @return array<string, mixed>
      */
-    public function listAdmins(): array
+    public function createConversation(array $data): array
     {
-        return $this->request('GET', '/admins');
+        return $this->request('POST', '/conversations', $data);
     }
 
-    // ── Tags ───────────────────────────────────────────────
+    // ── Contacts ───────────────────────────────────────────
 
     /**
-     * List tags.
+     * List contacts with optional pagination.
      *
+     * @param  array<string, mixed>  $params  Query params: limit, starting_after
      * @return array<string, mixed>
      */
-    public function listTags(): array
+    public function listContacts(array $params = []): array
     {
-        return $this->request('GET', '/tags');
+        return $this->request('GET', '/contacts', $params);
     }
 
     /**
-     * Tag contacts.
+     * Get a contact by ID.
      *
-     * @param  array<string, mixed>  $data  Tag fields (name, contact_ids)
      * @return array<string, mixed>
      */
-    public function tagContacts(array $data): array
+    public function getContact(string $id): array
     {
-        return $this->request('POST', '/tags', $data);
-    }
-
-    // ── Notes ──────────────────────────────────────────────
-
-    /**
-     * Create a note on a contact.
-     *
-     * @param  array<string, mixed>  $data  Note fields (contact_id, body)
-     * @return array<string, mixed>
-     */
-    public function createNote(array $data): array
-    {
-        return $this->request('POST', '/notes', $data);
+        return $this->request('GET', "/contacts/{$id}");
     }
 
     // ── Companies ──────────────────────────────────────────

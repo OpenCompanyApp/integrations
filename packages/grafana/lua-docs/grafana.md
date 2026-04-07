@@ -102,26 +102,31 @@ end
 
 ---
 
-## get_datasource
+## list_alerts
 
-Get a datasource by its ID.
+List Grafana alerts with optional filtering.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | integer | yes | The datasource ID |
+| `dashboardId` | integer | no | Filter alerts by dashboard ID |
+| `panelId` | integer | no | Filter alerts by panel ID |
 
 ### Example
 
 ```lua
-local result = app.integrations.grafana.get_datasource({
-  id = 1
-})
+-- List all alerts
+local result = app.integrations.grafana.list_alerts({})
 
-print("Datasource: " .. result.name)
-print("Type: " .. result.type)
-print("URL: " .. result.url)
+for _, alert in ipairs(result) do
+  print(alert.name .. " — state: " .. alert.state)
+end
+
+-- Filter by dashboard
+local result = app.integrations.grafana.list_alerts({
+  dashboardId = 42
+})
 ```
 
 ---
@@ -152,88 +157,9 @@ end
 
 ---
 
-## get_team
-
-Get a team by its ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | integer | yes | The team ID |
-
-### Example
-
-```lua
-local result = app.integrations.grafana.get_team({
-  id = 5
-})
-
-print("Team: " .. result.name)
-print("Email: " .. (result.email or "none"))
-print("Members: " .. result.memberCount)
-```
-
----
-
-## list_users
-
-List users in the Grafana organization.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `page` | integer | no | Page number (default: 1) |
-| `limit` | integer | no | Number of users per page (default: 50) |
-
-### Example
-
-```lua
-local result = app.integrations.grafana.list_users({
-  page = 1,
-  limit = 25
-})
-
-for _, user in ipairs(result) do
-  print(user.login .. " — " .. user.role .. " (" .. user.email .. ")")
-end
-```
-
----
-
-## list_alerts
-
-List Grafana alerts with optional filtering.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `dashboardId` | integer | no | Filter alerts by dashboard ID |
-| `panelId` | integer | no | Filter alerts by panel ID |
-
-### Example
-
-```lua
--- List all alerts
-local result = app.integrations.grafana.list_alerts({})
-
-for _, alert in ipairs(result) do
-  print(alert.name .. " — state: " .. alert.state)
-end
-
--- Filter by dashboard
-local result = app.integrations.grafana.list_alerts({
-  dashboardId = 42
-})
-```
-
----
-
 ## get_current_user
 
-Get the current Grafana organization info. Useful for verifying authentication.
+Get the currently authenticated Grafana user. Useful for verifying credentials.
 
 ### Parameters
 
@@ -244,8 +170,9 @@ None.
 ```lua
 local result = app.integrations.grafana.get_current_user({})
 
-print("Organization: " .. result.name)
-print("ID: " .. result.id)
+print("User: " .. result.name)
+print("Login: " .. result.login)
+print("Email: " .. result.email)
 ```
 
 ---

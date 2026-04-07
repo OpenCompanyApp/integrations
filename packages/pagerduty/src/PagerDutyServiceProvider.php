@@ -1,50 +1,42 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty;
+namespace OpenCompany\Integrations\Pagerduty;
 
 use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the PagerDuty integration package.
+ * Laravel service provider for the PagerDuty integration.
  *
- * Registers the {@see PagerDutyService} as a singleton resolved from
- * configuration credentials and boots the {@see PagerDutyToolProvider}
- * into the central {@see ToolProviderRegistry}.
+ * Registers the PagerdutyService singleton and bootstraps the tool provider
+ * with the ToolProviderRegistry when available.
  */
-class PagerDutyServiceProvider extends ServiceProvider
+class PagerdutyServiceProvider extends ServiceProvider
 {
     /**
-     * Register the PagerDuty service as a singleton.
-     *
-     * Credentials are read from the application configuration via the
-     * {@see CredentialResolver}. The service is only instantiated when
-     * actually resolved from the container.
+     * Register the PagerdutyService singleton.
      */
     public function register(): void
     {
-        $this->app->singleton(PagerDutyService::class, function ($app) {
+        $this->app->singleton(PagerdutyService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
-            return new PagerDutyService(
+            return new PagerdutyService(
                 apiToken: $creds->get('pagerduty', 'api_token', ''),
+                baseUrl: $creds->get('pagerduty', 'base_url', 'https://api.pagerduty.com'),
             );
         });
     }
 
     /**
-     * Boot the PagerDuty tool provider into the registry.
-     *
-     * The provider is only registered when the {@see ToolProviderRegistry}
-     * is bound in the container, which typically happens when the core
-     * integration package is installed.
+     * Boot the service provider — register tools with the ToolProviderRegistry.
      */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new PagerDutyToolProvider());
+                ->register(new PagerdutyToolProvider());
         }
     }
 }

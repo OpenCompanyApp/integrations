@@ -6,56 +6,62 @@ use OpenCompany\Integrations\Square\SquareService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the current authenticated Square merchant.
+ *
+ * Returns merchant details including business name, country, currency, and status.
+ */
 class SquareGetCurrentUser implements Tool
 {
     /**
-     * Create a new SquareGetCurrentUser tool instance.
+     * @param  SquareService  $service  The Square API client
      */
     public function __construct(
         private SquareService $service,
     ) {}
 
-    /**
-     * Get the tool name.
-     */
     public function name(): string
     {
         return 'square_get_current_user';
     }
 
-    /**
-     * Get the tool description.
-     */
     public function description(): string
     {
-        return 'Health check for the Square integration. Returns the first location name and count to verify connectivity.';
+        return <<<'MD'
+        Get the current authenticated Square merchant account.
+        Returns merchant details including business name, country, currency, and status.
+        MD;
     }
 
-    /**
-     * Get the tool parameter definitions.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [];
     }
 
     /**
-     * Execute the tool.
+     * Retrieve the current authenticated Square merchant.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (unused)
+     * @param  array<string, mixed>  $args  Tool arguments (none)
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Square integration is not configured.');
             }
 
             $result = $this->service->getCurrentUser();
+            $merchant = $result['merchant'] ?? [];
 
-            return ToolResult::success($result);
+            return ToolResult::success([
+                'id' => $merchant['id'] ?? '',
+                'business_name' => $merchant['business_name'] ?? '',
+                'country' => $merchant['country'] ?? '',
+                'currency' => $merchant['currency'] ?? '',
+                'status' => $merchant['status'] ?? '',
+                'main_location_id' => $merchant['main_location_id'] ?? null,
+                'created_at' => $merchant['created_at'] ?? null,
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

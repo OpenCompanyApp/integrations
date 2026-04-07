@@ -7,12 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List time entries for the authenticated Toggl Track user.
+ * Tool: toggl_list_time_entries
  *
- * Returns time entry details including ID, description, start/stop times,
- * duration, project, and tags. Optionally filter by date range.
- *
- * @see https://engineering.toggl.com/docs/api/time_entries#get-timeentries
+ * Lists recent Toggl time entries with optional date range filters.
  */
 class TogglListTimeEntries implements Tool
 {
@@ -27,30 +24,30 @@ class TogglListTimeEntries implements Tool
 
     public function description(): string
     {
-        return 'List time entries for the authenticated user. Optionally filter by date range.';
+        return 'List recent Toggl time entries. Optionally filter by date range.';
     }
 
     public function parameters(): array
     {
         return [
-            'start_date' => ['type' => 'string', 'description' => 'Start date in ISO 8601 format (e.g., "2026-01-01"). Defaults to 9 days ago if not specified.'],
-            'end_date'   => ['type' => 'string', 'description' => 'End date in ISO 8601 format (e.g., "2026-01-31"). Defaults to now if not specified.'],
+            'start_date' => ['type' => 'string', 'description' => 'Start date filter (ISO 8601 date, e.g. "2026-01-01").'],
+            'end_date'   => ['type' => 'string', 'description' => 'End date filter (ISO 8601 date).'],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Toggl integration is not configured.');
             }
 
-            $startDate = $args['start_date'] ?? null;
-            $endDate   = $args['end_date'] ?? null;
+            $result = $this->service->listTimeEntries(
+                startDate: $args['start_date'] ?? null,
+                endDate: $args['end_date'] ?? null,
+            );
 
-            $entries = $this->service->listTimeEntries($startDate, $endDate);
-
-            return ToolResult::success($entries);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

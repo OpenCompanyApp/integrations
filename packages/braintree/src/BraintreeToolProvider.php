@@ -11,7 +11,7 @@ use OpenCompany\Integrations\Braintree\Tools\BraintreeGetTransaction;
 use OpenCompany\Integrations\Braintree\Tools\BraintreeListCustomers;
 use OpenCompany\Integrations\Braintree\Tools\BraintreeGetCustomer;
 use OpenCompany\Integrations\Braintree\Tools\BraintreeListPlans;
-use OpenCompany\Integrations\Braintree\Tools\BraintreeListSubscriptions;
+use OpenCompany\Integrations\Braintree\Tools\BraintreeGetPlan;
 use OpenCompany\Integrations\Braintree\Tools\BraintreeGetCurrentUser;
 
 class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration
@@ -38,7 +38,7 @@ class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Payment processing by PayPal — accept cards, PayPal, Venmo, and more',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:braintree',
-            'category' => 'payments',
+            'category' => 'sales',
             'badge' => 'verified',
             'docs_url' => 'https://developer.paypal.com/braintree/docs',
         ];
@@ -160,12 +160,12 @@ class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'List recurring billing plans.',
                 'icon' => 'ph:currency-dollar',
             ],
-            'braintree_list_subscriptions' => [
-                'class' => BraintreeListSubscriptions::class,
+            'braintree_get_plan' => [
+                'class' => BraintreeGetPlan::class,
                 'type' => 'read',
-                'name' => 'List Subscriptions',
-                'description' => 'List active and past subscriptions.',
-                'icon' => 'ph:repeat',
+                'name' => 'Get Plan',
+                'description' => 'Retrieve a single recurring billing plan by ID.',
+                'icon' => 'ph:currency-dollar',
             ],
             'braintree_get_current_user' => [
                 'class' => BraintreeGetCurrentUser::class,

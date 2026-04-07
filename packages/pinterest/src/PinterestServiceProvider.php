@@ -15,7 +15,7 @@ class PinterestServiceProvider extends ServiceProvider
 
             return new PinterestService(
                 accessToken: $creds->get('pinterest', 'access_token', ''),
-                baseUrl: $creds->get('pinterest', 'base_url', 'https://api.pinterest.com/v5'),
+                baseUrl: $creds->get('pinterest', 'url', 'https://api.pinterest.com/v5'),
             );
         });
     }

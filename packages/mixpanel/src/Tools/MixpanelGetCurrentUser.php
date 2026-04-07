@@ -7,16 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Verify the authenticated Mixpanel user and retrieve project info.
+ * MixpanelGetCurrentUser — Retrieve the authenticated user's identity.
  *
- * Uses a minimal query request to confirm that the service-account
- * credentials are valid and the API is reachable.
+ * Calls GET /v1/me and returns the caller's Mixpanel account info,
+ * useful for verifying credentials and inspecting permissions.
  */
 class MixpanelGetCurrentUser implements Tool
 {
-    /**
-     * @param  MixpanelService  $service  The Mixpanel API client
-     */
     public function __construct(
         private MixpanelService $service,
     ) {}
@@ -28,7 +25,7 @@ class MixpanelGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Verify the authenticated user and retrieve basic project info.';
+        return 'Get the currently authenticated Mixpanel user. Returns account details for the API key owner — useful for verifying credentials and checking permissions.';
     }
 
     public function parameters(): array
@@ -36,24 +33,16 @@ class MixpanelGetCurrentUser implements Tool
         return [];
     }
 
-    /**
-     * Verify authentication and retrieve basic project info.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (none)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mixpanel integration is not configured.');
             }
 
             $result = $this->service->getCurrentUser();
 
-            return ToolResult::success([
-                'authenticated' => true,
-                'query_result'  => $result,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

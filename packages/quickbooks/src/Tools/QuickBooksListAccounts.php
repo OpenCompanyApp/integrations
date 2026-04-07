@@ -7,16 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List QuickBooks accounts using a query.
- *
- * Runs a SELECT query against the QuickBooks query API to retrieve accounts
- * (chart of accounts) with optional pagination.
+ * List QuickBooks accounts (chart of accounts) using a query.
  */
 class QuickBooksListAccounts implements Tool
 {
-    /**
-     * @param  QuickBooksService  $service  The QuickBooks API client
-     */
     public function __construct(
         private QuickBooksService $service,
     ) {}
@@ -28,11 +22,7 @@ class QuickBooksListAccounts implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List QuickBooks accounts (chart of accounts).
-        Returns a list of accounts with key fields including name, type, and balance.
-        Use the limit parameter to control page size.
-        MD;
+        return 'List QuickBooks accounts (chart of accounts). Returns a list of accounts with name, type, classification, and balance. Use the limit parameter to control page size.';
     }
 
     public function parameters(): array
@@ -42,22 +32,19 @@ class QuickBooksListAccounts implements Tool
         ];
     }
 
-    /**
-     * List QuickBooks accounts with optional limit.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (limit)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
-            $query = "SELECT * FROM Account STARTPOSITION 0 MAXRESULTS {$limit}";
+            $params = [];
+            if (isset($args['limit'])) {
+                $params['limit'] = (int) $args['limit'];
+            }
 
-            $result = $this->service->query($query);
+            $result = $this->service->listAccounts($params);
             $queryResponse = $result['QueryResponse'] ?? [];
             $accounts = $queryResponse['Account'] ?? [];
 
@@ -79,7 +66,7 @@ class QuickBooksListAccounts implements Tool
                 'accounts' => $mapped,
                 'total_count' => $queryResponse['totalCount'] ?? count($mapped),
                 'start_position' => $queryResponse['startPosition'] ?? 0,
-                'max_results' => $queryResponse['maxResults'] ?? $limit,
+                'max_results' => $queryResponse['maxResults'] ?? ($args['limit'] ?? 10),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

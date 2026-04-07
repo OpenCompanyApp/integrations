@@ -5,57 +5,48 @@ namespace OpenCompany\Integrations\QuickBooks;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * QuickBooks Online API service for making requests to the Intuit v3 REST API.
- *
- * Uses OAuth2 access tokens. All requests are JSON-based and target the
- * company-scoped endpoint: https://quickbooks.api.intuit.com/v3/company/{realmId}
- */
 class QuickBooksService
 {
-    private const BASE_URL_TEMPLATE = 'https://quickbooks.api.intuit.com/v3/company/%s';
-
-    /** @var string OAuth2 access token */
-    private string $accessToken;
-
-    /** @var string QuickBooks company (realm) ID from OAuth */
-    private string $realmId;
-
-    /** @var string Fully-qualified base URL including the realm ID */
-    private string $baseUrl;
-
-    /**
-     * @param  string  $accessToken  OAuth2 access token for QuickBooks API
-     * @param  string  $realmId      Company ID (realm ID) obtained during OAuth flow
-     */
-    public function __construct(string $accessToken = '', string $realmId = '')
-    {
-        $this->accessToken = $accessToken;
-        $this->realmId = $realmId;
-        $this->baseUrl = sprintf(self::BASE_URL_TEMPLATE, $realmId);
+    public function __construct(
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.quickbooks.com/v3',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the service has been configured with credentials.
+     * Check whether the service is properly configured with credentials.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->accessToken) && ! empty($this->realmId);
+        return !empty($this->accessToken);
     }
 
-    // ── Company Info ───────────────────────────────────────
+    // ─── Invoices ──────────────────────────────────────────────────────────
 
     /**
-     * Get company information for the connected realm.
+     * List invoices using a query.
+     *
+     * @param  array<string, mixed>  $params  Query parameters (limit, etc.)
+     * @return array<string, mixed>
+     */
+    public function listInvoices(array $params = []): array
+    {
+        $limit = isset($params['limit']) ? (int) $params['limit'] : 10;
+        $query = "SELECT * FROM Invoice STARTPOSITION 0 MAXRESULTS {$limit}";
+
+        return $this->request('GET', '/query', ['query' => $query]);
+    }
+
+    /**
+     * Get a single invoice by ID.
      *
      * @return array<string, mixed>
      */
-    public function getCompanyInfo(): array
+    public function getInvoice(string $invoiceId): array
     {
-        return $this->request('GET', "/companyinfo/{$this->realmId}");
+        return $this->request('GET', "/invoice/{$invoiceId}");
     }
-
-    // ── Invoices ───────────────────────────────────────────
 
     /**
      * Create a new invoice.
@@ -68,151 +59,109 @@ class QuickBooksService
         return $this->request('POST', '/invoice', $data);
     }
 
-    /**
-     * Get an invoice by ID.
-     *
-     * @param  string  $id  QuickBooks invoice ID
-     * @return array<string, mixed>
-     */
-    public function getInvoice(string $id): array
-    {
-        return $this->request('GET', "/invoice/{$id}");
-    }
+    // ─── Customers ─────────────────────────────────────────────────────────
 
     /**
-     * Update an existing invoice (full update with syncToken).
+     * List customers using a query.
      *
-     * @param  array<string, mixed>  $data  Invoice payload including Id and syncToken
+     * @param  array<string, mixed>  $params  Query parameters (limit, etc.)
      * @return array<string, mixed>
      */
-    public function updateInvoice(array $data): array
+    public function listCustomers(array $params = []): array
     {
-        return $this->request('POST', '/invoice?operation=update', $data);
-    }
+        $limit = isset($params['limit']) ? (int) $params['limit'] : 10;
+        $query = "SELECT * FROM Customer STARTPOSITION 0 MAXRESULTS {$limit}";
 
-    /**
-     * Run a query against the QuickBooks query API.
-     *
-     * @param  string  $query  SQL-like query string (e.g., "SELECT * FROM Invoice")
-     * @return array<string, mixed>
-     */
-    public function query(string $query): array
-    {
         return $this->request('GET', '/query', ['query' => $query]);
     }
 
-    // ── Customers ──────────────────────────────────────────
-
     /**
-     * Create a new customer.
+     * Get a single customer by ID.
      *
-     * @param  array<string, mixed>  $data  Customer payload
      * @return array<string, mixed>
      */
-    public function createCustomer(array $data): array
+    public function getCustomer(string $customerId): array
     {
-        return $this->request('POST', '/customer', $data);
+        return $this->request('GET', "/customer/{$customerId}");
     }
 
+    // ─── Accounts ──────────────────────────────────────────────────────────
+
     /**
-     * Get a customer by ID.
+     * List accounts using a query.
      *
-     * @param  string  $id  QuickBooks customer ID
+     * @param  array<string, mixed>  $params  Query parameters (limit, etc.)
      * @return array<string, mixed>
      */
-    public function getCustomer(string $id): array
+    public function listAccounts(array $params = []): array
     {
-        return $this->request('GET', "/customer/{$id}");
+        $limit = isset($params['limit']) ? (int) $params['limit'] : 10;
+        $query = "SELECT * FROM Account STARTPOSITION 0 MAXRESULTS {$limit}";
+
+        return $this->request('GET', '/query', ['query' => $query]);
     }
 
+    // ─── Current User ──────────────────────────────────────────────────────
+
     /**
-     * Update an existing customer (full update with syncToken).
+     * Get the currently authenticated user / company info.
      *
-     * @param  array<string, mixed>  $data  Customer payload including Id and syncToken
      * @return array<string, mixed>
      */
-    public function updateCustomer(array $data): array
+    public function getCurrentUser(): array
     {
-        return $this->request('POST', '/customer?operation=update', $data);
+        return $this->request('GET', '/companyinfo/current');
     }
 
-    // ── Payments ───────────────────────────────────────────
+    // ─── HTTP Layer ────────────────────────────────────────────────────────
 
     /**
-     * Create a new payment.
+     * Make an API request and return parsed JSON data.
      *
-     * @param  array<string, mixed>  $data  Payment payload
-     * @return array<string, mixed>
-     */
-    public function createPayment(array $data): array
-    {
-        return $this->request('POST', '/payment', $data);
-    }
-
-    // ── Estimates ──────────────────────────────────────────
-
-    /**
-     * Create a new estimate.
-     *
-     * @param  array<string, mixed>  $data  Estimate payload
-     * @return array<string, mixed>
-     */
-    public function createEstimate(array $data): array
-    {
-        return $this->request('POST', '/estimate', $data);
-    }
-
-    // ── Bills ──────────────────────────────────────────────
-
-    /**
-     * Create a new bill.
-     *
-     * @param  array<string, mixed>  $data  Bill payload
-     * @return array<string, mixed>
-     */
-    public function createBill(array $data): array
-    {
-        return $this->request('POST', '/bill', $data);
-    }
-
-    // ── HTTP ───────────────────────────────────────────────
-
-    /**
-     * Make an API request to QuickBooks Online.
-     *
-     * @param  string  $method  HTTP method (GET or POST)
-     * @param  string  $path    API path (relative to base URL)
-     * @param  array<string, mixed>  $data  Query params (GET) or JSON body (POST)
+     * @param  array<string, mixed>  $data  Query params (GET) or body (POST/PUT)
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('QuickBooks integration is not configured. Access token and realm ID are required.');
+        $response = $this->rawRequest($method, $path, $data);
+
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Make a raw HTTP request to the QuickBooks API.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    {
+        if (!$this->isConfigured()) {
+            throw new \RuntimeException('QuickBooks integration is not configured. Access token is required.');
         }
+
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(30);
 
-            $url = $this->baseUrl . $path;
-
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            $json = $response->json() ?? [];
-
-            if (! $response->successful()) {
+            if (!$response->successful()) {
+                $json = $response->json() ?? [];
                 $fault = $json['Fault'] ?? null;
                 if ($fault) {
                     $errorMessages = array_map(
-                        fn (array $e) => ($e['Message'] ?? 'Unknown error') . (isset($e['code']) ? " (code: {$e['code']})" : ''),
+                        fn(array $e) => ($e['Message'] ?? 'Unknown error') . (isset($e['code']) ? " (code: {$e['code']})" : ''),
                         $fault['Error'] ?? []
                     );
                     $error = implode('; ', $errorMessages);
@@ -225,10 +174,10 @@ class QuickBooksService
                     'error' => $error,
                 ]);
 
-                throw new \RuntimeException('QuickBooks API error (' . $response->status() . '): ' . $error);
+                throw new \RuntimeException("QuickBooks API error ({$response->status()}): {$error}");
             }
 
-            return $json;
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("QuickBooks API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

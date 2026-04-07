@@ -7,9 +7,7 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Discord integration.
- *
- * Registers the DiscordService singleton and bootstraps the Discord tool provider.
+ * Laravel service provider that registers the DiscordService singleton and bootstraps Discord tools.
  */
 class DiscordServiceProvider extends ServiceProvider
 {
@@ -19,7 +17,8 @@ class DiscordServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new DiscordService(
-                botToken: $creds->get('discord', 'bot_token', ''),
+                accessToken: $creds->get('discord', 'access_token', ''),
+                baseUrl: $creds->get('discord', 'base_url', 'https://discord.com/api/v10'),
             );
         });
     }

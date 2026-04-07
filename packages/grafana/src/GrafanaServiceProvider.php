@@ -24,7 +24,6 @@ class GrafanaServiceProvider extends ServiceProvider
 
             return new GrafanaService(
                 apiToken: $creds->get('grafana', 'api_token', ''),
-                hostname: $creds->get('grafana', 'hostname', ''),
             );
         });
     }

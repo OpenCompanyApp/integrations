@@ -2,24 +2,19 @@
 
 namespace OpenCompany\Integrations\Toggl;
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Toggl Track API service — handles authentication and HTTP communication.
+ * Toggl API service — handles authenticated HTTP requests to the Toggl Track REST API.
  *
- * Uses HTTP Basic Auth with the Toggl API token as username and "api_token"
- * as the password, as required by the Toggl Track v9 API.
- *
- * @see https://engineering.toggl.com/docs/
+ * Uses HTTP Basic Auth with the API token as username and 'api_token' as password.
+ * Supports all standard HTTP methods and returns parsed JSON responses.
  */
 class TogglService
 {
     /**
-     * Create a new TogglService instance.
-     *
-     * @param string $apiToken Toggl Track API token (found at https://track.toggl.com/profile)
+     * @param string $apiToken Toggl API token (used as username in Basic Auth)
      * @param string $baseUrl  Base URL for the Toggl Track API
      */
     public function __construct(
@@ -30,78 +25,90 @@ class TogglService
     }
 
     /**
-     * Check whether the service is configured with an API token.
+     * Check whether the service has been configured with an API token.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->apiToken);
+        return !empty($this->apiToken);
     }
 
+    // ── User ──────────────────────────────────────────────────────────────
+
     /**
-     * Get the current user's profile.
+     * Get the currently authenticated user.
      *
-     * @return array The authenticated user's profile data
-     *
-     * @see https://engineering.toggl.com/docs/api/me#get-me
+     * @return array User profile data
      */
     public function getCurrentUser(): array
     {
         return $this->request('GET', '/me');
     }
 
+    // ── Workspaces ────────────────────────────────────────────────────────
+
     /**
-     * List all workspaces the authenticated user has access to.
+     * List all workspaces the authenticated user belongs to.
      *
-     * @return array<int, array> List of workspace objects
-     *
-     * @see https://engineering.toggl.com/docs/api/workspaces#get-workspaces
+     * @return array List of workspace objects
      */
     public function listWorkspaces(): array
     {
         return $this->request('GET', '/me/workspaces');
     }
 
+    // ── Projects ──────────────────────────────────────────────────────────
+
     /**
-     * List all projects in a workspace.
+     * List projects in a workspace.
      *
-     * @param int $workspaceId The workspace ID
-     *
-     * @return array<int, array> List of project objects
-     *
-     * @see https://engineering.toggl.com/docs/api/projects#get-projects
+     * @param string $workspaceId Workspace ID
+     * @param bool   $active      Filter for active projects only
+     * @return array List of project objects
      */
-    public function listProjects(int $workspaceId): array
-    {
-        return $this->request('GET', "/workspaces/{$workspaceId}/projects");
+    public function listProjects(
+        string $workspaceId,
+        bool $active = true,
+    ): array {
+        $params = [];
+        if ($active) {
+            $params['active'] = 'true';
+        }
+
+        return $this->request(
+            'GET',
+            '/workspaces/' . urlencode($workspaceId) . '/projects',
+            $params,
+        );
     }
 
     /**
-     * Create a new project in a workspace.
+     * Get a single project by ID.
      *
-     * @param int   $workspaceId The workspace ID
-     * @param array $data        Project data (name, color, billable, etc.)
-     *
-     * @return array The created project object
-     *
-     * @see https://engineering.toggl.com/docs/api/projects#post-project
+     * @param string $workspaceId Workspace ID
+     * @param string $projectId   Project ID
+     * @return array Project object
      */
-    public function createProject(int $workspaceId, array $data): array
+    public function getProject(string $workspaceId, string $projectId): array
     {
-        return $this->request('POST', "/workspaces/{$workspaceId}/projects", $data);
+        return $this->request(
+            'GET',
+            '/workspaces/' . urlencode($workspaceId) . '/projects/' . urlencode($projectId),
+        );
     }
 
+    // ── Time Entries ──────────────────────────────────────────────────────
+
     /**
-     * List time entries for the authenticated user.
+     * List time entries.
      *
-     * @param string|null $startDate Start date in ISO 8601 format (e.g., "2026-01-01")
-     * @param string|null $endDate   End date in ISO 8601 format (e.g., "2026-01-31")
-     *
-     * @return array<int, array> List of time entry objects
-     *
-     * @see https://engineering.toggl.com/docs/api/time_entries#get-timeentries
+     * @param string|null $startDate Start date filter (ISO 8601 date, e.g. "2026-01-01")
+     * @param string|null $endDate   End date filter (ISO 8601 date)
+     * @return array List of time entry objects
      */
-    public function listTimeEntries(?string $startDate = null, ?string $endDate = null): array
-    {
+    public function listTimeEntries(
+        ?string $startDate = null,
+        ?string $endDate = null,
+    ): array {
         $params = [];
         if ($startDate !== null) {
             $params['start_date'] = $startDate;
@@ -114,63 +121,79 @@ class TogglService
     }
 
     /**
-     * Create a new time entry in a workspace.
+     * Get a single time entry by ID.
      *
-     * @param int   $workspaceId The workspace ID
-     * @param array $data        Time entry data (description, start, stop, duration, project_id, etc.)
-     *
-     * @return array The created time entry object
-     *
-     * @see https://engineering.toggl.com/docs/api/time_entries#post-timeentry
+     * @param string $timeEntryId Time entry ID
+     * @return array Time entry object
      */
-    public function createTimeEntry(int $workspaceId, array $data): array
+    public function getTimeEntry(string $timeEntryId): array
     {
-        return $this->request('POST', "/workspaces/{$workspaceId}/time_entries", $data);
+        return $this->request(
+            'GET',
+            '/me/time_entries/' . urlencode($timeEntryId),
+        );
     }
 
     /**
-     * Update an existing time entry.
+     * Create a new time entry.
      *
-     * @param int   $workspaceId   The workspace ID
-     * @param int   $timeEntryId   The time entry ID
-     * @param array $data          Updated time entry data
-     *
-     * @return array The updated time entry object
-     *
-     * @see https://engineering.toggl.com/docs/api/time_entries#put-timeentry
+     * @param string      $workspaceId  Workspace ID
+     * @param string      $description  Description of the time entry
+     * @param array       $tags         Tags for the time entry
+     * @param string      $duration     Duration in seconds (or -1 for running timer)
+     * @param string      $start        Start time (ISO 8601, e.g. "2026-04-05T09:00:00Z")
+     * @param string|null $stop         Stop time (ISO 8601, omit for running timer)
+     * @param string|null $projectId    Optional project ID to assign
+     * @param string      $createdWith  Source identifier (required by Toggl API)
+     * @return array Created time entry object
      */
-    public function updateTimeEntry(int $workspaceId, int $timeEntryId, array $data): array
-    {
-        return $this->request('PUT', "/workspaces/{$workspaceId}/time_entries/{$timeEntryId}", $data);
+    public function createTimeEntry(
+        string $workspaceId,
+        string $description = '',
+        array $tags = [],
+        string $duration = '-1',
+        string $start = '',
+        ?string $stop = null,
+        ?string $projectId = null,
+        string $createdWith = 'opencompany',
+    ): array {
+        $data = [
+            'description' => $description,
+            'tags' => $tags,
+            'duration' => (int) $duration,
+            'start' => $start ?: now()->toIso8601ZuluString(),
+            'created_with' => $createdWith,
+            'workspace_id' => (int) $workspaceId,
+        ];
+        if ($stop !== null) {
+            $data['stop'] = $stop;
+        }
+        if ($projectId !== null) {
+            $data['project_id'] = (int) $projectId;
+        }
+
+        return $this->request(
+            'POST',
+            '/workspaces/' . urlencode($workspaceId) . '/time_entries',
+            $data,
+        );
     }
 
-    /**
-     * Delete a time entry.
-     *
-     * @param int $workspaceId The workspace ID
-     * @param int $timeEntryId The time entry ID
-     *
-     * @see https://engineering.toggl.com/docs/api/time_entries#delete-timeentry
-     */
-    public function deleteTimeEntry(int $workspaceId, int $timeEntryId): void
-    {
-        $this->request('DELETE', "/workspaces/{$workspaceId}/time_entries/{$timeEntryId}");
-    }
+    // ── HTTP layer ────────────────────────────────────────────────────────
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param string $method HTTP method (GET, POST, PUT, DELETE)
-     * @param string $path   API path relative to the base URL
-     * @param array  $data   Request body (for POST/PUT) or query params (for GET)
-     *
-     * @return array Parsed JSON response body
+     * @param string $path   API path (e.g. "/me/workspaces")
+     * @param array  $data   Query params (GET) or body (POST/PUT/DELETE)
+     * @return array Parsed JSON response
      */
     private function request(string $method, string $path, array $data = []): array
     {
         $response = $this->rawRequest($method, $path, $data);
 
-        if ($method === 'DELETE') {
+        if ($response->status() === 204) {
             return [];
         }
 
@@ -178,32 +201,29 @@ class TogglService
     }
 
     /**
-     * Make a raw HTTP request to the Toggl Track API.
+     * Make a raw HTTP request to the Toggl API.
      *
-     * Authenticates using HTTP Basic Auth with the API token as the username
-     * and the literal string "api_token" as the password.
+     * Uses HTTP Basic Auth with the API token as username and 'api_token' as password.
      *
      * @param string $method HTTP method
      * @param string $path   API path
-     * @param array  $data   Request data
+     * @param array  $data   Query params or request body
+     * @return \Illuminate\Http\Client\Response Raw HTTP response
      *
-     * @return \Illuminate\Http\Client\Response The raw HTTP response
-     *
-     * @throws \RuntimeException If the API token is missing or the request fails
+     * @throws \RuntimeException On connection failure or API error
      */
-    private function rawRequest(string $method, string $path, array $data = []): Response
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (! $this->apiToken) {
+        if (!$this->apiToken) {
             throw new \RuntimeException('Toggl API token is not configured.');
         }
 
         $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->withBasicAuth($this->apiToken, 'api_token')
-              ->timeout(30);
+            $http = Http::withBasicAuth($this->apiToken, 'api_token')
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET'    => $http->get($url, $data),
@@ -213,14 +233,14 @@ class TogglService
                 default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (! $response->successful()) {
+            if (!$response->successful()) {
                 $error = $response->json('message') ?? $response->body();
                 Log::error("Toggl API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error'  => $error,
                 ]);
                 throw new \RuntimeException(
-                    "Toggl API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error))
+                    "Toggl API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)),
                 );
             }
 

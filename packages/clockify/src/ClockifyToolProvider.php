@@ -78,10 +78,10 @@ class ClockifyToolProvider implements ToolProvider, ConfigurableIntegration
         }
 
         try {
-            $response = Http::withHeaders([
-                'X-Api-Key' => $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.clockify.me/api/v1/user');
+            $response = Http::withToken($apiKey)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->timeout(10)
+                ->get('https://api.clockify.me/api/v1/user');
 
             if (!$response->successful()) {
                 return [

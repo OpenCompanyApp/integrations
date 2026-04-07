@@ -3,25 +3,22 @@
 namespace OpenCompany\Integrations\Mixpanel;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelTrackEvent;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelQuery;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelFunnel;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelRetention;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelProfile;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelListEvents;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetEvent;
 use OpenCompany\Integrations\Mixpanel\Tools\MixpanelListFunnels;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetExport;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetFunnel;
 use OpenCompany\Integrations\Mixpanel\Tools\MixpanelListCohorts;
-use OpenCompany\Integrations\Mixpanel\Tools\MixpanelQueryJql;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetCohort;
 use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetCurrentUser;
 
 /**
- * Registers all Mixpanel tools and provides integration metadata.
+ * MixpanelToolProvider — registers Mixpanel analytics tools with the integration core.
  *
- * Exposes 10 tools covering event tracking, queries, funnels,
- * retention, profiles, exports, cohorts, and JQL via the ToolProvider contract.
+ * Implements ConfigurableIntegration for multi-account support, config schema
+ * definition, connection testing, and credential field declaration.
  */
 class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -33,9 +30,9 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'events, funnels, retention, cohorts',
-            'description' => 'Product Analytics',
-            'icon' => 'ph:chart-line',
+            'label' => 'events, funnels, cohorts',
+            'description' => 'Product analytics',
+            'icon' => 'ph:chart-pie',
             'logo' => 'simple-icons:mixpanel',
         ];
     }
@@ -43,9 +40,9 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Mixpanel',
-            'description' => 'Event tracking, analytics queries, funnels, retention, profiles, and cohorts',
-            'icon' => 'ph:chart-line',
+            'name' => 'Mixpanel Analytics',
+            'description' => 'Product analytics platform for tracking user behavior, funnels, and cohorts',
+            'icon' => 'ph:chart-pie',
             'logo' => 'simple-icons:mixpanel',
             'category' => 'analytics',
             'badge' => 'verified',
@@ -57,157 +54,124 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             [
-                'key' => 'username',
-                'type' => 'text',
-                'label' => 'Service Account Username',
-                'placeholder' => 'service-account-...',
-                'hint' => 'Mixpanel service-account username (found in Organization Settings → Service Accounts).',
-                'required' => true,
-            ],
-            [
-                'key' => 'secret',
+                'key' => 'api_key',
                 'type' => 'secret',
-                'label' => 'Service Account Secret',
-                'placeholder' => '...',
-                'hint' => 'Mixpanel service-account secret (or API secret for older accounts).',
+                'label' => 'API Key',
+                'placeholder' => 'Enter your Mixpanel API key',
+                'hint' => 'Find your API key in Mixpanel account settings under "Project Settings"',
                 'required' => true,
             ],
             [
-                'key' => 'project_id',
-                'type' => 'text',
-                'label' => 'Project ID',
-                'placeholder' => '1234567',
-                'hint' => 'Mixpanel project ID (found in Project Settings).',
-                'required' => false,
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'Instance URL',
+                'placeholder' => 'https://api.mixpanel.com/v1',
+                'hint' => 'Use <code>https://api.mixpanel.com/v1</code> for the standard cloud, or your custom domain',
+                'default' => 'https://api.mixpanel.com/v1',
             ],
         ];
     }
 
-    /**
-     * Test the Mixpanel connection using the provided credentials.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'username' and 'secret'
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
-        $username = $config['username'] ?? '';
-        $secret = $config['secret'] ?? '';
+        $apiKey = $config['api_key'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.mixpanel.com/v1', '/');
 
-        if (empty($username) || empty($secret)) {
-            return ['success' => false, 'error' => 'Service-account username and secret are required.'];
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No API key provided'];
         }
 
         try {
-            $response = Http::withBasicAuth($username, $secret)
-                ->timeout(10)
-                ->get('https://mixpanel.com/api/2.0/query', [
-                    'from_date' => date('Y-m-d', strtotime('-1 day')),
-                    'to_date'   => date('Y-m-d'),
-                    'event'     => '[]',
-                ]);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/me');
 
-            if ($response->failed()) {
-                $body = $response->json() ?? [];
-                $error = is_string($body) ? $body : ($body['error'] ?? $response->body());
+            $json = $response->json();
 
+            if ($json === null) {
                 return [
                     'success' => false,
-                    'error' => 'Mixpanel API error: ' . (is_string($error) ? $error : json_encode($error)),
+                    'error' => "Could not reach Mixpanel API at {$baseUrl}. Check the URL.",
+                ];
+            }
+
+            if (!$response->successful()) {
+                $error = $json['error'] ?? $json['message'] ?? 'Unknown error';
+                return [
+                    'success' => false,
+                    'error' => "Mixpanel API returned an error: {$error}",
                 ];
             }
 
             return [
                 'success' => true,
-                'message' => 'Connected to Mixpanel API successfully.',
+                'message' => "Connected to Mixpanel API at {$baseUrl}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
-            'username'   => 'nullable|string',
-            'secret'     => 'nullable|string',
-            'project_id' => 'nullable|string',
+            'api_key' => 'nullable|string',
+            'url'     => 'nullable|url',
         ];
     }
 
     public function tools(): array
     {
         return [
-            'mixpanel_track_event' => [
-                'class' => MixpanelTrackEvent::class,
-                'type' => 'write',
-                'name' => 'Track Event',
-                'description' => 'Track an event in Mixpanel with optional properties and user identity.',
-                'icon' => 'ph:rocket',
-            ],
-            'mixpanel_query' => [
-                'class' => MixpanelQuery::class,
+            'mixpanel_list_events' => [
+                'class' => MixpanelListEvents::class,
                 'type' => 'read',
-                'name' => 'Query Events',
-                'description' => 'Query Mixpanel event data with date range, type, and time unit.',
-                'icon' => 'ph:magnifying-glass',
+                'name' => 'List Events',
+                'description' => 'List events from Mixpanel, optionally filtered by type, unit, or date range.',
+                'icon' => 'ph:list-bullets',
             ],
-            'mixpanel_funnel' => [
-                'class' => MixpanelFunnel::class,
+            'mixpanel_get_event' => [
+                'class' => MixpanelGetEvent::class,
                 'type' => 'read',
-                'name' => 'Get Funnel',
-                'description' => 'Get conversion funnel results for a specific funnel.',
-                'icon' => 'ph:funnel',
-            ],
-            'mixpanel_retention' => [
-                'class' => MixpanelRetention::class,
-                'type' => 'read',
-                'name' => 'Get Retention',
-                'description' => 'Get retention data for a cohort of users over time.',
-                'icon' => 'ph:clock-clockwise',
-            ],
-            'mixpanel_profile' => [
-                'class' => MixpanelProfile::class,
-                'type' => 'write',
-                'name' => 'Update Profile',
-                'description' => 'Set or update a Mixpanel user profile with properties.',
-                'icon' => 'ph:user-circle',
+                'name' => 'Get Event',
+                'description' => 'Retrieve a single event by its name with analytics data.',
+                'icon' => 'ph:eye',
             ],
             'mixpanel_list_funnels' => [
                 'class' => MixpanelListFunnels::class,
                 'type' => 'read',
                 'name' => 'List Funnels',
-                'description' => 'List all funnels in the Mixpanel project.',
-                'icon' => 'ph:list-funnels',
+                'description' => 'List all funnels configured in the Mixpanel project.',
+                'icon' => 'ph:funnel',
             ],
-            'mixpanel_get_export' => [
-                'class' => MixpanelGetExport::class,
+            'mixpanel_get_funnel' => [
+                'class' => MixpanelGetFunnel::class,
                 'type' => 'read',
-                'name' => 'Export Data',
-                'description' => 'Export raw event data from Mixpanel for a date range.',
-                'icon' => 'ph:download',
+                'name' => 'Get Funnel',
+                'description' => 'Retrieve funnel conversion data by funnel ID.',
+                'icon' => 'ph:funnel-simple',
             ],
             'mixpanel_list_cohorts' => [
                 'class' => MixpanelListCohorts::class,
                 'type' => 'read',
                 'name' => 'List Cohorts',
-                'description' => 'List all behavioural cohorts in the Mixpanel project.',
-                'icon' => 'ph:users-three',
+                'description' => 'List all behavioral cohorts in the Mixpanel project.',
+                'icon' => 'ph:users',
             ],
-            'mixpanel_query_jql' => [
-                'class' => MixpanelQueryJql::class,
+            'mixpanel_get_cohort' => [
+                'class' => MixpanelGetCohort::class,
                 'type' => 'read',
-                'name' => 'Query JQL',
-                'description' => 'Execute a JQL (JavaScript Query Language) script against Mixpanel data.',
-                'icon' => 'ph:code',
+                'name' => 'Get Cohort',
+                'description' => 'Retrieve cohort details by cohort ID.',
+                'icon' => 'ph:user-circle',
             ],
             'mixpanel_get_current_user' => [
                 'class' => MixpanelGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Verify the authenticated user and retrieve basic project info.',
-                'icon' => 'ph:user',
+                'description' => 'Get the currently authenticated Mixpanel user.',
+                'icon' => 'ph:identification-badge',
             ],
         ];
     }
@@ -220,9 +184,8 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration
     public function credentialFields(): array
     {
         return [
-            ['key' => 'username', 'type' => 'text', 'label' => 'Service Account Username', 'required' => true],
-            ['key' => 'secret', 'type' => 'secret', 'label' => 'Service Account Secret', 'required' => true],
-            ['key' => 'project_id', 'type' => 'text', 'label' => 'Project ID', 'required' => false],
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Mixpanel URL', 'required' => false, 'default' => 'https://api.mixpanel.com/v1'],
         ];
     }
 
@@ -231,31 +194,21 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the MixpanelService, with optional account-specific credentials.
-     *
-     * @param  array<string, mixed>  $context
-     */
-    private function resolveService(array $context = []): MixpanelService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new MixpanelService(
-                username: $creds->get('mixpanel', 'username', '', $account),
-                secret: $creds->get('mixpanel', 'secret', '', $account),
-                projectId: $creds->get('mixpanel', 'project_id', '', $account),
+            $service = new MixpanelService(
+                apiKey: $creds->get('mixpanel', 'api_key', '', $account),
+                baseUrl: $creds->get('mixpanel', 'url', 'https://api.mixpanel.com/v1', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(MixpanelService::class);
+        return new $class(app(MixpanelService::class));
     }
 }

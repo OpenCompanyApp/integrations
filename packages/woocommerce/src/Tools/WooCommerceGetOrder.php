@@ -1,20 +1,18 @@
 <?php
 
-namespace OpenCompany\Integrations\WooCommerce\Tools;
+namespace OpenCompany\Integrations\Woocommerce\Tools;
 
+use OpenCompany\Integrations\Woocommerce\WoocommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\WooCommerce\WooCommerceService;
 
 /**
- * Tool: woocommerce_get_order
- *
- * Retrieves details for a single WooCommerce order by ID.
+ * Get a single order from the WooCommerce store by ID.
  */
-class WooCommerceGetOrder implements Tool
+class WoocommerceGetOrder implements Tool
 {
     public function __construct(
-        private WooCommerceService $service,
+        private WoocommerceService $service,
     ) {}
 
     public function name(): string
@@ -24,12 +22,9 @@ class WooCommerceGetOrder implements Tool
 
     public function description(): string
     {
-        return 'Get full details for a single WooCommerce order by its ID.';
+        return 'Get a single order from the WooCommerce store by its ID. Returns full order details including line items and totals.';
     }
 
-    /**
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
@@ -40,17 +35,11 @@ class WooCommerceGetOrder implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('WooCommerce integration is not configured.');
             }
 
-            $id = (int) ($args['id'] ?? 0);
-
-            if ($id <= 0) {
-                return ToolResult::error('A valid order ID is required.');
-            }
-
-            $result = $this->service->getOrder($id);
+            $result = $this->service->getOrder((int) $args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

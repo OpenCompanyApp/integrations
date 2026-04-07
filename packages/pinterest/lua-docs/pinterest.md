@@ -1,179 +1,161 @@
 # Pinterest — Lua API Reference
 
-## list_boards
-
-List all boards for the authenticated Pinterest user.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Maximum number of boards to return (default: 25, max: 250) |
-| `bookmark` | string | no | Cursor for pagination — pass the bookmark from a previous response |
-
-### Examples
-
-```lua
-local result = app.integrations.pinterest.list_boards({
-  limit = 25
-})
-
-for _, board in ipairs(result.items) do
-  print(board.name .. " (ID: " .. board.id .. ")")
-end
-```
-
-### Paginating through all boards
-
-```lua
-local all_boards = {}
-local bookmark = nil
-
-repeat
-  local result = app.integrations.pinterest.list_boards({
-    limit = 100,
-    bookmark = bookmark
-  })
-  for _, board in ipairs(result.items or {}) do
-    table.insert(all_boards, board)
-  end
-  bookmark = result.bookmark
-until not bookmark
-```
-
----
-
-## get_board
-
-Get details for a specific Pinterest board.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `board_id` | string | yes | The unique identifier of the board |
-
-### Example
-
-```lua
-local board = app.integrations.pinterest.get_board({
-  board_id = "1234567890"
-})
-
-print(board.name)
-print("Pins: " .. tostring(board.pin_count))
-print("Privacy: " .. board.privacy)
-```
-
----
-
-## create_board
-
-Create a new board on Pinterest.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `name` | string | yes | Board name (max 180 characters) |
-| `description` | string | no | Board description (max 1500 characters) |
-
-### Example
-
-```lua
-local board = app.integrations.pinterest.create_board({
-  name = "Travel Inspiration",
-  description = "Places I want to visit someday"
-})
-
-print("Created board: " .. board.name .. " (ID: " .. board.id .. ")")
-```
-
----
-
 ## list_pins
 
-List pins on a specific Pinterest board.
+List pins for the authenticated Pinterest user.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `board_id` | string | yes | The unique identifier of the board |
-| `limit` | integer | no | Maximum number of pins to return (default: 25, max: 250) |
-| `bookmark` | string | no | Cursor for pagination |
+| `bookmark` | string | no | Pagination cursor from a previous response |
+| `pageSize` | integer | no | Number of pins to return per page (max 250) |
 
 ### Example
 
 ```lua
 local result = app.integrations.pinterest.list_pins({
-  board_id = "1234567890",
-  limit = 25
+  pageSize = 25
 })
 
-for _, pin in ipairs(result.items or {}) do
-  print(pin.title or "(untitled)")
-  if pin.link then
-    print("  Link: " .. pin.link)
-  end
+for _, pin in ipairs(result.items) do
+  print(pin.id .. ": " .. (pin.title or ""))
 end
+```
+
+---
+
+## get_pin
+
+Get details of a specific pin by ID.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `pinId` | string | yes | The pin ID to retrieve |
+
+### Example
+
+```lua
+local result = app.integrations.pinterest.get_pin({
+  pinId = "1234567890"
+})
+print(result.title)
+print(result.description)
+print(result.link)
 ```
 
 ---
 
 ## create_pin
 
-Create a new pin on a Pinterest board using an image URL.
+Create a new pin on a Pinterest board.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `board_id` | string | yes | The board to pin to |
-| `title` | string | yes | Pin title |
-| `image_url` | string | yes | URL of the image to pin |
-| `description` | string | no | Pin description |
-| `link` | string | no | Destination link for the pin |
+| `boardId` | string | yes | The board ID to pin to |
+| `title` | string | yes | The title of the pin |
+| `description` | string | yes | The description of the pin |
+| `mediaSource` | string | no | The media source type (default: `"image_url"`) |
+| `imageUrl` | string | yes | The URL of the image to pin |
+| `link` | string | no | Optional destination link URL for the pin |
 
 ### Example
 
 ```lua
-local pin = app.integrations.pinterest.create_pin({
-  board_id = "1234567890",
-  title = "Beautiful Sunset",
-  image_url = "https://example.com/photos/sunset.jpg",
-  description = "A gorgeous sunset over the ocean",
-  link = "https://example.com/blog/sunset-photos"
+local result = app.integrations.pinterest.create_pin({
+  boardId = "987654321",
+  title = "My New Pin",
+  description = "Check out this amazing content!",
+  imageUrl = "https://example.com/image.jpg",
+  link = "https://example.com/blog"
 })
-
-print("Created pin: " .. pin.title .. " (ID: " .. pin.id .. ")")
+print("Created pin: " .. result.id)
 ```
 
 ---
 
-## delete_pin
+## list_boards
 
-Delete a pin from Pinterest. This action is permanent and cannot be undone.
+List boards for the authenticated Pinterest user.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `pin_id` | string | yes | The unique identifier of the pin to delete |
+| `bookmark` | string | no | Pagination cursor from a previous response |
+| `pageSize` | integer | no | Number of boards to return per page (max 250) |
 
 ### Example
 
 ```lua
-app.integrations.pinterest.delete_pin({
-  pin_id = "9876543210"
+local result = app.integrations.pinterest.list_boards({
+  pageSize = 25
 })
+
+for _, board in ipairs(result.items) do
+  print(board.id .. ": " .. board.name .. " (" .. (board.pin_count or 0) .. " pins)")
+end
+```
+
+---
+
+## get_board
+
+Get details of a specific board by ID.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `boardId` | string | yes | The board ID to retrieve |
+
+### Example
+
+```lua
+local result = app.integrations.pinterest.get_board({
+  boardId = "1234567890"
+})
+print(result.name)
+print(result.description)
+print("Pin count: " .. (result.pin_count or 0))
+```
+
+---
+
+## list_campaigns
+
+List ad campaigns for a Pinterest ad account.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `adAccountId` | string | yes | The ad account ID to list campaigns for |
+| `bookmark` | string | no | Pagination cursor from a previous response |
+| `pageSize` | integer | no | Number of campaigns to return per page |
+
+### Example
+
+```lua
+local result = app.integrations.pinterest.list_campaigns({
+  adAccountId = "549560687913",
+  pageSize = 50
+})
+
+for _, campaign in ipairs(result.items) do
+  print(campaign.id .. ": " .. campaign.name .. " (" .. campaign.status .. ")")
+end
 ```
 
 ---
 
 ## get_current_user
 
-Get the authenticated Pinterest user's account information.
+Get the currently authenticated Pinterest user profile.
 
 ### Parameters
 
@@ -182,10 +164,9 @@ None.
 ### Example
 
 ```lua
-local user = app.integrations.pinterest.get_current_user({})
-
-print("Username: @" .. user.username)
-print("Account type: " .. (user.account_type or "unknown"))
+local result = app.integrations.pinterest.get_current_user()
+print("Logged in as: " .. (result.username or ""))
+print("Account type: " .. (result.account_type or ""))
 ```
 
 ---
@@ -196,14 +177,14 @@ If you have multiple Pinterest accounts configured, use account-specific namespa
 
 ```lua
 -- Default account (always works)
-app.integrations.pinterest.list_boards({...})
+app.integrations.pinterest.function_name({...})
 
 -- Explicit default (portable across setups)
-app.integrations.pinterest.default.list_boards({...})
+app.integrations.pinterest.default.function_name({...})
 
 -- Named accounts
-app.integrations.pinterest.business.list_boards({...})
-app.integrations.pinterest.personal.list_boards({...})
+app.integrations.pinterest.brand_account.function_name({...})
+app.integrations.pinterest.agency.function_name({...})
 ```
 
 All functions are identical across accounts — only the credentials differ.

@@ -15,8 +15,6 @@ class BigCommerceServiceProvider extends ServiceProvider
 
             return new BigCommerceService(
                 accessToken: $creds->get('bigcommerce', 'access_token', ''),
-                storeId: $creds->get('bigcommerce', 'store_id', ''),
-                clientId: $creds->get('bigcommerce', 'client_id', ''),
             );
         });
     }

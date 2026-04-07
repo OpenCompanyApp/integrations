@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-pinterest",
-    "description": "Pinterest integration for Laravel — manage boards, pins, and user account.",
+    "description": "Pinterest integration for Laravel — manage pins, boards, and campaigns.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "pinterest", "social", "opencompany"],
+    "keywords": ["tools", "pinterest", "social-media", "marketing", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

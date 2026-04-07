@@ -20,7 +20,130 @@ class PinterestService
     }
 
     /**
-     * Get the current authenticated user's account information.
+     * List pins for the authenticated user.
+     *
+     * @param  string|null  $bookmark  Cursor for pagination.
+     * @param  int|null     $pageSize  Number of pins to return per page.
+     * @return array<string, mixed>
+     */
+    public function listPins(?string $bookmark = null, ?int $pageSize = null): array
+    {
+        $params = [];
+        if ($bookmark !== null) {
+            $params['bookmark'] = $bookmark;
+        }
+        if ($pageSize !== null) {
+            $params['page_size'] = $pageSize;
+        }
+
+        return $this->request('GET', '/pins', $params);
+    }
+
+    /**
+     * Get a single pin by ID.
+     *
+     * @param  string  $pinId  The pin ID.
+     * @return array<string, mixed>
+     */
+    public function getPin(string $pinId): array
+    {
+        return $this->request('GET', '/pins/' . urlencode($pinId));
+    }
+
+    /**
+     * Create a new pin.
+     *
+     * @param  string  $boardId   The board ID to pin to.
+     * @param  string  $title     The pin title.
+     * @param  string  $description  The pin description.
+     * @param  string  $mediaSource  The media source type (e.g., "image_url").
+     * @param  string  $imageUrl  The image URL for the pin.
+     * @param  string|null  $link     Optional destination link.
+     * @return array<string, mixed>
+     */
+    public function createPin(
+        string $boardId,
+        string $title,
+        string $description,
+        string $mediaSource,
+        string $imageUrl,
+        ?string $link = null,
+    ): array {
+        $body = [
+            'board_id' => $boardId,
+            'title' => $title,
+            'description' => $description,
+            'media_source' => [
+                'source_type' => $mediaSource,
+                'url' => $imageUrl,
+            ],
+        ];
+
+        if ($link !== null) {
+            $body['link'] = $link;
+        }
+
+        return $this->request('POST', '/pins', $body);
+    }
+
+    /**
+     * List boards for the authenticated user.
+     *
+     * @param  string|null  $bookmark  Cursor for pagination.
+     * @param  int|null     $pageSize  Number of boards to return per page.
+     * @return array<string, mixed>
+     */
+    public function listBoards(?string $bookmark = null, ?int $pageSize = null): array
+    {
+        $params = [];
+        if ($bookmark !== null) {
+            $params['bookmark'] = $bookmark;
+        }
+        if ($pageSize !== null) {
+            $params['page_size'] = $pageSize;
+        }
+
+        return $this->request('GET', '/boards', $params);
+    }
+
+    /**
+     * Get a single board by ID.
+     *
+     * @param  string  $boardId  The board ID.
+     * @return array<string, mixed>
+     */
+    public function getBoard(string $boardId): array
+    {
+        return $this->request('GET', '/boards/' . urlencode($boardId));
+    }
+
+    /**
+     * List ad campaigns for the authenticated user.
+     *
+     * @param  string|null  $adAccountId  The ad account ID.
+     * @param  string|null  $bookmark     Cursor for pagination.
+     * @param  int|null     $pageSize     Number of campaigns to return per page.
+     * @return array<string, mixed>
+     */
+    public function listCampaigns(?string $adAccountId = null, ?string $bookmark = null, ?int $pageSize = null): array
+    {
+        if ($adAccountId === null) {
+            throw new \RuntimeException('An ad account ID is required to list campaigns.');
+        }
+
+        $params = [];
+        if ($bookmark !== null) {
+            $params['bookmark'] = $bookmark;
+        }
+        if ($pageSize !== null) {
+            $params['page_size'] = $pageSize;
+        }
+
+        return $this->request('GET', "/ad_accounts/{$adAccountId}/campaigns", $params);
+    }
+
+    /**
+     * Get the currently authenticated user.
      *
      * @return array<string, mixed>
      */
@@ -30,116 +153,11 @@ class PinterestService
     }
 
     /**
-     * List all boards for the authenticated user.
-     *
-     * @param  int  $limit  Maximum number of boards to return (default: 25, max: 250).
-     * @param  string|null  $bookmark  Cursor for pagination — pass the bookmark from a previous response.
-     * @return array<string, mixed>
-     */
-    public function listBoards(int $limit = 25, ?string $bookmark = null): array
-    {
-        $params = ['page_size' => $limit];
-        if ($bookmark) {
-            $params['bookmark'] = $bookmark;
-        }
-
-        return $this->request('GET', '/boards', $params);
-    }
-
-    /**
-     * Get details for a specific board.
-     *
-     * @param  string  $boardId  The unique identifier of the board.
-     * @return array<string, mixed>
-     */
-    public function getBoard(string $boardId): array
-    {
-        return $this->request('GET', '/boards/' . urlencode($boardId));
-    }
-
-    /**
-     * Create a new board.
-     *
-     * @param  string  $name  The name of the board.
-     * @param  string|null  $description  An optional description for the board.
-     * @return array<string, mixed>
-     */
-    public function createBoard(string $name, ?string $description = null): array
-    {
-        $data = ['name' => $name];
-        if ($description !== null) {
-            $data['description'] = $description;
-        }
-
-        return $this->request('POST', '/boards', $data);
-    }
-
-    /**
-     * List pins on a specific board.
-     *
-     * @param  string  $boardId  The unique identifier of the board.
-     * @param  int  $limit  Maximum number of pins to return (default: 25, max: 250).
-     * @param  string|null  $bookmark  Cursor for pagination.
-     * @return array<string, mixed>
-     */
-    public function listPins(string $boardId, int $limit = 25, ?string $bookmark = null): array
-    {
-        $params = ['page_size' => $limit];
-        if ($bookmark) {
-            $params['bookmark'] = $bookmark;
-        }
-
-        return $this->request('GET', '/boards/' . urlencode($boardId) . '/pins', $params);
-    }
-
-    /**
-     * Create a new pin on a board.
-     *
-     * @param  string  $boardId  The board to pin to.
-     * @param  string  $title  The title of the pin.
-     * @param  string  $imageUrl  The URL of the image to pin.
-     * @param  string|null  $description  An optional description for the pin.
-     * @param  string|null  $link  An optional destination link for the pin.
-     * @return array<string, mixed>
-     */
-    public function createPin(string $boardId, string $title, string $imageUrl, ?string $description = null, ?string $link = null): array
-    {
-        $data = [
-            'board_id' => $boardId,
-            'title' => $title,
-            'media_source' => [
-                'source_type' => 'image_url',
-                'url' => $imageUrl,
-            ],
-        ];
-
-        if ($description !== null) {
-            $data['description'] = $description;
-        }
-
-        if ($link !== null) {
-            $data['link'] = $link;
-        }
-
-        return $this->request('POST', '/pins', $data);
-    }
-
-    /**
-     * Delete a pin.
-     *
-     * @param  string  $pinId  The unique identifier of the pin to delete.
-     */
-    public function deletePin(string $pinId): void
-    {
-        $this->request('DELETE', '/pins/' . urlencode($pinId));
-    }
-
-    /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  string  $path    API endpoint path (e.g. "/v5/pins").
+     * @param  array   $data    Query params (GET) or body data (POST/PUT).
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -151,9 +169,9 @@ class PinterestService
     /**
      * Make a raw HTTP request to the Pinterest API.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path  API endpoint path.
-     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @param  string  $method  HTTP method.
+     * @param  string  $path    API endpoint path.
+     * @param  array   $data    Query params or body data.
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \RuntimeException
@@ -188,10 +206,10 @@ class PinterestService
                     Log::warning("Pinterest API returned HTML for {$method} {$path}", [
                         'status' => $response->status(),
                     ]);
-                    throw new \RuntimeException("Pinterest API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the token may be invalid.");
+                    throw new \RuntimeException("Pinterest API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
                 }
 
-                $error = $response->json('message') ?? $response->json('error') ?? $body;
+                $error = $response->json('error') ?? $response->json('message') ?? $body;
                 Log::error("Pinterest API error: {$method} {$path}", [
                     'status' => $response->status(),
                     'error' => $error,

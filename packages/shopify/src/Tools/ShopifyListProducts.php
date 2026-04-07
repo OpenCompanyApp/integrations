@@ -7,13 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Shopify products with optional filters and pagination.
+ * List products from the Shopify store.
+ *
+ * Supports filtering by status, product type, vendor,
+ * and pagination via limit and page_info parameters.
  */
 class ShopifyListProducts implements Tool
 {
-    /**
-     * @param  ShopifyService  $service  The Shopify API client
-     */
     public function __construct(
         private ShopifyService $service,
     ) {}
@@ -25,65 +25,47 @@ class ShopifyListProducts implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List Shopify products with optional filters.
-        Supports filtering by status, product_type, vendor, and collection_id.
-        Use limit to control page size (max 250) and page_info for cursor-based pagination.
-        MD;
+        return 'List products from the Shopify store. Supports filtering by status, product type, vendor, and pagination.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of products to return (max 250).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by status: active, draft, archived, or any.'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of products to return per page (default: 50, max: 250).'],
+            'status' => ['type' => 'string', 'description' => 'Filter by status: "active", "draft", or "archived".'],
             'product_type' => ['type' => 'string', 'description' => 'Filter by product type.'],
-            'vendor' => ['type' => 'string', 'description' => 'Filter by vendor.'],
+            'vendor' => ['type' => 'string', 'description' => 'Filter by vendor name.'],
             'collection_id' => ['type' => 'string', 'description' => 'Filter by collection ID.'],
-            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from previous response).'],
+            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from a previous response).'],
         ];
     }
 
-    /**
-     * List products from Shopify.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Shopify integration is not configured.');
             }
 
             $params = [];
+            $stringParams = ['status', 'product_type', 'vendor', 'collection_id', 'page_info'];
+            $intParams = ['limit'];
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
+            foreach ($stringParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = $args[$key];
+                }
             }
-            if (isset($args['status'])) {
-                $params['status'] = $args['status'];
-            }
-            if (isset($args['product_type'])) {
-                $params['product_type'] = $args['product_type'];
-            }
-            if (isset($args['vendor'])) {
-                $params['vendor'] = $args['vendor'];
-            }
-            if (isset($args['collection_id'])) {
-                $params['collection_id'] = $args['collection_id'];
-            }
-            if (isset($args['page_info'])) {
-                $params['page_info'] = $args['page_info'];
+
+            foreach ($intParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = (int) $args[$key];
+                }
             }
 
             $result = $this->service->listProducts($params);
-            $products = $result['products'] ?? [];
 
-            return ToolResult::success([
-                'products' => $products,
-                'count' => count($products),
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

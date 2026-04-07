@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-amplitude",
-    "description": "Amplitude Analytics integration for Laravel — list events, users, properties, and groups.",
+    "description": "Amplitude Analytics integration for Laravel — events, funnels, cohorts, and user identity.",
     "license": "MIT",
     "authors": [
         {

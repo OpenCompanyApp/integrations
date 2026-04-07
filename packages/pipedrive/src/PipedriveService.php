@@ -6,244 +6,198 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Client for the Pipedrive REST API covering persons, organizations, deals, notes, pipelines, and stages.
+ * Pipedrive CRM API service.
  *
- * Wraps HTTP calls to Pipedrive's v1 API endpoints with API token authentication
- * appended as a query parameter on every request.
+ * Handles HTTP communication with the Pipedrive API using Bearer token
+ * authentication. Provides methods for deals, persons, organizations,
+ * and user management.
+ *
+ * @see https://developers.pipedrive.com/docs/api/v1/
  */
 class PipedriveService
 {
     /**
-     * @param  string  $apiToken       Pipedrive API token
-     * @param  string  $companyDomain  Company domain (e.g. https://company.pipedrive.com)
+     * Create a new PipedriveService instance.
+     *
+     * @param  string  $apiToken  Pipedrive API token used as Bearer token.
+     * @param  string  $baseUrl  Base URL for the Pipedrive API (defaults to https://api.pipedrive.com/v1).
      */
     public function __construct(
         private string $apiToken = '',
-        private string $companyDomain = 'https://company.pipedrive.com',
-    ) {}
+        private string $baseUrl = 'https://api.pipedrive.com/v1',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
+    /**
+     * Check whether the service is configured with an API token.
+     */
     public function isConfigured(): bool
     {
         return ! empty($this->apiToken);
     }
 
-    // ── Connection ──────────────────────────────────────────
+    // ─── Deals ────────────────────────────────────────────────────────────
 
     /**
-     * Test the connection by fetching the current user profile.
+     * List deals with optional filtering and pagination.
      *
-     * @return array<string, mixed>
+     * @param  int|null  $userId  Filter deals by user ID (assigned to).
+     * @param  int|null  $personId  Filter deals by person ID.
+     * @param  int|null  $orgId  Filter deals by organization ID.
+     * @param  string|null  $status  Filter by status: "open", "won", "lost", "deleted".
+     * @param  int  $limit  Maximum number of deals to return (default 25, max 500).
+     * @param  int  $start  Pagination start (0-based offset).
+     * @return array<string, mixed> API response containing deals and pagination info.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Deals#getDeals
      */
-    public function testConnection(): array
+    public function listDeals(
+        ?int $userId = null,
+        ?int $personId = null,
+        ?int $orgId = null,
+        ?string $status = null,
+        int $limit = 25,
+        int $start = 0,
+    ): array {
+        $params = [
+            'limit' => min($limit, 500),
+            'start' => $start,
+        ];
+        if ($userId !== null) {
+            $params['user_id'] = $userId;
+        }
+        if ($personId !== null) {
+            $params['person_id'] = $personId;
+        }
+        if ($orgId !== null) {
+            $params['org_id'] = $orgId;
+        }
+        if ($status !== null) {
+            $params['status'] = $status;
+        }
+
+        return $this->request('GET', '/deals', $params);
+    }
+
+    /**
+     * Get a single deal by ID.
+     *
+     * @param  int  $id  The deal ID.
+     * @return array<string, mixed> The deal data.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Deals#getDeal
+     */
+    public function getDeal(int $id): array
+    {
+        return $this->request('GET', '/deals/' . $id);
+    }
+
+    /**
+     * Create a new deal.
+     *
+     * @param  string  $title  The deal title.
+     * @param  array<string, mixed>  $extra  Additional deal fields (value, currency, person_id, org_id, stage_id, etc.).
+     * @return array<string, mixed> The created deal data.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Deals#addDeal
+     */
+    public function createDeal(string $title, array $extra = []): array
+    {
+        $data = array_merge(['title' => $title], $extra);
+
+        return $this->request('POST', '/deals', $data);
+    }
+
+    // ─── Persons ──────────────────────────────────────────────────────────
+
+    /**
+     * List persons with optional filtering and pagination.
+     *
+     * @param  int  $limit  Maximum number of persons to return (default 25, max 500).
+     * @param  int  $start  Pagination start (0-based offset).
+     * @return array<string, mixed> API response containing persons and pagination info.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Persons#getPersons
+     */
+    public function listPersons(int $limit = 25, int $start = 0): array
+    {
+        return $this->request('GET', '/persons', [
+            'limit' => min($limit, 500),
+            'start' => $start,
+        ]);
+    }
+
+    /**
+     * Get a single person by ID.
+     *
+     * @param  int  $id  The person ID.
+     * @return array<string, mixed> The person data.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Persons#getPerson
+     */
+    public function getPerson(int $id): array
+    {
+        return $this->request('GET', '/persons/' . $id);
+    }
+
+    // ─── Organizations ────────────────────────────────────────────────────
+
+    /**
+     * List organizations with optional filtering and pagination.
+     *
+     * @param  int  $limit  Maximum number of organizations to return (default 25, max 500).
+     * @param  int  $start  Pagination start (0-based offset).
+     * @return array<string, mixed> API response containing organizations and pagination info.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Organizations#getOrganizations
+     */
+    public function listOrganizations(int $limit = 25, int $start = 0): array
+    {
+        return $this->request('GET', '/organizations', [
+            'limit' => min($limit, 500),
+            'start' => $start,
+        ]);
+    }
+
+    // ─── User ─────────────────────────────────────────────────────────────
+
+    /**
+     * Get the currently authenticated user.
+     *
+     * @return array<string, mixed> The user profile data.
+     *
+     * @see https://developers.pipedrive.com/docs/api/v1/Users#getCurrentUser
+     */
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/users/me');
     }
 
-    // ── Persons ─────────────────────────────────────────────
+    // ─── Internal helpers ─────────────────────────────────────────────────
 
     /**
-     * Create a person.
+     * Make an API request and return parsed JSON.
      *
-     * @param  array<string, mixed>  $data  Person fields (name, email, phone, org_id)
-     * @return array<string, mixed>
-     */
-    public function createPerson(array $data): array
-    {
-        return $this->request('POST', '/persons', $data);
-    }
-
-    /**
-     * Get a person by ID.
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path  API endpoint path (e.g. "/deals").
+     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @return array<string, mixed> Parsed JSON response.
      *
-     * @param  int|string  $id  Person ID
-     * @return array<string, mixed>
-     */
-    public function getPerson(int|string $id): array
-    {
-        return $this->request('GET', "/persons/{$id}");
-    }
-
-    /**
-     * Update a person.
-     *
-     * @param  int|string              $id   Person ID
-     * @param  array<string, mixed>    $data Fields to update (name, email, phone)
-     * @return array<string, mixed>
-     */
-    public function updatePerson(int|string $id, array $data): array
-    {
-        return $this->request('PUT', "/persons/{$id}", $data);
-    }
-
-    /**
-     * Search persons by term.
-     *
-     * @param  array<string, mixed>  $params  Search params (term, limit)
-     * @return array<string, mixed>
-     */
-    public function searchPersons(array $params): array
-    {
-        return $this->request('GET', '/persons/search', $params);
-    }
-
-    // ── Organizations ───────────────────────────────────────
-
-    /**
-     * Create an organization.
-     *
-     * @param  array<string, mixed>  $data  Organization fields (name, address, owner_id)
-     * @return array<string, mixed>
-     */
-    public function createOrganization(array $data): array
-    {
-        return $this->request('POST', '/organizations', $data);
-    }
-
-    /**
-     * Get an organization by ID.
-     *
-     * @param  int|string  $id  Organization ID
-     * @return array<string, mixed>
-     */
-    public function getOrganization(int|string $id): array
-    {
-        return $this->request('GET', "/organizations/{$id}");
-    }
-
-    /**
-     * Update an organization.
-     *
-     * @param  int|string              $id   Organization ID
-     * @param  array<string, mixed>    $data Fields to update (name, address)
-     * @return array<string, mixed>
-     */
-    public function updateOrganization(int|string $id, array $data): array
-    {
-        return $this->request('PUT', "/organizations/{$id}", $data);
-    }
-
-    /**
-     * Search organizations by term.
-     *
-     * @param  array<string, mixed>  $params  Search params (term, limit)
-     * @return array<string, mixed>
-     */
-    public function searchOrganizations(array $params): array
-    {
-        return $this->request('GET', '/organizations/search', $params);
-    }
-
-    // ── Deals ───────────────────────────────────────────────
-
-    /**
-     * Create a deal.
-     *
-     * @param  array<string, mixed>  $data  Deal fields (title, value, currency, person_id, org_id, pipeline_id, stage_id)
-     * @return array<string, mixed>
-     */
-    public function createDeal(array $data): array
-    {
-        return $this->request('POST', '/deals', $data);
-    }
-
-    /**
-     * Get a deal by ID.
-     *
-     * @param  int|string  $id  Deal ID
-     * @return array<string, mixed>
-     */
-    public function getDeal(int|string $id): array
-    {
-        return $this->request('GET', "/deals/{$id}");
-    }
-
-    /**
-     * Update a deal.
-     *
-     * @param  int|string              $id   Deal ID
-     * @param  array<string, mixed>    $data Fields to update (title, value, stage_id, status)
-     * @return array<string, mixed>
-     */
-    public function updateDeal(int|string $id, array $data): array
-    {
-        return $this->request('PUT', "/deals/{$id}", $data);
-    }
-
-    /**
-     * List deals with optional filters.
-     *
-     * @param  array<string, mixed>  $params  Query params (status, start, limit)
-     * @return array<string, mixed>
-     */
-    public function listDeals(array $params = []): array
-    {
-        return $this->request('GET', '/deals', $params);
-    }
-
-    // ── Notes ───────────────────────────────────────────────
-
-    /**
-     * Create a note.
-     *
-     * @param  array<string, mixed>  $data  Note fields (content, deal_id, person_id, org_id)
-     * @return array<string, mixed>
-     */
-    public function createNote(array $data): array
-    {
-        return $this->request('POST', '/notes', $data);
-    }
-
-    // ── Pipelines ───────────────────────────────────────────
-
-    /**
-     * List all pipelines.
-     *
-     * @return array<string, mixed>
-     */
-    public function listPipelines(): array
-    {
-        return $this->request('GET', '/pipelines');
-    }
-
-    // ── Stages ──────────────────────────────────────────────
-
-    /**
-     * List stages, optionally filtered by pipeline.
-     *
-     * @param  array<string, mixed>  $params  Query params (pipeline_id)
-     * @return array<string, mixed>
-     */
-    public function listStages(array $params = []): array
-    {
-        return $this->request('GET', '/stages', $params);
-    }
-
-    // ── HTTP ─────────────────────────────────────────────────
-
-    /**
-     * Make an API request to Pipedrive.
-     *
-     * Appends api_token as a query parameter on every request.
-     *
-     * @param  string                 $method HTTP method (GET, POST, PUT, DELETE)
-     * @param  string                 $path   API path (e.g. /persons, /deals/123)
-     * @param  array<string, mixed>  $data   Query params (GET) or JSON body (POST/PUT)
-     * @return array<string, mixed>
+     * @throws \RuntimeException On API errors or connection failures.
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        if (! $this->isConfigured()) {
+        if (! $this->apiToken) {
             throw new \RuntimeException('Pipedrive API token is not configured.');
         }
 
-        $baseUrl = rtrim($this->companyDomain, '/');
-        $separator = str_contains($path, '?') ? '&' : '?';
-        $url = $baseUrl . '/api/v1' . $path . $separator . 'api_token=' . urlencode($this->apiToken);
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiToken,
                 'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
@@ -255,12 +209,22 @@ class PipedriveService
             };
 
             if (! $response->successful()) {
+                $contentType = $response->header('Content-Type');
+                $body = $response->body();
+
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                    Log::warning("Pipedrive API returned HTML for {$method} {$path}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("Pipedrive API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
+                }
+
+                $errors = $response->json('error') ?? $response->json('errors') ?? $body;
                 Log::error("Pipedrive API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'body'   => $response->body(),
+                    'error'  => $errors,
                 ]);
-
-                throw new \RuntimeException("Pipedrive API error ({$response->status()}): {$response->body()}");
+                throw new \RuntimeException("Pipedrive API error ({$response->status()}): " . (is_string($errors) ? $errors : json_encode($errors)));
             }
 
             return $response->json() ?? [];

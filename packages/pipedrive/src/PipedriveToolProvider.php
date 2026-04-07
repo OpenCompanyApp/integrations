@@ -6,294 +6,255 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveCreatePerson;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveGetPerson;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveUpdatePerson;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveSearchPersons;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveCreateOrganization;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveGetOrganization;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveUpdateOrganization;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveSearchOrganizations;
 use OpenCompany\Integrations\Pipedrive\Tools\PipedriveCreateDeal;
+use OpenCompany\Integrations\Pipedrive\Tools\PipedriveGetCurrentUser;
 use OpenCompany\Integrations\Pipedrive\Tools\PipedriveGetDeal;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveUpdateDeal;
+use OpenCompany\Integrations\Pipedrive\Tools\PipedriveGetPerson;
 use OpenCompany\Integrations\Pipedrive\Tools\PipedriveListDeals;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveCreateNote;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveListPipelines;
-use OpenCompany\Integrations\Pipedrive\Tools\PipedriveListStages;
+use OpenCompany\Integrations\Pipedrive\Tools\PipedriveListOrganizations;
+use OpenCompany\Integrations\Pipedrive\Tools\PipedriveListPersons;
 
 /**
- * Registers all Pipedrive tools and provides integration metadata, configuration schema, and connection testing.
+ * Tool provider for Pipedrive CRM integration.
  *
- * Exposes 15 tools covering persons, organizations, deals, notes, pipelines, and stages
- * via the ToolProvider contract.
+ * Implements ConfigurableIntegration for multi-account support, config schema,
+ * connection testing, and credential field definitions. Registers all Pipedrive
+ * CRM tools (deals, persons, organizations, user).
  */
 class PipedriveToolProvider implements ToolProvider, ConfigurableIntegration
 {
+    /**
+     * Get the application identifier for this integration.
+     */
     public function appName(): string
     {
         return 'pipedrive';
     }
 
+    /**
+     * Get short metadata describing the integration's capabilities.
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'crm, contacts, deals, pipelines',
-            'description' => 'CRM platform',
-            'icon' => 'ph:chart-line-up',
-            'logo' => 'simple-icons:pipedrive',
+            'label'       => 'deals, persons, organizations',
+            'description' => 'CRM & sales pipeline',
+            'icon'        => 'ph:chart-line-up',
+            'logo'        => 'simple-icons:pipedrive',
         ];
     }
 
+    /**
+     * Get full integration metadata for display and categorization.
+     */
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Pipedrive',
-            'description' => 'CRM persons, organizations, deals, notes, pipelines, and stages',
-            'icon' => 'ph:chart-line-up',
-            'logo' => 'simple-icons:pipedrive',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.pipedrive.com/docs/api/v1',
+            'name'        => 'Pipedrive',
+            'description' => 'Sales CRM & pipeline management platform',
+            'icon'        => 'ph:chart-line-up',
+            'logo'        => 'simple-icons:pipedrive',
+            'category'    => 'productivity',
+            'badge'       => 'verified',
+            'docs_url'    => 'https://developers.pipedrive.com/docs/api/v1/',
         ];
     }
 
+    /**
+     * Get the configuration schema for the Pipedrive integration settings UI.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function configSchema(): array
     {
         return [
             [
-                'key' => 'api_token',
-                'type' => 'secret',
-                'label' => 'API Token',
-                'placeholder' => 'Your Pipedrive API token',
-                'hint' => 'Found in Pipedrive Settings → Personal Preferences → API.',
-                'required' => true,
+                'key'         => 'api_token',
+                'type'        => 'secret',
+                'label'       => 'API Token',
+                'placeholder' => 'Enter your Pipedrive API token',
+                'hint'        => 'Find your API token in Pipedrive Settings → Personal → API',
+                'required'    => true,
             ],
             [
-                'key' => 'company_domain',
-                'type' => 'text',
-                'label' => 'Company Domain',
-                'placeholder' => 'https://company.pipedrive.com',
-                'hint' => 'Your Pipedrive company domain URL.',
-                'required' => true,
+                'key'         => 'url',
+                'type'        => 'url',
+                'label'       => 'API Base URL',
+                'placeholder' => 'https://api.pipedrive.com/v1',
+                'hint'        => 'Change only if using a custom Pipedrive API endpoint',
+                'default'     => 'https://api.pipedrive.com/v1',
             ],
         ];
     }
 
     /**
-     * Test the Pipedrive connection using the provided credentials.
+     * Test the connection to the Pipedrive API using the provided config.
      *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_token' and 'company_domain'
+     * @param  array<string, mixed>  $config  Configuration containing api_token and optionally url.
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
         $apiToken = $config['api_token'] ?? '';
-        $companyDomain = $config['company_domain'] ?? '';
+        $baseUrl  = rtrim($config['url'] ?? 'https://api.pipedrive.com/v1', '/');
 
         if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'API token is required. Find it in Pipedrive Settings → Personal Preferences → API.'];
-        }
-
-        if (empty($companyDomain)) {
-            return ['success' => false, 'error' => 'Company domain is required.'];
+            return ['success' => false, 'error' => 'No API token provided'];
         }
 
         try {
-            $baseUrl = rtrim($companyDomain, '/');
             $response = Http::withHeaders([
-                'Accept' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/api/v1/users/me', [
-                'api_token' => $apiToken,
-            ]);
+                'Authorization' => 'Bearer ' . $apiToken,
+                'Content-Type'  => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/users/me');
 
-            if ($response->successful()) {
-                $body = $response->json() ?? [];
-                $data = $body['data'] ?? [];
-                $name = $data['name'] ?? 'Unknown';
+            $json = $response->json();
 
+            if ($json === null) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to Pipedrive as {$name}.",
+                    'success' => false,
+                    'error'   => "Could not reach Pipedrive API at {$baseUrl}. Check the URL.",
                 ];
             }
 
+            $data = $json['data'] ?? [];
+            $name = trim(($data['name'] ?? '') . ' ' . ($data['email'] ?? []));
+
             return [
-                'success' => false,
-                'error' => 'Pipedrive API error (' . $response->status() . '): ' . $response->body(),
+                'success' => true,
+                'message' => "Connected to Pipedrive API as " . ($name ?: 'authenticated user') . '.',
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string> */
+    /**
+     * Get validation rules for the configuration fields.
+     *
+     * @return array<string, mixed>
+     */
     public function validationRules(): array
     {
         return [
-            'api_token'       => 'nullable|string',
-            'company_domain'  => 'nullable|string',
+            'api_token' => 'nullable|string',
+            'url'       => 'nullable|url',
         ];
     }
 
+    /**
+     * Get all tools provided by this integration.
+     *
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
+     */
     public function tools(): array
     {
         return [
-            // Persons
-            'pipedrive_create_person' => [
-                'class' => PipedriveCreatePerson::class,
-                'type' => 'write',
-                'name' => 'Create Person',
-                'description' => 'Create a new person in Pipedrive.',
-                'icon' => 'ph:user-plus',
-            ],
-            'pipedrive_get_person' => [
-                'class' => PipedriveGetPerson::class,
-                'type' => 'read',
-                'name' => 'Get Person',
-                'description' => 'Retrieve a Pipedrive person by ID.',
-                'icon' => 'ph:user',
-            ],
-            'pipedrive_update_person' => [
-                'class' => PipedriveUpdatePerson::class,
-                'type' => 'write',
-                'name' => 'Update Person',
-                'description' => 'Update an existing Pipedrive person.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'pipedrive_search_persons' => [
-                'class' => PipedriveSearchPersons::class,
-                'type' => 'read',
-                'name' => 'Search Persons',
-                'description' => 'Search Pipedrive persons by term.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            // Organizations
-            'pipedrive_create_organization' => [
-                'class' => PipedriveCreateOrganization::class,
-                'type' => 'write',
-                'name' => 'Create Organization',
-                'description' => 'Create a new organization in Pipedrive.',
-                'icon' => 'ph:buildings',
-            ],
-            'pipedrive_get_organization' => [
-                'class' => PipedriveGetOrganization::class,
-                'type' => 'read',
-                'name' => 'Get Organization',
-                'description' => 'Retrieve a Pipedrive organization by ID.',
-                'icon' => 'ph:building',
-            ],
-            'pipedrive_update_organization' => [
-                'class' => PipedriveUpdateOrganization::class,
-                'type' => 'write',
-                'name' => 'Update Organization',
-                'description' => 'Update an existing Pipedrive organization.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'pipedrive_search_organizations' => [
-                'class' => PipedriveSearchOrganizations::class,
-                'type' => 'read',
-                'name' => 'Search Organizations',
-                'description' => 'Search Pipedrive organizations by term.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            // Deals
-            'pipedrive_create_deal' => [
-                'class' => PipedriveCreateDeal::class,
-                'type' => 'write',
-                'name' => 'Create Deal',
-                'description' => 'Create a new deal in Pipedrive.',
-                'icon' => 'ph:currency-dollar',
+            'pipedrive_list_deals' => [
+                'class'       => PipedriveListDeals::class,
+                'type'        => 'read',
+                'name'        => 'List Deals',
+                'description' => 'List deals in Pipedrive with optional filters.',
+                'icon'        => 'ph:list',
             ],
             'pipedrive_get_deal' => [
-                'class' => PipedriveGetDeal::class,
-                'type' => 'read',
-                'name' => 'Get Deal',
-                'description' => 'Retrieve a Pipedrive deal by ID.',
-                'icon' => 'ph:handshake',
+                'class'       => PipedriveGetDeal::class,
+                'type'        => 'read',
+                'name'        => 'Get Deal',
+                'description' => 'Get details for a single deal.',
+                'icon'        => 'ph:handshake',
             ],
-            'pipedrive_update_deal' => [
-                'class' => PipedriveUpdateDeal::class,
-                'type' => 'write',
-                'name' => 'Update Deal',
-                'description' => 'Update an existing Pipedrive deal.',
-                'icon' => 'ph:pencil-simple',
+            'pipedrive_create_deal' => [
+                'class'       => PipedriveCreateDeal::class,
+                'type'        => 'write',
+                'name'        => 'Create Deal',
+                'description' => 'Create a new deal in Pipedrive.',
+                'icon'        => 'ph:plus-circle',
             ],
-            'pipedrive_list_deals' => [
-                'class' => PipedriveListDeals::class,
-                'type' => 'read',
-                'name' => 'List Deals',
-                'description' => 'List Pipedrive deals with optional filters.',
-                'icon' => 'ph:list',
+            'pipedrive_list_persons' => [
+                'class'       => PipedriveListPersons::class,
+                'type'        => 'read',
+                'name'        => 'List Persons',
+                'description' => 'List persons (contacts) in Pipedrive.',
+                'icon'        => 'ph:users',
             ],
-            // Notes
-            'pipedrive_create_note' => [
-                'class' => PipedriveCreateNote::class,
-                'type' => 'write',
-                'name' => 'Create Note',
-                'description' => 'Create a note attached to a deal, person, or organization.',
-                'icon' => 'ph:note',
+            'pipedrive_get_person' => [
+                'class'       => PipedriveGetPerson::class,
+                'type'        => 'read',
+                'name'        => 'Get Person',
+                'description' => 'Get details for a single person.',
+                'icon'        => 'ph:user',
             ],
-            // Pipelines & Stages
-            'pipedrive_list_pipelines' => [
-                'class' => PipedriveListPipelines::class,
-                'type' => 'read',
-                'name' => 'List Pipelines',
-                'description' => 'List all Pipedrive pipelines.',
-                'icon' => 'ph:funnel',
+            'pipedrive_list_organizations' => [
+                'class'       => PipedriveListOrganizations::class,
+                'type'        => 'read',
+                'name'        => 'List Organizations',
+                'description' => 'List organizations in Pipedrive.',
+                'icon'        => 'ph:buildings',
             ],
-            'pipedrive_list_stages' => [
-                'class' => PipedriveListStages::class,
-                'type' => 'read',
-                'name' => 'List Stages',
-                'description' => 'List Pipedrive stages, optionally filtered by pipeline.',
-                'icon' => 'ph:list-bullets',
+            'pipedrive_get_current_user' => [
+                'class'       => PipedriveGetCurrentUser::class,
+                'type'        => 'read',
+                'name'        => 'Get Current User',
+                'description' => 'Get the authenticated user profile.',
+                'icon'        => 'ph:user-circle',
             ],
         ];
     }
 
+    /**
+     * Get the path to the Lua documentation file.
+     */
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/pipedrive.md';
     }
 
+    /**
+     * Get credential field definitions for the integration.
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
-            ['key' => 'company_domain', 'type' => 'text', 'label' => 'Company Domain', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.pipedrive.com/v1'],
         ];
     }
 
+    /**
+     * Confirm this class represents an integration.
+     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /** @param  array<string, mixed>  $context */
-    public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
     /**
-     * Resolve the PipedriveService, with optional account-specific credentials.
+     * Create a tool instance, optionally scoped to a specific account.
      *
-     * @param  array<string, mixed>  $context
+     * When an account context is provided, credentials are resolved for that
+     * specific account. Otherwise the default app-bound service is used.
+     *
+     * @param  class-string<Tool>  $class  The tool class to instantiate.
+     * @param  array<string, mixed>  $context  Context containing optional 'account' key.
      */
-    private function resolveService(array $context = []): PipedriveService
+    public function createTool(string $class, array $context = []): Tool
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new PipedriveService(
+            $service = new PipedriveService(
                 apiToken: $creds->get('pipedrive', 'api_token', '', $account),
-                companyDomain: $creds->get('pipedrive', 'company_domain', 'https://company.pipedrive.com', $account),
+                baseUrl: $creds->get('pipedrive', 'url', 'https://api.pipedrive.com/v1', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(PipedriveService::class);
+        return new $class(app(PipedriveService::class));
     }
 }

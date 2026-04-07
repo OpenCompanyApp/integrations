@@ -8,10 +8,10 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Amplitude\Tools\AmplitudeListEvents;
 use OpenCompany\Integrations\Amplitude\Tools\AmplitudeGetEvent;
-use OpenCompany\Integrations\Amplitude\Tools\AmplitudeListUsers;
-use OpenCompany\Integrations\Amplitude\Tools\AmplitudeGetUser;
-use OpenCompany\Integrations\Amplitude\Tools\AmplitudeListProperties;
-use OpenCompany\Integrations\Amplitude\Tools\AmplitudeListGroups;
+use OpenCompany\Integrations\Amplitude\Tools\AmplitudeListFunnels;
+use OpenCompany\Integrations\Amplitude\Tools\AmplitudeGetFunnel;
+use OpenCompany\Integrations\Amplitude\Tools\AmplitudeListCohorts;
+use OpenCompany\Integrations\Amplitude\Tools\AmplitudeGetCohort;
 use OpenCompany\Integrations\Amplitude\Tools\AmplitudeGetCurrentUser;
 
 /**
@@ -30,7 +30,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'events, users, properties, groups',
+            'label' => 'events, funnels, cohorts',
             'description' => 'Product analytics',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:amplitude',
@@ -41,7 +41,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Amplitude Analytics',
-            'description' => 'Product analytics platform for tracking user behavior and events',
+            'description' => 'Product analytics platform for tracking user behavior, funnels, and cohorts',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:amplitude',
             'category' => 'analytics',
@@ -65,9 +65,9 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'url',
                 'type' => 'url',
                 'label' => 'Instance URL',
-                'placeholder' => 'https://amplitude.com',
-                'hint' => 'Use <code>https://amplitude.com</code> for the standard cloud, or your custom domain',
-                'default' => 'https://amplitude.com',
+                'placeholder' => 'https://api.amplitude.com/v1',
+                'hint' => 'Use <code>https://api.amplitude.com/v1</code> for the standard cloud, or your custom domain',
+                'default' => 'https://api.amplitude.com/v1',
             ],
         ];
     }
@@ -75,7 +75,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
     public function testConnection(array $config): array
     {
         $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://amplitude.com', '/');
+        $baseUrl = rtrim($config['url'] ?? 'https://api.amplitude.com/v1', '/');
 
         if (empty($apiKey)) {
             return ['success' => false, 'error' => 'No API key provided'];
@@ -85,7 +85,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/api/2/me');
+            ])->timeout(10)->get($baseUrl . '/me');
 
             $json = $response->json();
 
@@ -138,33 +138,33 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Retrieve a single event by its ID.',
                 'icon' => 'ph:eye',
             ],
-            'amplitude_list_users' => [
-                'class' => AmplitudeListUsers::class,
+            'amplitude_list_funnels' => [
+                'class' => AmplitudeListFunnels::class,
                 'type' => 'read',
-                'name' => 'List Users',
-                'description' => 'Search for users in Amplitude by query.',
+                'name' => 'List Funnels',
+                'description' => 'List funnels configured in the Amplitude project.',
+                'icon' => 'ph:funnel',
+            ],
+            'amplitude_get_funnel' => [
+                'class' => AmplitudeGetFunnel::class,
+                'type' => 'read',
+                'name' => 'Get Funnel',
+                'description' => 'Retrieve a single funnel by its ID with conversion metrics.',
+                'icon' => 'ph:funnel',
+            ],
+            'amplitude_list_cohorts' => [
+                'class' => AmplitudeListCohorts::class,
+                'type' => 'read',
+                'name' => 'List Cohorts',
+                'description' => 'List behavioral cohorts in the Amplitude project.',
                 'icon' => 'ph:users',
             ],
-            'amplitude_get_user' => [
-                'class' => AmplitudeGetUser::class,
+            'amplitude_get_cohort' => [
+                'class' => AmplitudeGetCohort::class,
                 'type' => 'read',
-                'name' => 'Get User',
-                'description' => 'Retrieve a user profile by user ID or device ID.',
-                'icon' => 'ph:user',
-            ],
-            'amplitude_list_properties' => [
-                'class' => AmplitudeListProperties::class,
-                'type' => 'read',
-                'name' => 'List Properties',
-                'description' => 'List available event or user properties.',
-                'icon' => 'ph:sliders',
-            ],
-            'amplitude_list_groups' => [
-                'class' => AmplitudeListGroups::class,
-                'type' => 'read',
-                'name' => 'List Groups',
-                'description' => 'Search for groups in Amplitude by query.',
-                'icon' => 'ph:users-three',
+                'name' => 'Get Cohort',
+                'description' => 'Retrieve a single cohort by its ID with membership details.',
+                'icon' => 'ph:user-circle',
             ],
             'amplitude_get_current_user' => [
                 'class' => AmplitudeGetCurrentUser::class,
@@ -185,7 +185,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Amplitude URL', 'required' => false, 'default' => 'https://amplitude.com'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Amplitude URL', 'required' => false, 'default' => 'https://api.amplitude.com/v1'],
         ];
     }
 
@@ -203,7 +203,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration
 
             $service = new AmplitudeService(
                 apiKey: $creds->get('amplitude', 'api_key', '', $account),
-                baseUrl: $creds->get('amplitude', 'url', 'https://amplitude.com', $account),
+                baseUrl: $creds->get('amplitude', 'url', 'https://api.amplitude.com/v1', $account),
             );
 
             return new $class($service);

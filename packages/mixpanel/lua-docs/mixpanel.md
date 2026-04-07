@@ -1,267 +1,195 @@
-# Mixpanel — Lua API Reference
+# Mixpanel Analytics — Lua API Reference
 
-## mixpanel_track_event
+## list_events
 
-Track an event in Mixpanel with optional properties and user identity.
+List events from Mixpanel, optionally filtered by type, unit, or date range.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `event` | string | yes | Name of the event to track (e.g. `"Page View"`, `"Purchase"`) |
-| `properties` | string | no | JSON object of event properties (e.g. `'{"page":"/home","source":"ad"}'`) |
-| `distinct_id` | string | no | Distinct user ID to associate the event with |
-| `time` | integer | no | Unix timestamp for the event. Defaults to the current time |
+| `type` | string | no | Event type: `"general"` or `"unique"` (default: `"general"`) |
+| `unit` | string | no | Time unit: `"hour"`, `"day"`, `"week"`, `"month"` (default: `"day"`) |
+| `from` | string | no | Start date in YYYY-MM-DD format |
+| `to` | string | no | End date in YYYY-MM-DD format |
+| `limit` | integer | no | Maximum number of events to return (default: 100) |
 
-### Example
+### Examples
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_track_event({
-  event = "Purchase",
-  properties = '{"item":"widget","amount":49.99,"currency":"USD"}',
-  distinct_id = "user-12345"
+-- Get recent events
+local result = app.integrations.mixpanel.list_events({
+  limit = 50
+})
+
+for name, data in pairs(result.data or {}) do
+  print("Event: " .. name)
+end
+```
+
+```lua
+-- Get events in a date range
+local result = app.integrations.mixpanel.list_events({
+  from = "2025-01-01",
+  to = "2025-01-31",
+  unit = "day",
+  limit = 100
 })
 ```
 
 ---
 
-## mixpanel_query
+## get_event
 
-Query Mixpanel event data with date range, type, and time unit.
+Retrieve analytics data for a specific event by name.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `from_date` | string | yes | Start date in `YYYY-MM-DD` format |
-| `to_date` | string | yes | End date in `YYYY-MM-DD` format |
-| `event` | string | no | Event name or JSON array of event names (e.g. `'["Page View","Signup"]'`) |
-| `type` | string | no | Query type: `"general"` (total events), `"unique"` (unique users), or `"average"`. Defaults to `"general"` |
-| `unit` | string | no | Time unit for grouping: `"minute"`, `"hour"`, `"day"`, `"week"`, `"month"`. Defaults to `"day"` |
+| `name` | string | yes | The event name to retrieve data for |
+| `type` | string | no | Event type: `"general"` or `"unique"` (default: `"general"`) |
+| `unit` | string | no | Time unit: `"hour"`, `"day"`, `"week"`, `"month"` (default: `"day"`) |
+| `from` | string | no | Start date in YYYY-MM-DD format |
+| `to` | string | no | End date in YYYY-MM-DD format |
 
 ### Example
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_query({
-  from_date = "2026-01-01",
-  to_date = "2026-01-31",
-  event = "Signup",
-  type = "unique",
-  unit = "day"
+local result = app.integrations.mixpanel.get_event({
+  name = "Page View",
+  from = "2025-01-01",
+  to = "2025-01-31"
 })
 
-for _, row in ipairs(result.data or {}) do
-  print(row.date .. ": " .. (row.count or 0) .. " signups")
+for date, count in pairs(result.data or {}) do
+  print("Date: " .. date .. " — Count: " .. tostring(count))
 end
 ```
 
 ---
 
-## mixpanel_funnel
+## list_funnels
 
-Get conversion funnel results for a specific funnel.
+List all funnels configured in the Mixpanel project.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `funnel_id` | integer | yes | ID of the funnel to query |
-| `from_date` | string | yes | Start date in `YYYY-MM-DD` format |
-| `to_date` | string | yes | End date in `YYYY-MM-DD` format |
-| `unit` | string | no | Time unit: `"day"`, `"week"`, or `"month"`. Defaults to `"day"` |
+None.
 
 ### Example
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_funnel({
-  funnel_id = 12345,
-  from_date = "2026-01-01",
-  to_date = "2026-01-31",
-  unit = "week"
-})
-```
-
----
-
-## mixpanel_retention
-
-Get retention data for a cohort of users over time.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `from_date` | string | yes | Start date in `YYYY-MM-DD` format |
-| `to_date` | string | yes | End date in `YYYY-MM-DD` format |
-| `retention_type` | string | no | `"birth"` or `"compounded"`. Defaults to `"birth"` |
-| `born_event` | string | no | Event that defines cohort entry (e.g. `"Signup"`) |
-| `born_where` | string | no | Filter expression for the born event (e.g. `'properties["Source"] == "organic"'`) |
-
-### Example
-
-```lua
-local result = app.integrations.mixpanel.mixpanel_retention({
-  from_date = "2026-01-01",
-  to_date = "2026-02-01",
-  retention_type = "birth",
-  born_event = "Signup"
-})
-```
-
----
-
-## mixpanel_profile
-
-Set or update a Mixpanel user profile with properties.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `distinct_id` | string | yes | The user's distinct ID in Mixpanel |
-| `properties` | string | yes | JSON object of profile properties (e.g. `'{"$name":"John","$email":"john@example.com"}'`) |
-| `operation` | string | no | Profile operation: `"set"`, `"set_once"`, `"add"`, `"append"`, `"union"`, `"unset"`, or `"delete"`. Defaults to `"set"` |
-
-### Example
-
-```lua
-local result = app.integrations.mixpanel.mixpanel_profile({
-  distinct_id = "user-12345",
-  properties = '{"$name":"Jane Doe","$email":"jane@example.com","Plan":"Pro"}',
-  operation = "set"
-})
-```
-
----
-
-## mixpanel_list_funnels
-
-List all funnels in the Mixpanel project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | integer | no | Mixpanel project ID. Defaults to the configured project |
-
-### Example
-
-```lua
-local result = app.integrations.mixpanel.mixpanel_list_funnels({})
+local result = app.integrations.mixpanel.list_funnels({})
 
 for _, funnel in ipairs(result.data or {}) do
-  print(funnel.id .. ": " .. funnel.name)
+  print("Funnel: " .. funnel.name .. " (ID: " .. tostring(funnel.id) .. ")")
 end
 ```
 
 ---
 
-## mixpanel_get_export
+## get_funnel
 
-Export raw event data from Mixpanel for a date range.
+Retrieve detailed conversion data for a Mixpanel funnel by its ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `from_date` | string | yes | Start date in `YYYY-MM-DD` format |
-| `to_date` | string | yes | End date in `YYYY-MM-DD` format |
-| `event` | string | no | Event name or JSON array of event names to export. Leave empty for all events |
+| `id` | string | yes | The Mixpanel funnel ID |
 
 ### Example
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_get_export({
-  from_date = "2026-01-01",
-  to_date = "2026-01-07",
-  event = '["Page View","Signup"]'
+local result = app.integrations.mixpanel.get_funnel({
+  id = "12345"
 })
 
-for _, event in ipairs(result.data or {}) do
-  print(event.event .. " by " .. (event.distinct_id or "anonymous"))
+print("Funnel: " .. (result.data.name or "unknown"))
+for _, step in ipairs(result.data.steps or {}) do
+  print("  Step: " .. step.event .. " — Conversion: " .. tostring(step.conversion_ratio))
 end
 ```
 
 ---
 
-## mixpanel_list_cohorts
+## list_cohorts
 
-List all behavioural cohorts in the Mixpanel project.
+List all behavioral cohorts in the Mixpanel project.
 
 ### Parameters
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `project_id` | integer | no | Mixpanel project ID. Defaults to the configured project |
+None.
 
 ### Example
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_list_cohorts({})
+local result = app.integrations.mixpanel.list_cohorts({})
 
 for _, cohort in ipairs(result.data or {}) do
-  print(cohort.id .. ": " .. cohort.name .. " (" .. (cohort.count or 0) .. " users)")
+  print("Cohort: " .. cohort.name .. " (ID: " .. tostring(cohort.id) .. ")")
 end
 ```
 
 ---
 
-## mixpanel_query_jql
+## get_cohort
 
-Execute a JQL (JavaScript Query Language) script against Mixpanel data.
+Retrieve detailed information for a Mixpanel cohort by its ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `script` | string | yes | JQL script to execute |
-| `params` | string | no | JSON object of parameters to pass into the JQL script (accessible via `params` object) |
+| `id` | string | yes | The Mixpanel cohort ID |
 
 ### Example
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_query_jql({
-  script = "Events({from_date: params.from, to_date: params.to}).filter(e => e.name === 'Signup')",
-  params = '{"from":"2026-01-01","to":"2026-01-31"}'
+local result = app.integrations.mixpanel.get_cohort({
+  id = "67890"
 })
 
-for _, row in ipairs(result.data or {}) do
-  print(row.name .. " at " .. row.time)
-end
+print("Cohort: " .. (result.data.name or "unknown"))
+print("Count: " .. tostring(result.data.count or 0))
 ```
 
 ---
 
-## mixpanel_get_current_user
+## get_current_user
 
-Verify the authenticated user and retrieve basic project info. No parameters required.
+Get the currently authenticated Mixpanel user (caller identity).
+
+### Parameters
+
+None.
 
 ### Example
 
 ```lua
-local result = app.integrations.mixpanel.mixpanel_get_current_user({})
+local result = app.integrations.mixpanel.get_current_user({})
 
-if result.authenticated then
-  print("Successfully authenticated with Mixpanel")
-end
+print("Logged in as: " .. (result.name or result.email or "unknown"))
+print("Role: " .. (result.role or "N/A"))
 ```
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple mixpanel accounts configured, use account-specific namespaces:
+If you have multiple Mixpanel accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.mixpanel.function_name({...})
+app.integrations.mixpanel.list_events({limit = 50})
 
 -- Explicit default (portable across setups)
-app.integrations.mixpanel.default.function_name({...})
+app.integrations.mixpanel.default.list_events({limit = 50})
 
 -- Named accounts
-app.integrations.mixpanel.work.function_name({...})
-app.integrations.mixpanel.personal.function_name({...})
+app.integrations.mixpanel.production.list_events({limit = 50})
+app.integrations.mixpanel.staging.list_events({limit = 50})
 ```
 
 All functions are identical across accounts — only the credentials differ.

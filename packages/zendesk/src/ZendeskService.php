@@ -6,327 +6,155 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * HTTP client for the Zendesk REST API v2.
+ * Client for the Zendesk REST API covering tickets, users, and organizations.
  *
- * Provides methods for tickets, users, groups, help center articles,
- * macros, tags, and ticket fields using Basic Auth with API tokens.
+ * Wraps the Zendesk API v2 with Bearer token authentication, request routing, and error reporting.
  */
 class ZendeskService
 {
     /**
-     * @param  string  $email      Zendesk account email address
-     * @param  string  $apiToken   Zendesk API token
-     * @param  string  $subdomain  Zendesk account subdomain
+     * @param  string  $accessToken  Zendesk OAuth or API token
+     * @param  string  $baseUrl      Zendesk API base URL (default: https://api.zendesk.com/v2)
      */
     public function __construct(
-        private string $email = '',
-        private string $apiToken = '',
-        private string $subdomain = '',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.zendesk.com/v2',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
-    /**
-     * Check whether the Zendesk credentials have been configured.
-     */
     public function isConfigured(): bool
     {
-        return ! empty($this->email) && ! empty($this->apiToken) && ! empty($this->subdomain);
+        return ! empty($this->accessToken);
     }
 
-    /*-----------------------------------------------------------------------
-     | Tickets
-     *---------------------------------------------------------------------*/
+    // ── Tickets ────────────────────────────────────────────
 
     /**
-     * Create a new ticket.
+     * List tickets with optional pagination and filtering.
      *
-     * @param  array<string, mixed>  $data  Ticket data wrapped in a "ticket" key
-     * @return array<string, mixed>
-     */
-    public function createTicket(array $data): array
-    {
-        return $this->request('POST', '/tickets.json', $data);
-    }
-
-    /**
-     * Get details for a specific ticket.
-     *
-     * @return array<string, mixed>
-     */
-    public function getTicket(int $ticketId): array
-    {
-        return $this->request('GET', "/tickets/{$ticketId}.json");
-    }
-
-    /**
-     * Update an existing ticket.
-     *
-     * @param  array<string, mixed>  $data  Ticket fields to update, wrapped in a "ticket" key
-     * @return array<string, mixed>
-     */
-    public function updateTicket(int $ticketId, array $data): array
-    {
-        return $this->request('PUT', "/tickets/{$ticketId}.json", $data);
-    }
-
-    /**
-     * Delete a ticket.
-     *
-     * @return array<string, mixed>
-     */
-    public function deleteTicket(int $ticketId): array
-    {
-        return $this->request('DELETE', "/tickets/{$ticketId}.json");
-    }
-
-    /**
-     * List tickets with optional pagination and sorting.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (per_page, page, sort_by, sort_order)
+     * @param  array<string, mixed>  $params  Query params: per_page, page, sort_by, sort_order, status
      * @return array<string, mixed>
      */
     public function listTickets(array $params = []): array
     {
-        return $this->request('GET', '/tickets.json', $params);
+        return $this->request('GET', '/tickets', $params);
     }
 
     /**
-     * Search tickets using Zendesk query syntax.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (query, per_page, page)
-     * @return array<string, mixed>
-     */
-    public function searchTickets(array $params): array
-    {
-        return $this->request('GET', '/search.json', $params);
-    }
-
-    /**
-     * List comments on a ticket.
+     * Get a ticket by ID.
      *
      * @return array<string, mixed>
      */
-    public function listTicketComments(int $ticketId): array
+    public function getTicket(string $id): array
     {
-        return $this->request('GET', "/tickets/{$ticketId}/comments.json");
+        return $this->request('GET', "/tickets/{$id}");
     }
 
     /**
-     * List ticket fields (custom and system fields).
+     * Create a ticket.
      *
+     * @param  array<string, mixed>  $data  Ticket fields (subject, description, priority, status, etc.)
      * @return array<string, mixed>
      */
-    public function listTicketFields(): array
+    public function createTicket(array $data): array
     {
-        return $this->request('GET', '/ticket_fields.json');
+        return $this->request('POST', '/tickets', $data);
     }
 
-    /*-----------------------------------------------------------------------
-     | Users & Groups
-     *---------------------------------------------------------------------*/
+    // ── Users ──────────────────────────────────────────────
 
     /**
-     * Get details for a specific user.
+     * List users with optional pagination and filtering.
      *
-     * @return array<string, mixed>
-     */
-    public function getUser(int $userId): array
-    {
-        return $this->request('GET', "/users/{$userId}.json");
-    }
-
-    /**
-     * List users with optional filtering and pagination.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (role, per_page, page)
+     * @param  array<string, mixed>  $params  Query params: per_page, page, role, sort_by, sort_order
      * @return array<string, mixed>
      */
     public function listUsers(array $params = []): array
     {
-        return $this->request('GET', '/users.json', $params);
+        return $this->request('GET', '/users', $params);
     }
 
     /**
-     * Create a new user.
+     * Get a user by ID.
      *
-     * @param  array<string, mixed>  $data  User data wrapped in a "user" key
      * @return array<string, mixed>
      */
-    public function createUser(array $data): array
+    public function getUser(string $id): array
     {
-        return $this->request('POST', '/users.json', $data);
+        return $this->request('GET', "/users/{$id}");
     }
 
+    // ── Organizations ──────────────────────────────────────
+
     /**
-     * List groups.
+     * List organizations with optional pagination.
      *
+     * @param  array<string, mixed>  $params  Query params: per_page, page
      * @return array<string, mixed>
      */
-    public function listGroups(): array
+    public function listOrganizations(array $params = []): array
     {
-        return $this->request('GET', '/groups.json');
+        return $this->request('GET', '/organizations', $params);
     }
 
-    /*-----------------------------------------------------------------------
-     | Help Center
-     *---------------------------------------------------------------------*/
+    // ── Me (current user) ──────────────────────────────────
 
     /**
-     * Search Help Center articles.
+     * Get the currently authenticated user.
      *
-     * @param  array<string, mixed>  $params  Query parameters (query, section, category, per_page, page)
      * @return array<string, mixed>
      */
-    public function searchArticles(array $params): array
+    public function getMe(): array
     {
-        return $this->request('GET', '/help_center/articles/search.json', $params);
+        return $this->request('GET', '/users/me');
     }
 
-    /**
-     * Get a specific Help Center article.
-     *
-     * @return array<string, mixed>
-     */
-    public function getArticle(int $articleId): array
-    {
-        return $this->request('GET', "/help_center/articles/{$articleId}.json");
-    }
+    // ── HTTP ───────────────────────────────────────────────
 
     /**
-     * Create a Help Center article in a section.
+     * Make an API request and return parsed JSON.
      *
-     * @param  array<string, mixed>  $data  Article data wrapped in an "article" key
+     * @param  array<string, mixed>  $data  Query params (GET) or JSON body (POST/PUT/DELETE)
      * @return array<string, mixed>
      */
-    public function createArticle(int $sectionId, array $data): array
+    private function request(string $method, string $path, array $data = []): array
     {
-        return $this->request('POST', "/help_center/sections/{$sectionId}/articles.json", $data);
-    }
-
-    /**
-     * List Help Center sections.
-     *
-     * @return array<string, mixed>
-     */
-    public function listSections(): array
-    {
-        return $this->request('GET', '/help_center/sections.json');
-    }
-
-    /*-----------------------------------------------------------------------
-     | Macros & Tags
-     *---------------------------------------------------------------------*/
-
-    /**
-     * List available macros.
-     *
-     * @return array<string, mixed>
-     */
-    public function listMacros(): array
-    {
-        return $this->request('GET', '/macros.json');
-    }
-
-    /**
-     * Apply a macro to a ticket.
-     *
-     * @return array<string, mixed>
-     */
-    public function applyMacro(int $ticketId, int $macroId): array
-    {
-        return $this->request('POST', "/tickets/{$ticketId}/macros/{$macroId}/apply.json");
-    }
-
-    /**
-     * Add tags to a ticket (appends to existing tags).
-     *
-     * @param  array<int, string>  $tags
-     * @return array<string, mixed>
-     */
-    public function addTags(int $ticketId, array $tags): array
-    {
-        return $this->request('POST', "/tickets/{$ticketId}/tags.json", ['tags' => $tags]);
-    }
-
-    /**
-     * Set tags on a ticket (replaces all existing tags).
-     *
-     * @param  array<int, string>  $tags
-     * @return array<string, mixed>
-     */
-    public function setTags(int $ticketId, array $tags): array
-    {
-        return $this->request('PUT', "/tickets/{$ticketId}/tags.json", ['tags' => $tags]);
-    }
-
-    /*-----------------------------------------------------------------------
-     | Connection Test
-     *---------------------------------------------------------------------*/
-
-    /**
-     * Test the API connection by fetching the current authenticated user.
-     *
-     * @return array<string, mixed>
-     */
-    public function testConnection(): array
-    {
-        return $this->request('GET', '/users/me.json');
-    }
-
-    /*-----------------------------------------------------------------------
-     | Core HTTP
-     *---------------------------------------------------------------------*/
-
-    /**
-     * Make an authenticated API request to Zendesk REST API v2.
-     *
-     * Uses HTTP Basic Auth with the email/token convention.
-     *
-     * @param  array<string, mixed>  $params  Query or body parameters
-     * @return array<string, mixed>
-     */
-    private function request(string $method, string $path, array $params = []): array
-    {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('Zendesk is not configured. Missing email, API token, or subdomain.');
+        if (! $this->accessToken) {
+            throw new \RuntimeException('Zendesk access token is not configured.');
         }
 
-        $params = array_filter($params, fn ($v) => $v !== null && $v !== '');
-
-        $baseUrl = "https://{$this->subdomain}.zendesk.com/api/v2";
-        $url = $baseUrl . $path;
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withBasicAuth($this->email . '/token', $this->apiToken)
-                ->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ])
-                ->timeout(30);
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $params),
-                'POST' => $http->post($url, $params),
-                'PUT' => $http->put($url, $params),
-                'DELETE' => $http->delete($url, $params),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (! $response->successful()) {
                 $body = $response->json() ?? [];
-                $error = $body['error'] ?? $body['description'] ?? $response->body();
+                $err = $body['error'] ?? $body['description'] ?? $body['message'] ?? $response->body();
+
+                if (is_array($err)) {
+                    $err = json_encode($err);
+                }
 
                 Log::error("Zendesk API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'error' => $err,
                 ]);
 
-                throw new \RuntimeException(
-                    'Zendesk API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error))
-                );
-            }
-
-            if ($response->status() === 204 || $response->body() === '') {
-                return ['success' => true];
+                throw new \RuntimeException('Zendesk API error (' . $response->status() . '): ' . $err);
             }
 
             return $response->json() ?? [];

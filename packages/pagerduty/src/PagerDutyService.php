@@ -1,249 +1,254 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty;
+namespace OpenCompany\Integrations\Pagerduty;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * PagerDuty REST API service for making authenticated requests.
+ * PagerDuty API service.
  *
- * Handles authentication via API token and provides methods for all
- * PagerDuty v2 REST API endpoints used by the integration tools.
+ * Handles HTTP communication with the PagerDuty REST API using Bearer token
+ * authentication. Provides methods for incidents, services, teams, and user
+ * management.
  *
  * @see https://developer.pagerduty.com/api-reference/
  */
-class PagerDutyService
+class PagerdutyService
 {
     /**
-     * PagerDuty REST API v2 base URL.
-     */
-    private const BASE_URL = 'https://api.pagerduty.com';
-
-    /**
-     * @param  string  $apiToken  PagerDuty API token (generated in Developer → API Access Keys)
+     * Create a new PagerdutyService instance.
+     *
+     * @param  string  $apiToken  PagerDuty API token (Bearer token).
+     * @param  string  $baseUrl   Base URL for the PagerDuty API (defaults to https://api.pagerduty.com).
      */
     public function __construct(
         private string $apiToken = '',
-    ) {}
+        private string $baseUrl = 'https://api.pagerduty.com',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * Check whether the service has been configured with an API token.
+     * Check whether the service is configured with an API token.
      */
     public function isConfigured(): bool
     {
         return ! empty($this->apiToken);
     }
 
-    // ── Incidents ──────────────────────────────────────────
+    // ─── Incidents ────────────────────────────────────────────────────────
 
     /**
      * List incidents with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, offset, status[], service_ids[], urgency, etc.)
-     * @return array<string, mixed>  PagerDuty API response with incidents, total, and pagination info
+     * @param  string|null  $status  Filter by status (triggered, acknowledged, resolved).
+     * @param  string|null  $urgency  Filter by urgency (high, low).
+     * @param  string|null  $serviceId  Filter by service ID.
+     * @param  string|null  $teamId  Filter by team ID.
+     * @param  int  $limit  Maximum number of incidents to return (default 25, max 100).
+     * @param  int  $offset  Offset for pagination.
+     * @return array<string, mixed> API response containing incidents and pagination info.
      *
      * @see https://developer.pagerduty.com/api-reference/list-incidents
      */
-    public function listIncidents(array $params = []): array
-    {
+    public function listIncidents(
+        ?string $status = null,
+        ?string $urgency = null,
+        ?string $serviceId = null,
+        ?string $teamId = null,
+        int $limit = 25,
+        int $offset = 0,
+    ): array {
+        $params = ['limit' => min($limit, 100), 'offset' => $offset];
+        if ($status !== null) {
+            $params['statuses[]'] = $status;
+        }
+        if ($urgency !== null) {
+            $params['urgencies[]'] = $urgency;
+        }
+        if ($serviceId !== null) {
+            $params['service_ids[]'] = $serviceId;
+        }
+        if ($teamId !== null) {
+            $params['team_ids[]'] = $teamId;
+        }
+
         return $this->request('GET', '/incidents', $params);
     }
 
     /**
-     * Retrieve a single incident by ID.
+     * Get a single incident by ID.
      *
-     * @param  string  $id  PagerDuty incident ID (e.g., "Q02JFSRXI65D55")
-     * @return array<string, mixed>  PagerDuty incident object
+     * @param  string  $id  The incident ID.
+     * @return array<string, mixed> The incident data.
      *
      * @see https://developer.pagerduty.com/api-reference/get-an-incident
      */
     public function getIncident(string $id): array
     {
-        return $this->request('GET', "/incidents/{$id}");
+        return $this->request('GET', '/incidents/' . urlencode($id));
     }
 
-    /**
-     * Update an incident's status, priority, or other fields.
-     *
-     * @param  string  $id     PagerDuty incident ID
-     * @param  array<string, mixed>  $data  Incident fields to update (status, priority, etc.)
-     * @return array<string, mixed>  Updated incident object
-     *
-     * @see https://developer.pagerduty.com/api-reference/update-an-incident
-     */
-    public function updateIncident(string $id, array $data): array
-    {
-        $payload = [
-            'incident' => $data,
-        ];
-
-        return $this->request('PUT', "/incidents/{$id}", body: $payload);
-    }
-
-    /**
-     * Create a note on an incident.
-     *
-     * @param  string  $id       PagerDuty incident ID
-     * @param  string  $content  The note content
-     * @return array<string, mixed>  Created note object
-     *
-     * @see https://developer.pagerduty.com/api-reference/create-a-note-on-an-incident
-     */
-    public function createIncidentNote(string $id, string $content): array
-    {
-        $payload = [
-            'note' => [
-                'content' => $content,
-            ],
-        ];
-
-        return $this->request('POST', "/incidents/{$id}/notes", body: $payload);
-    }
-
-    // ── Services ───────────────────────────────────────────
+    // ─── Services ─────────────────────────────────────────────────────────
 
     /**
      * List services with optional filtering and pagination.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, offset, team_ids[], etc.)
-     * @return array<string, mixed>  PagerDuty API response with services, total, and pagination info
+     * @param  string|null  $teamId  Filter by team ID.
+     * @param  int  $limit  Maximum number of services to return (default 25, max 100).
+     * @param  int  $offset  Offset for pagination.
+     * @return array<string, mixed> API response containing services and pagination info.
      *
      * @see https://developer.pagerduty.com/api-reference/list-services
      */
-    public function listServices(array $params = []): array
+    public function listServices(?string $teamId = null, int $limit = 25, int $offset = 0): array
     {
+        $params = ['limit' => min($limit, 100), 'offset' => $offset];
+        if ($teamId !== null) {
+            $params['team_ids[]'] = $teamId;
+        }
+
         return $this->request('GET', '/services', $params);
     }
 
     /**
-     * Retrieve a single service by ID.
+     * Get a single service by ID.
      *
-     * @param  string  $id  PagerDuty service ID (e.g., "PIJ90N7")
-     * @return array<string, mixed>  PagerDuty service object
+     * @param  string  $id  The service ID.
+     * @return array<string, mixed> The service data.
      *
      * @see https://developer.pagerduty.com/api-reference/get-a-service
      */
     public function getService(string $id): array
     {
-        return $this->request('GET', "/services/{$id}");
+        return $this->request('GET', '/services/' . urlencode($id));
     }
 
-    // ── Teams ──────────────────────────────────────────────
+    // ─── Teams ────────────────────────────────────────────────────────────
 
     /**
      * List teams with optional pagination.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, offset, etc.)
-     * @return array<string, mixed>  PagerDuty API response with teams, total, and pagination info
+     * @param  int  $limit  Maximum number of teams to return (default 25, max 100).
+     * @param  int  $offset  Offset for pagination.
+     * @return array<string, mixed> API response containing teams and pagination info.
      *
      * @see https://developer.pagerduty.com/api-reference/list-teams
      */
-    public function listTeams(array $params = []): array
+    public function listTeams(int $limit = 25, int $offset = 0): array
     {
+        $params = ['limit' => min($limit, 100), 'offset' => $offset];
+
         return $this->request('GET', '/teams', $params);
     }
 
-    // ── Users ──────────────────────────────────────────────
+    /**
+     * Get a single team by ID.
+     *
+     * @param  string  $id  The team ID.
+     * @return array<string, mixed> The team data.
+     *
+     * @see https://developer.pagerduty.com/api-reference/get-a-team
+     */
+    public function getTeam(string $id): array
+    {
+        return $this->request('GET', '/teams/' . urlencode($id));
+    }
+
+    // ─── User ─────────────────────────────────────────────────────────────
 
     /**
-     * List users with optional filtering and pagination.
+     * Get the currently authenticated user.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, offset, team_ids[], etc.)
-     * @return array<string, mixed>  PagerDuty API response with users, total, and pagination info
+     * @return array<string, mixed> The user profile data.
      *
-     * @see https://developer.pagerduty.com/api-reference/list-users
+     * @see https://developer.pagerduty.com/api-reference/get-the-current-user
      */
-    public function listUsers(array $params = []): array
+    public function getCurrentUser(): array
     {
-        return $this->request('GET', '/users', $params);
+        return $this->request('GET', '/users/me');
+    }
+
+    // ─── Internal helpers ─────────────────────────────────────────────────
+
+    /**
+     * Make an API request and return parsed JSON.
+     *
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path  API endpoint path (e.g. "/incidents").
+     * @param  array<string, mixed>  $data  Query parameters or request body.
+     * @return array<string, mixed> Parsed JSON response.
+     *
+     * @throws \RuntimeException On API errors or connection failures.
+     */
+    private function request(string $method, string $path, array $data = []): array
+    {
+        $response = $this->rawRequest($method, $path, $data);
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        return $response->json() ?? [];
     }
 
     /**
-     * Retrieve a single user by ID.
+     * Make a raw HTTP request to the PagerDuty API using Bearer token auth.
      *
-     * @param  string  $id  PagerDuty user ID (e.g., "PXPGF42")
-     * @return array<string, mixed>  PagerDuty user object
+     * Includes the required Accept header for the PagerDuty REST API v2.
      *
-     * @see https://developer.pagerduty.com/api-reference/get-a-user
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path  API endpoint path.
+     * @param  array<string, mixed>  $data  Query parameters (GET) or JSON body (POST/PUT/DELETE).
+     * @return Response The raw HTTP response.
+     *
+     * @throws \RuntimeException On API errors, connection failures, or missing API token.
      */
-    public function getUser(string $id): array
-    {
-        return $this->request('GET', "/users/{$id}");
-    }
-
-    // ── On-Call ────────────────────────────────────────────
-
-    /**
-     * List current on-call entries with optional filtering.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (limit, escalation_policy_ids[], etc.)
-     * @return array<string, mixed>  PagerDuty API response with oncalls, total, and pagination info
-     *
-     * @see https://developer.pagerduty.com/api-reference/list-all-on-calls
-     */
-    public function listOnCalls(array $params = []): array
-    {
-        return $this->request('GET', '/oncalls', $params);
-    }
-
-    // ── HTTP ───────────────────────────────────────────────
-
-    /**
-     * Execute an authenticated HTTP request to the PagerDuty REST API.
-     *
-     * Sends the API token via the `Authorization: Token token={token}` header
-     * and expects JSON request/response bodies.
-     *
-     * @param  string  $method   HTTP method (GET, POST, PUT)
-     * @param  string  $path     API endpoint path (e.g., "/incidents")
-     * @param  array<string, mixed>  $query   Query parameters for GET requests
-     * @param  array<string, mixed>|null  $body   JSON body for POST/PUT requests
-     * @return array<string, mixed>  Decoded JSON response body
-     *
-     * @throws \RuntimeException  On connection failure or API error
-     */
-    private function request(string $method, string $path, array $query = [], ?array $body = null): array
+    private function rawRequest(string $method, string $path, array $data = []): Response
     {
         if (! $this->apiToken) {
             throw new \RuntimeException('PagerDuty API token is not configured.');
         }
 
+        $url = $this->baseUrl . $path;
+
         try {
             $http = Http::withHeaders([
-                'Authorization' => 'Token token=' . $this->apiToken,
+                'Authorization' => 'Bearer ' . $this->apiToken,
+                'Accept' => 'application/vnd.pagerduty+json;version=2',
                 'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get(self::BASE_URL . $path, $query),
-                'POST' => $http->post(self::BASE_URL . $path, $body ?? []),
-                'PUT' => $http->put(self::BASE_URL . $path, $body ?? []),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                'GET'    => $http->get($url, $data),
+                'POST'   => $http->post($url, $data),
+                'PUT'    => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
+                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            $json = $response->json() ?? [];
-
             if (! $response->successful()) {
-                $error = $json['error']['message'] ?? $response->body();
-                $code = $json['error']['code'] ?? '';
+                $contentType = $response->header('Content-Type');
+                $body = $response->body();
 
-                Log::error("PagerDuty API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                    'code' => $code,
-                ]);
-
-                $msg = is_string($error) ? $error : json_encode($error);
-                if ($code) {
-                    $msg .= " (code: {$code})";
+                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                    Log::warning("PagerDuty API returned HTML for {$method} {$path}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("PagerDuty API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be incorrect.");
                 }
 
-                throw new \RuntimeException('PagerDuty API error (' . $response->status() . '): ' . $msg);
+                $error = $response->json('error') ?? $response->json('message') ?? $body;
+                Log::error("PagerDuty API error: {$method} {$path}", [
+                    'status' => $response->status(),
+                    'error'  => $error,
+                ]);
+                throw new \RuntimeException("PagerDuty API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            return $json;
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("PagerDuty API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

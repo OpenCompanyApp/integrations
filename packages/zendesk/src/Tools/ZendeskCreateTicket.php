@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create a new Zendesk ticket.
+ * Create a new ticket in Zendesk.
+ *
+ * Creates a ticket with subject, description, and optional priority/type/status fields.
  */
 class ZendeskCreateTicket implements Tool
 {
@@ -25,87 +27,80 @@ class ZendeskCreateTicket implements Tool
 
     public function description(): string
     {
-        return 'Create a new Zendesk ticket. Requires subject and description. Optionally set priority, type, tags, custom fields, requester, group, and assignee.';
+        return <<<'MD'
+        Create a new ticket in Zendesk.
+        Requires a subject and description. Optionally set priority, type, status, and assignee.
+        Returns the created ticket with its ID.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'subject' => ['type' => 'string', 'required' => true, 'description' => 'The subject of the ticket.'],
-            'description' => ['type' => 'string', 'required' => true, 'description' => 'The initial comment/description of the ticket.'],
-            'requester_email' => ['type' => 'string', 'description' => 'Email address of the ticket requester.'],
-            'requester_name' => ['type' => 'string', 'description' => 'Name of the ticket requester.'],
-            'priority' => ['type' => 'string', 'description' => 'Priority of the ticket (urgent, high, normal, low).'],
-            'type' => ['type' => 'string', 'description' => 'Type of the ticket (problem, incident, question, task).'],
-            'tags' => ['type' => 'array', 'description' => 'Array of tag strings. Example: ["support", "urgent"].'],
-            'custom_fields' => ['type' => 'array', 'description' => 'Array of custom field objects with id and value. Example: [{"id": 123, "value": "foo"}].'],
-            'group_id' => ['type' => 'integer', 'description' => 'The ID of the group to assign the ticket to.'],
-            'assignee_id' => ['type' => 'integer', 'description' => 'The ID of the agent to assign the ticket to.'],
+            'subject' => ['type' => 'string', 'required' => true, 'description' => 'Subject of the ticket.'],
+            'description' => ['type' => 'string', 'required' => true, 'description' => 'Initial description/body of the ticket.'],
+            'priority' => ['type' => 'string', 'description' => 'Ticket priority: "urgent", "high", "normal", "low".'],
+            'type' => ['type' => 'string', 'description' => 'Ticket type: "problem", "incident", "question", "task".'],
+            'status' => ['type' => 'string', 'description' => 'Initial status: "new", "open", "pending", "hold" (default: "new").'],
+            'assignee_id' => ['type' => 'string', 'description' => 'ID of the agent to assign the ticket to.'],
+            'tags' => ['type' => 'array', 'description' => 'Array of tags to apply to the ticket.'],
         ];
     }
 
     /**
-     * Create a Zendesk ticket with subject, description, and optional fields.
+     * Create a new Zendesk ticket.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (subject, description, requester_email, requester_name, priority, type, tags, custom_fields, group_id, assignee_id)
+     * @param  array<string, mixed>  $args  Tool arguments (subject, description, priority, type, status, assignee_id, tags)
      */
     public function execute(array $args): ToolResult
     {
-        if (! $this->service->isConfigured()) {
-            return ToolResult::error('Zendesk is not configured. Missing email, API token, or subdomain.');
-        }
-
-        $subject = $args['subject'] ?? '';
-        $description = $args['description'] ?? '';
-
-        if (empty($subject)) {
-            return ToolResult::error('Subject is required.');
-        }
-
-        if (empty($description)) {
-            return ToolResult::error('Description is required.');
-        }
-
         try {
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Zendesk integration is not configured.');
+            }
+
+            $subject = $args['subject'] ?? '';
+            if (empty($subject)) {
+                return ToolResult::error('subject is required.');
+            }
+
+            $description = $args['description'] ?? '';
+            if (empty($description)) {
+                return ToolResult::error('description is required.');
+            }
+
             $ticket = [
                 'subject' => $subject,
-                'comment' => ['body' => $description],
+                'description' => $description,
             ];
 
-            if (! empty($args['requester_email'])) {
-                $ticket['requester'] = array_filter([
-                    'email' => $args['requester_email'],
-                    'name' => $args['requester_name'] ?? null,
-                ], fn ($v) => $v !== null);
-            }
-
-            if (isset($args['priority'])) {
+            if (! empty($args['priority'])) {
                 $ticket['priority'] = $args['priority'];
             }
-
-            if (isset($args['type'])) {
+            if (! empty($args['type'])) {
                 $ticket['type'] = $args['type'];
             }
-
-            if (isset($args['tags'])) {
-                $ticket['tags'] = $args['tags'];
+            if (! empty($args['status'])) {
+                $ticket['status'] = $args['status'];
             }
-
-            if (isset($args['custom_fields'])) {
-                $ticket['custom_fields'] = $args['custom_fields'];
-            }
-
-            if (isset($args['group_id'])) {
-                $ticket['group_id'] = (int) $args['group_id'];
-            }
-
-            if (isset($args['assignee_id'])) {
+            if (! empty($args['assignee_id'])) {
                 $ticket['assignee_id'] = (int) $args['assignee_id'];
+            }
+            if (! empty($args['tags']) && is_array($args['tags'])) {
+                $ticket['tags'] = $args['tags'];
             }
 
             $result = $this->service->createTicket(['ticket' => $ticket]);
 
-            return ToolResult::success($result);
+            $created = $result['ticket'] ?? $result;
+
+            return ToolResult::success([
+                'id' => $created['id'] ?? '',
+                'subject' => $created['subject'] ?? '',
+                'status' => $created['status'] ?? '',
+                'priority' => $created['priority'] ?? '',
+                'created_at' => $created['created_at'] ?? '',
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

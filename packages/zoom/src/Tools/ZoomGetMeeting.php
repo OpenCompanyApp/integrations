@@ -7,16 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get details of a Zoom meeting.
+ * Get a meeting by ID.
  *
- * Retrieves meeting information including join URL, settings,
- * and participant details by meeting ID.
+ * Returns the full meeting object including id, topic, type, start_time,
+ * duration, timezone, agenda, settings, and join_url.
  */
 class ZoomGetMeeting implements Tool
 {
-    /**
-     * @param  ZoomService  $service  The Zoom API client
-     */
     public function __construct(
         private ZoomService $service,
     ) {}
@@ -28,29 +25,25 @@ class ZoomGetMeeting implements Tool
 
     public function description(): string
     {
-        return 'Get details of a Zoom meeting by ID.';
+        return 'Get details of a specific Zoom meeting by ID. Returns the meeting topic, agenda, start time, duration, join URL, and settings.';
     }
 
     public function parameters(): array
     {
         return [
-            'meeting_id' => ['type' => 'string', 'required' => true, 'description' => 'The meeting ID.'],
+            'meeting_id' => ['type' => 'string', 'required' => true, 'description' => 'The meeting ID or UUID.'],
         ];
     }
 
-    /**
-     * Retrieve a meeting by its ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (meeting_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Zoom integration is not configured.');
             }
 
             $meetingId = $args['meeting_id'] ?? '';
+
             if (empty($meetingId)) {
                 return ToolResult::error('meeting_id is required.');
             }

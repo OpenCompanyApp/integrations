@@ -1,56 +1,65 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty\Tools;
+namespace OpenCompany\Integrations\Pagerduty\Tools;
 
-use OpenCompany\Integrations\PagerDuty\PagerDutyService;
+use OpenCompany\Integrations\Pagerduty\PagerdutyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List PagerDuty incidents with optional filtering and pagination.
+ * Tool: List Incidents.
  *
- * Supports filtering by status, service IDs, and urgency. Returns
- * paginated incident records with key details.
+ * Lists PagerDuty incidents with optional filters for status, urgency,
+ * service, and team. Supports pagination via limit and offset.
+ *
+ * @see https://developer.pagerduty.com/api-reference/list-incidents
  */
-class PagerDutyListIncidents implements Tool
+class PagerdutyListIncidents implements Tool
 {
     /**
-     * @param  PagerDutyService  $service  The PagerDuty API client
+     * @param  PagerdutyService  $service  The PagerDuty API service instance.
      */
     public function __construct(
-        private PagerDutyService $service,
+        private PagerdutyService $service,
     ) {}
 
+    /**
+     * Get the tool identifier.
+     */
     public function name(): string
     {
         return 'pagerduty_list_incidents';
     }
 
+    /**
+     * Get the human-readable tool description.
+     */
     public function description(): string
     {
-        return <<<'MD'
-        List PagerDuty incidents with optional filtering.
-        Supports filtering by status (triggered, acknowledged, resolved),
-        service IDs, and urgency (high, low).
-        Returns paginated results with incident details.
-        MD;
+        return 'List PagerDuty incidents. Filter by status (triggered, acknowledged, resolved), urgency (high, low), service ID, or team ID. Returns a paginated list of incidents.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of incidents to return (1–100, default 25).'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default 0).'],
-            'status' => ['type' => 'array', 'description' => 'Filter by incident status. Values: "triggered", "acknowledged", "resolved".'],
-            'service_ids' => ['type' => 'array', 'description' => 'Filter by service IDs (array of service ID strings).'],
-            'urgency' => ['type' => 'string', 'description' => 'Filter by urgency. Values: "high", "low".'],
+            'status'     => ['type' => 'string', 'description' => 'Filter by status: "triggered", "acknowledged", or "resolved".'],
+            'urgency'    => ['type' => 'string', 'description' => 'Filter by urgency: "high" or "low".'],
+            'service_id' => ['type' => 'string', 'description' => 'Filter by service ID.'],
+            'team_id'    => ['type' => 'string', 'description' => 'Filter by team ID.'],
+            'limit'      => ['type' => 'integer', 'description' => 'Maximum number of incidents to return (default: 25, max: 100).'],
+            'offset'     => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
         ];
     }
 
     /**
-     * List PagerDuty incidents with optional filtering and pagination.
+     * Execute the list incidents tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, offset, status, service_ids, urgency)
+     * @param  array<string, mixed>  $args  Tool arguments (status, urgency, service_id, team_id, limit, offset).
      */
     public function execute(array $args): ToolResult
     {
@@ -59,56 +68,26 @@ class PagerDutyListIncidents implements Tool
                 return ToolResult::error('PagerDuty integration is not configured.');
             }
 
-            $params = [];
+            $status    = $args['status'] ?? null;
+            $urgency   = $args['urgency'] ?? null;
+            $serviceId = $args['service_id'] ?? null;
+            $teamId    = $args['team_id'] ?? null;
+            $limit     = isset($args['limit']) ? (int) $args['limit'] : 25;
+            $offset    = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (isset($args['offset'])) {
-                $params['offset'] = (int) $args['offset'];
-            }
-            if (isset($args['status']) && is_array($args['status'])) {
-                foreach ($args['status'] as $i => $status) {
-                    $params["statuses[]"][$i] = $status;
-                }
-            }
-            if (isset($args['service_ids']) && is_array($args['service_ids'])) {
-                foreach ($args['service_ids'] as $i => $serviceId) {
-                    $params["service_ids[]"][$i] = $serviceId;
-                }
-            }
-            if (isset($args['urgency'])) {
-                $params['urgencies[]'] = $args['urgency'];
-            }
+            $result = $this->service->listIncidents($status, $urgency, $serviceId, $teamId, $limit, $offset);
 
-            $result = $this->service->listIncidents($params);
-
-            $incidents = array_map(function (array $inc) {
-                return [
-                    'id' => $inc['id'] ?? '',
-                    'title' => $inc['title'] ?? '',
-                    'status' => $inc['status'] ?? '',
-                    'urgency' => $inc['urgency'] ?? '',
-                    'created_at' => $inc['created_at'] ?? null,
-                    'updated_at' => $inc['updated_at'] ?? null,
-                    'service' => [
-                        'id' => $inc['service']['id'] ?? '',
-                        'name' => $inc['service']['name'] ?? '',
-                    ],
-                    'assigned_to' => array_map(function (array $a) {
-                        return [
-                            'id' => $a['assignee']['id'] ?? '',
-                            'name' => $a['assignee']['summary'] ?? '',
-                            'type' => $a['assignee']['type'] ?? '',
-                        ];
-                    }, $inc['assignments'] ?? []),
-                ];
-            }, $result['incidents'] ?? []);
+            $incidents = $result['incidents'] ?? [];
+            $total     = $result['total'] ?? count($incidents);
+            $more      = $result['more'] ?? (($offset + count($incidents)) < $total);
 
             return ToolResult::success([
                 'incidents' => $incidents,
-                'total' => $result['total'] ?? count($incidents),
-                'more' => $result['more'] ?? false,
+                'count'     => count($incidents),
+                'total'     => $total,
+                'more'      => $more,
+                'offset'    => $offset,
+                'limit'     => $limit,
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

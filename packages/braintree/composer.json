@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-braintree",
-    "description": "Braintree payments integration for Laravel — list transactions, customers, plans, and subscriptions.",
+    "description": "Braintree payments integration for Laravel — list transactions, customers, plans, and current merchant info.",
     "license": "MIT",
     "authors": [
         {

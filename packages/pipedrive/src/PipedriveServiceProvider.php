@@ -7,12 +7,16 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Pipedrive integration.
+ * Laravel service provider for the Pipedrive CRM integration.
  *
- * Registers the PipedriveService singleton and bootstraps the Pipedrive tool provider.
+ * Registers the PipedriveService singleton and bootstraps the tool provider
+ * with the ToolProviderRegistry when available.
  */
 class PipedriveServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the PipedriveService singleton.
+     */
     public function register(): void
     {
         $this->app->singleton(PipedriveService::class, function ($app) {
@@ -20,11 +24,14 @@ class PipedriveServiceProvider extends ServiceProvider
 
             return new PipedriveService(
                 apiToken: $creds->get('pipedrive', 'api_token', ''),
-                companyDomain: $creds->get('pipedrive', 'company_domain', 'https://company.pipedrive.com'),
+                baseUrl: $creds->get('pipedrive', 'url', 'https://api.pipedrive.com/v1'),
             );
         });
     }
 
+    /**
+     * Boot the service provider — register tools with the ToolProviderRegistry.
+     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

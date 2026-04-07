@@ -6,61 +6,34 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Xero API service for making requests to the Xero Accounting REST API.
+ * Client for the Xero Accounting REST API covering invoices, contacts, and accounts.
  *
- * Uses OAuth2 Bearer token authentication with a required Xero-Tenant-Id header.
- * Xero uses PUT for create (upsert) operations and POST for updates.
- * Responses wrap resources in plural keys like {"Invoices": [...]}.
+ * Wraps the Xero API v2.0 with Bearer token authentication, request routing, and error reporting.
  */
 class XeroService
 {
-    private const BASE_URL = 'https://api.xero.com/api.xro/2.0';
-
     /**
-     * @param  string  $accessToken  OAuth2 access token for Xero API
-     * @param  string  $tenantId     Xero tenant ID (required header for all requests)
+     * @param  string  $accessToken  Xero OAuth2 access token
+     * @param  string  $baseUrl      Xero API base URL (default: https://api.xero.com/api.xro/2.0)
      */
     public function __construct(
         private string $accessToken = '',
-        private string $tenantId = '',
-    ) {}
+        private string $baseUrl = 'https://api.xero.com/api.xro/2.0',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
-    /**
-     * Check whether the Xero service is configured with credentials.
-     */
     public function isConfigured(): bool
     {
-        return ! empty($this->accessToken) && ! empty($this->tenantId);
+        return ! empty($this->accessToken);
     }
 
     // ── Invoices ───────────────────────────────────────────
 
     /**
-     * Create (upsert) an invoice in Xero.
+     * List invoices with optional pagination, status filter, and date range.
      *
-     * @param  array<string, mixed>  $data  Invoice payload wrapped in {"Invoices": [{...}]}
-     * @return array<string, mixed>
-     */
-    public function createInvoice(array $data): array
-    {
-        return $this->request('PUT', '/Invoices', $data);
-    }
-
-    /**
-     * Get a single invoice by ID.
-     *
-     * @param  string  $id  Xero invoice GUID
-     * @return array<string, mixed>
-     */
-    public function getInvoice(string $id): array
-    {
-        return $this->request('GET', "/Invoices/{$id}");
-    }
-
-    /**
-     * List invoices with optional filtering.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (Status, ContactID, etc.)
+     * @param  array<string, mixed>  $params  Query params: page, pageSize, statuses, where, order
      * @return array<string, mixed>
      */
     public function listInvoices(array $params = []): array
@@ -69,45 +42,32 @@ class XeroService
     }
 
     /**
-     * Update an existing invoice.
+     * Get an invoice by ID.
      *
-     * @param  string  $id  Xero invoice GUID
-     * @param  array<string, mixed>  $data  Invoice fields to update
      * @return array<string, mixed>
      */
-    public function updateInvoice(string $id, array $data): array
+    public function getInvoice(string $id): array
     {
-        return $this->request('POST', "/Invoices/{$id}", $data);
+        return $this->request('GET', "/Invoices/{$id}");
+    }
+
+    /**
+     * Create an invoice.
+     *
+     * @param  array<string, mixed>  $data  Invoice fields
+     * @return array<string, mixed>
+     */
+    public function createInvoice(array $data): array
+    {
+        return $this->request('PUT', '/Invoices', $data);
     }
 
     // ── Contacts ───────────────────────────────────────────
 
     /**
-     * Create (upsert) a contact in Xero.
+     * List contacts with optional pagination and search.
      *
-     * @param  array<string, mixed>  $data  Contact payload wrapped in {"Contacts": [{...}]}
-     * @return array<string, mixed>
-     */
-    public function createContact(array $data): array
-    {
-        return $this->request('PUT', '/Contacts', $data);
-    }
-
-    /**
-     * Get a single contact by ID.
-     *
-     * @param  string  $id  Xero contact GUID
-     * @return array<string, mixed>
-     */
-    public function getContact(string $id): array
-    {
-        return $this->request('GET', "/Contacts/{$id}");
-    }
-
-    /**
-     * List contacts with optional filtering.
-     *
-     * @param  array<string, mixed>  $params  Query parameters
+     * @param  array<string, mixed>  $params  Query params: page, pageSize, where, order, includeArchived
      * @return array<string, mixed>
      */
     public function listContacts(array $params = []): array
@@ -116,47 +76,21 @@ class XeroService
     }
 
     /**
-     * Update an existing contact.
+     * Get a contact by ID.
      *
-     * @param  string  $id  Xero contact GUID
-     * @param  array<string, mixed>  $data  Contact fields to update
      * @return array<string, mixed>
      */
-    public function updateContact(string $id, array $data): array
+    public function getContact(string $id): array
     {
-        return $this->request('POST', "/Contacts/{$id}", $data);
-    }
-
-    // ── Payments ───────────────────────────────────────────
-
-    /**
-     * Create a payment in Xero.
-     *
-     * @param  array<string, mixed>  $data  Payment payload wrapped in {"Payments": [{...}]}
-     * @return array<string, mixed>
-     */
-    public function createPayment(array $data): array
-    {
-        return $this->request('PUT', '/Payments', $data);
-    }
-
-    /**
-     * List payments with optional filtering.
-     *
-     * @param  array<string, mixed>  $params  Query parameters
-     * @return array<string, mixed>
-     */
-    public function listPayments(array $params = []): array
-    {
-        return $this->request('GET', '/Payments', $params);
+        return $this->request('GET', "/Contacts/{$id}");
     }
 
     // ── Accounts ───────────────────────────────────────────
 
     /**
-     * List chart of accounts with optional filtering.
+     * List accounts.
      *
-     * @param  array<string, mixed>  $params  Query parameters
+     * @param  array<string, mixed>  $params  Query params: where, order
      * @return array<string, mixed>
      */
     public function listAccounts(array $params = []): array
@@ -164,62 +98,24 @@ class XeroService
         return $this->request('GET', '/Accounts', $params);
     }
 
-    // ── Bank Transactions ──────────────────────────────────
+    // ── Current User ───────────────────────────────────────
 
     /**
-     * Create (upsert) a bank transaction in Xero.
-     *
-     * @param  array<string, mixed>  $data  Bank transaction payload
-     * @return array<string, mixed>
-     */
-    public function createBankTransaction(array $data): array
-    {
-        return $this->request('PUT', '/BankTransactions', $data);
-    }
-
-    /**
-     * List bank transactions with optional filtering.
-     *
-     * @param  array<string, mixed>  $params  Query parameters
-     * @return array<string, mixed>
-     */
-    public function listBankTransactions(array $params = []): array
-    {
-        return $this->request('GET', '/BankTransactions', $params);
-    }
-
-    // ── Users ──────────────────────────────────────────────
-
-    /**
-     * List users in the Xero organisation.
+     * Get the current user info via the connections endpoint.
      *
      * @return array<string, mixed>
      */
-    public function listUsers(): array
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/Users');
-    }
-
-    // ── Organisations ──────────────────────────────────────
-
-    /**
-     * List organisations connected to the Xero tenant.
-     *
-     * @return array<string, mixed>
-     */
-    public function listOrganisations(): array
-    {
-        return $this->request('GET', '/Organisations');
     }
 
     // ── HTTP ───────────────────────────────────────────────
 
     /**
-     * Make an API request to Xero.
+     * Make an API request and return parsed JSON.
      *
-     * @param  string  $method  HTTP method (GET, PUT, POST)
-     * @param  string  $path    API endpoint path (e.g. /Invoices)
-     * @param  array<string, mixed>  $data  Request body (for PUT/POST) or query params (for GET)
+     * @param  array<string, mixed>  $data  Query params (GET) or JSON body (PUT/POST/DELETE)
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -228,41 +124,53 @@ class XeroService
             throw new \RuntimeException('Xero access token is not configured.');
         }
 
-        if (! $this->tenantId) {
-            throw new \RuntimeException('Xero tenant ID is not configured.');
-        }
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withToken($this->accessToken)
-                ->withHeaders([
-                    'Xero-Tenant-Id' => $this->tenantId,
-                    'Accept' => 'application/json',
-                ])
-                ->timeout(30);
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get(self::BASE_URL . $path, $data),
-                'PUT' => $http->put(self::BASE_URL . $path, $data),
-                'POST' => $http->post(self::BASE_URL . $path, $data),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            $json = $response->json() ?? [];
-
             if (! $response->successful()) {
-                $error = $json['Message'] ?? $json['Title'] ?? $response->body();
+                $body = $response->json() ?? [];
+                $err = $body['ErrorNumber'] ?? null;
+                $msg = $body['Message'] ?? $body['Type'] ?? $response->body();
+
+                if (isset($body['Elements']) && is_array($body['Elements'])) {
+                    $validationErrors = [];
+                    foreach ($body['Elements'] as $element) {
+                        if (isset($element['ValidationErrors']) && is_array($element['ValidationErrors'])) {
+                            foreach ($element['ValidationErrors'] as $ve) {
+                                $validationErrors[] = $ve['Message'] ?? json_encode($ve);
+                            }
+                        }
+                    }
+                    if (! empty($validationErrors)) {
+                        $msg = implode('; ', $validationErrors);
+                    }
+                }
 
                 Log::error("Xero API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'error' => is_string($msg) ? $msg : json_encode($msg),
                 ]);
 
-                $msg = is_string($error) ? $error : json_encode($error);
+                $errorMsg = is_string($msg) ? $msg : json_encode($msg);
 
-                throw new \RuntimeException('Xero API error (' . $response->status() . '): ' . $msg);
+                throw new \RuntimeException('Xero API error (' . $response->status() . '): ' . $errorMsg);
             }
 
-            return $json;
+            return $response->json() ?? [];
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Xero API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

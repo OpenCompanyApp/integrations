@@ -1,12 +1,33 @@
 {
     "name": "opencompanyapp/integration-mixpanel",
-    "description": "Mixpanel integration for OpenCompany — events, funnels, retention, profiles, cohorts, and JQL queries.",
+    "description": "Mixpanel Analytics integration for Laravel — list events, funnels, cohorts, and current user.",
     "license": "MIT",
-    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
-    "keywords": ["tools", "mixpanel", "analytics", "events", "opencompany"],
-    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
-    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Mixpanel\\": "src/"}},
-    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Mixpanel\\MixpanelServiceProvider"]}},
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "mixpanel", "analytics", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-mixpanel": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Mixpanel\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Mixpanel\\MixpanelServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }

@@ -9,8 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * List Xero chart of accounts.
  *
- * Returns all bank accounts and optionally filters by account class type
- * (e.g. ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE).
+ * Returns accounts with their codes, names, types, and statuses.
  */
 class XeroListAccounts implements Tool
 {
@@ -29,22 +28,23 @@ class XeroListAccounts implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List the Xero chart of accounts.
-        Optionally filter by class type: ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE.
+        List Xero chart of accounts.
+        Returns account codes, names, types, tax types, and statuses.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'class_type' => ['type' => 'string', 'description' => 'Filter by account class: ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE.'],
+            'where' => ['type' => 'string', 'description' => 'Xero where filter expression (e.g. Type=="BANK").'],
+            'order' => ['type' => 'string', 'description' => 'Sort order (e.g. "Code ASC").'],
         ];
     }
 
     /**
-     * List Xero accounts, optionally filtered by class type.
+     * List Xero accounts.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (class_type)
+     * @param  array<string, mixed>  $args  Tool arguments (where, order)
      */
     public function execute(array $args): ToolResult
     {
@@ -55,27 +55,33 @@ class XeroListAccounts implements Tool
 
             $params = [];
 
-            if (! empty($args['class_type'])) {
-                $params['Class'] = strtoupper($args['class_type']);
+            if (! empty($args['where'])) {
+                $params['where'] = $args['where'];
+            }
+            if (! empty($args['order'])) {
+                $params['order'] = $args['order'];
             }
 
             $result = $this->service->listAccounts($params);
 
-            $accounts = array_map(function (array $a) {
+            $accounts = array_map(function (array $account): array {
                 return [
-                    'id' => $a['AccountID'] ?? '',
-                    'code' => $a['Code'] ?? '',
-                    'name' => $a['Name'] ?? '',
-                    'type' => $a['Type'] ?? '',
-                    'class' => $a['Class'] ?? '',
-                    'status' => $a['Status'] ?? '',
-                    'bank_account_number' => $a['BankAccountNumber'] ?? null,
-                    'currency' => $a['CurrencyCode'] ?? null,
+                    'id' => $account['AccountID'] ?? '',
+                    'code' => $account['Code'] ?? '',
+                    'name' => $account['Name'] ?? '',
+                    'type' => $account['Type'] ?? '',
+                    'status' => $account['Status'] ?? '',
+                    'tax_type' => $account['TaxType'] ?? '',
+                    'description' => $account['Description'] ?? '',
+                    'class' => $account['Class'] ?? '',
+                    'system_account' => $account['SystemAccount'] ?? '',
+                    'enable_payments' => $account['EnablePaymentsToAccount'] ?? false,
                 ];
             }, $result['Accounts'] ?? []);
 
             return ToolResult::success([
-                'accounts' => $accounts,
+                'results' => $accounts,
+                'count' => count($accounts),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

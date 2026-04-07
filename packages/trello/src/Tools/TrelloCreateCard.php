@@ -11,9 +11,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class TrelloCreateCard implements Tool
 {
-    /**
-     * @param  TrelloService  $service  The Trello API client
-     */
     public function __construct(
         private TrelloService $service,
     ) {}
@@ -31,25 +28,20 @@ class TrelloCreateCard implements Tool
     public function parameters(): array
     {
         return [
-            'name'      => ['type' => 'string',  'required' => true,  'description' => 'Name for the card.'],
-            'id_list'   => ['type' => 'string',  'required' => true,  'description' => 'ID of the list to add the card to.'],
-            'desc'      => ['type' => 'string',  'description' => 'Description (supports Markdown).'],
-            'id_labels' => ['type' => 'array',   'description' => 'Array of label IDs to add.'],
-            'id_members'=> ['type' => 'array',   'description' => 'Array of member IDs to assign.'],
-            'due'       => ['type' => 'string',  'description' => 'Due date in ISO 8601 format.'],
-            'pos'       => ['type' => 'string',  'description' => 'Position: "top", "bottom", or a positive number.'],
+            'name' => ['type' => 'string', 'required' => true, 'description' => 'Name for the card.'],
+            'id_list' => ['type' => 'string', 'required' => true, 'description' => 'ID of the list to add the card to.'],
+            'desc' => ['type' => 'string', 'description' => 'Description (supports Markdown).'],
+            'id_labels' => ['type' => 'array', 'description' => 'Array of label IDs to add.'],
+            'id_members' => ['type' => 'array', 'description' => 'Array of member IDs to assign.'],
+            'due' => ['type' => 'string', 'description' => 'Due date in ISO 8601 format.'],
+            'pos' => ['type' => 'string', 'description' => 'Position: "top", "bottom", or a positive number.'],
         ];
     }
 
-    /**
-     * Create a new card with the given details.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (name, id_list, desc, id_labels, id_members, due, pos)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Trello integration is not configured.');
             }
 
@@ -57,10 +49,10 @@ class TrelloCreateCard implements Tool
             $idList = $args['id_list'] ?? '';
 
             if (empty($name)) {
-                return ToolResult::error('name is required.');
+                return ToolResult::error('Card name is required.');
             }
             if (empty($idList)) {
-                return ToolResult::error('id_list is required.');
+                return ToolResult::error('List ID (id_list) is required.');
             }
 
             $data = ['name' => $name, 'idList' => $idList];

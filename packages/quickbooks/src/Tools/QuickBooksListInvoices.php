@@ -8,15 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * List QuickBooks invoices using a query.
- *
- * Runs a SELECT query against the QuickBooks query API to retrieve invoices
- * with optional pagination via STARTPOSITION and MAXRESULTS.
  */
 class QuickBooksListInvoices implements Tool
 {
-    /**
-     * @param  QuickBooksService  $service  The QuickBooks API client
-     */
     public function __construct(
         private QuickBooksService $service,
     ) {}
@@ -28,10 +22,7 @@ class QuickBooksListInvoices implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List QuickBooks invoices.
-        Returns a list of invoices with key fields. Use the limit parameter to control page size.
-        MD;
+        return 'List QuickBooks invoices. Returns a list of invoices with key fields. Use the limit parameter to control page size.';
     }
 
     public function parameters(): array
@@ -41,22 +32,19 @@ class QuickBooksListInvoices implements Tool
         ];
     }
 
-    /**
-     * List QuickBooks invoices with optional limit.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (limit)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 10;
-            $query = "SELECT * FROM Invoice STARTPOSITION 0 MAXRESULTS {$limit}";
+            $params = [];
+            if (isset($args['limit'])) {
+                $params['limit'] = (int) $args['limit'];
+            }
 
-            $result = $this->service->query($query);
+            $result = $this->service->listInvoices($params);
             $queryResponse = $result['QueryResponse'] ?? [];
             $invoices = $queryResponse['Invoice'] ?? [];
 
@@ -78,7 +66,7 @@ class QuickBooksListInvoices implements Tool
                 'invoices' => $mapped,
                 'total_count' => $queryResponse['totalCount'] ?? count($mapped),
                 'start_position' => $queryResponse['startPosition'] ?? 0,
-                'max_results' => $queryResponse['maxResults'] ?? $limit,
+                'max_results' => $queryResponse['maxResults'] ?? ($args['limit'] ?? 10),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

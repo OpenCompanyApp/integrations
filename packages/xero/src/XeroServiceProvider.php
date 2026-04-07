@@ -7,16 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Xero integration package.
- *
- * Registers the XeroService singleton and boots the XeroToolProvider
- * into the ToolProviderRegistry.
+ * Laravel service provider that registers the XeroService singleton and bootstraps Xero tools.
  */
 class XeroServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the XeroService singleton with resolved credentials.
-     */
     public function register(): void
     {
         $this->app->singleton(XeroService::class, function ($app) {
@@ -24,14 +18,11 @@ class XeroServiceProvider extends ServiceProvider
 
             return new XeroService(
                 accessToken: $creds->get('xero', 'access_token', ''),
-                tenantId: $creds->get('xero', 'tenant_id', ''),
+                baseUrl: $creds->get('xero', 'base_url', 'https://api.xero.com/api.xro/2.0'),
             );
         });
     }
 
-    /**
-     * Boot the Xero tool provider into the registry.
-     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

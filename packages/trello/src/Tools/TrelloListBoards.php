@@ -8,12 +8,11 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * List all boards for the authenticated member.
+ *
+ * Returns a list of boards with optional filtering and field selection.
  */
 class TrelloListBoards implements Tool
 {
-    /**
-     * @param  TrelloService  $service  The Trello API client
-     */
     public function __construct(
         private TrelloService $service,
     ) {}
@@ -25,27 +24,22 @@ class TrelloListBoards implements Tool
 
     public function description(): string
     {
-        return 'List all boards for the authenticated member.';
+        return 'List all boards for the authenticated Trello member. Supports filtering by status and field selection.';
     }
 
     public function parameters(): array
     {
         return [
-            'filter' => ['type' => 'string',  'description' => 'Filter: "all", "closed", "members", "open", "organization", "public" (default: "all").'],
-            'fields' => ['type' => 'string',  'description' => 'Comma-separated board fields to return (default: "all").'],
-            'limit'  => ['type' => 'integer', 'description' => 'Max number of boards to return (1–1000).'],
+            'filter' => ['type' => 'string', 'description' => 'Filter: "all", "closed", "members", "open", "organization", "public" (default: "all").'],
+            'fields' => ['type' => 'string', 'description' => 'Comma-separated board fields to return (default: "all").'],
+            'limit' => ['type' => 'integer', 'description' => 'Max number of boards to return (1–1000).'],
         ];
     }
 
-    /**
-     * Retrieve boards for the current member.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (filter, fields, limit)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Trello integration is not configured.');
             }
 

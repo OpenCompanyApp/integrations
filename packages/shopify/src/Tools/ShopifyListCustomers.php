@@ -7,13 +7,12 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Shopify customers with optional filters and pagination.
+ * List customers from the Shopify store.
+ *
+ * Supports filtering and pagination.
  */
 class ShopifyListCustomers implements Tool
 {
-    /**
-     * @param  ShopifyService  $service  The Shopify API client
-     */
     public function __construct(
         private ShopifyService $service,
     ) {}
@@ -25,57 +24,45 @@ class ShopifyListCustomers implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List Shopify customers with optional filters.
-        Supports filtering by email and tag.
-        Use limit to control page size (max 250) and page_info for cursor-based pagination.
-        MD;
+        return 'List customers from the Shopify store. Supports filtering by email or tag and pagination.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of customers to return (max 250).'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of customers per page (default: 50, max: 250).'],
             'email' => ['type' => 'string', 'description' => 'Filter by customer email address.'],
             'tag' => ['type' => 'string', 'description' => 'Filter by customer tag.'],
-            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from previous response).'],
+            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from a previous response).'],
         ];
     }
 
-    /**
-     * List customers from Shopify.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Shopify integration is not configured.');
             }
 
             $params = [];
+            $stringParams = ['email', 'tag', 'page_info'];
+            $intParams = ['limit'];
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
+            foreach ($stringParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = $args[$key];
+                }
             }
-            if (isset($args['email'])) {
-                $params['email'] = $args['email'];
-            }
-            if (isset($args['tag'])) {
-                $params['tag'] = $args['tag'];
-            }
-            if (isset($args['page_info'])) {
-                $params['page_info'] = $args['page_info'];
+
+            foreach ($intParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = (int) $args[$key];
+                }
             }
 
             $result = $this->service->listCustomers($params);
-            $customers = $result['customers'] ?? [];
 
-            return ToolResult::success([
-                'customers' => $customers,
-                'count' => count($customers),
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

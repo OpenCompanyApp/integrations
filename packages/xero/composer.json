@@ -1,17 +1,13 @@
 {
     "name": "opencompanyapp/integration-xero",
-    "description": "Xero integration for OpenCompany — invoices, contacts, payments, accounts, bank transactions, and organisations.",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "OpenCompany",
-            "homepage": "https://github.com/OpenCompanyApp"
-        }
-    ],
-    "keywords": ["tools", "xero", "accounting", "invoicing", "opencompany"],
+    "description": "Xero integration for OpenCompany – invoices, contacts, and accounts.",
+    "type": "library",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
     },
     "autoload": {
         "psr-4": {
@@ -25,6 +21,6 @@
             ]
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

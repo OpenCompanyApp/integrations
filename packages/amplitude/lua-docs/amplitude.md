@@ -62,114 +62,100 @@ print("User: " .. result.user_id)
 
 ---
 
-## list_users
+## list_funnels
 
-Search for users in Amplitude by query string.
+List funnels configured in the Amplitude project.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `query` | string | yes | Search term — user ID, name, email, or other identifier |
-| `limit` | integer | no | Maximum number of users to return (default: 100) |
+| `project_id` | integer | no | Filter by Amplitude project ID |
+| `limit` | integer | no | Maximum number of funnels to return (default: 100) |
 
 ### Example
 
 ```lua
-local result = app.integrations.amplitude.list_users({
-  query = "john@example.com",
-  limit = 10
-})
-
-for _, user in ipairs(result.users or result.matches or {}) do
-  print("User: " .. (user.user_id or user.name or "unknown"))
-end
-```
-
----
-
-## get_user
-
-Retrieve a full user profile by user ID or device ID.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `user_id` | string | no* | The Amplitude user ID |
-| `device_id` | string | no* | The Amplitude device ID |
-
-*At least one of `user_id` or `device_id` is required.
-
-### Example
-
-```lua
-local result = app.integrations.amplitude.get_user({
-  user_id = "user_123"
-})
-
-print("User: " .. result.user_id)
-for key, value in pairs(result.user_properties or {}) do
-  print("  " .. key .. ": " .. tostring(value))
-end
-```
-
----
-
-## list_properties
-
-List available event or user properties in the Amplitude project.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `type` | string | no | Property type: `"event"` (default) or `"user"` |
-
-### Examples
-
-```lua
--- List event properties
-local result = app.integrations.amplitude.list_properties({
-  type = "event"
-})
-
-for _, prop in ipairs(result.properties or result.data or {}) do
-  print("Event property: " .. prop)
-end
-```
-
-```lua
--- List user properties
-local result = app.integrations.amplitude.list_properties({
-  type = "user"
-})
-```
-
----
-
-## list_groups
-
-Search for groups in Amplitude by query string.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `query` | string | yes | Search term — group name or group ID |
-| `limit` | integer | no | Maximum number of groups to return (default: 100) |
-
-### Example
-
-```lua
-local result = app.integrations.amplitude.list_groups({
-  query = "Enterprise",
+local result = app.integrations.amplitude.list_funnels({
   limit = 20
 })
 
-for _, group in ipairs(result.groups or result.matches or {}) do
-  print("Group: " .. (group.group_name or group.name or "unknown"))
+for _, funnel in ipairs(result.funnels or result.data or {}) do
+  print("Funnel: " .. (funnel.name or funnel.id) .. " — conversion: " .. tostring(funnel.conversion_rate or "N/A"))
 end
+```
+
+---
+
+## get_funnel
+
+Retrieve a single funnel by its ID with conversion metrics and step details.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | The Amplitude funnel ID |
+
+### Example
+
+```lua
+local result = app.integrations.amplitude.get_funnel({
+  id = "42"
+})
+
+print("Funnel: " .. result.name)
+for _, step in ipairs(result.steps or {}) do
+  print("  Step: " .. step.event_type .. " — " .. tostring(step.count) .. " users")
+end
+```
+
+---
+
+## list_cohorts
+
+List behavioral cohorts in the Amplitude project.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `project_id` | integer | no | Filter by Amplitude project ID |
+| `limit` | integer | no | Maximum number of cohorts to return (default: 100) |
+
+### Example
+
+```lua
+local result = app.integrations.amplitude.list_cohorts({
+  limit = 20
+})
+
+for _, cohort in ipairs(result.cohorts or result.data or {}) do
+  print("Cohort: " .. (cohort.name or cohort.id) .. " — size: " .. tostring(cohort.size or "N/A"))
+end
+```
+
+---
+
+## get_cohort
+
+Retrieve a single cohort by its ID with membership and behavioral criteria.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | The Amplitude cohort ID |
+
+### Example
+
+```lua
+local result = app.integrations.amplitude.get_cohort({
+  id = "7"
+})
+
+print("Cohort: " .. result.name)
+print("Members: " .. tostring(result.size or result.count or "N/A"))
 ```
 
 ---

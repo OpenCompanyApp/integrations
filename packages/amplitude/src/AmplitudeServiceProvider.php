@@ -21,7 +21,7 @@ class AmplitudeServiceProvider extends ServiceProvider
 
             return new AmplitudeService(
                 apiKey: $creds->get('amplitude', 'api_key', ''),
-                baseUrl: $creds->get('amplitude', 'url', 'https://amplitude.com'),
+                baseUrl: $creds->get('amplitude', 'url', 'https://api.amplitude.com/v1'),
             );
         });
     }

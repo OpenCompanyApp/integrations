@@ -9,7 +9,7 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 /**
  * List Intercom companies with pagination.
  *
- * Returns a paginated list of companies with their IDs and names.
+ * Returns a paginated list of companies with their IDs, names, and metadata.
  */
 class IntercomListCompanies implements Tool
 {
@@ -70,11 +70,12 @@ class IntercomListCompanies implements Tool
                     'id' => $company['id'] ?? '',
                     'name' => $company['name'] ?? '',
                     'employee_count' => $company['employee_count'] ?? null,
+                    'website' => $company['website'] ?? '',
                     'industry' => $company['industry'] ?? '',
                 ];
             }, $result['data'] ?? []);
 
-            $output = ['results' => $companies];
+            $output = ['results' => $companies, 'total' => $result['total_count'] ?? count($companies)];
 
             if (isset($result['pages']['next']['starting_after'])) {
                 $output['starting_after'] = $result['pages']['next']['starting_after'];

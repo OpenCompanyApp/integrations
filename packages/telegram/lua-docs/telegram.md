@@ -1,4 +1,4 @@
-# Telegram Bot — Lua API Reference
+# Telegram — Lua API Reference
 
 ## send_message
 
@@ -8,130 +8,142 @@ Send a text message to a Telegram chat.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `chat_id` | string | yes | Chat ID or username (e.g., `"@channelname"`) |
-| `text` | string | yes | Message text (max 4096 characters) |
-| `parse_mode` | string | no | Formatting: `"MarkdownV2"`, `"HTML"`, or `"Markdown"` |
-| `disable_notification` | boolean | no | Send silently (default: false) |
-| `reply_to_message_id` | integer | no | Message ID to reply to |
-| `reply_markup` | string | no | JSON-encoded inline keyboard or reply markup |
+| `chat_id` | string | yes | Unique identifier for the target chat or @username of the target channel. |
+| `text` | string | yes | Text of the message to send. |
+| `parse_mode` | string | no | Parse mode: Markdown, MarkdownV2, or HTML. |
+| `reply_to_message_id` | integer | no | ID of the original message if this is a reply. |
+| `disable_notification` | boolean | no | Send the message silently. Default: false. |
 
-### Examples
+### Response
+
+Returns the sent message object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `message_id` | integer | Unique message identifier. |
+| `date` | integer | Send date as Unix timestamp. |
+| `chat` | object | Chat the message was sent to. |
+| `from` | object | Bot info that sent the message. |
+| `text` | string | The message text. |
+
+### Example
 
 ```lua
--- Simple message
-local result = app.integrations.telegram.send_message({
+local msg = app.integrations.telegram.send_message({
   chat_id = "123456789",
-  text = "Hello from the bot!"
+  text = "Hello from the AI agent! 🤖",
+  parse_mode = "Markdown"
 })
 
--- Formatted message (Markdown)
-local result = app.integrations.telegram.send_message({
-  chat_id = "123456789",
-  text = "*Bold* and _italic_ text",
-  parse_mode = "MarkdownV2"
-})
-
--- Send to a channel
-local result = app.integrations.telegram.send_message({
-  chat_id = "@mychannel",
-  text = "Breaking news update!"
-})
+print("Sent message ID: " .. msg.message_id)
 ```
 
 ---
 
-## send_photo
+## list_updates
 
-Send a photo to a Telegram chat.
+Get incoming updates (messages, callbacks, etc.) for the bot.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `chat_id` | string | yes | Chat ID or username |
-| `photo` | string | yes | URL or file_id of the photo |
-| `caption` | string | no | Photo caption (max 1024 characters) |
-| `parse_mode` | string | no | Caption formatting mode |
-| `disable_notification` | boolean | no | Send silently (default: false) |
-| `reply_to_message_id` | integer | no | Message ID to reply to |
-| `reply_markup` | string | no | JSON-encoded inline keyboard |
+| `offset` | integer | no | Identifier of the first update to return. Must be one greater than the highest previously received update_id. |
+| `limit` | integer | no | Number of updates to fetch (1–100). Default: 100. |
+| `timeout` | integer | no | Long polling timeout in seconds. Default: 0. |
 
-### Examples
+### Response
 
-```lua
--- Send a photo from URL
-local result = app.integrations.telegram.send_photo({
-  chat_id = "123456789",
-  photo = "https://example.com/image.jpg",
-  caption = "Check this out!"
-})
+Returns an array of update objects:
 
--- Send with formatted caption
-local result = app.integrations.telegram.send_photo({
-  chat_id = "123456789",
-  photo = "https://example.com/chart.png",
-  caption = "*Monthly Report* - Revenue chart",
-  parse_mode = "MarkdownV2"
-})
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `update_id` | integer | Unique update identifier. |
+| `message` | object | New incoming message (if present). |
+| `edited_message` | object | Edited message (if present). |
+| `channel_post` | object | New channel post (if present). |
+| `callback_query` | object | Callback query (if present). |
 
----
-
-## get_updates
-
-Get incoming updates for the bot — messages, callback queries, and other events.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `offset` | integer | no | First update ID to return (use last_id + 1 to acknowledge) |
-| `limit` | integer | no | Max updates to return (1-100, default: 100) |
-| `timeout` | integer | no | Long polling timeout in seconds (0-300, default: 0) |
-| `allowed_updates` | array | no | Update types to receive, e.g. `{"message", "callback_query"}` |
-
-### Examples
+### Example
 
 ```lua
--- Get recent updates
-local result = app.integrations.telegram.get_updates({
+local updates = app.integrations.telegram.list_updates({
   limit = 10
 })
 
-for _, update in ipairs(result.updates) do
+for _, update in ipairs(updates) do
   if update.message then
-    print(update.message.from.first_name .. ": " .. update.message.text)
+    print("From: " .. update.message.from.first_name .. " — " .. update.message.text)
   end
 end
+```
 
--- Acknowledge and get new updates
-local result = app.integrations.telegram.get_updates({
-  offset = last_update_id + 1,
-  limit = 10
-})
+---
+
+## get_me
+
+Get information about the authenticated Telegram bot.
+
+### Parameters
+
+None.
+
+### Response
+
+Returns a bot user object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | Bot user ID. |
+| `is_bot` | boolean | Always true for bots. |
+| `first_name` | string | Bot display name. |
+| `username` | string | Bot @username. |
+| `can_join_groups` | boolean | Whether the bot can join groups. |
+| `can_read_all_group_messages` | boolean | Whether the bot receives all group messages. |
+
+### Example
+
+```lua
+local bot = app.integrations.telegram.get_me({})
+
+print("Bot: @" .. bot.username .. " (" .. bot.first_name .. ")")
 ```
 
 ---
 
 ## list_chats
 
-List chats the bot has interacted with. Since Telegram has no direct "list chats" API, this derives chats from recent updates.
+List recent chats the bot has interacted with.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `limit` | integer | no | Max chats to return (default: 50) |
+| `limit` | integer | no | Maximum number of updates to scan for chats (1–100). Default: 100. |
 
-### Examples
+### Response
+
+Returns an array of chat summary objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | Chat ID. |
+| `type` | string | Chat type: private, group, supergroup, or channel. |
+| `title` | string | Chat title (for groups/channels). |
+| `username` | string | Chat @username (if available). |
+| `first_name` | string | First name (for private chats). |
+| `last_name` | string | Last name (for private chats). |
+
+### Example
 
 ```lua
-local result = app.integrations.telegram.list_chats({
-  limit = 20
+local chats = app.integrations.telegram.list_chats({
+  limit = 50
 })
 
-for _, chat in ipairs(result.chats) do
-  print(chat.type .. ": " .. (chat.title or chat.first_name or chat.id))
+for _, chat in ipairs(chats) do
+  local name = chat.title or (chat.first_name or "Unknown")
+  print(name .. " (" .. chat.type .. ") — " .. chat.id)
 end
 ```
 
@@ -145,44 +157,97 @@ Get information about a specific Telegram chat.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `chat_id` | string | yes | Chat ID or username |
+| `chat_id` | string | yes | Unique identifier for the target chat or @username of the target channel. |
 
-### Examples
+### Response
+
+Returns a chat object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | Chat ID. |
+| `type` | string | Chat type: private, group, supergroup, or channel. |
+| `title` | string | Chat title (for groups/channels). |
+| `username` | string | Chat @username (if available). |
+| `first_name` | string | First name (for private chats). |
+| `last_name` | string | Last name (for private chats). |
+| `description` | string | Chat description (for groups/channels). |
+| `member_count` | integer | Number of members (for groups/channels). |
+
+### Example
 
 ```lua
 local chat = app.integrations.telegram.get_chat({
-  chat_id = "123456789"
+  chat_id = "-1001234567890"
 })
 
-print("Type: " .. chat.type)
-print("Title: " .. (chat.title or "N/A"))
-print("Members: " .. (chat.member_count or "unknown"))
-
--- Get channel info by username
-local channel = app.integrations.telegram.get_chat({
-  chat_id = "@mychannel"
-})
+print("Chat: " .. (chat.title or "DM") .. " (" .. chat.type .. ")")
+if chat.member_count then
+  print("Members: " .. chat.member_count)
+end
 ```
 
 ---
 
-## get_me
+## send_photo
 
-Get information about the authenticated bot.
+Send a photo to a Telegram chat.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `chat_id` | string | yes | Unique identifier for the target chat or @username of the target channel. |
+| `photo` | string | yes | URL of the photo or file_id of a photo already on Telegram servers. |
+| `caption` | string | no | Photo caption (0–1024 characters). |
+| `parse_mode` | string | no | Parse mode for the caption: Markdown, MarkdownV2, or HTML. |
+| `reply_to_message_id` | integer | no | ID of the original message if this is a reply. |
+| `disable_notification` | boolean | no | Send silently. Default: false. |
+
+### Response
+
+Returns the sent message object with photo array.
+
+### Example
+
+```lua
+local msg = app.integrations.telegram.send_photo({
+  chat_id = "123456789",
+  photo = "https://example.com/photo.jpg",
+  caption = "Check this out! 📸",
+  parse_mode = "Markdown"
+})
+
+print("Sent photo, message ID: " .. msg.message_id)
+```
+
+---
+
+## get_current_user
+
+Get the authenticated bot user profile.
 
 ### Parameters
 
 None.
 
-### Examples
+### Response
+
+Returns a bot user object (same as get_me):
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | integer | Bot user ID. |
+| `is_bot` | boolean | Always true. |
+| `first_name` | string | Bot display name. |
+| `username` | string | Bot @username. |
+
+### Example
 
 ```lua
-local bot = app.integrations.telegram.get_me({})
+local bot = app.integrations.telegram.get_current_user({})
 
-print("Bot: @" .. bot.username)
-print("Name: " .. bot.first_name)
-print("Can join groups: " .. tostring(bot.can_join_groups))
-print("Can read messages: " .. tostring(bot.can_read_all_group_messages))
+print("Bot: @" .. bot.username .. " (" .. bot.first_name .. ")")
 ```
 
 ---
@@ -193,14 +258,14 @@ If you have multiple Telegram bots configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.telegram.send_message({...})
+app.integrations.telegram.send_message({chat_id = "123", text = "Hello"})
 
 -- Explicit default (portable across setups)
-app.integrations.telegram.default.send_message({...})
+app.integrations.telegram.default.send_message({chat_id = "123", text = "Hello"})
 
 -- Named accounts
-app.integrations.telegram.support_bot.send_message({...})
-app.integrations.telegram.notifications.send_message({...})
+app.integrations.telegram.sales_bot.send_message({chat_id = "123", text = "Hello"})
+app.integrations.telegram.support_bot.send_message({chat_id = "123", text = "Hello"})
 ```
 
-All functions are identical across accounts — only the credentials differ.
+All functions are identical across accounts — only the bot token differs.

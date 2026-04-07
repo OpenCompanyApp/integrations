@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-pagerduty",
-    "description": "PagerDuty integration for OpenCompany — incidents, services, teams, and on-call management.",
+    "description": "PagerDuty integration for Laravel — manage incidents, services, and teams.",
     "license": "MIT",
     "authors": [
         {
@@ -15,13 +15,13 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenCompany\\Integrations\\PagerDuty\\": "src/"
+            "OpenCompany\\Integrations\\Pagerduty\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\PagerDuty\\PagerDutyServiceProvider"
+                "OpenCompany\\Integrations\\Pagerduty\\PagerdutyServiceProvider"
             ]
         }
     },

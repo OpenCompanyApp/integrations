@@ -7,15 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Create a new Shopify product.
+ * Create a new product in the Shopify store.
  *
- * Supports title, body_html, vendor, product_type, tags, status, and variants.
+ * Requires at minimum a title. Supports all product fields
+ * including body_html, vendor, product_type, tags, and status.
  */
 class ShopifyCreateProduct implements Tool
 {
-    /**
-     * @param  ShopifyService  $service  The Shopify API client
-     */
     public function __construct(
         private ShopifyService $service,
     ) {}
@@ -27,73 +25,46 @@ class ShopifyCreateProduct implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Create a new Shopify product.
-        Supports title, body_html (description), vendor, product_type, tags, status (draft/active/archived), and variants.
-        Returns the created product object with ID and variants.
-        MD;
+        return 'Create a new product in the Shopify store. Requires a title. Supports description, vendor, product type, tags, and status.';
     }
 
     public function parameters(): array
     {
         return [
-            'title' => ['type' => 'string', 'description' => 'Product title.'],
+            'title' => ['type' => 'string', 'required' => true, 'description' => 'Product title.'],
             'body_html' => ['type' => 'string', 'description' => 'Product description (HTML allowed).'],
-            'vendor' => ['type' => 'string', 'description' => 'Product vendor or brand.'],
-            'product_type' => ['type' => 'string', 'description' => 'Product type (e.g. "Shoes", "Electronics").'],
-            'tags' => ['type' => 'string', 'description' => 'Comma-separated list of tags.'],
-            'status' => ['type' => 'string', 'description' => 'Product status: active, draft, or archived.'],
-            'variants' => ['type' => 'array', 'description' => 'Array of variant objects with price, sku, option values, etc.'],
+            'vendor' => ['type' => 'string', 'description' => 'Product vendor.'],
+            'product_type' => ['type' => 'string', 'description' => 'Product type (e.g., "Shirts", "Electronics").'],
+            'status' => ['type' => 'string', 'description' => 'Product status: "active", "draft", or "archived".'],
+            'tags' => ['type' => 'string', 'description' => 'Comma-separated tags (e.g., "cotton, summer").'],
+            'published' => ['type' => 'boolean', 'description' => 'Whether the product is published (default: true).'],
         ];
     }
 
-    /**
-     * Create a new product in Shopify.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Shopify integration is not configured.');
             }
 
-            $data = [];
+            $data = [
+                'title' => $args['title'],
+            ];
 
-            if (isset($args['title'])) {
-                $data['title'] = $args['title'];
-            }
-            if (isset($args['body_html'])) {
-                $data['body_html'] = $args['body_html'];
-            }
-            if (isset($args['vendor'])) {
-                $data['vendor'] = $args['vendor'];
-            }
-            if (isset($args['product_type'])) {
-                $data['product_type'] = $args['product_type'];
-            }
-            if (isset($args['tags'])) {
-                $data['tags'] = $args['tags'];
-            }
-            if (isset($args['status'])) {
-                $data['status'] = $args['status'];
-            }
-            if (isset($args['variants']) && is_array($args['variants'])) {
-                $data['variants'] = $args['variants'];
+            $optionalFields = [
+                'body_html', 'vendor', 'product_type', 'status', 'tags', 'published',
+            ];
+
+            foreach ($optionalFields as $field) {
+                if (isset($args[$field])) {
+                    $data[$field] = $args[$field];
+                }
             }
 
             $result = $this->service->createProduct($data);
-            $product = $result['product'] ?? $result;
 
-            return ToolResult::success([
-                'id' => $product['id'] ?? null,
-                'title' => $product['title'] ?? '',
-                'status' => $product['status'] ?? '',
-                'handle' => $product['handle'] ?? '',
-                'product_type' => $product['product_type'] ?? '',
-                'variants' => $product['variants'] ?? [],
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -1,186 +1,85 @@
-# Toggl Track — Lua API Reference
+# Toggl — Lua API Reference
 
-## get_current_user
+## toggl_list_workspaces
 
-Get the authenticated user's profile information.
-
-### Parameters
-
-None.
-
-### Response Fields
-
-| Name | Type | Description |
-|------|------|-------------|
-| `id` | integer | User ID |
-| `email` | string | Email address |
-| `fullname` | string | Full name |
-| `default_workspace_id` | integer | Default workspace ID |
-| `timezone` | string | User timezone |
-| `image_url` | string | Profile image URL |
-
----
-
-## list_workspaces
-
-List all workspaces the authenticated user has access to.
+List all Toggl workspaces the authenticated user belongs to.
 
 ### Parameters
 
-None.
+_None_
 
-### Response Fields
+### Example
 
-Each workspace object contains:
+```lua
+local workspaces = app.integrations.toggl.list_workspaces()
 
-| Name | Type | Description |
-|------|------|-------------|
-| `id` | integer | Workspace ID |
-| `name` | string | Workspace name |
-| `organization_id` | integer | Organization ID |
-| `premium` | boolean | Whether the workspace has premium features |
-| `admin` | boolean | Whether the user is an admin |
+for _, ws in ipairs(workspaces) do
+  print(ws.id .. ": " .. ws.name)
+end
+```
 
 ---
 
-## list_projects
+## toggl_list_projects
 
-List all projects in a workspace.
+List projects in a Toggl workspace.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `workspace_id` | integer | yes | The workspace ID (find it using `list_workspaces`) |
+| `workspace_id` | string | yes | The workspace ID |
+| `active` | boolean | no | Filter for active projects only (default: `true`) |
 
-### Response Fields
+### Example
 
-Each project object contains:
+```lua
+local projects = app.integrations.toggl.list_projects({
+  workspace_id = "123456"
+})
 
-| Name | Type | Description |
-|------|------|-------------|
-| `id` | integer | Project ID |
-| `name` | string | Project name |
-| `workspace_id` | integer | Workspace ID |
-| `color` | string | Project color (hex) |
-| `active` | boolean | Whether the project is active |
-| `billable` | boolean | Whether the project is billable |
-| `is_private` | boolean | Whether the project is private |
-| `estimated_hours` | number | Estimated hours |
+for _, p in ipairs(projects) do
+  print(p.id .. ": " .. p.name)
+end
+```
 
 ---
 
-## create_project
+## toggl_get_project
 
-Create a new project in a workspace.
+Get details for a single Toggl project.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `workspace_id` | integer | yes | The workspace ID |
-| `name` | string | yes | Project name (e.g., "Website Redesign") |
-| `color` | string | no | Hex color code (e.g., "#0b83d9") |
-| `billable` | boolean | no | Whether the project is billable (default: false) |
-| `is_private` | boolean | no | Whether the project is private (default: false) |
-| `active` | boolean | no | Whether the project is active (default: true) |
-| `estimated_hours` | number | no | Estimated hours for the project |
-| `client_id` | integer | no | Client ID to associate |
+| `workspace_id` | string | yes | The workspace ID |
+| `project_id` | string | yes | The project ID |
+
+### Example
+
+```lua
+local project = app.integrations.toggl.get_project({
+  workspace_id = "123456",
+  project_id = "789012"
+})
+print(project.name .. " — " .. (project.active and "active" or "inactive"))
+```
 
 ---
 
-## list_time_entries
+## toggl_list_time_entries
 
-List time entries for the authenticated user.
+List recent Toggl time entries.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `start_date` | string | no | Start date in ISO 8601 (e.g., "2026-01-01"). Defaults to 9 days ago. |
-| `end_date` | string | no | End date in ISO 8601 (e.g., "2026-01-31"). Defaults to now. |
+| `start_date` | string | no | Start date filter (ISO 8601 date, e.g. `"2026-01-01"`) |
+| `end_date` | string | no | End date filter (ISO 8601 date) |
 
-### Response Fields
-
-Each time entry object contains:
-
-| Name | Type | Description |
-|------|------|-------------|
-| `id` | integer | Time entry ID |
-| `description` | string | Description |
-| `start` | string | Start time (ISO 8601) |
-| `stop` | string | Stop time (ISO 8601), null if running |
-| `duration` | integer | Duration in seconds (-1 if currently running) |
-| `workspace_id` | integer | Workspace ID |
-| `project_id` | integer | Project ID (null if unassigned) |
-| `task_id` | integer | Task ID (null if unassigned) |
-| `billable` | boolean | Whether the entry is billable |
-| `tags` | array | Array of tag names |
-| `user_id` | integer | User ID |
-
----
-
-## create_time_entry
-
-Create a new time entry.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `workspace_id` | integer | yes | The workspace ID |
-| `start` | string | yes | Start time in ISO 8601 (e.g., "2026-04-05T09:00:00Z") |
-| `description` | string | no | Description of the time entry |
-| `stop` | string | no | Stop time in ISO 8601. Omit for a running timer (set duration to -1). |
-| `duration` | integer | no | Duration in seconds. Use -1 for a running timer. |
-| `project_id` | integer | no | Project ID to associate |
-| `task_id` | integer | no | Task ID to associate |
-| `tags` | array | no | Array of tag names |
-| `tag_ids` | array | no | Array of tag IDs |
-| `billable` | boolean | no | Whether the entry is billable |
-
----
-
-## update_time_entry
-
-Update an existing time entry.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `workspace_id` | integer | yes | The workspace ID |
-| `time_entry_id` | integer | yes | The time entry ID to update |
-| `description` | string | no | Updated description |
-| `start` | string | no | Updated start time (ISO 8601) |
-| `stop` | string | no | Updated stop time (ISO 8601) |
-| `duration` | integer | no | Updated duration in seconds |
-| `project_id` | integer | no | Updated project ID |
-| `task_id` | integer | no | Updated task ID |
-| `tags` | array | no | Updated array of tag names |
-| `tag_ids` | array | no | Updated array of tag IDs |
-| `billable` | boolean | no | Updated billable status |
-
----
-
-## delete_time_entry
-
-Delete a time entry permanently.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `workspace_id` | integer | yes | The workspace ID |
-| `time_entry_id` | integer | yes | The time entry ID to delete |
-
-> **Warning:** This action is permanent and cannot be undone.
-
----
-
-## Examples
-
-### List recent time entries
+### Example
 
 ```lua
 local entries = app.integrations.toggl.list_time_entries({
@@ -188,72 +87,89 @@ local entries = app.integrations.toggl.list_time_entries({
   end_date = "2026-04-05"
 })
 
-for _, entry in ipairs(entries) do
-  local duration_min = math.floor(entry.duration / 60)
-  print(entry.description .. ": " .. duration_min .. " minutes")
+for _, e in ipairs(entries) do
+  print(e.description .. ": " .. e.start .. " → " .. (e.stop or "running"))
 end
 ```
 
-### Create a time entry
+---
+
+## toggl_get_time_entry
+
+Get details for a single Toggl time entry.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `time_entry_id` | string | yes | The time entry ID |
+
+### Example
+
+```lua
+local entry = app.integrations.toggl.get_time_entry({
+  time_entry_id = "1234567890"
+})
+print(entry.description)
+```
+
+---
+
+## toggl_create_time_entry
+
+Create a new time entry in a Toggl workspace.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `workspace_id` | string | yes | The workspace ID |
+| `description` | string | no | Description of the time entry |
+| `start` | string | no | Start time (ISO 8601, e.g. `"2026-04-05T09:00:00Z"`). Defaults to now. |
+| `stop` | string | no | Stop time (ISO 8601). Omit for a running timer. |
+| `duration` | integer | no | Duration in seconds. Use -1 for a running timer (default: -1) |
+| `project_id` | string | no | Project ID to assign the time entry to |
+| `tags` | array | no | Tags for the time entry |
+
+### Example
 
 ```lua
 local entry = app.integrations.toggl.create_time_entry({
-  workspace_id = 12345,
-  description = "Working on API integration",
+  workspace_id = "123456",
+  description = "Worked on API integration",
   start = "2026-04-05T09:00:00Z",
-  duration = 3600,
-  project_id = 67890,
-  billable = true
+  stop = "2026-04-05T12:30:00Z",
+  project_id = "789012",
+  tags = { "development", "backend" }
 })
-
-print("Created time entry: " .. entry.id)
+print("Created entry: " .. entry.id)
 ```
 
 ### Start a running timer
 
 ```lua
 local entry = app.integrations.toggl.create_time_entry({
-  workspace_id = 12345,
-  description = "Meeting with client",
-  start = "2026-04-05T14:00:00Z",
-  duration = -1
+  workspace_id = "123456",
+  description = "Meeting with team"
 })
-
-print("Timer started with entry ID: " .. entry.id)
+print("Timer started: " .. entry.id)
 ```
 
-### Stop a running timer (update with stop time)
+---
+
+## toggl_get_current_user
+
+Get the authenticated Toggl user profile. Useful for verifying API token validity.
+
+### Parameters
+
+_None_
+
+### Example
 
 ```lua
-local updated = app.integrations.toggl.update_time_entry({
-  workspace_id = 12345,
-  time_entry_id = 99999,
-  stop = "2026-04-05T15:00:00Z"
-})
-
-print("Timer stopped")
-```
-
-### Create a project and log time to it
-
-```lua
--- First, create the project
-local project = app.integrations.toggl.create_project({
-  workspace_id = 12345,
-  name = "Website Redesign",
-  color = "#0b83d9",
-  billable = true
-})
-
--- Then log time to it
-local entry = app.integrations.toggl.create_time_entry({
-  workspace_id = 12345,
-  description = "Design homepage mockup",
-  start = "2026-04-05T09:00:00Z",
-  duration = 7200,
-  project_id = project.id,
-  billable = true
-})
+local user = app.integrations.toggl.get_current_user()
+print(user.fullname .. " <" .. user.email .. ">")
 ```
 
 ---

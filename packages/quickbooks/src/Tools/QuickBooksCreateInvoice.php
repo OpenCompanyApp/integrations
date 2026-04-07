@@ -8,15 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Create a QuickBooks invoice for a customer.
- *
- * Sends a POST request to the QuickBooks invoice endpoint with customer reference,
- * line items, and optional due date. Returns the created invoice details.
  */
 class QuickBooksCreateInvoice implements Tool
 {
-    /**
-     * @param  QuickBooksService  $service  The QuickBooks API client
-     */
     public function __construct(
         private QuickBooksService $service,
     ) {}
@@ -28,11 +22,7 @@ class QuickBooksCreateInvoice implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Create a new QuickBooks invoice for a customer.
-        Provide customer_id, line_items (array of items with DetailType, Amount, and SalesItemLineDetail),
-        and an optional due_date. Returns the created invoice with its ID and sync token.
-        MD;
+        return 'Create a new QuickBooks invoice for a customer. Provide customer_id, line_items (array of items with DetailType, Amount, and SalesItemLineDetail), and an optional due_date.';
     }
 
     public function parameters(): array
@@ -44,15 +34,10 @@ class QuickBooksCreateInvoice implements Tool
         ];
     }
 
-    /**
-     * Create a QuickBooks invoice.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (customer_id, line_items, due_date)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 
@@ -62,7 +47,7 @@ class QuickBooksCreateInvoice implements Tool
             }
 
             $lineItems = $args['line_items'] ?? [];
-            if (empty($lineItems) || ! is_array($lineItems)) {
+            if (empty($lineItems) || !is_array($lineItems)) {
                 return ToolResult::error('line_items is required and must be a non-empty array.');
             }
 
@@ -71,7 +56,7 @@ class QuickBooksCreateInvoice implements Tool
                 'Line' => $lineItems,
             ];
 
-            if (! empty($args['due_date'])) {
+            if (!empty($args['due_date'])) {
                 $data['DueDate'] = $args['due_date'];
             }
 

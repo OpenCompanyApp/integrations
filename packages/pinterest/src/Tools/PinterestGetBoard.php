@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Pinterest\PinterestService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get a single Pinterest board by ID.
+ *
+ * Retrieves full details for a specific board, including name,
+ * description, privacy setting, and pin counts.
+ */
 class PinterestGetBoard implements Tool
 {
     public function __construct(
@@ -19,13 +25,13 @@ class PinterestGetBoard implements Tool
 
     public function description(): string
     {
-        return 'Get details for a specific Pinterest board, including its name, description, pin count, and privacy settings.';
+        return 'Get details of a specific Pinterest board by its ID. Returns the board name, description, pin count, and privacy settings.';
     }
 
     public function parameters(): array
     {
         return [
-            'board_id' => ['type' => 'string', 'required' => true, 'description' => 'The unique identifier of the board.'],
+            'boardId' => ['type' => 'string', 'required' => true, 'description' => 'The board ID to retrieve.'],
         ];
     }
 
@@ -36,11 +42,7 @@ class PinterestGetBoard implements Tool
                 return ToolResult::error('Pinterest integration is not configured.');
             }
 
-            if (empty($args['board_id'])) {
-                return ToolResult::error('board_id is required.');
-            }
-
-            $result = $this->service->getBoard($args['board_id']);
+            $result = $this->service->getBoard($args['boardId']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

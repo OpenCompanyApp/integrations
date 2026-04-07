@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Log;
 /**
  * Clockify API service — handles authenticated HTTP requests to the Clockify REST API.
  *
- * Uses the X-Api-Key header for authentication. Supports all standard HTTP methods
+ * Uses Bearer token authentication. Supports all standard HTTP methods
  * and returns parsed JSON responses.
  */
 class ClockifyService
 {
     /**
-     * @param string $apiKey  Clockify API key (X-Api-Key header value)
+     * @param string $apiKey  Clockify API key (Bearer token)
      * @param string $baseUrl Base URL for the Clockify API
      */
     public function __construct(
@@ -328,10 +328,9 @@ class ClockifyService
         $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withHeaders([
-                'X-Api-Key' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $http = Http::withToken($this->apiKey)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET'    => $http->get($url, $data),

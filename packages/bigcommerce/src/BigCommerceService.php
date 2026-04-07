@@ -9,24 +9,17 @@ class BigCommerceService
 {
     public function __construct(
         private string $accessToken = '',
-        private string $storeId = '',
-        private string $clientId = '',
-    ) {}
+        private string $baseUrl = 'https://api.bigcommerce.com/v3',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
      * Check whether the service is properly configured with credentials.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken) && !empty($this->storeId) && !empty($this->clientId);
-    }
-
-    /**
-     * Build the base API URL for the configured store.
-     */
-    private function baseUrl(): string
-    {
-        return "https://api.bigcommerce.com/stores/{$this->storeId}/v3";
+        return !empty($this->accessToken);
     }
 
     // ─── Products ──────────────────────────────────────────────────────────
@@ -45,11 +38,12 @@ class BigCommerceService
     /**
      * Get a single product by ID.
      *
+     * @param  array<string, mixed>  $params  Optional query parameters (include, etc.)
      * @return array<string, mixed>
      */
-    public function getProduct(int $productId): array
+    public function getProduct(int $productId, array $params = []): array
     {
-        return $this->request('GET', '/catalog/products/' . $productId);
+        return $this->request('GET', '/catalog/products/' . $productId, $params);
     }
 
     /**
@@ -61,25 +55,6 @@ class BigCommerceService
     public function createProduct(array $data): array
     {
         return $this->request('POST', '/catalog/products', $data);
-    }
-
-    /**
-     * Update an existing product.
-     *
-     * @param  array<string, mixed>  $data  Fields to update
-     * @return array<string, mixed>
-     */
-    public function updateProduct(int $productId, array $data): array
-    {
-        return $this->request('PUT', '/catalog/products/' . $productId, $data);
-    }
-
-    /**
-     * Delete a product by ID.
-     */
-    public function deleteProduct(int $productId): void
-    {
-        $this->request('DELETE', '/catalog/products/' . $productId);
     }
 
     // ─── Orders ────────────────────────────────────────────────────────────
@@ -105,17 +80,6 @@ class BigCommerceService
         return $this->request('GET', '/orders/' . $orderId);
     }
 
-    /**
-     * Update an existing order.
-     *
-     * @param  array<string, mixed>  $data  Fields to update
-     * @return array<string, mixed>
-     */
-    public function updateOrder(int $orderId, array $data): array
-    {
-        return $this->request('PUT', '/orders/' . $orderId, $data);
-    }
-
     // ─── Customers ─────────────────────────────────────────────────────────
 
     /**
@@ -129,48 +93,14 @@ class BigCommerceService
         return $this->request('GET', '/customers', $params);
     }
 
+    // ─── Current User ──────────────────────────────────────────────────────
+
     /**
-     * Get a single customer by ID.
+     * Get the currently authenticated user.
      *
      * @return array<string, mixed>
      */
-    public function getCustomer(int $customerId): array
-    {
-        return $this->request('GET', '/customers/' . $customerId);
-    }
-
-    /**
-     * Create a new customer.
-     *
-     * @param  array<string, mixed>  $data  Customer data (first_name, last_name, email, etc.)
-     * @return array<string, mixed>
-     */
-    public function createCustomer(array $data): array
-    {
-        return $this->request('POST', '/customers', $data);
-    }
-
-    // ─── Categories ────────────────────────────────────────────────────────
-
-    /**
-     * List catalog categories.
-     *
-     * @param  array<string, mixed>  $params  Query parameters (limit, page, etc.)
-     * @return array<string, mixed>
-     */
-    public function listCategories(array $params = []): array
-    {
-        return $this->request('GET', '/catalog/categories', $params);
-    }
-
-    // ─── Storefront ────────────────────────────────────────────────────────
-
-    /**
-     * Get storefront status (useful for connection testing).
-     *
-     * @return array<string, mixed>
-     */
-    public function getStorefrontStatus(): array
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/storefront/status');
     }
@@ -187,10 +117,6 @@ class BigCommerceService
     {
         $response = $this->rawRequest($method, $path, $data);
 
-        if ($method === 'DELETE') {
-            return [];
-        }
-
         return $response->json('data', $response->json() ?? []);
     }
 
@@ -202,15 +128,14 @@ class BigCommerceService
     private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
         if (!$this->isConfigured()) {
-            throw new \RuntimeException('BigCommerce integration is not configured. Access token, store ID, and client ID are required.');
+            throw new \RuntimeException('BigCommerce integration is not configured. Access token is required.');
         }
 
-        $url = $this->baseUrl() . $path;
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
-                'X-Auth-Token' => $this->accessToken,
-                'X-Auth-Client' => $this->clientId,
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(30);

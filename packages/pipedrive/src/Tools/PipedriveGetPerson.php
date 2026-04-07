@@ -7,40 +7,54 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a Pipedrive person by ID.
+ * Tool: Get Person.
  *
- * Returns the person's details including name, email, phone, and associated organization.
+ * Retrieves a single person (contact) by their ID, including email,
+ * phone, organization, and custom field values.
+ *
+ * @see https://developers.pipedrive.com/docs/api/v1/Persons#getPerson
  */
 class PipedriveGetPerson implements Tool
 {
     /**
-     * @param  PipedriveService  $service  The Pipedrive API client
+     * @param  PipedriveService  $service  The Pipedrive API service instance.
      */
     public function __construct(
         private PipedriveService $service,
     ) {}
 
+    /**
+     * Get the tool identifier.
+     */
     public function name(): string
     {
         return 'pipedrive_get_person';
     }
 
+    /**
+     * Get the human-readable tool description.
+     */
     public function description(): string
     {
-        return 'Retrieve a Pipedrive person by their ID. Returns the person\'s name, email, phone, and organization.';
+        return 'Get full details for a single person (contact) in Pipedrive, including email, phone, organization, and custom fields.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The Pipedrive person ID.'],
+            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The person ID.'],
         ];
     }
 
     /**
-     * Retrieve a Pipedrive person by ID.
+     * Execute the get person tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (id)
+     * @param  array<string, mixed>  $args  Tool arguments containing the person ID.
      */
     public function execute(array $args): ToolResult
     {
@@ -51,13 +65,12 @@ class PipedriveGetPerson implements Tool
 
             $id = $args['id'] ?? '';
             if (empty($id)) {
-                return ToolResult::error('id is required.');
+                return ToolResult::error('Person ID is required.');
             }
 
-            $result = $this->service->getPerson($id);
-            $person = $result['data'] ?? $result;
+            $result = $this->service->getPerson((int) $id);
 
-            return ToolResult::success($person);
+            return ToolResult::success($result['data'] ?? $result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

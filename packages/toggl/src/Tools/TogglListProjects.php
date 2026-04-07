@@ -7,12 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all projects in a Toggl Track workspace.
+ * Tool: toggl_list_projects
  *
- * Returns project details including ID, name, color, billable flag, active
- * status, and estimated hours. Use the workspace ID from toggl_list_workspaces.
- *
- * @see https://engineering.toggl.com/docs/api/projects#get-projects
+ * Lists projects in a Toggl workspace.
  */
 class TogglListProjects implements Tool
 {
@@ -27,32 +24,30 @@ class TogglListProjects implements Tool
 
     public function description(): string
     {
-        return 'List all projects in a Toggl Track workspace. Use this to find project IDs for time entries.';
+        return 'List projects in a Toggl workspace. Optionally filter for active projects only.';
     }
 
     public function parameters(): array
     {
         return [
-            'workspace_id' => ['type' => 'integer', 'required' => true, 'description' => 'The workspace ID (find it using toggl_list_workspaces).'],
+            'workspace_id' => ['type' => 'string', 'required' => true, 'description' => 'The workspace ID.'],
+            'active'       => ['type' => 'boolean', 'description' => 'Filter for active projects only (default: true).'],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Toggl integration is not configured.');
             }
 
-            $workspaceId = (int) ($args['workspace_id'] ?? 0);
+            $result = $this->service->listProjects(
+                workspaceId: $args['workspace_id'],
+                active: $args['active'] ?? true,
+            );
 
-            if ($workspaceId === 0) {
-                return ToolResult::error('workspace_id is required.');
-            }
-
-            $projects = $this->service->listProjects($workspaceId);
-
-            return ToolResult::success($projects);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

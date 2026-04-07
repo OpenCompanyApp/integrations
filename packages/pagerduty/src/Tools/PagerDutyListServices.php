@@ -1,53 +1,61 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty\Tools;
+namespace OpenCompany\Integrations\Pagerduty\Tools;
 
-use OpenCompany\Integrations\PagerDuty\PagerDutyService;
+use OpenCompany\Integrations\Pagerduty\PagerdutyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List PagerDuty services with optional filtering and pagination.
+ * Tool: List Services.
  *
- * Supports filtering by team IDs. Returns service details including
- * status, escalation policy, and integration counts.
+ * Lists PagerDuty services with optional team filtering and pagination.
+ *
+ * @see https://developer.pagerduty.com/api-reference/list-services
  */
-class PagerDutyListServices implements Tool
+class PagerdutyListServices implements Tool
 {
     /**
-     * @param  PagerDutyService  $service  The PagerDuty API client
+     * @param  PagerdutyService  $service  The PagerDuty API service instance.
      */
     public function __construct(
-        private PagerDutyService $service,
+        private PagerdutyService $service,
     ) {}
 
+    /**
+     * Get the tool identifier.
+     */
     public function name(): string
     {
         return 'pagerduty_list_services';
     }
 
+    /**
+     * Get the human-readable tool description.
+     */
     public function description(): string
     {
-        return <<<'MD'
-        List PagerDuty services with optional filtering by team.
-        Supports pagination with limit and offset.
-        Returns service details including status, escalation policy, and integrations.
-        MD;
+        return 'List PagerDuty services. Optionally filter by team ID. Returns a paginated list of services with status and escalation policy info.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of services to return (1–100, default 25).'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default 0).'],
-            'team_ids' => ['type' => 'array', 'description' => 'Filter by team IDs (array of team ID strings).'],
+            'team_id' => ['type' => 'string', 'description' => 'Filter services by team ID.'],
+            'limit'   => ['type' => 'integer', 'description' => 'Maximum number of services to return (default: 25, max: 100).'],
+            'offset'  => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
         ];
     }
 
     /**
-     * List PagerDuty services with optional filtering and pagination.
+     * Execute the list services tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, offset, team_ids)
+     * @param  array<string, mixed>  $args  Tool arguments (team_id, limit, offset).
      */
     public function execute(array $args): ToolResult
     {
@@ -56,48 +64,23 @@ class PagerDutyListServices implements Tool
                 return ToolResult::error('PagerDuty integration is not configured.');
             }
 
-            $params = [];
+            $teamId = $args['team_id'] ?? null;
+            $limit  = isset($args['limit']) ? (int) $args['limit'] : 25;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (isset($args['offset'])) {
-                $params['offset'] = (int) $args['offset'];
-            }
-            if (isset($args['team_ids']) && is_array($args['team_ids'])) {
-                foreach ($args['team_ids'] as $i => $teamId) {
-                    $params["team_ids[]"][$i] = $teamId;
-                }
-            }
+            $result = $this->service->listServices($teamId, $limit, $offset);
 
-            $result = $this->service->listServices($params);
-
-            $services = array_map(function (array $svc) {
-                return [
-                    'id' => $svc['id'] ?? '',
-                    'name' => $svc['name'] ?? '',
-                    'status' => $svc['status'] ?? '',
-                    'description' => $svc['description'] ?? null,
-                    'created_at' => $svc['created_at'] ?? null,
-                    'updated_at' => $svc['updated_at'] ?? null,
-                    'escalation_policy' => [
-                        'id' => $svc['escalation_policy']['id'] ?? '',
-                        'name' => $svc['escalation_policy']['summary'] ?? '',
-                    ],
-                    'teams' => array_map(function (array $t) {
-                        return [
-                            'id' => $t['id'] ?? '',
-                            'name' => $t['summary'] ?? '',
-                        ];
-                    }, $svc['teams'] ?? []),
-                    'html_url' => $svc['html_url'] ?? '',
-                ];
-            }, $result['services'] ?? []);
+            $services = $result['services'] ?? [];
+            $total    = $result['total'] ?? count($services);
+            $more     = $result['more'] ?? (($offset + count($services)) < $total);
 
             return ToolResult::success([
                 'services' => $services,
-                'total' => $result['total'] ?? count($services),
-                'more' => $result['more'] ?? false,
+                'count'    => count($services),
+                'total'    => $total,
+                'more'     => $more,
+                'offset'   => $offset,
+                'limit'    => $limit,
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

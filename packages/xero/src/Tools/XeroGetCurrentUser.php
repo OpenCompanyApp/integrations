@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the current Xero user.
+ * Retrieve the currently authenticated Xero user.
  *
- * Fetches the list of users and returns the first user's details.
+ * Returns the user's ID, name, and email for the authenticated token.
  */
 class XeroGetCurrentUser implements Tool
 {
@@ -28,8 +28,9 @@ class XeroGetCurrentUser implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Get the current Xero user.
-        Fetches the list of organisation users and returns the first user.
+        Retrieve the currently authenticated Xero user.
+        Returns the user's ID, name, and email.
+        Useful for identifying which Xero organisation or token is in use.
         MD;
     }
 
@@ -39,7 +40,7 @@ class XeroGetCurrentUser implements Tool
     }
 
     /**
-     * Retrieve the first Xero user from the organisation.
+     * Retrieve the currently authenticated Xero user.
      *
      * @param  array<string, mixed>  $args  Tool arguments (none)
      */
@@ -50,22 +51,17 @@ class XeroGetCurrentUser implements Tool
                 return ToolResult::error('Xero integration is not configured.');
             }
 
-            $result = $this->service->listUsers();
+            $result = $this->service->getCurrentUser();
 
             $users = $result['Users'] ?? [];
-            if (empty($users)) {
-                return ToolResult::error('No users found in the Xero organisation.');
-            }
-
-            $user = $users[0];
+            $user = $users[0] ?? $result;
 
             return ToolResult::success([
                 'id' => $user['UserID'] ?? '',
-                'email' => $user['EmailAddress'] ?? '',
                 'first_name' => $user['FirstName'] ?? '',
                 'last_name' => $user['LastName'] ?? '',
+                'email' => $user['EmailAddress'] ?? '',
                 'name' => trim(($user['FirstName'] ?? '') . ' ' . ($user['LastName'] ?? '')),
-                'role' => $user['OrganisationRole'] ?? '',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

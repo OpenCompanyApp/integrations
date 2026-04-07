@@ -8,6 +8,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Get information about a Discord channel.
+ *
+ * Returns the channel's ID, name, type, topic, and other properties.
  */
 class DiscordGetChannel implements Tool
 {
@@ -25,7 +27,10 @@ class DiscordGetChannel implements Tool
 
     public function description(): string
     {
-        return 'Get information about a Discord channel by its ID.';
+        return <<<'MD'
+        Get information about a Discord channel by its ID.
+        Returns the channel's ID, name, type, topic, and other properties.
+        MD;
     }
 
     public function parameters(): array

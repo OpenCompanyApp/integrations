@@ -5,123 +5,32 @@ namespace OpenCompany\Integrations\Trello;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Client for the Trello REST API.
- *
- * Wraps HTTP calls to Trello's REST endpoints for boards, lists,
- * cards, labels, members, checklists, and comments.
- */
 class TrelloService
 {
-    private const BASE_URL = 'https://api.trello.com/1';
+    public function __construct(
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.trello.com/1',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     /**
-     * @param  string  $apiKey   Trello API key
-     * @param  string  $apiToken Trello API token (member or server token)
+     * Check whether the service is properly configured.
      */
-    public function __construct(
-        private string $apiKey = '',
-        private string $apiToken = '',
-    ) {}
-
     public function isConfigured(): bool
     {
-        return ! empty($this->apiKey) && ! empty($this->apiToken);
-    }
-
-    // ── Connection ──────────────────────────────────────────
-
-    /**
-     * Test the connection by fetching the current member profile.
-     *
-     * @return array<string, mixed>
-     */
-    public function testConnection(): array
-    {
-        return $this->request('GET', '/members/me');
-    }
-
-    // ── Cards ───────────────────────────────────────────────
-
-    /**
-     * Create a new card.
-     *
-     * @param  array<string, mixed>  $data  Card fields (name, desc, idList, etc.)
-     * @return array<string, mixed>
-     */
-    public function createCard(array $data): array
-    {
-        return $this->request('POST', '/cards', $data);
+        return !empty($this->accessToken);
     }
 
     /**
-     * Get a card by ID.
+     * List boards for the authenticated member.
      *
-     * @param  string  $id  Card ID
+     * @param  array<string, mixed>  $params  Query params (filter, fields, limit)
      * @return array<string, mixed>
      */
-    public function getCard(string $id): array
+    public function listBoards(array $params = []): array
     {
-        return $this->request('GET', "/cards/{$id}");
-    }
-
-    /**
-     * Update a card.
-     *
-     * @param  string                 $id   Card ID
-     * @param  array<string, mixed>   $data Fields to update
-     * @return array<string, mixed>
-     */
-    public function updateCard(string $id, array $data): array
-    {
-        return $this->request('PUT', "/cards/{$id}", $data);
-    }
-
-    /**
-     * Delete a card.
-     *
-     * @param  string  $id  Card ID
-     * @return array<string, mixed>
-     */
-    public function deleteCard(string $id): array
-    {
-        return $this->request('DELETE', "/cards/{$id}");
-    }
-
-    /**
-     * Get all cards in a list.
-     *
-     * @param  string                 $id     List ID
-     * @param  array<string, mixed>   $params Query params (limit, before)
-     * @return array<string, mixed>
-     */
-    public function getCardsInList(string $id, array $params = []): array
-    {
-        return $this->request('GET', "/lists/{$id}/cards", $params);
-    }
-
-    /**
-     * Search for cards across boards.
-     *
-     * @param  array<string, mixed>  $params  Search params (query, idBoards, modelTypes, limit)
-     * @return array<string, mixed>
-     */
-    public function searchCards(array $params): array
-    {
-        return $this->request('GET', '/search', $params);
-    }
-
-    // ── Boards ──────────────────────────────────────────────
-
-    /**
-     * Create a new board.
-     *
-     * @param  array<string, mixed>  $data  Board fields (name, desc, etc.)
-     * @return array<string, mixed>
-     */
-    public function createBoard(array $data): array
-    {
-        return $this->request('POST', '/boards', $data);
+        return $this->request('GET', '/members/me/boards', $params);
     }
 
     /**
@@ -136,49 +45,14 @@ class TrelloService
     }
 
     /**
-     * List boards for the current member.
-     *
-     * @param  array<string, mixed>  $params  Query params (filter, fields, limit)
-     * @return array<string, mixed>
-     */
-    public function listBoards(array $params = []): array
-    {
-        return $this->request('GET', '/members/me/boards', $params);
-    }
-
-    /**
-     * Get all lists on a board.
+     * List all lists on a board.
      *
      * @param  string  $id  Board ID
      * @return array<string, mixed>
      */
-    public function getBoardLists(string $id): array
+    public function listLists(string $id): array
     {
         return $this->request('GET', "/boards/{$id}/lists");
-    }
-
-    /**
-     * Get all members of a board.
-     *
-     * @param  string  $id  Board ID
-     * @return array<string, mixed>
-     */
-    public function getBoardMembers(string $id): array
-    {
-        return $this->request('GET', "/boards/{$id}/members");
-    }
-
-    // ── Lists ───────────────────────────────────────────────
-
-    /**
-     * Create a new list on a board.
-     *
-     * @param  array<string, mixed>  $data  List fields (name, idBoard, pos)
-     * @return array<string, mixed>
-     */
-    public function createList(array $data): array
-    {
-        return $this->request('POST', '/lists', $data);
     }
 
     /**
@@ -193,172 +67,105 @@ class TrelloService
     }
 
     /**
-     * Update a list.
+     * List all cards in a list.
      *
-     * @param  string                 $id   List ID
-     * @param  array<string, mixed>   $data Fields to update
+     * @param  string  $id     List ID
+     * @param  array<string, mixed>  $params  Query params (limit, before)
      * @return array<string, mixed>
      */
-    public function updateList(string $id, array $data): array
+    public function listCards(string $id, array $params = []): array
     {
-        return $this->request('PUT', "/lists/{$id}", $data);
-    }
-
-    // ── Labels ──────────────────────────────────────────────
-
-    /**
-     * Create a new label on a board.
-     *
-     * @param  array<string, mixed>  $data  Label fields (name, color, idBoard)
-     * @return array<string, mixed>
-     */
-    public function createLabel(array $data): array
-    {
-        return $this->request('POST', '/labels', $data);
+        return $this->request('GET', "/lists/{$id}/cards", $params);
     }
 
     /**
-     * Add a label to a card.
+     * Create a new card.
      *
-     * @param  string  $cardId  Card ID
-     * @param  string  $labelId Label ID to add
+     * @param  array<string, mixed>  $data  Card fields (name, idList, desc, etc.)
      * @return array<string, mixed>
      */
-    public function addLabelToCard(string $cardId, string $labelId): array
+    public function createCard(array $data): array
     {
-        return $this->request('POST', "/cards/{$cardId}/idLabels", ['value' => $labelId]);
+        return $this->request('POST', '/cards', $data);
     }
 
     /**
-     * Remove a label from a card.
-     *
-     * @param  string  $cardId  Card ID
-     * @param  string  $labelId Label ID to remove
-     * @return array<string, mixed>
-     */
-    public function removeLabelFromCard(string $cardId, string $labelId): array
-    {
-        return $this->request('DELETE', "/cards/{$cardId}/idLabels/{$labelId}");
-    }
-
-    // ── Members ─────────────────────────────────────────────
-
-    /**
-     * Get a member by ID.
-     *
-     * @param  string  $id  Member ID or username
-     * @return array<string, mixed>
-     */
-    public function getMember(string $id): array
-    {
-        return $this->request('GET', "/members/{$id}");
-    }
-
-    /**
-     * Get the current authenticated member.
+     * Get the currently authenticated member.
      *
      * @return array<string, mixed>
      */
-    public function getCurrentMember(): array
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/members/me');
     }
 
     /**
-     * Add a member to a card.
+     * Make an API request and return parsed JSON.
      *
-     * @param  string  $cardId   Card ID
-     * @param  string  $memberId Member ID to add
-     * @return array<string, mixed>
-     */
-    public function addMemberToCard(string $cardId, string $memberId): array
-    {
-        return $this->request('POST', "/cards/{$cardId}/idMembers", ['value' => $memberId]);
-    }
-
-    // ── Comments ────────────────────────────────────────────
-
-    /**
-     * Add a comment to a card.
-     *
-     * @param  string  $cardId  Card ID
-     * @param  string  $text    Comment text
-     * @return array<string, mixed>
-     */
-    public function addComment(string $cardId, string $text): array
-    {
-        return $this->request('POST', "/cards/{$cardId}/actions/comments", ['text' => $text]);
-    }
-
-    // ── Checklists ──────────────────────────────────────────
-
-    /**
-     * Create a new checklist on a card.
-     *
-     * @param  array<string, mixed>  $data  Checklist fields (idCard, name)
-     * @return array<string, mixed>
-     */
-    public function createChecklist(array $data): array
-    {
-        return $this->request('POST', '/checklists', $data);
-    }
-
-    /**
-     * Create a checklist item.
-     *
-     * @param  string                 $checklistId Checklist ID
-     * @param  array<string, mixed>   $data        Item fields (name, checked)
-     * @return array<string, mixed>
-     */
-    public function createChecklistItem(string $checklistId, array $data): array
-    {
-        return $this->request('POST', "/checklists/{$checklistId}/checkItems", $data);
-    }
-
-    // ── HTTP ─────────────────────────────────────────────────
-
-    /**
-     * Make an API request to Trello.
-     *
-     * Appends key and token as query parameters on every request.
-     *
-     * @param  array<string, mixed>  $data  Query or body params
+     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
+     * @param  string  $path    API path (e.g., "/boards/123").
+     * @param  array<string, mixed>  $data  Query params or request body.
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('Trello API key and token are not configured.');
+        $response = $this->rawRequest($method, $path, $data);
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Make a raw HTTP request to the Trello API.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $path    API path.
+     * @param  array<string, mixed>  $data  Query params or request body.
+     * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \RuntimeException
+     */
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    {
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Trello API token is not configured.');
         }
 
-        // Append key and token to the URL query string
-        $separator = str_contains($path, '?') ? '&' : '?';
-        $url = self::BASE_URL . $path . $separator . 'key=' . urlencode($this->apiKey) . '&token=' . urlencode($this->apiToken);
+        $url = $this->baseUrl . $path;
 
         try {
             $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $data),
-                'POST'   => $http->post($url, $data),
-                'PUT'    => $http->put($url, $data),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (! $response->successful()) {
+            if (!$response->successful()) {
+                $contentType = $response->header('Content-Type');
+                $body = $response->body();
+
+                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                    Log::warning("Trello API returned HTML for {$method} {$path}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("Trello API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may not exist or the URL may be incorrect.");
+                }
+
+                $error = $response->json('message') ?? $response->json('error') ?? $body;
                 Log::error("Trello API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'body'   => $response->body(),
+                    'error' => $error,
                 ]);
-
-                throw new \RuntimeException("Trello API error ({$response->status()}): {$response->body()}");
+                throw new \RuntimeException("Trello API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            return $response->json() ?? [];
+            return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Trello API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

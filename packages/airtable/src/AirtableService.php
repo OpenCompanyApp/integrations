@@ -210,6 +210,31 @@ class AirtableService
         return $this->request('GET', "/meta/bases/{$baseId}/tables");
     }
 
+    // ── Meta: Single Base ───────────────────────────────────
+
+    /**
+     * Get details for a single base.
+     *
+     * @param  string  $baseId  Airtable base ID (e.g., "appXXXXXXXXXXXX")
+     * @return array<string, mixed>
+     */
+    public function getBase(string $baseId): array
+    {
+        return $this->request('GET', "/meta/bases/{$baseId}");
+    }
+
+    // ── Current User ────────────────────────────────────────
+
+    /**
+     * Get the currently authenticated user (whoami).
+     *
+     * @return array<string, mixed>
+     */
+    public function getCurrentUser(): array
+    {
+        return $this->request('GET', '/whoami');
+    }
+
     // ── Meta: Fields ────────────────────────────────────────
 
     /**

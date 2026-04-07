@@ -7,16 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Toggl Track integration.
+ * Laravel service provider for the Toggl integration.
  *
- * Registers the TogglService as a singleton and boots the TogglToolProvider
- * into the ToolProviderRegistry when available.
+ * Registers the TogglService singleton and bootstraps the tool provider
+ * into the ToolProviderRegistry.
  */
 class TogglServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the TogglService singleton.
-     */
     public function register(): void
     {
         $this->app->singleton(TogglService::class, function ($app) {
@@ -24,14 +21,10 @@ class TogglServiceProvider extends ServiceProvider
 
             return new TogglService(
                 apiToken: $creds->get('toggl', 'api_token', ''),
-                baseUrl: $creds->get('toggl', 'url', 'https://api.track.toggl.com/api/v9'),
             );
         });
     }
 
-    /**
-     * Boot the Toggl tool provider into the registry.
-     */
     public function boot(): void
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {

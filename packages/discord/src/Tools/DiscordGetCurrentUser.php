@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the current Discord bot user.
+ * Retrieve the currently authenticated Discord user.
+ *
+ * Returns the user's ID, username, discriminator, and avatar.
  */
 class DiscordGetCurrentUser implements Tool
 {
@@ -25,7 +27,11 @@ class DiscordGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get information about the current Discord bot user.';
+        return <<<'MD'
+        Retrieve the currently authenticated Discord user.
+        Returns the user's ID, username, discriminator, and avatar.
+        Useful for identifying which account or token is in use.
+        MD;
     }
 
     public function parameters(): array
@@ -34,7 +40,7 @@ class DiscordGetCurrentUser implements Tool
     }
 
     /**
-     * Get the current bot user.
+     * Retrieve the currently authenticated Discord user.
      *
      * @param  array<string, mixed>  $args  Tool arguments (none)
      */
@@ -48,8 +54,11 @@ class DiscordGetCurrentUser implements Tool
             $result = $this->service->getCurrentUser();
 
             return ToolResult::success([
-                'ok' => true,
-                'user' => $result,
+                'id' => $result['id'] ?? '',
+                'username' => $result['username'] ?? '',
+                'discriminator' => $result['discriminator'] ?? '',
+                'avatar' => $result['avatar'] ?? null,
+                'global_name' => $result['global_name'] ?? null,
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

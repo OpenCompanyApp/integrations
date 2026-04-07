@@ -6,27 +6,16 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Xero\Tools\XeroCreateBankTransaction;
-use OpenCompany\Integrations\Xero\Tools\XeroCreateContact;
-use OpenCompany\Integrations\Xero\Tools\XeroCreateInvoice;
-use OpenCompany\Integrations\Xero\Tools\XeroCreatePayment;
-use OpenCompany\Integrations\Xero\Tools\XeroGetCurrentUser;
-use OpenCompany\Integrations\Xero\Tools\XeroGetContact;
-use OpenCompany\Integrations\Xero\Tools\XeroGetInvoice;
-use OpenCompany\Integrations\Xero\Tools\XeroListAccounts;
-use OpenCompany\Integrations\Xero\Tools\XeroListBankTransactions;
-use OpenCompany\Integrations\Xero\Tools\XeroListContacts;
 use OpenCompany\Integrations\Xero\Tools\XeroListInvoices;
-use OpenCompany\Integrations\Xero\Tools\XeroListOrganisations;
-use OpenCompany\Integrations\Xero\Tools\XeroListPayments;
-use OpenCompany\Integrations\Xero\Tools\XeroUpdateContact;
-use OpenCompany\Integrations\Xero\Tools\XeroUpdateInvoice;
+use OpenCompany\Integrations\Xero\Tools\XeroGetInvoice;
+use OpenCompany\Integrations\Xero\Tools\XeroCreateInvoice;
+use OpenCompany\Integrations\Xero\Tools\XeroListContacts;
+use OpenCompany\Integrations\Xero\Tools\XeroGetContact;
+use OpenCompany\Integrations\Xero\Tools\XeroListAccounts;
+use OpenCompany\Integrations\Xero\Tools\XeroGetCurrentUser;
 
 /**
- * Registers all Xero tools and provides integration metadata.
- *
- * Provides tool definitions, configuration schema, connection testing,
- * and credential resolution for the Xero accounting integration.
+ * Registers all Xero tools and provides integration metadata, configuration schema, and connection testing.
  */
 class XeroToolProvider implements ToolProvider, ConfigurableIntegration
 {
@@ -38,9 +27,9 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'accounting, invoicing, payments',
-            'description' => 'Cloud accounting software',
-            'icon' => 'ph:building-office',
+            'label' => 'invoices, contacts, accounts',
+            'description' => 'Cloud accounting platform',
+            'icon' => 'ph:calculator',
             'logo' => 'simple-icons:xero',
         ];
     }
@@ -49,12 +38,12 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Xero',
-            'description' => 'Cloud accounting — invoices, contacts, payments, bank transactions, and reporting',
-            'icon' => 'ph:building-office',
+            'description' => 'Cloud accounting platform – invoices, contacts, and chart of accounts',
+            'icon' => 'ph:calculator',
             'logo' => 'simple-icons:xero',
-            'category' => 'productivity',
+            'category' => 'finance',
             'badge' => 'verified',
-            'docs_url' => 'https://developer.xero.com/documentation/api/accounting/overview',
+            'docs_url' => 'https://developer.xero.com/documentation/api/accounting/',
         ];
     }
 
@@ -65,57 +54,55 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'eyJhbGciOi...',
-                'hint' => 'OAuth2 access token obtained from the Xero OAuth2 flow.',
+                'placeholder' => 'eyJhbG...',
+                'hint' => 'Xero OAuth2 access token. Generate one in the Xero Developer Portal → My Apps → Your App.',
                 'required' => true,
             ],
             [
-                'key' => 'tenant_id',
-                'type' => 'string',
-                'label' => 'Tenant ID',
-                'placeholder' => 'e.g. 297c459e-...',
-                'hint' => 'The Xero tenant ID for the organisation. Found in the Xero OAuth2 token response.',
-                'required' => true,
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.xero.com/api.xro/2.0',
+                'hint' => 'Override only if using a custom Xero API endpoint. Defaults to <code>https://api.xero.com/api.xro/2.0</code>.',
+                'default' => 'https://api.xero.com/api.xro/2.0',
             ],
         ];
     }
 
-    /**
-     * Test the Xero connection by fetching the connected organisations.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing access_token and tenant_id
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $tenantId = $config['tenant_id'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.xero.com/api.xro/2.0', '/');
 
-        if (empty($accessToken) || empty($tenantId)) {
-            return ['success' => false, 'error' => 'Access token and tenant ID are required. Obtain them from the Xero OAuth2 flow.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'No access token provided. Generate one in the Xero Developer Portal.'];
         }
 
         try {
-            $response = Http::withToken($accessToken)
-                ->withHeaders([
-                    'Xero-Tenant-Id' => $tenantId,
-                    'Accept' => 'application/json',
-                ])
-                ->timeout(10)
-                ->get('https://api.xero.com/api.xro/2.0/Organisations');
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/Users');
 
             if ($response->successful()) {
-                $json = $response->json() ?? [];
-                $orgs = $json['Organisations'] ?? [];
-                $name = $orgs[0]['Name'] ?? 'Unknown Organisation';
+                $data = $response->json() ?? [];
+                $users = $data['Users'] ?? [];
+                $name = '';
+                if (! empty($users)) {
+                    $name = trim(($users[0]['FirstName'] ?? '') . ' ' . ($users[0]['LastName'] ?? ''));
+                }
 
                 return [
                     'success' => true,
-                    'message' => "Connected to Xero organisation: {$name}",
+                    'message' => $name
+                        ? "Connected to Xero as {$name}."
+                        : 'Connected to Xero successfully.',
                 ];
             }
 
-            $error = $response->json('Message') ?? $response->json('Title') ?? $response->body();
+            $body = $response->json() ?? [];
+            $error = $body['Message'] ?? $body['Type'] ?? $response->body();
 
             return [
                 'success' => false,
@@ -131,7 +118,7 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'access_token' => 'nullable|string',
-            'tenant_id' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
@@ -139,12 +126,12 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             // Invoices
-            'xero_create_invoice' => [
-                'class' => XeroCreateInvoice::class,
-                'type' => 'write',
-                'name' => 'Create Invoice',
-                'description' => 'Create a Xero invoice.',
-                'icon' => 'ph:file-text',
+            'xero_list_invoices' => [
+                'class' => XeroListInvoices::class,
+                'type' => 'read',
+                'name' => 'List Invoices',
+                'description' => 'List Xero invoices with pagination and filtering.',
+                'icon' => 'ph:list',
             ],
             'xero_get_invoice' => [
                 'class' => XeroGetInvoice::class,
@@ -153,27 +140,20 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Retrieve a Xero invoice by ID.',
                 'icon' => 'ph:file-text',
             ],
-            'xero_list_invoices' => [
-                'class' => XeroListInvoices::class,
-                'type' => 'read',
-                'name' => 'List Invoices',
-                'description' => 'List Xero invoices.',
-                'icon' => 'ph:files',
-            ],
-            'xero_update_invoice' => [
-                'class' => XeroUpdateInvoice::class,
+            'xero_create_invoice' => [
+                'class' => XeroCreateInvoice::class,
                 'type' => 'write',
-                'name' => 'Update Invoice',
-                'description' => 'Update a Xero invoice.',
-                'icon' => 'ph:pencil-simple',
+                'name' => 'Create Invoice',
+                'description' => 'Create a new Xero invoice.',
+                'icon' => 'ph:file-plus',
             ],
             // Contacts
-            'xero_create_contact' => [
-                'class' => XeroCreateContact::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create a Xero contact.',
-                'icon' => 'ph:user-plus',
+            'xero_list_contacts' => [
+                'class' => XeroListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List Xero contacts with pagination.',
+                'icon' => 'ph:users',
             ],
             'xero_get_contact' => [
                 'class' => XeroGetContact::class,
@@ -182,87 +162,34 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Retrieve a Xero contact by ID.',
                 'icon' => 'ph:user',
             ],
-            'xero_list_contacts' => [
-                'class' => XeroListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List Xero contacts.',
-                'icon' => 'ph:users',
-            ],
-            'xero_update_contact' => [
-                'class' => XeroUpdateContact::class,
-                'type' => 'write',
-                'name' => 'Update Contact',
-                'description' => 'Update a Xero contact.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            // Payments
-            'xero_create_payment' => [
-                'class' => XeroCreatePayment::class,
-                'type' => 'write',
-                'name' => 'Create Payment',
-                'description' => 'Create a Xero payment.',
-                'icon' => 'ph:money',
-            ],
-            'xero_list_payments' => [
-                'class' => XeroListPayments::class,
-                'type' => 'read',
-                'name' => 'List Payments',
-                'description' => 'List Xero payments.',
-                'icon' => 'ph:money',
-            ],
             // Accounts
             'xero_list_accounts' => [
                 'class' => XeroListAccounts::class,
                 'type' => 'read',
                 'name' => 'List Accounts',
                 'description' => 'List Xero chart of accounts.',
-                'icon' => 'ph:wallet',
+                'icon' => 'ph:buildings',
             ],
-            // Bank Transactions
-            'xero_create_bank_transaction' => [
-                'class' => XeroCreateBankTransaction::class,
-                'type' => 'write',
-                'name' => 'Create Bank Transaction',
-                'description' => 'Create a Xero bank transaction.',
-                'icon' => 'ph:bank',
-            ],
-            'xero_list_bank_transactions' => [
-                'class' => XeroListBankTransactions::class,
-                'type' => 'read',
-                'name' => 'List Bank Transactions',
-                'description' => 'List Xero bank transactions.',
-                'icon' => 'ph:bank',
-            ],
-            // Users
             'xero_get_current_user' => [
                 'class' => XeroGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the current Xero user.',
+                'description' => 'Get the currently authenticated Xero user.',
                 'icon' => 'ph:user-circle',
-            ],
-            // Organisations
-            'xero_list_organisations' => [
-                'class' => XeroListOrganisations::class,
-                'type' => 'read',
-                'name' => 'List Organisations',
-                'description' => 'List connected Xero organisations.',
-                'icon' => 'ph:buildings',
             ],
         ];
     }
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/xero.md';
+        return dirname(__DIR__) . '/lua-docs/xero.md';
     }
 
     public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'tenant_id', 'type' => 'string', 'label' => 'Tenant ID', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.xero.com/api.xro/2.0'],
         ];
     }
 
@@ -271,12 +198,7 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /**
-     * Create a tool instance with resolved service.
-     *
-     * @param  string  $class  Fully-qualified tool class name
-     * @param  array<string, mixed>  $context  Optional context with account credentials
-     */
+    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
     {
         return new $class($this->resolveService($context));
@@ -285,7 +207,7 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
     /**
      * Resolve the XeroService, with optional account-specific credentials.
      *
-     * @param  array<string, mixed>  $context  Optional context containing account info
+     * @param  array<string, mixed>  $context
      */
     private function resolveService(array $context = []): XeroService
     {
@@ -296,7 +218,7 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration
 
             return new XeroService(
                 accessToken: $creds->get('xero', 'access_token', '', $account),
-                tenantId: $creds->get('xero', 'tenant_id', '', $account),
+                baseUrl: $creds->get('xero', 'base_url', 'https://api.xero.com/api.xro/2.0', $account),
             );
         }
 

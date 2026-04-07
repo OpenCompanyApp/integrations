@@ -8,14 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Retrieve a QuickBooks customer by ID.
- *
- * Returns full customer details including name, email, phone, and balance.
  */
 class QuickBooksGetCustomer implements Tool
 {
-    /**
-     * @param  QuickBooksService  $service  The QuickBooks API client
-     */
     public function __construct(
         private QuickBooksService $service,
     ) {}
@@ -27,10 +22,7 @@ class QuickBooksGetCustomer implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Retrieve a QuickBooks customer by ID.
-        Returns full customer details including name, email, phone, and balance.
-        MD;
+        return 'Retrieve a QuickBooks customer by ID. Returns full customer details including name, email, phone, and balance.';
     }
 
     public function parameters(): array
@@ -40,15 +32,10 @@ class QuickBooksGetCustomer implements Tool
         ];
     }
 
-    /**
-     * Retrieve a QuickBooks customer by ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (customer_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-square",
-    "description": "Square payments and POS integration for Laravel — manage payments, customers, and locations.",
+    "description": "Square integration for OpenCompany — payments, customers, and orders.",
     "license": "MIT",
     "authors": [
         {
@@ -8,13 +8,10 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "square", "payments", "pos", "finance", "opencompany"],
+    "keywords": ["tools", "square", "payments", "orders", "sales", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-square": "self.version"
     },
     "autoload": {
         "psr-4": {

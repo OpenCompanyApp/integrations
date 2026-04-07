@@ -1,12 +1,33 @@
 {
     "name": "opencompanyapp/integration-trello",
-    "description": "Trello integration for OpenCompany — boards, lists, cards, labels, and members.",
+    "description": "Trello integration for Laravel — manage boards, lists, and cards.",
     "license": "MIT",
-    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
-    "keywords": ["tools", "trello", "kanban", "project-management", "opencompany"],
-    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
-    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Trello\\": "src/"}},
-    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Trello\\TrelloServiceProvider"]}},
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "trello", "kanban", "project-management", "productivity", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-trello": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Trello\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Trello\\TrelloServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }

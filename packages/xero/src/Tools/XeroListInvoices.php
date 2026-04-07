@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Xero invoices with optional filtering and pagination.
+ * List Xero invoices with pagination and filtering.
  *
- * Supports filtering by status, contact, date range, and ordering.
+ * Returns a paginated list of invoices with their IDs, numbers, amounts, and status.
  */
 class XeroListInvoices implements Tool
 {
@@ -28,27 +28,27 @@ class XeroListInvoices implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List Xero invoices with optional filtering and pagination.
-        Filter by status (DRAFT, SUBMITTED, AUTHORISED, PAID, VOIDED), contact, date range.
+        List Xero invoices with pagination and filtering.
+        Returns invoice IDs, numbers, amounts, status, and dates.
+        Use page and pageSize for pagination.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'status' => ['type' => 'string', 'description' => 'Filter by status: DRAFT, SUBMITTED, AUTHORISED, PAID, VOIDED.'],
-            'contact_id' => ['type' => 'string', 'description' => 'Filter by Xero contact GUID.'],
-            'date_from' => ['type' => 'string', 'description' => 'Start date filter (YYYY-MM-DD).'],
-            'date_to' => ['type' => 'string', 'description' => 'End date filter (YYYY-MM-DD).'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default 1).'],
-            'order' => ['type' => 'string', 'description' => 'Sort order, e.g. "Date ASC" or "Date DESC".'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (default 1).'],
+            'pageSize' => ['type' => 'integer', 'description' => 'Number of invoices per page (default 100, max 2000).'],
+            'statuses' => ['type' => 'string', 'description' => 'Comma-separated filter: DRAFT, SUBMITTED, AUTHORISED, PAID, VOIDED, DELETED.'],
+            'where' => ['type' => 'string', 'description' => 'Xero where filter expression (e.g. Type=="ACCREC").'],
+            'order' => ['type' => 'string', 'description' => 'Sort order (e.g. "Date DESC", "InvoiceNumber ASC").'],
         ];
     }
 
     /**
-     * List Xero invoices with optional filtering and pagination.
+     * List Xero invoices with optional pagination and filtering.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (status, contact_id, date_from, date_to, page, order)
+     * @param  array<string, mixed>  $args  Tool arguments (page, pageSize, statuses, where, order)
      */
     public function execute(array $args): ToolResult
     {
@@ -59,20 +59,17 @@ class XeroListInvoices implements Tool
 
             $params = [];
 
-            if (! empty($args['status'])) {
-                $params['Status'] = $args['status'];
-            }
-            if (! empty($args['contact_id'])) {
-                $params['ContactID'] = $args['contact_id'];
-            }
-            if (! empty($args['date_from'])) {
-                $params['DateFrom'] = $args['date_from'];
-            }
-            if (! empty($args['date_to'])) {
-                $params['DateTo'] = $args['date_to'];
-            }
-            if (! empty($args['page'])) {
+            if (isset($args['page'])) {
                 $params['page'] = (int) $args['page'];
+            }
+            if (isset($args['pageSize'])) {
+                $params['pageSize'] = (int) $args['pageSize'];
+            }
+            if (! empty($args['statuses'])) {
+                $params['Statuses'] = $args['statuses'];
+            }
+            if (! empty($args['where'])) {
+                $params['where'] = $args['where'];
             }
             if (! empty($args['order'])) {
                 $params['order'] = $args['order'];
@@ -80,22 +77,28 @@ class XeroListInvoices implements Tool
 
             $result = $this->service->listInvoices($params);
 
-            $invoices = array_map(function (array $inv) {
+            $invoices = array_map(function (array $inv): array {
                 return [
                     'id' => $inv['InvoiceID'] ?? '',
                     'number' => $inv['InvoiceNumber'] ?? '',
                     'type' => $inv['Type'] ?? '',
                     'status' => $inv['Status'] ?? '',
-                    'contact' => $inv['Contact']['Name'] ?? '',
                     'date' => $inv['Date'] ?? '',
                     'due_date' => $inv['DueDate'] ?? '',
                     'total' => $inv['Total'] ?? 0,
+                    'amount_due' => $inv['AmountDue'] ?? 0,
+                    'amount_paid' => $inv['AmountPaid'] ?? 0,
                     'currency' => $inv['CurrencyCode'] ?? '',
+                    'contact' => isset($inv['Contact']) ? [
+                        'id' => $inv['Contact']['ContactID'] ?? '',
+                        'name' => $inv['Contact']['Name'] ?? '',
+                    ] : [],
                 ];
             }, $result['Invoices'] ?? []);
 
             return ToolResult::success([
-                'invoices' => $invoices,
+                'results' => $invoices,
+                'count' => count($invoices),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

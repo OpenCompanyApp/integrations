@@ -1,20 +1,18 @@
 <?php
 
-namespace OpenCompany\Integrations\WooCommerce\Tools;
+namespace OpenCompany\Integrations\Woocommerce\Tools;
 
+use OpenCompany\Integrations\Woocommerce\WoocommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\WooCommerce\WooCommerceService;
 
 /**
- * Tool: woocommerce_get_product
- *
- * Retrieves details for a single WooCommerce product by ID.
+ * Get a single product from the WooCommerce catalog by ID.
  */
-class WooCommerceGetProduct implements Tool
+class WoocommerceGetProduct implements Tool
 {
     public function __construct(
-        private WooCommerceService $service,
+        private WoocommerceService $service,
     ) {}
 
     public function name(): string
@@ -24,12 +22,9 @@ class WooCommerceGetProduct implements Tool
 
     public function description(): string
     {
-        return 'Get full details for a single WooCommerce product by its ID.';
+        return 'Get a single product from the WooCommerce catalog by its ID. Returns full product details.';
     }
 
-    /**
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
@@ -40,17 +35,11 @@ class WooCommerceGetProduct implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('WooCommerce integration is not configured.');
             }
 
-            $id = (int) ($args['id'] ?? 0);
-
-            if ($id <= 0) {
-                return ToolResult::error('A valid product ID is required.');
-            }
-
-            $result = $this->service->getProduct($id);
+            $result = $this->service->getProduct((int) $args['id']);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

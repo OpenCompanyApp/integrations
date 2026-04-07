@@ -18,7 +18,7 @@ class IntercomServiceProvider extends ServiceProvider
 
             return new IntercomService(
                 accessToken: $creds->get('intercom', 'access_token', ''),
-                baseUrl: $creds->get('intercom', 'base_url', 'https://api.intercom.io'),
+                baseUrl: $creds->get('intercom', 'base_url', 'https://api.intercom.io/v1'),
             );
         });
     }

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-bigcommerce",
-    "description": "BigCommerce integration for Laravel — manage products, orders, customers, and categories.",
+    "description": "BigCommerce integration for Laravel — manage products, orders, and customers.",
     "license": "MIT",
     "authors": [
         {

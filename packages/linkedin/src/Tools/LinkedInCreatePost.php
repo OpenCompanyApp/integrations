@@ -1,90 +1,74 @@
 <?php
 
-namespace OpenCompany\Integrations\LinkedIn\Tools;
+namespace OpenCompany\Integrations\Linkedin\Tools;
 
-use OpenCompany\Integrations\LinkedIn\LinkedInService;
+use OpenCompany\Integrations\Linkedin\LinkedinService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to create a post on behalf of the authenticated LinkedIn user.
+ * Create a new LinkedIn UGC post.
  *
- * Accepts a text commentary and optional visibility setting, constructs
- * the proper UGC post payload following LinkedIn's UGC Posts API format,
- * and publishes the post.
+ * Creates a post on behalf of an author with text content.
  */
-class LinkedInCreatePost implements Tool
+class LinkedinCreatePost implements Tool
 {
     /**
-     * Create a new LinkedInCreatePost tool instance.
-     *
-     * @param  LinkedInService  $service  The LinkedIn API service.
+     * @param  LinkedinService  $service  The LinkedIn API client
      */
     public function __construct(
-        private LinkedInService $service,
+        private LinkedinService $service,
     ) {}
 
-    /**
-     * Get the tool name identifier.
-     */
     public function name(): string
     {
         return 'linkedin_create_post';
     }
 
-    /**
-     * Get the tool description for AI agent consumption.
-     */
     public function description(): string
     {
-        return 'Create and publish a post on LinkedIn on behalf of the authenticated user. Requires the post text content and optionally the author URN.';
+        return <<<'MD'
+        Create a new LinkedIn UGC post.
+        Requires an author URN and text content.
+        Returns the created post with its ID and lifecycle state.
+        MD;
     }
 
-    /**
-     * Get the tool parameter schema.
-     *
-     * @return array<string, array{type: string, required?: bool, description: string}>
-     */
     public function parameters(): array
     {
         return [
-            'text' => ['type' => 'string', 'required' => true, 'description' => 'The text content of the LinkedIn post.'],
-            'author_urn' => ['type' => 'string', 'description' => 'The author URN (e.g., "urn:li:person:ABC123"). If omitted, the authenticated user is used.'],
-            'visibility' => ['type' => 'string', 'description' => 'Post visibility: "PUBLIC" (anyone on LinkedIn) or "CONNECTIONS" (1st-degree connections only). Default: "PUBLIC".'],
+            'author' => ['type' => 'string', 'required' => true, 'description' => 'Author URN (e.g. "urn:li:person:ABC123" or "urn:li:organization:12345").'],
+            'text' => ['type' => 'string', 'required' => true, 'description' => 'Text content for the post.'],
+            'visibility' => ['type' => 'string', 'description' => 'Visibility: "PUBLIC" (default) or "CONNECTIONS".'],
         ];
     }
 
     /**
-     * Execute the tool and create the LinkedIn post.
+     * Create a new LinkedIn UGC post.
      *
-     * @param  array<string, mixed>  $args  Tool arguments including 'text', optional 'author_urn', and 'visibility'.
+     * @param  array<string, mixed>  $args  Tool arguments (author, text, visibility)
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('LinkedIn integration is not configured.');
             }
 
+            $author = $args['author'] ?? '';
+            if (empty($author)) {
+                return ToolResult::error('author is required. Provide a LinkedIn URN (e.g. "urn:li:person:ABC123").');
+            }
+
             $text = $args['text'] ?? '';
-            if (empty(trim($text))) {
-                return ToolResult::error('Post text content is required.');
+            if (empty($text)) {
+                return ToolResult::error('text is required.');
             }
 
             $visibility = $args['visibility'] ?? 'PUBLIC';
-            if (!in_array($visibility, ['PUBLIC', 'CONNECTIONS'], true)) {
-                return ToolResult::error('Visibility must be either "PUBLIC" or "CONNECTIONS".');
-            }
 
-            // Build the author URN — use provided or construct from profile
-            $authorUrn = $args['author_urn'] ?? null;
-            if ($authorUrn === null) {
-                $profile = $this->service->getProfile();
-                $authorUrn = 'urn:li:person:' . ($profile['id'] ?? '');
-            }
-
-            $postBody = [
-                'author' => $authorUrn,
+            $payload = [
+                'author' => $author,
                 'lifecycleState' => 'PUBLISHED',
                 'specificContent' => [
                     'com.linkedin.ugc.ShareContent' => [
@@ -99,9 +83,12 @@ class LinkedInCreatePost implements Tool
                 ],
             ];
 
-            $result = $this->service->createPost($postBody);
+            $result = $this->service->createPost($payload);
 
-            return ToolResult::success($result);
+            return ToolResult::success([
+                'id' => $result['id'] ?? '',
+                'lifecycle_state' => $result['lifecycleState'] ?? '',
+            ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

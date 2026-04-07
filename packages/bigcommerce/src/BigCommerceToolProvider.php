@@ -9,15 +9,9 @@ use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceListProducts;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceGetProduct;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceCreateProduct;
-use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceUpdateProduct;
-use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceDeleteProduct;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceListOrders;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceGetOrder;
-use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceUpdateOrder;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceListCustomers;
-use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceGetCustomer;
-use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceCreateCustomer;
-use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceListCategories;
 use OpenCompany\Integrations\BigCommerce\Tools\BigCommerceGetCurrentUser;
 
 class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
@@ -30,8 +24,8 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'products, orders, customers, categories',
-            'description' => 'E-commerce platform',
+            'label' => 'products, orders, customers',
+            'description' => 'BigCommerce e-commerce',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:bigcommerce',
         ];
@@ -41,10 +35,10 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'BigCommerce',
-            'description' => 'E-commerce platform for growing businesses — manage products, orders, customers, and categories',
+            'description' => 'BigCommerce e-commerce platform — manage products, orders, and customers',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:bigcommerce',
-            'category' => 'ecommerce',
+            'category' => 'sales',
             'badge' => 'verified',
             'docs_url' => 'https://developer.bigcommerce.com/docs/rest',
         ];
@@ -62,20 +56,12 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
                 'required' => true,
             ],
             [
-                'key' => 'store_id',
-                'type' => 'string',
-                'label' => 'Store ID',
-                'placeholder' => 'e.g., abc12345',
-                'hint' => 'Your BigCommerce store hash / ID, found in the store URL or API Accounts settings',
-                'required' => true,
-            ],
-            [
-                'key' => 'client_id',
-                'type' => 'string',
-                'label' => 'Client ID',
-                'placeholder' => 'Enter your BigCommerce API client ID',
-                'hint' => 'The Client ID associated with your API account, found alongside the Access Token',
-                'required' => true,
+                'key' => 'base_url',
+                'type' => 'url',
+                'label' => 'Base URL',
+                'placeholder' => 'https://api.bigcommerce.com/v3',
+                'hint' => 'BigCommerce API base URL. Change only if using a proxy or mock server.',
+                'default' => 'https://api.bigcommerce.com/v3',
             ],
         ];
     }
@@ -83,25 +69,23 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $storeId = $config['store_id'] ?? '';
-        $clientId = $config['client_id'] ?? '';
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.bigcommerce.com/v3', '/');
 
-        if (empty($accessToken) || empty($storeId) || empty($clientId)) {
-            return ['success' => false, 'error' => 'Access token, store ID, and client ID are required.'];
+        if (empty($accessToken)) {
+            return ['success' => false, 'error' => 'Access token is required.'];
         }
 
         try {
             $response = Http::withHeaders([
-                'X-Auth-Token' => $accessToken,
-                'X-Auth-Client' => $clientId,
+                'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-            ])->timeout(10)->get("https://api.bigcommerce.com/stores/{$storeId}/v3/storefront/status");
+            ])->timeout(10)->get($baseUrl . '/storefront/status');
 
             if ($response->successful()) {
                 return [
                     'success' => true,
-                    'message' => "Connected to BigCommerce store {$storeId}.",
+                    'message' => 'Connected to BigCommerce API.',
                 ];
             }
 
@@ -120,8 +104,7 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'access_token' => 'nullable|string',
-            'store_id' => 'nullable|string',
-            'client_id' => 'nullable|string',
+            'base_url' => 'nullable|url',
         ];
     }
 
@@ -149,20 +132,6 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Create a new product in the catalog.',
                 'icon' => 'ph:plus-circle',
             ],
-            'bigcommerce_update_product' => [
-                'class' => BigCommerceUpdateProduct::class,
-                'type' => 'write',
-                'name' => 'Update Product',
-                'description' => 'Update an existing product.',
-                'icon' => 'ph:pencil',
-            ],
-            'bigcommerce_delete_product' => [
-                'class' => BigCommerceDeleteProduct::class,
-                'type' => 'write',
-                'name' => 'Delete Product',
-                'description' => 'Delete a product from the catalog.',
-                'icon' => 'ph:trash',
-            ],
             'bigcommerce_list_orders' => [
                 'class' => BigCommerceListOrders::class,
                 'type' => 'read',
@@ -177,13 +146,6 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'Get a single order by ID.',
                 'icon' => 'ph:receipt',
             ],
-            'bigcommerce_update_order' => [
-                'class' => BigCommerceUpdateOrder::class,
-                'type' => 'write',
-                'name' => 'Update Order',
-                'description' => 'Update an existing order.',
-                'icon' => 'ph:pencil',
-            ],
             'bigcommerce_list_customers' => [
                 'class' => BigCommerceListCustomers::class,
                 'type' => 'read',
@@ -191,32 +153,11 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
                 'description' => 'List customers from the store.',
                 'icon' => 'ph:users',
             ],
-            'bigcommerce_get_customer' => [
-                'class' => BigCommerceGetCustomer::class,
-                'type' => 'read',
-                'name' => 'Get Customer',
-                'description' => 'Get a single customer by ID.',
-                'icon' => 'ph:user',
-            ],
-            'bigcommerce_create_customer' => [
-                'class' => BigCommerceCreateCustomer::class,
-                'type' => 'write',
-                'name' => 'Create Customer',
-                'description' => 'Create a new customer.',
-                'icon' => 'ph:user-plus',
-            ],
-            'bigcommerce_list_categories' => [
-                'class' => BigCommerceListCategories::class,
-                'type' => 'read',
-                'name' => 'List Categories',
-                'description' => 'List catalog categories.',
-                'icon' => 'ph:folders',
-            ],
             'bigcommerce_get_current_user' => [
                 'class' => BigCommerceGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Get Store Status',
-                'description' => 'Get storefront status and verify connection.',
+                'name' => 'Get Current User',
+                'description' => 'Get storefront status and verify API connection.',
                 'icon' => 'ph:storefront',
             ],
         ];
@@ -231,8 +172,7 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'store_id', 'type' => 'string', 'label' => 'Store ID', 'required' => true],
-            ['key' => 'client_id', 'type' => 'string', 'label' => 'Client ID', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'Base URL', 'required' => false, 'default' => 'https://api.bigcommerce.com/v3'],
         ];
     }
 
@@ -250,8 +190,7 @@ class BigCommerceToolProvider implements ToolProvider, ConfigurableIntegration
 
             $service = new BigCommerceService(
                 accessToken: $creds->get('bigcommerce', 'access_token', '', $account),
-                storeId: $creds->get('bigcommerce', 'store_id', '', $account),
-                clientId: $creds->get('bigcommerce', 'client_id', '', $account),
+                baseUrl: $creds->get('bigcommerce', 'base_url', 'https://api.bigcommerce.com/v3', $account),
             );
 
             return new $class($service);

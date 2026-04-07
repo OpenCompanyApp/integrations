@@ -7,16 +7,12 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all funnels in the Mixpanel project.
+ * MixpanelListFunnels — List all funnels in the Mixpanel project.
  *
- * Returns a list of funnel definitions including IDs and names,
- * useful for discovering funnel IDs before querying specific funnels.
+ * Calls GET /v1/funnels/list and returns all configured funnels.
  */
 class MixpanelListFunnels implements Tool
 {
-    /**
-     * @param  MixpanelService  $service  The Mixpanel API client
-     */
     public function __construct(
         private MixpanelService $service,
     ) {}
@@ -28,31 +24,22 @@ class MixpanelListFunnels implements Tool
 
     public function description(): string
     {
-        return 'List all funnels in the Mixpanel project.';
+        return 'List all funnels configured in the Mixpanel project. Returns funnel names, IDs, and basic configuration.';
     }
 
     public function parameters(): array
     {
-        return [
-            'project_id' => ['type' => 'integer', 'description' => 'Mixpanel project ID. Defaults to the configured project.'],
-        ];
+        return [];
     }
 
-    /**
-     * List all funnels in the project.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (project_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mixpanel integration is not configured.');
             }
 
-            $projectId = $args['project_id'] ?? null;
-
-            $result = $this->service->listFunnels($projectId);
+            $result = $this->service->listFunnels();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

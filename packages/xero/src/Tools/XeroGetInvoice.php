@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a single Xero invoice by ID.
+ * Retrieve a Xero invoice by ID.
  *
- * Fetches the full invoice details including line items, totals, and status.
+ * Returns the full invoice including line items, contact, and totals.
  */
 class XeroGetInvoice implements Tool
 {
@@ -28,15 +28,15 @@ class XeroGetInvoice implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Retrieve a single Xero invoice by ID.
-        Returns full invoice details including line items, contact, and status.
+        Retrieve a Xero invoice by its ID.
+        Returns the full invoice including line items, contact details, and totals.
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'invoice_id' => ['type' => 'string', 'required' => true, 'description' => 'Xero invoice GUID.'],
+            'invoice_id' => ['type' => 'string', 'required' => true, 'description' => 'Xero invoice ID (UUID).'],
         ];
     }
 
@@ -52,30 +52,34 @@ class XeroGetInvoice implements Tool
                 return ToolResult::error('Xero integration is not configured.');
             }
 
-            $invoiceId = $args['invoice_id'] ?? '';
-            if (empty($invoiceId)) {
+            $id = $args['invoice_id'] ?? '';
+            if (empty($id)) {
                 return ToolResult::error('invoice_id is required.');
             }
 
-            $result = $this->service->getInvoice($invoiceId);
-            $invoice = $result['Invoices'][0] ?? [];
+            $result = $this->service->getInvoice($id);
+
+            $invoice = $result['Invoices'][0] ?? $result;
 
             return ToolResult::success([
                 'id' => $invoice['InvoiceID'] ?? '',
                 'number' => $invoice['InvoiceNumber'] ?? '',
                 'type' => $invoice['Type'] ?? '',
                 'status' => $invoice['Status'] ?? '',
-                'contact' => [
-                    'id' => $invoice['Contact']['ContactID'] ?? '',
-                    'name' => $invoice['Contact']['Name'] ?? '',
-                ],
                 'date' => $invoice['Date'] ?? '',
                 'due_date' => $invoice['DueDate'] ?? '',
-                'sub_total' => $invoice['SubTotal'] ?? 0,
+                'subtotal' => $invoice['SubTotal'] ?? 0,
                 'total_tax' => $invoice['TotalTax'] ?? 0,
                 'total' => $invoice['Total'] ?? 0,
+                'total_discount' => $invoice['TotalDiscount'] ?? 0,
+                'amount_due' => $invoice['AmountDue'] ?? 0,
+                'amount_paid' => $invoice['AmountPaid'] ?? 0,
                 'currency' => $invoice['CurrencyCode'] ?? '',
                 'reference' => $invoice['Reference'] ?? '',
+                'contact' => isset($invoice['Contact']) ? [
+                    'id' => $invoice['Contact']['ContactID'] ?? '',
+                    'name' => $invoice['Contact']['Name'] ?? '',
+                ] : [],
                 'line_items' => $invoice['LineItems'] ?? [],
             ]);
         } catch (\Throwable $e) {

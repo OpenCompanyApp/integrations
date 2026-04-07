@@ -8,14 +8,9 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Retrieve a QuickBooks invoice by ID.
- *
- * Returns full invoice details including line items, totals, balance, and status.
  */
 class QuickBooksGetInvoice implements Tool
 {
-    /**
-     * @param  QuickBooksService  $service  The QuickBooks API client
-     */
     public function __construct(
         private QuickBooksService $service,
     ) {}
@@ -27,10 +22,7 @@ class QuickBooksGetInvoice implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Retrieve a QuickBooks invoice by ID.
-        Returns full invoice details including line items, totals, balance, and status.
-        MD;
+        return 'Retrieve a QuickBooks invoice by ID. Returns full invoice details including line items, totals, balance, and status.';
     }
 
     public function parameters(): array
@@ -40,15 +32,10 @@ class QuickBooksGetInvoice implements Tool
         ];
     }
 
-    /**
-     * Retrieve a QuickBooks invoice by ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (invoice_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('QuickBooks integration is not configured.');
             }
 

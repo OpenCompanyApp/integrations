@@ -1,21 +1,20 @@
 <?php
 
-namespace OpenCompany\Integrations\WooCommerce\Tools;
+namespace OpenCompany\Integrations\Woocommerce\Tools;
 
+use OpenCompany\Integrations\Woocommerce\WoocommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\WooCommerce\WooCommerceService;
 
 /**
- * Tool: woocommerce_list_orders
+ * List orders from the WooCommerce store.
  *
- * Lists orders from the WooCommerce store with optional filtering
- * and pagination.
+ * Supports filtering by status, date range, and pagination.
  */
-class WooCommerceListOrders implements Tool
+class WoocommerceListOrders implements Tool
 {
     public function __construct(
-        private WooCommerceService $service,
+        private WoocommerceService $service,
     ) {}
 
     public function name(): string
@@ -25,45 +24,45 @@ class WooCommerceListOrders implements Tool
 
     public function description(): string
     {
-        return 'List orders from the WooCommerce store. Supports filtering by status, customer, date, and pagination.';
+        return 'List orders from the WooCommerce store. Supports filtering by status, customer, and pagination.';
     }
 
-    /**
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
-            'per_page'     => ['type' => 'integer', 'description' => 'Number of orders per page (default: 10, max: 100).'],
-            'page'         => ['type' => 'integer', 'description' => 'Current page number (1-based).'],
-            'status'       => ['type' => 'string',  'description' => 'Filter by status: any, pending, processing, on-hold, completed, cancelled, refunded, failed, trash.'],
-            'customer'     => ['type' => 'integer', 'description' => 'Filter by customer ID.'],
-            'product'      => ['type' => 'integer', 'description' => 'Filter by product ID.'],
-            'after'        => ['type' => 'string',  'description' => 'Limit response to orders after this date (ISO 8601).'],
-            'before'       => ['type' => 'string',  'description' => 'Limit response to orders before this date (ISO 8601).'],
-            'orderby'      => ['type' => 'string',  'description' => 'Sort by: date, id, include, title, slug.'],
-            'order'        => ['type' => 'string',  'description' => 'Sort direction: asc or desc (default: desc).'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of orders per page (default: 10, max: 100).'],
+            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
+            'status' => ['type' => 'string', 'description' => 'Filter by order status: "pending", "processing", "on-hold", "completed", "cancelled", "refunded", or "failed".'],
+            'customer' => ['type' => 'integer', 'description' => 'Filter by customer ID.'],
+            'after' => ['type' => 'string', 'description' => 'Limit response to orders created after this date (ISO 8601, e.g., "2025-01-01T00:00:00").'],
+            'before' => ['type' => 'string', 'description' => 'Limit response to orders created before this date (ISO 8601).'],
+            'orderby' => ['type' => 'string', 'description' => 'Sort collection by field (e.g., "date", "id", "total").'],
+            'order' => ['type' => 'string', 'description' => 'Sort direction: "asc" or "desc".'],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('WooCommerce integration is not configured.');
             }
 
-            $params = array_filter([
-                'per_page' => $args['per_page'] ?? null,
-                'page'     => $args['page'] ?? null,
-                'status'   => $args['status'] ?? null,
-                'customer' => $args['customer'] ?? null,
-                'product'  => $args['product'] ?? null,
-                'after'    => $args['after'] ?? null,
-                'before'   => $args['before'] ?? null,
-                'orderby'  => $args['orderby'] ?? null,
-                'order'    => $args['order'] ?? null,
-            ], fn ($v) => $v !== null);
+            $params = [];
+            $stringParams = ['status', 'after', 'before', 'orderby', 'order'];
+            $intParams = ['per_page', 'page', 'customer'];
+
+            foreach ($stringParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = $args[$key];
+                }
+            }
+
+            foreach ($intParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = (int) $args[$key];
+                }
+            }
 
             $result = $this->service->listOrders($params);
 

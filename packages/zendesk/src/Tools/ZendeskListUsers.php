@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Zendesk users with optional role filtering and pagination.
+ * List Zendesk users with pagination and filtering.
+ *
+ * Returns a paginated list of users with their IDs, names, emails, and roles.
  */
 class ZendeskListUsers implements Tool
 {
@@ -25,47 +27,74 @@ class ZendeskListUsers implements Tool
 
     public function description(): string
     {
-        return 'List Zendesk users with optional role filtering and pagination. Returns user IDs, names, emails, and roles.';
+        return <<<'MD'
+        List Zendesk users with pagination and filtering.
+        Returns user IDs, names, emails, and roles.
+        Use per_page, page, and role for pagination and filtering.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'role' => ['type' => 'string', 'description' => 'Filter by role (end-user, agent, admin).'],
-            'per_page' => ['type' => 'integer', 'description' => 'Number of users per page. Default: 100.'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination.'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of users per page (default 100, max 100).'],
+            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (1-indexed).'],
+            'role' => ['type' => 'string', 'description' => 'Filter by role: "end-user", "agent", "admin".'],
+            'sort_by' => ['type' => 'string', 'description' => 'Field to sort by (e.g. "name", "created_at").'],
+            'sort_order' => ['type' => 'string', 'description' => 'Sort order: "asc" or "desc".'],
         ];
     }
 
     /**
-     * List Zendesk users with optional filtering.
+     * List Zendesk users with optional pagination and filtering.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (role, per_page, page)
+     * @param  array<string, mixed>  $args  Tool arguments (per_page, page, role, sort_by, sort_order)
      */
     public function execute(array $args): ToolResult
     {
-        if (! $this->service->isConfigured()) {
-            return ToolResult::error('Zendesk is not configured. Missing email, API token, or subdomain.');
-        }
-
         try {
-            $params = [];
-
-            if (isset($args['role'])) {
-                $params['role'] = $args['role'];
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Zendesk integration is not configured.');
             }
+
+            $params = [];
 
             if (isset($args['per_page'])) {
                 $params['per_page'] = (int) $args['per_page'];
             }
-
             if (isset($args['page'])) {
                 $params['page'] = (int) $args['page'];
+            }
+            if (! empty($args['role'])) {
+                $params['role'] = $args['role'];
+            }
+            if (! empty($args['sort_by'])) {
+                $params['sort_by'] = $args['sort_by'];
+            }
+            if (! empty($args['sort_order'])) {
+                $params['sort_order'] = $args['sort_order'];
             }
 
             $result = $this->service->listUsers($params);
 
-            return ToolResult::success($result);
+            $users = array_map(function (array $user): array {
+                return [
+                    'id' => $user['id'] ?? '',
+                    'name' => $user['name'] ?? '',
+                    'email' => $user['email'] ?? '',
+                    'role' => $user['role'] ?? '',
+                    'created_at' => $user['created_at'] ?? '',
+                    'last_login_at' => $user['last_login_at'] ?? '',
+                ];
+            }, $result['users'] ?? []);
+
+            $output = ['results' => $users];
+
+            if (isset($result['next_page'])) {
+                $output['next_page'] = $result['next_page'];
+            }
+
+            return ToolResult::success($output);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

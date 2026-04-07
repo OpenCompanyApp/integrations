@@ -1,33 +1,30 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty;
+namespace OpenCompany\Integrations\Pagerduty;
 
 use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyCreateIncidentNote;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyGetIncident;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyGetService;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyGetUser;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyListIncidents;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyListOnCalls;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyListServices;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyListTeams;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyListUsers;
-use OpenCompany\Integrations\PagerDuty\Tools\PagerDutyUpdateIncident;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyListIncidents;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyGetIncident;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyListServices;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyGetService;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyListTeams;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyGetTeam;
+use OpenCompany\Integrations\Pagerduty\Tools\PagerdutyGetCurrentUser;
 
 /**
- * Registers all PagerDuty tools and provides integration metadata.
+ * Tool provider for the PagerDuty integration.
  *
- * Implements both {@see ToolProvider} (for tool registration) and
- * {@see ConfigurableIntegration} (for configuration schema, connection
- * testing, and credential field definitions).
+ * Implements ConfigurableIntegration for multi-account support, config schema,
+ * connection testing, and credential field definitions. Registers all PagerDuty
+ * tools (incidents, services, teams, user).
  */
-class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration
+class PagerdutyToolProvider implements ToolProvider, ConfigurableIntegration
 {
     /**
-     * Return the integration slug used for credential lookup.
+     * Get the application identifier for this integration.
      */
     public function appName(): string
     {
@@ -35,98 +32,97 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Return short metadata for tool-catalog display.
-     *
-     * @return array{label: string, description: string, icon: string, logo: string}
+     * Get short metadata describing the integration's capabilities.
      */
     public function appMeta(): array
     {
         return [
-            'label' => 'incidents, services, on-call',
-            'description' => 'Incident management & monitoring',
-            'icon' => 'ph:siren',
-            'logo' => 'simple-icons:pagerduty',
+            'label'       => 'incidents, services, teams',
+            'description' => 'Incident management & response',
+            'icon'        => 'ph:siren',
+            'logo'        => 'simple-icons:pagerduty',
         ];
     }
 
     /**
-     * Return full integration metadata for the settings UI.
-     *
-     * @return array{name: string, description: string, icon: string, logo: string, category: string, badge: string, docs_url: string}
+     * Get full integration metadata for display and categorization.
      */
     public function integrationMeta(): array
     {
         return [
-            'name' => 'PagerDuty',
-            'description' => 'Incident management, on-call scheduling, and service monitoring',
-            'icon' => 'ph:siren',
-            'logo' => 'simple-icons:pagerduty',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.pagerduty.com/api-reference/',
+            'name'        => 'PagerDuty',
+            'description' => 'Incident management and real-time operations platform',
+            'icon'        => 'ph:siren',
+            'logo'        => 'simple-icons:pagerduty',
+            'category'    => 'productivity',
+            'badge'       => 'verified',
+            'docs_url'    => 'https://developer.pagerduty.com/api-reference/',
         ];
     }
 
     /**
-     * Return the credential configuration schema for the settings UI.
+     * Get the configuration schema for the PagerDuty integration settings UI.
      *
-     * @return array<int, array{key: string, type: string, label: string, placeholder: string, hint: string, required: bool}>
+     * @return array<int, array<string, mixed>>
      */
     public function configSchema(): array
     {
         return [
             [
-                'key' => 'api_token',
-                'type' => 'secret',
-                'label' => 'API Token',
-                'placeholder' => 'y_NbAkKc66ryYTWUXYEu...',
-                'hint' => 'Generate in PagerDuty → Developer → API Access Keys. Use a token with read/write permissions for incidents, services, teams, and users.',
-                'required' => true,
+                'key'         => 'api_token',
+                'type'        => 'secret',
+                'label'       => 'API Token',
+                'placeholder' => 'Enter your PagerDuty API token',
+                'hint'        => 'Generate a General Access REST API token in PagerDuty under Developer Tools → API Access Keys',
+                'required'    => true,
+            ],
+            [
+                'key'         => 'base_url',
+                'type'        => 'url',
+                'label'       => 'API Base URL',
+                'placeholder' => 'https://api.pagerduty.com',
+                'hint'        => 'Change only if using a PagerDuty account with a custom API endpoint',
+                'default'     => 'https://api.pagerduty.com',
             ],
         ];
     }
 
     /**
-     * Test the PagerDuty connection by fetching a single user.
+     * Test the connection to the PagerDuty API using the provided config.
      *
-     * Validates that the API token is correct and the PagerDuty account
-     * is reachable. Returns the total user count on success.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'api_token'
+     * @param  array<string, mixed>  $config  Configuration containing api_token and optionally base_url.
      * @return array{success: bool, message?: string, error?: string}
      */
     public function testConnection(array $config): array
     {
         $apiToken = $config['api_token'] ?? '';
+        $baseUrl  = rtrim($config['base_url'] ?? 'https://api.pagerduty.com', '/');
 
         if (empty($apiToken)) {
-            return ['success' => false, 'error' => 'No API token provided. Generate one at PagerDuty → Developer → API Access Keys.'];
+            return ['success' => false, 'error' => 'No API token provided'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Token token=' . $apiToken,
+                'Authorization' => 'Bearer ' . $apiToken,
+                'Accept' => 'application/vnd.pagerduty+json;version=2',
                 'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ])->timeout(10)
-              ->get('https://api.pagerduty.com/users', ['limit' => 1]);
+            ])->timeout(10)->get($baseUrl . '/users/me');
 
-            if ($response->successful()) {
-                $json = $response->json() ?? [];
-                $total = $json['total'] ?? 0;
-                $count = count($json['users'] ?? []);
+            $json = $response->json();
 
+            if ($json === null) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to PagerDuty. Found {$total} user(s) in the account.",
+                    'success' => false,
+                    'error'   => "Could not reach PagerDuty API at {$baseUrl}. Check the URL.",
                 ];
             }
 
-            $error = $response->json('error.message') ?? $response->body();
+            $name = ($json['user']['name'] ?? 'Unknown');
 
             return [
-                'success' => false,
-                'error' => 'PagerDuty API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'success' => true,
+                'message' => "Connected to PagerDuty as {$name}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -134,108 +130,80 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Return Laravel validation rules for the configuration fields.
+     * Get validation rules for the configuration fields.
      *
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function validationRules(): array
     {
         return [
             'api_token' => 'nullable|string',
+            'base_url'  => 'nullable|url',
         ];
     }
 
     /**
-     * Return the full catalog of PagerDuty tools.
+     * Get all tools provided by this integration.
      *
-     * Each entry maps a tool slug to its class, type, display name,
-     * description, and icon for the tool registry.
-     *
-     * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
+     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
      */
     public function tools(): array
     {
         return [
-            // Incidents
             'pagerduty_list_incidents' => [
-                'class' => PagerDutyListIncidents::class,
-                'type' => 'read',
-                'name' => 'List Incidents',
-                'description' => 'List PagerDuty incidents with optional filtering by status, service, and urgency.',
-                'icon' => 'ph:list-bullets',
+                'class'       => PagerdutyListIncidents::class,
+                'type'        => 'read',
+                'name'        => 'List Incidents',
+                'description' => 'List PagerDuty incidents with optional filters.',
+                'icon'        => 'ph:warning-circle',
             ],
             'pagerduty_get_incident' => [
-                'class' => PagerDutyGetIncident::class,
-                'type' => 'read',
-                'name' => 'Get Incident',
-                'description' => 'Retrieve a PagerDuty incident by ID.',
-                'icon' => 'ph:warning-circle',
+                'class'       => PagerdutyGetIncident::class,
+                'type'        => 'read',
+                'name'        => 'Get Incident',
+                'description' => 'Get details for a single PagerDuty incident.',
+                'icon'        => 'ph:warning-circle',
             ],
-            'pagerduty_update_incident' => [
-                'class' => PagerDutyUpdateIncident::class,
-                'type' => 'write',
-                'name' => 'Update Incident',
-                'description' => 'Update a PagerDuty incident\'s status and priority.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'pagerduty_create_incident_note' => [
-                'class' => PagerDutyCreateIncidentNote::class,
-                'type' => 'write',
-                'name' => 'Create Incident Note',
-                'description' => 'Add a note to a PagerDuty incident.',
-                'icon' => 'ph:note',
-            ],
-            // Services
             'pagerduty_list_services' => [
-                'class' => PagerDutyListServices::class,
-                'type' => 'read',
-                'name' => 'List Services',
-                'description' => 'List PagerDuty services with optional filtering by team.',
-                'icon' => 'ph:gear-six',
+                'class'       => PagerdutyListServices::class,
+                'type'        => 'read',
+                'name'        => 'List Services',
+                'description' => 'List PagerDuty services.',
+                'icon'        => 'ph:cube',
             ],
             'pagerduty_get_service' => [
-                'class' => PagerDutyGetService::class,
-                'type' => 'read',
-                'name' => 'Get Service',
-                'description' => 'Retrieve a PagerDuty service by ID.',
-                'icon' => 'ph:gear-six',
+                'class'       => PagerdutyGetService::class,
+                'type'        => 'read',
+                'name'        => 'Get Service',
+                'description' => 'Get details for a single PagerDuty service.',
+                'icon'        => 'ph:cube',
             ],
-            // Teams
             'pagerduty_list_teams' => [
-                'class' => PagerDutyListTeams::class,
-                'type' => 'read',
-                'name' => 'List Teams',
+                'class'       => PagerdutyListTeams::class,
+                'type'        => 'read',
+                'name'        => 'List Teams',
                 'description' => 'List PagerDuty teams.',
-                'icon' => 'ph:users-three',
+                'icon'        => 'ph:users-three',
             ],
-            // Users
-            'pagerduty_list_users' => [
-                'class' => PagerDutyListUsers::class,
-                'type' => 'read',
-                'name' => 'List Users',
-                'description' => 'List PagerDuty users with optional filtering by team.',
-                'icon' => 'ph:users',
+            'pagerduty_get_team' => [
+                'class'       => PagerdutyGetTeam::class,
+                'type'        => 'read',
+                'name'        => 'Get Team',
+                'description' => 'Get details for a single PagerDuty team.',
+                'icon'        => 'ph:users-three',
             ],
-            'pagerduty_get_user' => [
-                'class' => PagerDutyGetUser::class,
-                'type' => 'read',
-                'name' => 'Get User',
-                'description' => 'Retrieve a PagerDuty user by ID.',
-                'icon' => 'ph:user',
-            ],
-            // On-Call
-            'pagerduty_list_on_calls' => [
-                'class' => PagerDutyListOnCalls::class,
-                'type' => 'read',
-                'name' => 'List On-Calls',
-                'description' => 'List current PagerDuty on-call entries.',
-                'icon' => 'ph:bell-ringing',
+            'pagerduty_get_current_user' => [
+                'class'       => PagerdutyGetCurrentUser::class,
+                'type'        => 'read',
+                'name'        => 'Get Current User',
+                'description' => 'Get the authenticated PagerDuty user profile.',
+                'icon'        => 'ph:user-circle',
             ],
         ];
     }
 
     /**
-     * Return the path to the Lua documentation file for PagerDuty tools.
+     * Get the path to the Lua documentation file.
      */
     public function luaDocsPath(): ?string
     {
@@ -243,19 +211,20 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Return simplified credential field definitions for CLI flows.
+     * Get credential field definitions for the integration.
      *
-     * @return array<int, array{key: string, type: string, label: string, required: bool}>
+     * @return array<int, array<string, mixed>>
      */
     public function credentialFields(): array
     {
         return [
             ['key' => 'api_token', 'type' => 'secret', 'label' => 'API Token', 'required' => true],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.pagerduty.com'],
         ];
     }
 
     /**
-     * Indicate that this provider is an integration (requires credentials).
+     * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
     {
@@ -263,37 +232,29 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration
     }
 
     /**
-     * Create a tool instance with the resolved PagerDuty service.
+     * Create a tool instance, optionally scoped to a specific account.
      *
-     * @param  string  $class  Fully-qualified tool class name
-     * @param  array<string, mixed>  $context  Optional context (may include 'account' for multi-tenant)
+     * When an account context is provided, credentials are resolved for that
+     * specific account. Otherwise the default app-bound service is used.
+     *
+     * @param  class-string<Tool>  $class  The tool class to instantiate.
+     * @param  array<string, mixed>  $context  Context containing optional 'account' key.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the PagerDutyService, with optional account-specific credentials.
-     *
-     * When an `account` key is present in the context, credentials are
-     * resolved for that specific account. Otherwise, the default singleton
-     * service from the container is used.
-     *
-     * @param  array<string, mixed>  $context  Resolution context
-     */
-    private function resolveService(array $context = []): PagerDutyService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new PagerDutyService(
+            $service = new PagerdutyService(
                 apiToken: $creds->get('pagerduty', 'api_token', '', $account),
+                baseUrl: $creds->get('pagerduty', 'base_url', 'https://api.pagerduty.com', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(PagerDutyService::class);
+        return new $class(app(PagerdutyService::class));
     }
 }

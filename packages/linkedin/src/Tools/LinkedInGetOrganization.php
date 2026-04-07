@@ -1,74 +1,68 @@
 <?php
 
-namespace OpenCompany\Integrations\LinkedIn\Tools;
+namespace OpenCompany\Integrations\Linkedin\Tools;
 
-use OpenCompany\Integrations\LinkedIn\LinkedInService;
+use OpenCompany\Integrations\Linkedin\LinkedinService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to retrieve a LinkedIn organization's details by its ID.
+ * Retrieve a LinkedIn organization by ID.
  *
- * Returns organization information including name, description,
- * website, industry, and other available fields.
+ * Returns the full organization profile including name, description, and metadata.
  */
-class LinkedInGetOrganization implements Tool
+class LinkedinGetOrganization implements Tool
 {
     /**
-     * Create a new LinkedInGetOrganization tool instance.
-     *
-     * @param  LinkedInService  $service  The LinkedIn API service.
+     * @param  LinkedinService  $service  The LinkedIn API client
      */
     public function __construct(
-        private LinkedInService $service,
+        private LinkedinService $service,
     ) {}
 
-    /**
-     * Get the tool name identifier.
-     */
     public function name(): string
     {
         return 'linkedin_get_organization';
     }
 
-    /**
-     * Get the tool description for AI agent consumption.
-     */
     public function description(): string
     {
-        return "Get a LinkedIn organization's details by its ID. Returns the organization's name, description, website, and other available information.";
+        return <<<'MD'
+        Retrieve a LinkedIn organization (company page) by its ID.
+        Returns the organization's name, description, website, and other profile data.
+        MD;
     }
 
-    /**
-     * Get the tool parameter schema.
-     *
-     * @return array<string, array{type: string, required?: bool, description: string}>
-     */
     public function parameters(): array
     {
         return [
-            'organization_id' => ['type' => 'string', 'required' => true, 'description' => 'The LinkedIn organization ID (e.g., "2414183" from urn:li:organization:2414183).'],
+            'organization_id' => ['type' => 'string', 'required' => true, 'description' => 'LinkedIn organization ID or URN (e.g. "12345" or "urn:li:organization:12345").'],
         ];
     }
 
     /**
-     * Execute the tool and return the organization data.
+     * Retrieve a LinkedIn organization by ID.
      *
-     * @param  array<string, mixed>  $args  Tool arguments including 'organization_id'.
+     * @param  array<string, mixed>  $args  Tool arguments (organization_id)
      */
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('LinkedIn integration is not configured.');
             }
 
-            $organizationId = $args['organization_id'] ?? '';
-            if (empty(trim($organizationId))) {
-                return ToolResult::error('Organization ID is required.');
+            $id = $args['organization_id'] ?? '';
+            if (empty($id)) {
+                return ToolResult::error('organization_id is required.');
             }
 
-            $result = $this->service->getOrganization($organizationId);
+            // Strip URN prefix if provided
+            if (str_starts_with($id, 'urn:li:organization:')) {
+                $id = substr($id, strlen('urn:li:organization:'));
+            }
+
+            $result = $this->service->getOrganization($id);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -7,9 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Xero contacts with optional search, pagination, and ordering.
+ * List Xero contacts with pagination.
  *
- * Supports searching by name and paginating results.
+ * Returns a paginated list of contacts with their IDs, names, and emails.
  */
 class XeroListContacts implements Tool
 {
@@ -28,24 +28,26 @@ class XeroListContacts implements Tool
     public function description(): string
     {
         return <<<'MD'
-        List Xero contacts with optional search, pagination, and ordering.
-        Use the search parameter to filter contacts by name.
+        List Xero contacts with pagination.
+        Returns contact IDs, names, emails, and types.
+        Use page for pagination (1-indexed).
         MD;
     }
 
     public function parameters(): array
     {
         return [
-            'search' => ['type' => 'string', 'description' => 'Search term to filter contacts by name.'],
-            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default 1).'],
-            'order' => ['type' => 'string', 'description' => 'Sort order, e.g. "Name ASC" or "Name DESC".'],
+            'page' => ['type' => 'integer', 'description' => 'Page number (default 1).'],
+            'where' => ['type' => 'string', 'description' => 'Xero where filter expression.'],
+            'order' => ['type' => 'string', 'description' => 'Sort order (e.g. "Name ASC").'],
+            'include_archived' => ['type' => 'boolean', 'description' => 'Include archived contacts (default false).'],
         ];
     }
 
     /**
-     * List Xero contacts with optional search and pagination.
+     * List Xero contacts with optional pagination.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (search, page, order)
+     * @param  array<string, mixed>  $args  Tool arguments (page, where, order, include_archived)
      */
     public function execute(array $args): ToolResult
     {
@@ -56,31 +58,35 @@ class XeroListContacts implements Tool
 
             $params = [];
 
-            if (! empty($args['search'])) {
-                $params['where'] = 'Name.Contains("' . $args['search'] . '")';
-            }
-            if (! empty($args['page'])) {
+            if (isset($args['page'])) {
                 $params['page'] = (int) $args['page'];
+            }
+            if (! empty($args['where'])) {
+                $params['where'] = $args['where'];
             }
             if (! empty($args['order'])) {
                 $params['order'] = $args['order'];
             }
+            if (isset($args['include_archived'])) {
+                $params['includeArchived'] = $args['include_archived'] ? 'true' : 'false';
+            }
 
             $result = $this->service->listContacts($params);
 
-            $contacts = array_map(function (array $c) {
+            $contacts = array_map(function (array $contact): array {
                 return [
-                    'id' => $c['ContactID'] ?? '',
-                    'name' => $c['Name'] ?? '',
-                    'email' => $c['EmailAddress'] ?? '',
-                    'status' => $c['ContactStatus'] ?? '',
-                    'is_customer' => $c['IsCustomer'] ?? false,
-                    'is_supplier' => $c['IsSupplier'] ?? false,
+                    'id' => $contact['ContactID'] ?? '',
+                    'name' => $contact['Name'] ?? '',
+                    'email' => $contact['EmailAddress'] ?? '',
+                    'type' => $contact['ContactStatus'] ?? '',
+                    'is_customer' => $contact['IsSupplier'] ?? false ? false : true,
+                    'is_supplier' => $contact['IsSupplier'] ?? false,
                 ];
             }, $result['Contacts'] ?? []);
 
             return ToolResult::success([
-                'contacts' => $contacts,
+                'results' => $contacts,
+                'count' => count($contacts),
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

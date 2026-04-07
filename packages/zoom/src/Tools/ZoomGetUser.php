@@ -7,16 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get a Zoom user by ID or email.
+ * Get a user by ID.
  *
- * Retrieves detailed user information including name, email,
- * type, and status.
+ * Returns the user object including id, email, first_name, last_name,
+ * type, status, timezone, and created_at.
  */
 class ZoomGetUser implements Tool
 {
-    /**
-     * @param  ZoomService  $service  The Zoom API client
-     */
     public function __construct(
         private ZoomService $service,
     ) {}
@@ -28,29 +25,25 @@ class ZoomGetUser implements Tool
 
     public function description(): string
     {
-        return 'Get details of a Zoom user by ID or email address.';
+        return 'Get details of a specific Zoom user by ID or "me" for the authenticated user. Returns email, name, type, status, and timezone.';
     }
 
     public function parameters(): array
     {
         return [
-            'user_id' => ['type' => 'string', 'required' => true, 'description' => 'User ID or email address.'],
+            'user_id' => ['type' => 'string', 'required' => true, 'description' => 'The user ID or "me" for the authenticated user.'],
         ];
     }
 
-    /**
-     * Retrieve a user by ID or email.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (user_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Zoom integration is not configured.');
             }
 
             $userId = $args['user_id'] ?? '';
+
             if (empty($userId)) {
                 return ToolResult::error('user_id is required.');
             }

@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-quickbooks",
-    "description": "QuickBooks Online integration for OpenCompany — invoices, customers, payments, estimates, bills, and more.",
+    "description": "QuickBooks Online integration for Laravel — invoices, customers, and accounts.",
     "license": "MIT",
     "authors": [
         {
@@ -8,10 +8,13 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "quickbooks", "accounting", "invoicing", "billing", "opencompany"],
+    "keywords": ["tools", "quickbooks", "accounting", "finance", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-quickbooks": "self.version"
     },
     "autoload": {
         "psr-4": {

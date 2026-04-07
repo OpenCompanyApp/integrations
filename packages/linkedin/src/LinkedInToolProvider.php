@@ -1,67 +1,52 @@
 <?php
 
-namespace OpenCompany\Integrations\LinkedIn;
+namespace OpenCompany\Integrations\Linkedin;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\LinkedIn\Tools\LinkedInCreatePost;
-use OpenCompany\Integrations\LinkedIn\Tools\LinkedInGetCurrentUser;
-use OpenCompany\Integrations\LinkedIn\Tools\LinkedInGetOrganization;
-use OpenCompany\Integrations\LinkedIn\Tools\LinkedInGetProfile;
-use OpenCompany\Integrations\LinkedIn\Tools\LinkedInListConnections;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinListPosts;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinGetPost;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinCreatePost;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinListOrganizations;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinGetOrganization;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinListAdAccounts;
+use OpenCompany\Integrations\Linkedin\Tools\LinkedinGetCurrentUser;
 
 /**
- * Tool provider for the LinkedIn integration.
- *
- * Implements ConfigurableIntegration for multi-account support and provides
- * configuration schema, connection testing, and tool instantiation.
+ * Registers all LinkedIn tools and provides integration metadata, configuration schema, and connection testing.
  */
-class LinkedInToolProvider implements ToolProvider, ConfigurableIntegration
+class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration
 {
-    /**
-     * Get the application name identifier.
-     */
     public function appName(): string
     {
         return 'linkedin';
     }
 
-    /**
-     * Get metadata for the app display in the integration marketplace.
-     */
     public function appMeta(): array
     {
         return [
-            'label' => 'profile, connections, posts, organizations',
-            'description' => 'Professional social network',
+            'label' => 'posts, organizations, ads',
+            'description' => 'Professional networking and marketing platform',
             'icon' => 'ph:linkedin-logo',
             'logo' => 'simple-icons:linkedin',
         ];
     }
 
-    /**
-     * Get integration metadata for display and categorization.
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'LinkedIn',
-            'description' => 'Professional networking and social media platform',
+            'description' => 'Professional networking platform – posts, organizations, and ad accounts',
             'icon' => 'ph:linkedin-logo',
             'logo' => 'simple-icons:linkedin',
-            'category' => 'social',
+            'category' => 'marketing',
             'badge' => 'verified',
-            'docs_url' => 'https://learn.microsoft.com/en-us/linkedin/shared/api-guide/concepts',
+            'docs_url' => 'https://learn.microsoft.com/en-us/linkedin/marketing/',
         ];
     }
 
-    /**
-     * Get the configuration schema for LinkedIn integration setup.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function configSchema(): array
     {
         return [
@@ -69,172 +54,170 @@ class LinkedInToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Enter your LinkedIn OAuth2 access token',
-                'hint' => 'Generate an access token via LinkedIn OAuth2 with the required scopes (r_liteprofile, r_emailaddress, w_member_social, r_organization_social)',
+                'placeholder' => 'AQV...',
+                'hint' => 'LinkedIn OAuth 2.0 access token with marketing permissions. Generate via LinkedIn Developer Portal.',
                 'required' => true,
             ],
             [
-                'key' => 'url',
+                'key' => 'base_url',
                 'type' => 'url',
                 'label' => 'API Base URL',
                 'placeholder' => 'https://api.linkedin.com/v2',
-                'hint' => 'Use <code>https://api.linkedin.com/v2</code> for the standard LinkedIn API',
+                'hint' => 'Override only if using a custom LinkedIn API endpoint. Defaults to <code>https://api.linkedin.com/v2</code>.',
                 'default' => 'https://api.linkedin.com/v2',
             ],
         ];
     }
 
-    /**
-     * Test the LinkedIn API connection using the provided configuration.
-     *
-     * @param  array<string, mixed>  $config  The configuration to test.
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.linkedin.com/v2', '/');
+        $baseUrl = rtrim($config['base_url'] ?? 'https://api.linkedin.com/v2', '/');
 
         if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+            return ['success' => false, 'error' => 'No access token provided. Generate one via LinkedIn Developer Portal.'];
         }
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ])->timeout(10)->get($baseUrl . '/me');
 
-            $json = $response->json();
+            if ($response->successful()) {
+                $data = $response->json() ?? [];
+                $localized = $data['localizedFirstName'] ?? $data['firstName'] ?? '';
+                $localizedLast = $data['localizedLastName'] ?? $data['lastName'] ?? '';
+                $name = trim($localized . ' ' . $localizedLast);
 
-            if ($json === null) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach LinkedIn API at {$baseUrl}. Check the URL and access token.",
+                    'success' => true,
+                    'message' => "Connected to LinkedIn as {$name}.",
                 ];
             }
 
-            $firstName = $json['localizedFirstName'] ?? 'User';
-            $lastName = $json['localizedLastName'] ?? '';
+            $body = $response->json() ?? [];
+            $error = $body['message'] ?? $body['error_description'] ?? $body['error'] ?? $response->body();
 
             return [
-                'success' => true,
-                'message' => "Connected to LinkedIn as {$firstName} {$lastName}.",
+                'success' => false,
+                'error' => 'LinkedIn API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get validation rules for the LinkedIn configuration.
-     *
-     * @return array<string, string|array<int, string>>
-     */
+    /** @return array<string, string|array<int, string>> */
     public function validationRules(): array
     {
         return [
             'access_token' => 'nullable|string',
-            'url' => 'nullable|url',
+            'base_url' => 'nullable|url',
         ];
     }
 
-    /**
-     * Get the list of available LinkedIn tools.
-     *
-     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
-     */
     public function tools(): array
     {
         return [
-            'linkedin_get_profile' => [
-                'class' => LinkedInGetProfile::class,
+            // Posts
+            'linkedin_list_posts' => [
+                'class' => LinkedinListPosts::class,
                 'type' => 'read',
-                'name' => 'Get Profile',
-                'description' => "Get the authenticated user's LinkedIn profile.",
-                'icon' => 'ph:user',
+                'name' => 'List Posts',
+                'description' => 'List LinkedIn UGC posts for an author.',
+                'icon' => 'ph:list',
             ],
-            'linkedin_get_current_user' => [
-                'class' => LinkedInGetCurrentUser::class,
+            'linkedin_get_post' => [
+                'class' => LinkedinGetPost::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => "Get the authenticated user's LinkedIn identity and basic info.",
-                'icon' => 'ph:identification-card',
-            ],
-            'linkedin_list_connections' => [
-                'class' => LinkedInListConnections::class,
-                'type' => 'read',
-                'name' => 'List Connections',
-                'description' => "List the authenticated user's 1st-degree connections.",
-                'icon' => 'ph:users',
+                'name' => 'Get Post',
+                'description' => 'Retrieve a LinkedIn UGC post by ID.',
+                'icon' => 'ph:article',
             ],
             'linkedin_create_post' => [
-                'class' => LinkedInCreatePost::class,
+                'class' => LinkedinCreatePost::class,
                 'type' => 'write',
                 'name' => 'Create Post',
-                'description' => 'Create a post on behalf of the authenticated LinkedIn user.',
-                'icon' => 'ph:paper-plane-tilt',
+                'description' => 'Create a new LinkedIn UGC post.',
+                'icon' => 'ph:pen',
+            ],
+            // Organizations
+            'linkedin_list_organizations' => [
+                'class' => LinkedinListOrganizations::class,
+                'type' => 'read',
+                'name' => 'List Organizations',
+                'description' => 'List LinkedIn organizations (company pages) the user has access to.',
+                'icon' => 'ph:buildings',
             ],
             'linkedin_get_organization' => [
-                'class' => LinkedInGetOrganization::class,
+                'class' => LinkedinGetOrganization::class,
                 'type' => 'read',
                 'name' => 'Get Organization',
-                'description' => "Get a LinkedIn organization's details by ID.",
-                'icon' => 'ph:buildings',
+                'description' => 'Retrieve a LinkedIn organization by ID.',
+                'icon' => 'ph:building-office',
+            ],
+            // Ad Accounts
+            'linkedin_list_ad_accounts' => [
+                'class' => LinkedinListAdAccounts::class,
+                'type' => 'read',
+                'name' => 'List Ad Accounts',
+                'description' => 'List LinkedIn ad accounts.',
+                'icon' => 'ph:megaphone',
+            ],
+            'linkedin_get_current_user' => [
+                'class' => LinkedinGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the currently authenticated LinkedIn user profile.',
+                'icon' => 'ph:user-circle',
             ],
         ];
     }
 
-    /**
-     * Get the path to the Lua documentation file.
-     */
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/linkedin.md';
+        return dirname(__DIR__) . '/lua-docs/linkedin.md';
     }
 
-    /**
-     * Get the credential fields for the LinkedIn integration.
-     *
-     * @return array<int, array{key: string, type: string, label: string, required?: bool, default?: string}>
-     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'LinkedIn API URL', 'required' => false, 'default' => 'https://api.linkedin.com/v2'],
+            ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.linkedin.com/v2'],
         ];
     }
 
-    /**
-     * Confirm this is an integration provider.
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance, optionally using account-specific credentials.
-     *
-     * @param  class-string<Tool>  $class  The tool class to instantiate.
-     * @param  array<string, mixed>  $context  Optional context with 'account' for multi-account support.
-     */
+    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the LinkedinService, with optional account-specific credentials.
+     *
+     * @param  array<string, mixed>  $context
+     */
+    private function resolveService(array $context = []): LinkedinService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new LinkedInService(
+            return new LinkedinService(
                 accessToken: $creds->get('linkedin', 'access_token', '', $account),
-                baseUrl: $creds->get('linkedin', 'url', 'https://api.linkedin.com/v2', $account),
+                baseUrl: $creds->get('linkedin', 'base_url', 'https://api.linkedin.com/v2', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(LinkedInService::class));
+        return app(LinkedinService::class);
     }
 }

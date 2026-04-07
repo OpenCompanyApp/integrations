@@ -7,9 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Mixpanel integration.
+ * MixpanelServiceProvider — Laravel service provider for the Mixpanel integration.
  *
- * Registers the MixpanelService singleton and bootstraps the Mixpanel tool provider.
+ * Registers the MixpanelService singleton (resolving credentials from the
+ * CredentialResolver) and boots the tool provider into the ToolProviderRegistry.
  */
 class MixpanelServiceProvider extends ServiceProvider
 {
@@ -19,9 +20,8 @@ class MixpanelServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new MixpanelService(
-                username: $creds->get('mixpanel', 'username', ''),
-                secret: $creds->get('mixpanel', 'secret', ''),
-                projectId: $creds->get('mixpanel', 'project_id', ''),
+                apiKey: $creds->get('mixpanel', 'api_key', ''),
+                baseUrl: $creds->get('mixpanel', 'url', 'https://api.mixpanel.com/v1'),
             );
         });
     }

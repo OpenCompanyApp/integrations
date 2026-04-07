@@ -7,60 +7,39 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for listing hot posts from a subreddit.
+ * List posts from a subreddit or the Reddit front page.
  *
- * Retrieves the hottest (currently trending) posts from a specified subreddit
- * using Reddit's `/r/{subreddit}/hot` endpoint. Supports pagination via
- * cursor-based `after` and `before` parameters.
+ * Returns a paginated list of posts sorted by the specified method.
+ * Use the `subreddit` parameter to specify a subreddit, or leave empty
+ * for the front page. Supports hot, new, top, rising, and controversial sorting.
  */
 class RedditListPosts implements Tool
 {
-    /**
-     * Create a new RedditListPosts tool instance.
-     *
-     * @param  RedditService  $service  The Reddit API service for making authenticated requests.
-     */
     public function __construct(
         private RedditService $service,
     ) {}
 
-    /**
-     * Get the tool identifier.
-     */
     public function name(): string
     {
         return 'reddit_list_posts';
     }
 
-    /**
-     * Get a human-readable description of what this tool does.
-     */
     public function description(): string
     {
-        return 'List hot posts from a subreddit on Reddit. Returns post titles, scores, authors, and permalinks. Use for browsing trending content in any public subreddit.';
+        return 'List posts from a subreddit or the Reddit front page. Supports hot, new, top, rising, and controversial sorting with pagination via after/before cursors.';
     }
 
-    /**
-     * Get the parameter schema for this tool.
-     *
-     * @return array<string, array{type: string, required?: bool, description: string}>
-     */
     public function parameters(): array
     {
         return [
-            'subreddit' => ['type' => 'string', 'required' => true, 'description' => 'The subreddit name without the r/ prefix (e.g., "laravel", "php").'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of posts to return (default: 25, max: 100).'],
-            'after' => ['type' => 'string', 'description' => 'Pagination cursor — fullname of the last post seen (from previous response).'],
-            'before' => ['type' => 'string', 'description' => 'Pagination cursor — fullname of a post to list posts before it.'],
+            'subreddit' => ['type' => 'string', 'description' => 'Subreddit name (without r/ prefix). Leave empty for front page.'],
+            'sort' => ['type' => 'string', 'description' => 'Sort method: hot, new, top, rising, controversial (default: hot).'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of posts to return (default: 25, max: 100).'],
+            'after' => ['type' => 'string', 'description' => 'Fullname of a post to fetch results after (for pagination).'],
+            'before' => ['type' => 'string', 'description' => 'Fullname of a post to fetch results before (for pagination).'],
         ];
     }
 
-    /**
-     * Execute the tool: fetch hot posts from the specified subreddit.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments including 'subreddit', and optional 'limit', 'after', 'before'.
-     * @return ToolResult The result containing formatted post data or an error message.
-     */
     public function execute(array $args): ToolResult
     {
         try {
@@ -68,55 +47,17 @@ class RedditListPosts implements Tool
                 return ToolResult::error('Reddit integration is not configured.');
             }
 
-            $subreddit = $args['subreddit'];
+            $subreddit = isset($args['subreddit']) ? (string) $args['subreddit'] : '';
+            $sort = isset($args['sort']) ? (string) $args['sort'] : 'hot';
             $limit = isset($args['limit']) ? (int) $args['limit'] : 25;
-            $after = $args['after'] ?? null;
-            $before = $args['before'] ?? null;
+            $after = isset($args['after']) ? (string) $args['after'] : null;
+            $before = isset($args['before']) ? (string) $args['before'] : null;
 
-            $result = $this->service->listPosts($subreddit, $limit, $after, $before);
+            $result = $this->service->listPosts($subreddit, $sort, $limit, $after, $before);
 
-            return ToolResult::success($this->formatResponse($result, $subreddit));
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }
-    }
-
-    /**
-     * Format the Reddit API listing response into a structured result.
-     *
-     * @param  array<string, mixed>  $result  Raw Reddit API response.
-     * @return array<string, mixed> Formatted response with posts and pagination info.
-     */
-    private function formatResponse(array $result, string $subreddit): array
-    {
-        $data = $result['data'] ?? [];
-        $children = $data['children'] ?? [];
-
-        $posts = array_map(function (array $child): array {
-            $post = $child['data'] ?? [];
-            return [
-                'id' => $post['id'] ?? null,
-                'name' => $post['name'] ?? null,
-                'title' => $post['title'] ?? null,
-                'author' => $post['author'] ?? null,
-                'subreddit' => $post['subreddit'] ?? null,
-                'score' => $post['score'] ?? 0,
-                'numComments' => $post['num_comments'] ?? 0,
-                'url' => $post['url'] ?? null,
-                'permalink' => isset($post['permalink']) ? 'https://www.reddit.com' . $post['permalink'] : null,
-                'selftext' => isset($post['selftext']) && $post['selftext'] !== '' ? mb_substr($post['selftext'], 0, 300) : null,
-                'createdUtc' => $post['created_utc'] ?? null,
-                'isSelf' => $post['is_self'] ?? false,
-                'linkFlairText' => $post['link_flair_text'] ?? null,
-            ];
-        }, $children);
-
-        return [
-            'subreddit' => $subreddit,
-            'posts' => $posts,
-            'count' => count($posts),
-            'after' => $data['after'] ?? null,
-            'before' => $data['before'] ?? null,
-        ];
     }
 }

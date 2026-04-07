@@ -5,133 +5,161 @@ namespace OpenCompany\Integrations\Telegram;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Telegram Bot API service for making authenticated requests to the Telegram Bot API.
- *
- * Handles all HTTP communication including message sending, photo uploads,
- * chat management, and bot information retrieval.
- */
 class TelegramService
 {
     public function __construct(
-        private string $botToken = '',
+        private string $accessToken = '',
         private string $baseUrl = 'https://api.telegram.org',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the bot token has been configured.
+     * Check whether the service is configured with an access token.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->botToken);
+        return !empty($this->accessToken);
     }
 
     /**
-     * Get information about the bot (authenticated user).
-     *
-     * @return array<string, mixed> Bot user object from the Telegram API
+     * Get the base API URL with bot token embedded.
      */
-    public function getMe(): array
+    private function apiUrl(string $method): string
     {
-        return $this->request('GET', '/bot{token}/getMe');
+        return $this->baseUrl . '/bot' . $this->accessToken . '/' . $method;
     }
 
     /**
      * Send a text message to a chat.
      *
-     * @param  string|int  $chatId  Unique identifier or username of the target chat
-     * @param  string  $text  Message text (supports Markdown/HTML via parse_mode)
-     * @param  array<string, mixed>  $options  Additional parameters (parse_mode, reply_markup, etc.)
-     * @return array<string, mixed> Message object from the Telegram API
+     * @param  int|string  $chatId   Unique identifier or @username for the target chat.
+     * @param  string      $text     Text of the message to send.
+     * @param  array       $options  Optional parameters (parse_mode, reply_to_message_id, etc.).
+     * @return array<string, mixed>
      */
-    public function sendMessage(string|int $chatId, string $text, array $options = []): array
+    public function sendMessage(int|string $chatId, string $text, array $options = []): array
     {
-        $data = array_merge([
+        return $this->request('POST', 'sendMessage', array_merge([
             'chat_id' => $chatId,
             'text' => $text,
-        ], $options);
-
-        return $this->request('POST', '/bot{token}/sendMessage', $data);
+        ], $options));
     }
 
     /**
      * Send a photo to a chat.
      *
-     * @param  string|int  $chatId  Unique identifier or username of the target chat
-     * @param  string  $photo  URL of the photo or file_id of a previously uploaded photo
-     * @param  array<string, mixed>  $options  Additional parameters (caption, parse_mode, reply_markup, etc.)
-     * @return array<string, mixed> Message object from the Telegram API
+     * @param  int|string  $chatId  Unique identifier or @username for the target chat.
+     * @param  string      $photo   URL of the photo or file_id of an existing photo.
+     * @param  array       $options Optional parameters (caption, parse_mode, etc.).
+     * @return array<string, mixed>
      */
-    public function sendPhoto(string|int $chatId, string $photo, array $options = []): array
+    public function sendPhoto(int|string $chatId, string $photo, array $options = []): array
     {
-        $data = array_merge([
+        return $this->request('POST', 'sendPhoto', array_merge([
             'chat_id' => $chatId,
             'photo' => $photo,
-        ], $options);
-
-        return $this->request('POST', '/bot{token}/sendPhoto', $data);
+        ], $options));
     }
 
     /**
-     * Get incoming updates (messages, callbacks, etc.) for the bot.
+     * Get incoming updates (messages, callbacks, etc.).
      *
-     * @param  array<string, mixed>  $params  Optional parameters (offset, limit, timeout, allowed_updates)
-     * @return array<int, array<string, mixed>> Array of Update objects
+     * @param  int|null  $offset    Identifier of the first update to return.
+     * @param  int       $limit     Number of updates to fetch (1–100).
+     * @param  int       $timeout   Long polling timeout in seconds.
+     * @return array<string, mixed>
      */
-    public function getUpdates(array $params = []): array
+    public function listUpdates(?int $offset = null, int $limit = 100, int $timeout = 0): array
     {
-        $result = $this->request('GET', '/bot{token}/getUpdates', $params);
+        $params = [
+            'limit' => $limit,
+            'timeout' => $timeout,
+        ];
 
-        return $result;
+        if ($offset !== null) {
+            $params['offset'] = $offset;
+        }
+
+        return $this->request('GET', 'getUpdates', $params);
+    }
+
+    /**
+     * Get bot information.
+     *
+     * @return array<string, mixed>
+     */
+    public function getMe(): array
+    {
+        return $this->request('GET', 'getMe');
     }
 
     /**
      * Get information about a chat.
      *
-     * @param  string|int  $chatId  Unique identifier or username of the target chat
-     * @return array<string, mixed> Chat object from the Telegram API
+     * @param  int|string  $chatId  Unique identifier or @username of the target chat.
+     * @return array<string, mixed>
      */
-    public function getChat(string|int $chatId): array
+    public function getChat(int|string $chatId): array
     {
-        return $this->request('GET', '/bot{token}/getChat', [
+        return $this->request('GET', 'getChat', [
             'chat_id' => $chatId,
         ]);
     }
 
     /**
-     * Make an API request and return parsed JSON.
+     * Get the currently authenticated bot user.
      *
-     * @param  string  $method  HTTP method (GET, POST)
-     * @param  string  $path  API endpoint path (use {token} placeholder for bot token)
-     * @param  array<string, mixed>  $data  Request parameters
-     * @return array<string, mixed> Parsed JSON response
+     * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $data = []): array
+    public function getCurrentUser(): array
     {
-        $response = $this->rawRequest($method, $path, $data);
+        return $this->getMe();
+    }
 
-        return $response->json() ?? [];
+    /**
+     * Make an API request and return parsed JSON result.
+     *
+     * @param  string  $method  HTTP method.
+     * @param  string  $api     Telegram Bot API method name.
+     * @param  array   $data    Query params or JSON body.
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $api, array $data = []): array
+    {
+        $response = $this->rawRequest($method, $api, $data);
+
+        if ($response->status() === 204) {
+            return [];
+        }
+
+        $json = $response->json();
+
+        // Telegram wraps responses in {ok: true, result: ...}
+        if (is_array($json) && isset($json['ok']) && $json['ok'] === true) {
+            return $json['result'] ?? [];
+        }
+
+        return $json ?? [];
     }
 
     /**
      * Make a raw HTTP request to the Telegram Bot API.
      *
-     * @param  string  $method  HTTP method (GET, POST)
-     * @param  string  $path  API endpoint path (use {token} placeholder for bot token)
-     * @param  array<string, mixed>  $data  Request parameters
-     * @return \Illuminate\Http\Client\Response Raw HTTP response
+     * @param  string  $method  HTTP method.
+     * @param  string  $api     Telegram Bot API method name.
+     * @param  array   $data    Query params or JSON body.
+     * @return \Illuminate\Http\Client\Response
      *
-     * @throws \RuntimeException When the request fails or the service is not configured
+     * @throws \RuntimeException
      */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $api, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (!$this->botToken) {
-            throw new \RuntimeException('Telegram Bot token is not configured.');
+        if (!$this->accessToken) {
+            throw new \RuntimeException('Telegram bot token is not configured.');
         }
 
-        $url = $this->baseUrl . str_replace('{token}', $this->botToken, $path);
+        $url = $this->apiUrl($api);
 
         try {
             $http = Http::withHeaders([
@@ -141,37 +169,46 @@ class TelegramService
             $response = match (strtoupper($method)) {
                 'GET' => $http->get($url, $data),
                 'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
+                'DELETE' => $http->delete($url, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
             if (!$response->successful()) {
+                $contentType = $response->header('Content-Type');
                 $body = $response->body();
+
+                if (str_contains($contentType, 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
+                    Log::warning("Telegram API returned HTML for {$method} {$api}", [
+                        'status' => $response->status(),
+                    ]);
+                    throw new \RuntimeException("Telegram API endpoint not available (HTTP {$response->status()}). The token may be incorrect.");
+                }
+
                 $json = $response->json();
-
-                $error = $json['description'] ?? $body;
-
-                Log::error("Telegram API error: {$method} {$path}", [
+                $error = $json['description'] ?? $json['error'] ?? $body;
+                Log::error("Telegram API error: {$method} {$api}", [
                     'status' => $response->status(),
                     'error' => $error,
                 ]);
-
                 throw new \RuntimeException("Telegram API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
             }
 
-            $jsonBody = $response->json();
-
-            // Telegram API returns {"ok": true/false, "result": ...}
-            if (isset($jsonBody['ok']) && $jsonBody['ok'] === false) {
-                $error = $jsonBody['description'] ?? 'Unknown error';
-                Log::error("Telegram API returned ok=false: {$method} {$path}", [
-                    'error' => $error,
+            // Check Telegram's own ok field
+            $json = $response->json();
+            if (is_array($json) && isset($json['ok']) && $json['ok'] === false) {
+                $error = $json['description'] ?? 'Unknown Telegram API error';
+                $errorCode = $json['error_code'] ?? $response->status();
+                Log::error("Telegram API error: {$method} {$api}", [
+                    'error_code' => $errorCode,
+                    'description' => $error,
                 ]);
-                throw new \RuntimeException("Telegram API error: {$error}");
+                throw new \RuntimeException("Telegram API error ({$errorCode}): {$error}");
             }
 
             return $response;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Telegram API connection error: {$method} {$path}", [
+            Log::error("Telegram API connection error: {$method} {$api}", [
                 'error' => $e->getMessage(),
             ]);
             throw new \RuntimeException("Failed to connect to Telegram API: {$e->getMessage()}");

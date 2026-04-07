@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-reddit",
-    "description": "Reddit integration for Laravel — list posts, search, manage subreddits, create posts and comments.",
+    "description": "Reddit integration for Laravel — browse posts, subreddits, and comments.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "reddit", "social", "opencompany"],
+    "keywords": ["tools", "reddit", "social", "data", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

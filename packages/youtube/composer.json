@@ -1,0 +1,21 @@
+{
+    "name": "opencompanyapp/integration-youtube",
+    "description": "YouTube Data API v3 integration for OpenCompany — search videos, get video details, channels, and playlists.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "youtube", "video", "data", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {"OpenCompany\\Integrations\\YouTube\\": "src/"}
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["OpenCompany\\Integrations\\YouTube\\YouTubeServiceProvider"]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

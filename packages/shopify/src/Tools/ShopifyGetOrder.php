@@ -7,13 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a Shopify order by ID.
+ * Get a single order from the Shopify store by ID.
  */
 class ShopifyGetOrder implements Tool
 {
-    /**
-     * @param  ShopifyService  $service  The Shopify API client
-     */
     public function __construct(
         private ShopifyService $service,
     ) {}
@@ -25,40 +22,26 @@ class ShopifyGetOrder implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        Retrieve a single Shopify order by its ID.
-        Returns the full order object including line items, customer, shipping, and fulfillment details.
-        MD;
+        return 'Get a single order from the Shopify store by its ID. Returns full order details including line items and totals.';
     }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'description' => 'The Shopify order ID.'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The order ID.'],
         ];
     }
 
-    /**
-     * Get an order from Shopify by ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Shopify integration is not configured.');
             }
 
-            $id = $args['id'] ?? '';
-            if (empty($id)) {
-                return ToolResult::error('Order ID is required.');
-            }
+            $result = $this->service->getOrder($args['id']);
 
-            $result = $this->service->getOrder($id);
-            $order = $result['order'] ?? $result;
-
-            return ToolResult::success($order);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Log;
 /**
  * AmplitudeService — HTTP client for the Amplitude Analytics API.
  *
- * Wraps all Amplitude v2 REST endpoints used by the integration tools.
+ * Wraps Amplitude REST endpoints used by the integration tools.
  * Authentication is via Bearer token passed in the Authorization header.
  */
 class AmplitudeService
 {
     public function __construct(
         private string $apiKey = '',
-        private string $baseUrl = 'https://amplitude.com',
+        private string $baseUrl = 'https://api.amplitude.com/v1',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
@@ -60,7 +60,7 @@ class AmplitudeService
             $params['end'] = $end;
         }
 
-        return $this->request('GET', '/api/2/events', $params);
+        return $this->request('GET', '/events', $params);
     }
 
     /**
@@ -71,70 +71,65 @@ class AmplitudeService
      */
     public function getEvent(string|int $id): array
     {
-        return $this->request('GET', '/api/2/events/' . urlencode((string) $id));
+        return $this->request('GET', '/events/' . urlencode((string) $id));
     }
 
     /**
-     * Search for users matching a query string.
+     * List funnels from the Amplitude dashboard API.
      *
-     * @param  string  $query  Search term (user ID, name, email, etc.).
-     * @param  int     $limit  Maximum number of users to return (default 100).
+     * @param  int|null  $projectId  Filter by project ID.
+     * @param  int       $limit      Maximum number of funnels to return (default 100).
      * @return array<string, mixed>
      */
-    public function listUsers(string $query, int $limit = 100): array
+    public function listFunnels(?int $projectId = null, int $limit = 100): array
     {
-        return $this->request('GET', '/api/2/usersearch', [
-            'query' => $query,
-            'limit' => $limit,
-        ]);
-    }
+        $params = ['limit' => $limit];
 
-    /**
-     * Get the full user profile for a user.
-     *
-     * @param  string|null  $userId   The Amplitude user_id.
-     * @param  string|null  $deviceId The Amplitude device_id.
-     * @return array<string, mixed>
-     */
-    public function getUser(?string $userId = null, ?string $deviceId = null): array
-    {
-        $params = [];
-        if ($userId !== null) {
-            $params['user_id'] = $userId;
-        }
-        if ($deviceId !== null) {
-            $params['device_id'] = $deviceId;
+        if ($projectId !== null) {
+            $params['project_id'] = $projectId;
         }
 
-        return $this->request('GET', '/api/2/userprofile', $params);
+        return $this->request('GET', '/funnels', $params);
     }
 
     /**
-     * List properties (event or user) available in the Amplitude project.
+     * Get a single funnel by its ID.
      *
-     * @param  string  $type  Property type: "event" or "user" (default "event").
+     * @param  string|int  $id  The funnel ID.
      * @return array<string, mixed>
      */
-    public function listProperties(string $type = 'event'): array
+    public function getFunnel(string|int $id): array
     {
-        return $this->request('GET', '/api/2/properties', [
-            'type' => $type,
-        ]);
+        return $this->request('GET', '/funnels/' . urlencode((string) $id));
     }
 
     /**
-     * Search for groups matching a query string.
+     * List behavioral cohorts from the Amplitude dashboard API.
      *
-     * @param  string  $query  Search term for group name or ID.
-     * @param  int     $limit  Maximum number of groups to return (default 100).
+     * @param  int|null  $projectId  Filter by project ID.
+     * @param  int       $limit      Maximum number of cohorts to return (default 100).
      * @return array<string, mixed>
      */
-    public function listGroups(string $query, int $limit = 100): array
+    public function listCohorts(?int $projectId = null, int $limit = 100): array
     {
-        return $this->request('GET', '/api/2/groupsearch', [
-            'query' => $query,
-            'limit' => $limit,
-        ]);
+        $params = ['limit' => $limit];
+
+        if ($projectId !== null) {
+            $params['project_id'] = $projectId;
+        }
+
+        return $this->request('GET', '/cohorts', $params);
+    }
+
+    /**
+     * Get a single cohort by its ID.
+     *
+     * @param  string|int  $id  The cohort ID.
+     * @return array<string, mixed>
+     */
+    public function getCohort(string|int $id): array
+    {
+        return $this->request('GET', '/cohorts/' . urlencode((string) $id));
     }
 
     /**
@@ -144,14 +139,14 @@ class AmplitudeService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/api/2/me');
+        return $this->request('GET', '/me');
     }
 
     /**
      * Make an API request and return parsed JSON.
      *
      * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API endpoint path (e.g. "/api/2/events").
+     * @param  string  $path    API endpoint path (e.g. "/events").
      * @param  array   $data    Query parameters or JSON body.
      * @return array<string, mixed>
      */

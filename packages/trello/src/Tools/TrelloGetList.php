@@ -11,9 +11,6 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
  */
 class TrelloGetList implements Tool
 {
-    /**
-     * @param  TrelloService  $service  The Trello API client
-     */
     public function __construct(
         private TrelloService $service,
     ) {}
@@ -25,7 +22,7 @@ class TrelloGetList implements Tool
 
     public function description(): string
     {
-        return 'Get detailed information about a Trello list.';
+        return 'Get detailed information about a Trello list by ID.';
     }
 
     public function parameters(): array
@@ -35,25 +32,20 @@ class TrelloGetList implements Tool
         ];
     }
 
-    /**
-     * Retrieve a list by its ID.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Trello integration is not configured.');
             }
 
             $id = $args['id'] ?? '';
 
             if (empty($id)) {
-                return ToolResult::error('id is required.');
+                return ToolResult::error('List ID is required.');
             }
 
-            $list = $this->service->getList($id);
+            $list = $this->service->getList((string) $id);
 
             return ToolResult::success($list);
         } catch (\Throwable $e) {

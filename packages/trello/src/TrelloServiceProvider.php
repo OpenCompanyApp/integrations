@@ -6,11 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
-/**
- * Laravel service provider for the Trello integration.
- *
- * Registers the TrelloService singleton and bootstraps the Trello tool provider.
- */
 class TrelloServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -19,8 +14,8 @@ class TrelloServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new TrelloService(
-                apiKey: $creds->get('trello', 'api_key', ''),
-                apiToken: $creds->get('trello', 'api_token', ''),
+                accessToken: $creds->get('trello', 'access_token', ''),
+                baseUrl: $creds->get('trello', 'url', 'https://api.trello.com/1'),
             );
         });
     }

@@ -7,13 +7,13 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List Shopify orders with optional filters and pagination.
+ * List orders from the Shopify store.
+ *
+ * Supports filtering by status, financial status,
+ * fulfillment status, and pagination.
  */
 class ShopifyListOrders implements Tool
 {
-    /**
-     * @param  ShopifyService  $service  The Shopify API client
-     */
     public function __construct(
         private ShopifyService $service,
     ) {}
@@ -25,61 +25,46 @@ class ShopifyListOrders implements Tool
 
     public function description(): string
     {
-        return <<<'MD'
-        List Shopify orders with optional filters.
-        Supports filtering by status (open, closed, cancelled, any), financial_status, and fulfillment_status.
-        Use limit to control page size (max 250) and page_info for cursor-based pagination.
-        MD;
+        return 'List orders from the Shopify store. Supports filtering by status, financial status, fulfillment status, and pagination.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of orders to return (max 250).'],
-            'status' => ['type' => 'string', 'description' => 'Filter by order status: open, closed, cancelled, any.'],
-            'financial_status' => ['type' => 'string', 'description' => 'Filter by financial status: pending, paid, partially_paid, refunded, voided.'],
-            'fulfillment_status' => ['type' => 'string', 'description' => 'Filter by fulfillment status: fulfilled, unfulfilled, partial, restocked.'],
-            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from previous response).'],
+            'limit' => ['type' => 'integer', 'description' => 'Number of orders per page (default: 50, max: 250).'],
+            'status' => ['type' => 'string', 'description' => 'Filter by order status: "open", "closed", "cancelled", or "any".'],
+            'financial_status' => ['type' => 'string', 'description' => 'Filter by financial status: "pending", "paid", "partially_paid", "refunded", "voided".'],
+            'fulfillment_status' => ['type' => 'string', 'description' => 'Filter by fulfillment status: "shipped", "partial", "unshipped", "any".'],
+            'page_info' => ['type' => 'string', 'description' => 'Cursor for pagination (from a previous response).'],
         ];
     }
 
-    /**
-     * List orders from Shopify.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Shopify integration is not configured.');
             }
 
             $params = [];
+            $stringParams = ['status', 'financial_status', 'fulfillment_status', 'page_info'];
+            $intParams = ['limit'];
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
+            foreach ($stringParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = $args[$key];
+                }
             }
-            if (isset($args['status'])) {
-                $params['status'] = $args['status'];
-            }
-            if (isset($args['financial_status'])) {
-                $params['financial_status'] = $args['financial_status'];
-            }
-            if (isset($args['fulfillment_status'])) {
-                $params['fulfillment_status'] = $args['fulfillment_status'];
-            }
-            if (isset($args['page_info'])) {
-                $params['page_info'] = $args['page_info'];
+
+            foreach ($intParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = (int) $args[$key];
+                }
             }
 
             $result = $this->service->listOrders($params);
-            $orders = $result['orders'] ?? [];
 
-            return ToolResult::success([
-                'orders' => $orders,
-                'count' => count($orders),
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

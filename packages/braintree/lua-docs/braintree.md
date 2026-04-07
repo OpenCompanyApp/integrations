@@ -115,29 +115,22 @@ end
 
 ---
 
-## list_subscriptions
+## get_plan
 
-List subscriptions.
+Retrieve a single recurring billing plan by ID.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `limit` | integer | no | Max results (default: 10, max: 100) |
-| `page` | integer | no | Page number (default: 1) |
-| `status` | string | no | Filter by status: `active`, `past_due`, `canceled`, `expired`, `pending` |
+| `id` | string | yes | The plan ID |
 
 ### Example
 
 ```lua
-local result = app.integrations.braintree.list_subscriptions({
-  limit = 20,
-  status = "active"
-})
-
-for _, sub in ipairs(result.subscriptions) do
-  print(sub.id .. ": plan=" .. sub.plan_id .. " price=" .. sub.price .. " next_billing=" .. sub.next_billing_date)
-end
+local result = app.integrations.braintree.get_plan({ id = "plan_abc123" })
+print("Plan: " .. result.plan.name)
+print("Price: $" .. result.plan.price .. "/" .. result.plan.billing_frequency .. " cycles")
 ```
 
 ---

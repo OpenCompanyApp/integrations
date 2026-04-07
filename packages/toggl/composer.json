@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-toggl",
-    "description": "Toggl Track integration for Laravel — manage workspaces, projects, and time entries.",
+    "description": "Toggl integration for Laravel — manage workspaces, projects, and time entries.",
     "license": "MIT",
     "authors": [
         {

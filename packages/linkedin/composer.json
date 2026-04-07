@@ -1,33 +1,26 @@
 {
     "name": "opencompanyapp/integration-linkedin",
-    "description": "LinkedIn integration for Laravel — manage profiles, connections, organizations, and posts.",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "OpenCompany",
-            "homepage": "https://github.com/OpenCompanyApp"
-        }
-    ],
-    "keywords": ["tools", "linkedin", "social", "opencompany"],
+    "description": "LinkedIn integration for OpenCompany – posts, organizations, and ad accounts.",
+    "type": "library",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
-        "opencompanyapp/integration-core": "^2.0 || @dev"
-    },
-    "replace": {
-        "opencompanyapp/ai-tool-linkedin": "self.version"
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
     },
     "autoload": {
         "psr-4": {
-            "OpenCompany\\Integrations\\LinkedIn\\": "src/"
+            "OpenCompany\\Integrations\\Linkedin\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\LinkedIn\\LinkedInServiceProvider"
+                "OpenCompany\\Integrations\\Linkedin\\LinkedinServiceProvider"
             ]
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

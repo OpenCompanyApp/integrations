@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Pinterest\PinterestService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * Get the currently authenticated Pinterest user.
+ *
+ * Returns the profile of the authenticated user, including
+ * username, account type, and profile image.
+ */
 class PinterestGetCurrentUser implements Tool
 {
     public function __construct(
@@ -19,7 +25,7 @@ class PinterestGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the authenticated Pinterest user\'s account information, including username, profile image, and account type.';
+        return 'Get the currently authenticated Pinterest user profile. Returns the username, account type, and profile image.';
     }
 
     public function parameters(): array

@@ -2,37 +2,34 @@
 
 namespace OpenCompany\Integrations\Square;
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Square API service for making requests to the Square REST API.
+ */
 class SquareService
 {
+    private const BASE_URL = 'https://api.squareup.com/v2';
+
     /**
-     * Create a new Square API service instance.
-     *
-     * @param  string  $accessToken  Square OAuth or personal access token
-     * @param  string  $baseUrl  Square API base URL (default: https://connect.squareup.com/v2)
+     * @param  string  $accessToken  Square access token
      */
     public function __construct(
         private string $accessToken = '',
-        private string $baseUrl = 'https://connect.squareup.com/v2',
-    ) {
-        $this->baseUrl = rtrim($this->baseUrl, '/');
-    }
+    ) {}
 
-    /**
-     * Check whether the service is properly configured with an access token.
-     */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
+        return ! empty($this->accessToken);
     }
 
+    // ── Payments ───────────────────────────────────────────
+
     /**
-     * List payments with optional filtering and pagination.
+     * List payments.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, cursor, begin_time, end_time, location_id, status)
+     * @param  array<string, mixed>  $params
      * @return array<string, mixed>
      */
     public function listPayments(array $params = []): array
@@ -41,31 +38,21 @@ class SquareService
     }
 
     /**
-     * Get a single payment by ID.
+     * Get a payment by ID.
      *
-     * @param  string  $id  The Square payment ID
      * @return array<string, mixed>
      */
     public function getPayment(string $id): array
     {
-        return $this->request('GET', '/payments/' . urlencode($id));
+        return $this->request('GET', "/payments/{$id}");
     }
 
-    /**
-     * Create a new payment.
-     *
-     * @param  array<string, mixed>  $data  Payment data including source_id, idempotency_key, and amount_money
-     * @return array<string, mixed>
-     */
-    public function createPayment(array $data): array
-    {
-        return $this->request('POST', '/payments', $data);
-    }
+    // ── Customers ──────────────────────────────────────────
 
     /**
-     * List customers with optional pagination.
+     * List customers.
      *
-     * @param  array<string, mixed>  $params  Query parameters (limit, cursor)
+     * @param  array<string, mixed>  $params
      * @return array<string, mixed>
      */
     public function listCustomers(array $params = []): array
@@ -74,125 +61,117 @@ class SquareService
     }
 
     /**
-     * Create a new customer.
-     *
-     * @param  array<string, mixed>  $data  Customer data including given_name, family_name, email_address, phone_number
-     * @return array<string, mixed>
-     */
-    public function createCustomer(array $data): array
-    {
-        return $this->request('POST', '/customers', $data);
-    }
-
-    /**
-     * List all business locations.
+     * Get a customer by ID.
      *
      * @return array<string, mixed>
      */
-    public function listLocations(): array
+    public function getCustomer(string $id): array
     {
-        return $this->request('GET', '/locations');
+        return $this->request('GET', "/customers/{$id}");
+    }
+
+    // ── Orders ─────────────────────────────────────────────
+
+    /**
+     * List orders.
+     *
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
+    public function listOrders(array $params = []): array
+    {
+        $locationId = $params['location_id'] ?? '';
+        unset($params['location_id']);
+
+        if (empty($locationId)) {
+            throw new \RuntimeException('location_id is required for listing orders.');
+        }
+
+        return $this->request('GET', "/locations/{$locationId}/orders", $params);
     }
 
     /**
-     * Get the current user / health check via the locations endpoint.
+     * Get an order by ID.
      *
-     * Returns the name of the first location as a simple connectivity check.
+     * @return array<string, mixed>
+     */
+    public function getOrder(string $id): array
+    {
+        return $this->request('GET', "/orders/{$id}");
+    }
+
+    // ── Current User ───────────────────────────────────────
+
+    /**
+     * Get the current authenticated user (merchant).
      *
      * @return array<string, mixed>
      */
     public function getCurrentUser(): array
     {
-        $result = $this->listLocations();
-        $locations = $result['locations'] ?? [];
-
-        if (!empty($locations)) {
-            return [
-                'connected' => true,
-                'location_name' => $locations[0]['name'] ?? 'Unknown',
-                'location_count' => count($locations),
-            ];
-        }
-
-        return [
-            'connected' => true,
-            'location_name' => null,
-            'location_count' => 0,
-        ];
+        return $this->request('GET', '/merchants/me');
     }
 
+    // ── HTTP ───────────────────────────────────────────────
+
     /**
-     * Make an API request and return parsed JSON.
+     * Make an API request to Square.
      *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Query or body parameters
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
     {
-        $response = $this->rawRequest($method, $path, $data);
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Square API.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE)
-     * @param  string  $path  API endpoint path
-     * @param  array<string, mixed>  $data  Query or body parameters
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
-     */
-    private function rawRequest(string $method, string $path, array $data = []): Response
-    {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             throw new \RuntimeException('Square access token is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
-
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-                'Square-Version' => '2024-12-18',
-            ])->timeout(30);
+            $http = Http::withToken($this->accessToken)
+                ->withHeaders([
+                    'Square-Version' => '2024-12-18',
+                ])
+                ->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
+                'GET' => $http->get(self::BASE_URL . $path, $data),
+                'POST' => $http->post(self::BASE_URL . $path, $data),
+                'PUT' => $http->put(self::BASE_URL . $path, $data),
+                'PATCH' => $http->patch(self::BASE_URL . $path, $data),
+                'DELETE' => $http->delete(self::BASE_URL . $path, $data),
                 default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+            $json = $response->json() ?? [];
 
-                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Square API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Square API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may require different permissions or the URL may be incorrect.");
-                }
-
-                $json = $response->json();
+            if (! $response->successful()) {
                 $errors = $json['errors'] ?? [];
-                $errorMessages = array_map(fn (array $e) => ($e['category'] ?? '') . ': ' . ($e['detail'] ?? $e['message'] ?? 'Unknown error'), $errors);
-                $error = !empty($errorMessages) ? implode('; ', $errorMessages) : $body;
+                $errorMessages = array_map(function (array $e) {
+                    $category = $e['category'] ?? '';
+                    $detail = $e['detail'] ?? ($e['message'] ?? 'Unknown error');
+                    $code = $e['code'] ?? '';
+
+                    $msg = $detail;
+                    if ($code) {
+                        $msg .= " (code: {$code})";
+                    }
+
+                    return $msg;
+                }, $errors);
+
+                $combined = ! empty($errorMessages)
+                    ? implode('; ', $errorMessages)
+                    : $response->body();
 
                 Log::error("Square API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error' => $error,
+                    'errors' => $errors,
                 ]);
-                throw new \RuntimeException("Square API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+
+                throw new \RuntimeException('Square API error (' . $response->status() . '): ' . $combined);
             }
 
-            return $response;
+            return $json;
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Square API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

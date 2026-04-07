@@ -27,7 +27,10 @@ class DiscordSendMessage implements Tool
 
     public function description(): string
     {
-        return 'Send a message to a Discord channel. Supports text content and rich embeds.';
+        return <<<'MD'
+        Send a message to a Discord channel. Supports text content and rich embeds.
+        Returns the sent message ID and channel ID.
+        MD;
     }
 
     public function parameters(): array

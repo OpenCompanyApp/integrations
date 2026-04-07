@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for getting information about a specific Telegram chat.
+ * Get information about a specific Telegram chat.
  *
- * Returns chat details including type (private, group, supergroup, channel),
- * title, description, member count, and other metadata.
+ * Returns the Chat object including id, type, title, username,
+ * first_name, last_name, and other metadata.
  */
 class TelegramGetChat implements Tool
 {
@@ -25,13 +25,13 @@ class TelegramGetChat implements Tool
 
     public function description(): string
     {
-        return 'Get information about a Telegram chat — type, title, description, member count, and more.';
+        return 'Get information about a specific Telegram chat by its ID or @username. Returns chat type, title, description, member count, and other metadata.';
     }
 
     public function parameters(): array
     {
         return [
-            'chat_id' => ['type' => 'string', 'required' => true, 'description' => 'Unique identifier for the target chat or username (e.g., "@channelname").'],
+            'chat_id' => ['type' => 'string', 'required' => true, 'description' => 'Unique identifier for the target chat or @username of the target channel.'],
         ];
     }
 
@@ -42,11 +42,14 @@ class TelegramGetChat implements Tool
                 return ToolResult::error('Telegram integration is not configured.');
             }
 
-            $result = $this->service->getChat($args['chat_id']);
+            $chatId = $args['chat_id'] ?? '';
+            if (empty($chatId)) {
+                return ToolResult::error('chat_id is required.');
+            }
 
-            $chat = $result['result'] ?? $result;
+            $result = $this->service->getChat($chatId);
 
-            return ToolResult::success($chat);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

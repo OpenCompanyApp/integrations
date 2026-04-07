@@ -8,6 +8,8 @@ use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
  * Get information about a Discord guild.
+ *
+ * Returns the guild's ID, name, icon, description, member count, and other properties.
  */
 class DiscordGetGuild implements Tool
 {
@@ -25,7 +27,10 @@ class DiscordGetGuild implements Tool
 
     public function description(): string
     {
-        return 'Get information about a Discord guild by its ID.';
+        return <<<'MD'
+        Get information about a Discord guild by its ID.
+        Returns the guild's ID, name, icon, description, member count, and other properties.
+        MD;
     }
 
     public function parameters(): array
@@ -36,7 +41,7 @@ class DiscordGetGuild implements Tool
     }
 
     /**
-     * Get guild information by ID.
+     * Retrieve a Discord guild by ID.
      *
      * @param  array<string, mixed>  $args  Tool arguments (guild_id)
      */
@@ -56,8 +61,12 @@ class DiscordGetGuild implements Tool
             $result = $this->service->getGuild($guildId);
 
             return ToolResult::success([
-                'ok' => true,
-                'guild' => $result,
+                'id' => $result['id'] ?? '',
+                'name' => $result['name'] ?? '',
+                'icon' => $result['icon'] ?? null,
+                'description' => $result['description'] ?? '',
+                'member_count' => $result['approximate_member_count'] ?? $result['member_count'] ?? null,
+                'owner_id' => $result['owner_id'] ?? '',
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

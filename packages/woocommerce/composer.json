@@ -15,13 +15,13 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenCompany\\Integrations\\WooCommerce\\": "src/"
+            "OpenCompany\\Integrations\\Woocommerce\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\WooCommerce\\WooCommerceServiceProvider"
+                "OpenCompany\\Integrations\\Woocommerce\\WoocommerceServiceProvider"
             ]
         }
     },

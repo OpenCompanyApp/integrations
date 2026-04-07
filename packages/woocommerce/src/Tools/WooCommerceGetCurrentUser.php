@@ -1,21 +1,20 @@
 <?php
 
-namespace OpenCompany\Integrations\WooCommerce\Tools;
+namespace OpenCompany\Integrations\Woocommerce\Tools;
 
+use OpenCompany\Integrations\Woocommerce\WoocommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\WooCommerce\WooCommerceService;
 
 /**
- * Tool: woocommerce_get_current_user
+ * Get the system status from the WooCommerce store.
  *
- * Retrieves the WooCommerce system status, useful for verifying
- * credentials and inspecting store environment details.
+ * Useful for verifying the API connection and retrieving store info.
  */
-class WooCommerceGetCurrentUser implements Tool
+class WoocommerceGetCurrentUser implements Tool
 {
     public function __construct(
-        private WooCommerceService $service,
+        private WoocommerceService $service,
     ) {}
 
     public function name(): string
@@ -25,12 +24,9 @@ class WooCommerceGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get WooCommerce system status — environment info, store settings, and API credentials validation.';
+        return 'Get the system status from WooCommerce. Use this to verify the API connection is working and retrieve store information.';
     }
 
-    /**
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [];
@@ -39,11 +35,11 @@ class WooCommerceGetCurrentUser implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('WooCommerce integration is not configured.');
             }
 
-            $result = $this->service->getSystemStatus();
+            $result = $this->service->getCurrentUser();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -1,21 +1,20 @@
 <?php
 
-namespace OpenCompany\Integrations\WooCommerce\Tools;
+namespace OpenCompany\Integrations\Woocommerce\Tools;
 
+use OpenCompany\Integrations\Woocommerce\WoocommerceService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\WooCommerce\WooCommerceService;
 
 /**
- * Tool: woocommerce_list_products
+ * List products from the WooCommerce catalog.
  *
- * Lists products from the WooCommerce store with optional filtering
- * and pagination.
+ * Supports pagination, filtering, and including related data.
  */
-class WooCommerceListProducts implements Tool
+class WoocommerceListProducts implements Tool
 {
     public function __construct(
-        private WooCommerceService $service,
+        private WoocommerceService $service,
     ) {}
 
     public function name(): string
@@ -25,41 +24,45 @@ class WooCommerceListProducts implements Tool
 
     public function description(): string
     {
-        return 'List products from the WooCommerce store. Supports filtering by status, category, search term, and pagination.';
+        return 'List products from the WooCommerce catalog. Supports pagination, filtering by name or SKU, and including variants/images.';
     }
 
-    /**
-     * @return array<string, array<string, mixed>>
-     */
     public function parameters(): array
     {
         return [
-            'per_page'    => ['type' => 'integer', 'description' => 'Number of products per page (default: 10, max: 100).'],
-            'page'        => ['type' => 'integer', 'description' => 'Current page number (1-based).'],
-            'search'      => ['type' => 'string',  'description' => 'Search term to filter products by name.'],
-            'status'      => ['type' => 'string',  'description' => 'Filter by status: publish, draft, pending, private, trash.'],
-            'category'    => ['type' => 'string',  'description' => 'Filter by category ID or slug.'],
-            'orderby'     => ['type' => 'string',  'description' => 'Sort collection by: date, id, title, slug, price, popularity.'],
-            'order'       => ['type' => 'string',  'description' => 'Sort direction: asc or desc (default: desc).'],
+            'per_page' => ['type' => 'integer', 'description' => 'Number of products to return per page (default: 10, max: 100).'],
+            'page' => ['type' => 'integer', 'description' => 'Page number for pagination (default: 1).'],
+            'search' => ['type' => 'string', 'description' => 'Search products by name or description.'],
+            'status' => ['type' => 'string', 'description' => 'Filter by product status: "publish", "draft", "pending", "private", or "trash".'],
+            'category' => ['type' => 'string', 'description' => 'Filter by category ID.'],
+            'sku' => ['type' => 'string', 'description' => 'Filter by SKU.'],
+            'orderby' => ['type' => 'string', 'description' => 'Sort collection by field (e.g., "date", "id", "title", "slug", "price").'],
+            'order' => ['type' => 'string', 'description' => 'Sort direction: "asc" or "desc".'],
         ];
     }
 
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('WooCommerce integration is not configured.');
             }
 
-            $params = array_filter([
-                'per_page' => $args['per_page'] ?? null,
-                'page'     => $args['page'] ?? null,
-                'search'   => $args['search'] ?? null,
-                'status'   => $args['status'] ?? null,
-                'category' => $args['category'] ?? null,
-                'orderby'  => $args['orderby'] ?? null,
-                'order'    => $args['order'] ?? null,
-            ], fn ($v) => $v !== null);
+            $params = [];
+            $stringParams = ['search', 'status', 'category', 'sku', 'orderby', 'order'];
+            $intParams = ['per_page', 'page'];
+
+            foreach ($stringParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = $args[$key];
+                }
+            }
+
+            foreach ($intParams as $key) {
+                if (isset($args[$key])) {
+                    $params[$key] = (int) $args[$key];
+                }
+            }
 
             $result = $this->service->listProducts($params);
 

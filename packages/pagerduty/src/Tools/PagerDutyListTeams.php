@@ -1,50 +1,60 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty\Tools;
+namespace OpenCompany\Integrations\Pagerduty\Tools;
 
-use OpenCompany\Integrations\PagerDuty\PagerDutyService;
+use OpenCompany\Integrations\Pagerduty\PagerdutyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List PagerDuty teams with optional pagination.
+ * Tool: List Teams.
  *
- * Returns team details including name, description, and parent team.
+ * Lists PagerDuty teams with pagination support.
+ *
+ * @see https://developer.pagerduty.com/api-reference/list-teams
  */
-class PagerDutyListTeams implements Tool
+class PagerdutyListTeams implements Tool
 {
     /**
-     * @param  PagerDutyService  $service  The PagerDuty API client
+     * @param  PagerdutyService  $service  The PagerDuty API service instance.
      */
     public function __construct(
-        private PagerDutyService $service,
+        private PagerdutyService $service,
     ) {}
 
+    /**
+     * Get the tool identifier.
+     */
     public function name(): string
     {
         return 'pagerduty_list_teams';
     }
 
+    /**
+     * Get the human-readable tool description.
+     */
     public function description(): string
     {
-        return <<<'MD'
-        List PagerDuty teams with optional pagination.
-        Returns team details including name, description, and parent team.
-        MD;
+        return 'List PagerDuty teams. Returns a paginated list of teams with their names, descriptions, and parent team info.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Number of teams to return (1–100, default 25).'],
-            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default 0).'],
+            'limit'  => ['type' => 'integer', 'description' => 'Maximum number of teams to return (default: 25, max: 100).'],
+            'offset' => ['type' => 'integer', 'description' => 'Offset for pagination (default: 0).'],
         ];
     }
 
     /**
-     * List PagerDuty teams with optional pagination.
+     * Execute the list teams tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (limit, offset)
+     * @param  array<string, mixed>  $args  Tool arguments (limit, offset).
      */
     public function execute(array $args): ToolResult
     {
@@ -53,34 +63,22 @@ class PagerDutyListTeams implements Tool
                 return ToolResult::error('PagerDuty integration is not configured.');
             }
 
-            $params = [];
+            $limit  = isset($args['limit']) ? (int) $args['limit'] : 25;
+            $offset = isset($args['offset']) ? (int) $args['offset'] : 0;
 
-            if (isset($args['limit'])) {
-                $params['limit'] = (int) $args['limit'];
-            }
-            if (isset($args['offset'])) {
-                $params['offset'] = (int) $args['offset'];
-            }
+            $result = $this->service->listTeams($limit, $offset);
 
-            $result = $this->service->listTeams($params);
-
-            $teams = array_map(function (array $team) {
-                return [
-                    'id' => $team['id'] ?? '',
-                    'name' => $team['name'] ?? '',
-                    'description' => $team['description'] ?? null,
-                    'parent' => isset($team['parent']) ? [
-                        'id' => $team['parent']['id'] ?? '',
-                        'name' => $team['parent']['summary'] ?? '',
-                    ] : null,
-                    'html_url' => $team['html_url'] ?? '',
-                ];
-            }, $result['teams'] ?? []);
+            $teams = $result['teams'] ?? [];
+            $total = $result['total'] ?? count($teams);
+            $more  = $result['more'] ?? (($offset + count($teams)) < $total);
 
             return ToolResult::success([
-                'teams' => $teams,
-                'total' => $result['total'] ?? count($teams),
-                'more' => $result['more'] ?? false,
+                'teams'  => $teams,
+                'count'  => count($teams),
+                'total'  => $total,
+                'more'   => $more,
+                'offset' => $offset,
+                'limit'  => $limit,
             ]);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());

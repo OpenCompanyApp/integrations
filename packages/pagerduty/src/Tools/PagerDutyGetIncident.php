@@ -1,51 +1,60 @@
 <?php
 
-namespace OpenCompany\Integrations\PagerDuty\Tools;
+namespace OpenCompany\Integrations\Pagerduty\Tools;
 
-use OpenCompany\Integrations\PagerDuty\PagerDutyService;
+use OpenCompany\Integrations\Pagerduty\PagerdutyService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Retrieve a single PagerDuty incident by ID.
+ * Tool: Get Incident.
  *
- * Returns full incident details including status, urgency, service,
- * assignments, acknowledgements, and priority.
+ * Retrieves a single PagerDuty incident by its ID, including all associated
+ * alerts, assignments, and context.
+ *
+ * @see https://developer.pagerduty.com/api-reference/get-an-incident
  */
-class PagerDutyGetIncident implements Tool
+class PagerdutyGetIncident implements Tool
 {
     /**
-     * @param  PagerDutyService  $service  The PagerDuty API client
+     * @param  PagerdutyService  $service  The PagerDuty API service instance.
      */
     public function __construct(
-        private PagerDutyService $service,
+        private PagerdutyService $service,
     ) {}
 
+    /**
+     * Get the tool identifier.
+     */
     public function name(): string
     {
         return 'pagerduty_get_incident';
     }
 
+    /**
+     * Get the human-readable tool description.
+     */
     public function description(): string
     {
-        return <<<'MD'
-        Retrieve a PagerDuty incident by ID.
-        Returns full incident details including status, urgency, service,
-        assignments, acknowledgements, and priority.
-        MD;
+        return 'Get full details for a single PagerDuty incident, including status, urgency, assignments, alerts, and timeline.';
     }
 
+    /**
+     * Get the tool parameter definitions.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'string', 'required' => true, 'description' => 'PagerDuty incident ID (e.g., "Q02JFSRXI65D55").'],
+            'id' => ['type' => 'string', 'required' => true, 'description' => 'The incident ID (e.g., "Q02JTSZO2VGFBH").'],
         ];
     }
 
     /**
-     * Retrieve a PagerDuty incident by ID with full details.
+     * Execute the get incident tool.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (id)
+     * @param  array<string, mixed>  $args  Tool arguments containing the incident ID.
      */
     public function execute(array $args): ToolResult
     {
@@ -56,42 +65,12 @@ class PagerDutyGetIncident implements Tool
 
             $id = $args['id'] ?? '';
             if (empty($id)) {
-                return ToolResult::error('id is required.');
+                return ToolResult::error('Incident ID is required.');
             }
 
             $result = $this->service->getIncident($id);
-            $inc = $result['incident'] ?? $result;
 
-            return ToolResult::success([
-                'id' => $inc['id'] ?? '',
-                'title' => $inc['title'] ?? '',
-                'status' => $inc['status'] ?? '',
-                'urgency' => $inc['urgency'] ?? '',
-                'priority' => [
-                    'id' => $inc['priority']['id'] ?? null,
-                    'name' => $inc['priority']['summary'] ?? null,
-                ],
-                'created_at' => $inc['created_at'] ?? null,
-                'updated_at' => $inc['updated_at'] ?? null,
-                'resolved_at' => $inc['last_status_change_at'] ?? null,
-                'service' => [
-                    'id' => $inc['service']['id'] ?? '',
-                    'name' => $inc['service']['name'] ?? '',
-                ],
-                'assigned_to' => array_map(function (array $a) {
-                    return [
-                        'id' => $a['assignee']['id'] ?? '',
-                        'name' => $a['assignee']['summary'] ?? '',
-                    ];
-                }, $inc['assignments'] ?? []),
-                'acknowledged_by' => array_map(function (array $a) {
-                    return [
-                        'id' => $a['acknowledger']['id'] ?? '',
-                        'name' => $a['acknowledger']['summary'] ?? '',
-                    ];
-                }, $inc['acknowledgements'] ?? []),
-                'html_url' => $inc['html_url'] ?? '',
-            ]);
+            return ToolResult::success($result['incident'] ?? $result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

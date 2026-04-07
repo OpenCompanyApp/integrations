@@ -7,12 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get the authenticated Toggl Track user's profile.
+ * Tool: toggl_get_current_user
  *
- * Returns user details including email, fullname, default workspace, and
- * other account settings.
- *
- * @see https://engineering.toggl.com/docs/api/me#get-me
+ * Gets the authenticated Toggl user profile. Useful for verifying API token validity.
  */
 class TogglGetCurrentUser implements Tool
 {
@@ -27,7 +24,7 @@ class TogglGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the authenticated Toggl Track user profile, including email, name, and default workspace.';
+        return 'Get the authenticated Toggl user profile. Use this to verify your API token is working.';
     }
 
     public function parameters(): array
@@ -38,13 +35,13 @@ class TogglGetCurrentUser implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Toggl integration is not configured.');
             }
 
-            $user = $this->service->getCurrentUser();
+            $result = $this->service->getCurrentUser();
 
-            return ToolResult::success($user);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

@@ -6,37 +6,50 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Client for the Discord Bot API (v10).
+ * Client for the Discord REST API (v10) covering channels, messages, guilds, and users.
  *
- * Wraps HTTP calls to Discord's REST endpoints for messages, channels,
- * guilds, members, roles, reactions, users, and webhooks.
+ * Wraps HTTP calls with Bearer token authentication, request routing, and error reporting.
  */
 class DiscordService
 {
-    private const BASE_URL = 'https://discord.com/api/v10';
-
     /**
-     * @param  string  $botToken  Discord Bot Token
+     * @param  string  $accessToken  Discord access token
+     * @param  string  $baseUrl      Discord API base URL (default: https://discord.com/api/v10)
      */
     public function __construct(
-        private string $botToken = '',
-    ) {}
+        private string $accessToken = '',
+        private string $baseUrl = 'https://discord.com/api/v10',
+    ) {
+        $this->baseUrl = rtrim($this->baseUrl, '/');
+    }
 
     public function isConfigured(): bool
     {
-        return ! empty($this->botToken);
+        return ! empty($this->accessToken);
     }
 
-    // ── Connection Test ─────────────────────────────────────
+    // ── Channels ────────────────────────────────────────────
 
     /**
-     * Test the bot token by fetching the current user.
+     * List channels in a guild.
      *
+     * @param  string  $guildId  Snowflake guild ID
      * @return array<string, mixed>
      */
-    public function testConnection(): array
+    public function listChannels(string $guildId): array
     {
-        return $this->request('GET', '/users/@me');
+        return $this->request('GET', "/guilds/{$guildId}/channels");
+    }
+
+    /**
+     * Get a channel by ID.
+     *
+     * @param  string  $channelId  Snowflake channel ID
+     * @return array<string, mixed>
+     */
+    public function getChannel(string $channelId): array
+    {
+        return $this->request('GET', "/channels/{$channelId}");
     }
 
     // ── Messages ────────────────────────────────────────────
@@ -60,84 +73,23 @@ class DiscordService
      * @param  array<string, mixed>  $params  Query params (limit, before, after)
      * @return array<string, mixed>
      */
-    public function getMessages(string $channelId, array $params = []): array
+    public function listMessages(string $channelId, array $params = []): array
     {
         return $this->request('GET', "/channels/{$channelId}/messages", $params);
     }
 
-    /**
-     * Get a single message by ID.
-     *
-     * @param  string  $channelId   Snowflake channel ID
-     * @param  string  $messageId   Snowflake message ID
-     * @return array<string, mixed>
-     */
-    public function getMessage(string $channelId, string $messageId): array
-    {
-        return $this->request('GET', "/channels/{$channelId}/messages/{$messageId}");
-    }
-
-    /**
-     * Delete a message by ID.
-     *
-     * @param  string  $channelId   Snowflake channel ID
-     * @param  string  $messageId   Snowflake message ID
-     * @return array<string, mixed>
-     */
-    public function deleteMessage(string $channelId, string $messageId): array
-    {
-        return $this->request('DELETE', "/channels/{$channelId}/messages/{$messageId}");
-    }
-
-    // ── Channels ────────────────────────────────────────────
-
-    /**
-     * Get a channel by ID.
-     *
-     * @param  string  $channelId  Snowflake channel ID
-     * @return array<string, mixed>
-     */
-    public function getChannel(string $channelId): array
-    {
-        return $this->request('GET', "/channels/{$channelId}");
-    }
-
-    /**
-     * Create a channel in a guild.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @param  array<string, mixed>  $data  Channel payload (name, type, topic, parent_id)
-     * @return array<string, mixed>
-     */
-    public function createChannel(string $guildId, array $data): array
-    {
-        return $this->request('POST', "/guilds/{$guildId}/channels", $data);
-    }
-
-    /**
-     * Update a channel's properties.
-     *
-     * @param  string  $channelId  Snowflake channel ID
-     * @param  array<string, mixed>  $data  Update payload (name, topic, rate_limit_per_user)
-     * @return array<string, mixed>
-     */
-    public function updateChannel(string $channelId, array $data): array
-    {
-        return $this->request('PATCH', "/channels/{$channelId}", $data);
-    }
-
-    /**
-     * List all channels in a guild.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @return array<string, mixed>
-     */
-    public function listGuildChannels(string $guildId): array
-    {
-        return $this->request('GET', "/guilds/{$guildId}/channels");
-    }
-
     // ── Guilds ──────────────────────────────────────────────
+
+    /**
+     * List guilds the current user is in.
+     *
+     * @param  array<string, mixed>  $params  Query params (limit, before, after)
+     * @return array<string, mixed>
+     */
+    public function listGuilds(array $params = []): array
+    {
+        return $this->request('GET', '/users/@me/guilds', $params);
+    }
 
     /**
      * Get a guild by ID.
@@ -150,85 +102,10 @@ class DiscordService
         return $this->request('GET', "/guilds/{$guildId}");
     }
 
-    /**
-     * List members of a guild.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @param  array<string, mixed>  $params  Query params (limit, after)
-     * @return array<string, mixed>
-     */
-    public function listGuildMembers(string $guildId, array $params = []): array
-    {
-        return $this->request('GET', "/guilds/{$guildId}/members", $params);
-    }
-
-    /**
-     * Add a role to a guild member.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @param  string  $userId   Snowflake user ID
-     * @param  string  $roleId   Snowflake role ID
-     * @return array<string, mixed>
-     */
-    public function addMemberRole(string $guildId, string $userId, string $roleId): array
-    {
-        return $this->request('PUT', "/guilds/{$guildId}/members/{$userId}/roles/{$roleId}");
-    }
-
-    /**
-     * Remove a role from a guild member.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @param  string  $userId   Snowflake user ID
-     * @param  string  $roleId   Snowflake role ID
-     * @return array<string, mixed>
-     */
-    public function removeMemberRole(string $guildId, string $userId, string $roleId): array
-    {
-        return $this->request('DELETE', "/guilds/{$guildId}/members/{$userId}/roles/{$roleId}");
-    }
-
-    /**
-     * List roles in a guild.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @return array<string, mixed>
-     */
-    public function listGuildRoles(string $guildId): array
-    {
-        return $this->request('GET', "/guilds/{$guildId}/roles");
-    }
-
-    // ── Reactions ───────────────────────────────────────────
-
-    /**
-     * Add a reaction to a message.
-     *
-     * @param  string  $channelId  Snowflake channel ID
-     * @param  string  $messageId  Snowflake message ID
-     * @param  string  $emoji      URL-encoded emoji (e.g. "%F0%9F%91%8D" or "emoji_name:emoji_id")
-     * @return array<string, mixed>
-     */
-    public function addReaction(string $channelId, string $messageId, string $emoji): array
-    {
-        return $this->request('PUT', "/channels/{$channelId}/messages/{$messageId}/reactions/{$emoji}/@me");
-    }
-
     // ── Users ───────────────────────────────────────────────
 
     /**
-     * Get a user by ID.
-     *
-     * @param  string  $userId  Snowflake user ID
-     * @return array<string, mixed>
-     */
-    public function getUser(string $userId): array
-    {
-        return $this->request('GET', "/users/{$userId}");
-    }
-
-    /**
-     * Get the current bot user.
+     * Get the current user.
      *
      * @return array<string, mixed>
      */
@@ -237,68 +114,29 @@ class DiscordService
         return $this->request('GET', '/users/@me');
     }
 
-    // ── Guild Member Management ─────────────────────────────
-
-    /**
-     * Modify a guild member's properties.
-     *
-     * @param  string  $guildId  Snowflake guild ID
-     * @param  string  $userId   Snowflake user ID
-     * @param  array<string, mixed>  $data  Update payload (nick, roles, mute, deaf)
-     * @return array<string, mixed>
-     */
-    public function modifyGuildMember(string $guildId, string $userId, array $data): array
-    {
-        return $this->request('PATCH', "/guilds/{$guildId}/members/{$userId}", $data);
-    }
-
-    // ── Webhooks ────────────────────────────────────────────
-
-    /**
-     * Execute a webhook (no bot auth required).
-     *
-     * @param  string  $webhookId     Snowflake webhook ID
-     * @param  string  $webhookToken  Webhook token
-     * @param  array<string, mixed>  $data  Payload (content, embeds, username, avatar_url)
-     * @return array<string, mixed>
-     */
-    public function sendWebhook(string $webhookId, string $webhookToken, array $data): array
-    {
-        return $this->request('POST', "/webhooks/{$webhookId}/{$webhookToken}", $data, auth: false);
-    }
-
-    // ── HTTP ─────────────────────────────────────────────────
+    // ── HTTP ───────────────────────────────────────────────
 
     /**
      * Make an API request to Discord.
      *
      * @param  array<string, mixed>  $data
-     * @param  bool  $auth  Whether to include the bot authorization header
      * @return array<string, mixed>
      *
      * @throws \RuntimeException  On connection failure, rate limit (429), or API error
      */
-    private function request(string $method, string $path, array $data = [], bool $auth = true): array
+    private function request(string $method, string $path, array $data = []): array
     {
-        if ($auth && ! $this->botToken) {
-            throw new \RuntimeException('Discord bot token is not configured.');
+        if (! $this->accessToken) {
+            throw new \RuntimeException('Discord access token is not configured.');
         }
 
-        $url = self::BASE_URL . $path;
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::timeout(30);
-
-            if ($auth) {
-                $http = $http->withHeaders([
-                    'Authorization' => 'Bot ' . $this->botToken,
-                    'Content-Type' => 'application/json',
-                ]);
-            } else {
-                $http = $http->withHeaders([
-                    'Content-Type' => 'application/json',
-                ]);
-            }
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Content-Type' => 'application/json',
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
                 'GET'    => $http->get($url, $data),
@@ -330,7 +168,7 @@ class DiscordService
                 throw new \RuntimeException("Discord API error ({$response->status()}): {$error}");
             }
 
-            // Some Discord endpoints return 204 No Content (e.g., DELETE, PUT for roles)
+            // Some Discord endpoints return 204 No Content
             if ($response->status() === 204) {
                 return [];
             }

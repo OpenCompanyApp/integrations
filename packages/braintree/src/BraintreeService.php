@@ -99,6 +99,17 @@ class BraintreeService
     }
 
     /**
+     * Get a single plan by ID.
+     *
+     * @param  string  $id  The plan ID.
+     * @return array<string, mixed>
+     */
+    public function getPlan(string $id): array
+    {
+        return $this->request('GET', "/merchants/{$this->merchantId}/plans/{$id}");
+    }
+
+    /**
      * List subscriptions for the merchant.
      *
      * @param  int  $limit  Maximum number of subscriptions to return (default: 10, max: 100).

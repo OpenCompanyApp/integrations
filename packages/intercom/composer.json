@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-intercom",
-    "description": "Intercom integration for OpenCompany – contacts, conversations, admins, tags, notes, and companies.",
+    "description": "Intercom integration for OpenCompany – contacts, conversations, and companies.",
     "type": "library",
     "license": "proprietary",
     "require": {

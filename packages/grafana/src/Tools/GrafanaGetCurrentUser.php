@@ -7,10 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool to get the current Grafana organization info.
+ * Tool to get the currently authenticated Grafana user.
  *
- * Used primarily to verify authentication and retrieve org details.
- * Returns the organization ID, name, and address.
+ * Useful for verifying credentials and identifying the connected account.
  */
 class GrafanaGetCurrentUser implements Tool
 {
@@ -36,7 +35,7 @@ class GrafanaGetCurrentUser implements Tool
      */
     public function description(): string
     {
-        return 'Get the current Grafana organization info. Useful for verifying authentication and retrieving org name and details.';
+        return 'Get the currently authenticated Grafana user. Useful for verifying credentials and identifying the connected account.';
     }
 
     /**
@@ -57,7 +56,7 @@ class GrafanaGetCurrentUser implements Tool
                 return ToolResult::error('Grafana integration is not configured.');
             }
 
-            $result = $this->service->getOrg();
+            $result = $this->service->getCurrentUser();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

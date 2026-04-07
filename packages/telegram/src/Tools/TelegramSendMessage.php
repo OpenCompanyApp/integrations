@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for sending text messages via the Telegram Bot API.
+ * Send a text message to a Telegram chat.
  *
- * Sends a text message to a specified chat. Supports Markdown/HTML formatting
- * via the parse_mode parameter and inline keyboards via reply_markup.
+ * Sends a message to the specified chat and returns the sent message
+ * object including message_id, date, and the message content.
  */
 class TelegramSendMessage implements Tool
 {
@@ -25,18 +25,17 @@ class TelegramSendMessage implements Tool
 
     public function description(): string
     {
-        return 'Send a text message to a Telegram chat. Supports Markdown and HTML formatting. The chat must have an active conversation with the bot.';
+        return 'Send a text message to a Telegram chat. Provide the chat_id and message text. The chat_id can be a numeric ID or @channelusername. Supports optional parse_mode (Markdown, MarkdownV2, HTML) and other formatting options.';
     }
 
     public function parameters(): array
     {
         return [
-            'chat_id' => ['type' => 'string', 'required' => true, 'description' => 'Unique identifier for the target chat or username (e.g., "@channelname").'],
-            'text' => ['type' => 'string', 'required' => true, 'description' => 'Text of the message to send (max 4096 characters).'],
-            'parse_mode' => ['type' => 'string', 'description' => 'Formatting mode: "MarkdownV2", "HTML", or "Markdown".'],
-            'disable_notification' => ['type' => 'boolean', 'description' => 'Send silently without notification (default: false).'],
-            'reply_to_message_id' => ['type' => 'integer', 'description' => 'ID of the message to reply to.'],
-            'reply_markup' => ['type' => 'string', 'description' => 'JSON-encoded inline keyboard or reply markup.'],
+            'chat_id' => ['type' => 'string', 'required' => true, 'description' => 'Unique identifier for the target chat or @username of the target channel.'],
+            'text' => ['type' => 'string', 'required' => true, 'description' => 'Text of the message to send.'],
+            'parse_mode' => ['type' => 'string', 'description' => 'Parse mode for the message: Markdown, MarkdownV2, or HTML.'],
+            'reply_to_message_id' => ['type' => 'integer', 'description' => 'If the message is a reply, ID of the original message.'],
+            'disable_notification' => ['type' => 'boolean', 'description' => 'Send the message silently. Default: false.'],
         ];
     }
 
@@ -47,34 +46,30 @@ class TelegramSendMessage implements Tool
                 return ToolResult::error('Telegram integration is not configured.');
             }
 
-            $chatId = $args['chat_id'];
-            $text = $args['text'];
+            $chatId = $args['chat_id'] ?? '';
+            $text = $args['text'] ?? '';
+
+            if (empty($chatId)) {
+                return ToolResult::error('chat_id is required.');
+            }
+            if (empty($text)) {
+                return ToolResult::error('text is required.');
+            }
 
             $options = [];
             if (isset($args['parse_mode'])) {
                 $options['parse_mode'] = $args['parse_mode'];
             }
-            if (isset($args['disable_notification'])) {
-                $options['disable_notification'] = (bool) $args['disable_notification'];
-            }
             if (isset($args['reply_to_message_id'])) {
                 $options['reply_to_message_id'] = (int) $args['reply_to_message_id'];
             }
-            if (isset($args['reply_markup'])) {
-                $markup = $args['reply_markup'];
-                $options['reply_markup'] = is_string($markup) ? json_decode($markup, true) : $markup;
+            if (isset($args['disable_notification'])) {
+                $options['disable_notification'] = (bool) $args['disable_notification'];
             }
 
             $result = $this->service->sendMessage($chatId, $text, $options);
 
-            // Telegram wraps in {ok: true, result: {...}}
-            $message = $result['result'] ?? $result;
-
-            return ToolResult::success([
-                'message_id' => $message['message_id'] ?? null,
-                'chat' => $message['chat'] ?? [],
-                'date' => $message['date'] ?? null,
-            ]);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

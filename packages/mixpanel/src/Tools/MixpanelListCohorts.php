@@ -7,16 +7,12 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all behavioural cohorts in Mixpanel.
+ * MixpanelListCohorts — List all behavioral cohorts in Mixpanel.
  *
- * Returns a list of cohort definitions including IDs and names,
- * useful for discovering cohort IDs for further analysis.
+ * Calls GET /v1/cohorts/list and returns all configured cohorts.
  */
 class MixpanelListCohorts implements Tool
 {
-    /**
-     * @param  MixpanelService  $service  The Mixpanel API client
-     */
     public function __construct(
         private MixpanelService $service,
     ) {}
@@ -28,31 +24,22 @@ class MixpanelListCohorts implements Tool
 
     public function description(): string
     {
-        return 'List all behavioural cohorts in the Mixpanel project.';
+        return 'List all behavioral cohorts in the Mixpanel project. Returns cohort names, IDs, and sizes.';
     }
 
     public function parameters(): array
     {
-        return [
-            'project_id' => ['type' => 'integer', 'description' => 'Mixpanel project ID. Defaults to the configured project.'],
-        ];
+        return [];
     }
 
-    /**
-     * List all cohorts in the project.
-     *
-     * @param  array<string, mixed>  $args  Tool arguments (project_id)
-     */
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Mixpanel integration is not configured.');
             }
 
-            $projectId = $args['project_id'] ?? null;
-
-            $result = $this->service->listCohorts($projectId);
+            $result = $this->service->listCohorts();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

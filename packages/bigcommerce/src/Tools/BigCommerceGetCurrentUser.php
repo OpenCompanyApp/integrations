@@ -24,7 +24,7 @@ class BigCommerceGetCurrentUser implements Tool
 
     public function description(): string
     {
-        return 'Get the storefront status from the BigCommerce store. Use this to verify the API connection is working.';
+        return 'Get the current user / storefront status from BigCommerce. Use this to verify the API connection is working.';
     }
 
     public function parameters(): array
@@ -39,7 +39,7 @@ class BigCommerceGetCurrentUser implements Tool
                 return ToolResult::error('BigCommerce integration is not configured.');
             }
 
-            $result = $this->service->getStorefrontStatus();
+            $result = $this->service->getCurrentUser();
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

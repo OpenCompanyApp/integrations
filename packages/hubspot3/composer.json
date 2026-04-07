@@ -1,0 +1,26 @@
+{
+    "name": "opencompanyapp/integration-hubspot3",
+    "description": "HubSpot marketing/CRM integration for OpenCompany – contacts, companies, and deals.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "opencompanyapp/integration-core": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Hubspot3\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Hubspot3\\Hubspot3ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

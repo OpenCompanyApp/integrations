@@ -52,7 +52,7 @@ class FreshdeskToolProvider implements ToolProvider, ConfigurableIntegration
             'description' => 'Customer support and helpdesk platform',
             'icon'        => 'ph:headset',
             'logo'        => 'simple-icons:freshdesk',
-            'category'    => 'support',
+            'category'    => 'productivity',
             'badge'       => 'verified',
             'docs_url'    => 'https://developers.freshdesk.com/api/',
         ];

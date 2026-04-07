@@ -7,12 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * List all Toggl Track workspaces the authenticated user has access to.
+ * Tool: toggl_list_workspaces
  *
- * Returns workspace ID, name, and organization details needed as parameters
- * for other Toggl tools (projects, time entries).
- *
- * @see https://engineering.toggl.com/docs/api/workspaces#get-workspaces
+ * Lists all Toggl workspaces the authenticated user belongs to.
  */
 class TogglListWorkspaces implements Tool
 {
@@ -27,7 +24,7 @@ class TogglListWorkspaces implements Tool
 
     public function description(): string
     {
-        return 'List all Toggl Track workspaces the user has access to. Returns workspace IDs needed for project and time entry operations.';
+        return 'List all Toggl workspaces the authenticated user belongs to. Returns workspace IDs and names needed for other Toggl tools.';
     }
 
     public function parameters(): array
@@ -38,13 +35,13 @@ class TogglListWorkspaces implements Tool
     public function execute(array $args): ToolResult
     {
         try {
-            if (! $this->service->isConfigured()) {
+            if (!$this->service->isConfigured()) {
                 return ToolResult::error('Toggl integration is not configured.');
             }
 
-            $workspaces = $this->service->listWorkspaces();
+            $result = $this->service->listWorkspaces();
 
-            return ToolResult::success($workspaces);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

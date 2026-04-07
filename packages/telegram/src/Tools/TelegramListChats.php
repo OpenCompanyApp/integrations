@@ -7,11 +7,11 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for listing chats the bot has interacted with.
+ * List recent chats the bot has interacted with.
  *
- * The Telegram Bot API does not provide a direct "list chats" endpoint.
- * This tool uses getUpdates to collect unique chats from recent updates,
- * then enriches each with getChat information.
+ * Telegram Bot API does not have a direct "list chats" endpoint.
+ * This tool fetches recent updates and extracts unique chat objects
+ * from them, providing a summary of recent conversations.
  */
 class TelegramListChats implements Tool
 {
@@ -26,13 +26,13 @@ class TelegramListChats implements Tool
 
     public function description(): string
     {
-        return 'List chats the bot has interacted with. Since Telegram has no direct "list chats" API, this derives chats from recent updates.';
+        return 'List recent chats the bot has interacted with. Since Telegram Bot API does not have a native list-chats endpoint, this fetches recent updates and extracts unique chats. Returns chat IDs, types, and titles.';
     }
 
     public function parameters(): array
     {
         return [
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of chats to return (default: 50).'],
+            'limit' => ['type' => 'integer', 'description' => 'Maximum number of updates to scan for chats (1–100). Default: 100.'],
         ];
     }
 
@@ -43,88 +43,50 @@ class TelegramListChats implements Tool
                 return ToolResult::error('Telegram integration is not configured.');
             }
 
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 50;
+            $limit = isset($args['limit']) ? (int) $args['limit'] : 100;
 
-            // Fetch updates to discover chats
-            $result = $this->service->getUpdates(['limit' => 100]);
-            $updates = $result['result'] ?? $result;
-
-            if (!is_array($updates)) {
-                return ToolResult::success([
-                    'chats' => [],
-                    'count' => 0,
-                ]);
-            }
+            $updates = $this->service->listUpdates(null, $limit);
 
             // Extract unique chats from updates
-            $seenChatIds = [];
             $chats = [];
+            $seenIds = [];
 
-            foreach ($updates as $update) {
-                $chat = $this->extractChatFromUpdate($update);
+            if (is_array($updates)) {
+                foreach ($updates as $update) {
+                    $chat = null;
 
-                if ($chat !== null) {
-                    $chatId = (string) ($chat['id'] ?? '');
-                    if ($chatId !== '' && !isset($seenChatIds[$chatId])) {
-                        $seenChatIds[$chatId] = true;
+                    // Extract chat from various update types
+                    if (isset($update['message']['chat'])) {
+                        $chat = $update['message']['chat'];
+                    } elseif (isset($update['edited_message']['chat'])) {
+                        $chat = $update['edited_message']['chat'];
+                    } elseif (isset($update['channel_post']['chat'])) {
+                        $chat = $update['channel_post']['chat'];
+                    } elseif (isset($update['edited_channel_post']['chat'])) {
+                        $chat = $update['edited_channel_post']['chat'];
+                    } elseif (isset($update['callback_query']['message']['chat'])) {
+                        $chat = $update['callback_query']['message']['chat'];
+                    } elseif (isset($update['my_chat_member']['chat'])) {
+                        $chat = $update['my_chat_member']['chat'];
+                    }
 
-                        // Try to enrich with getChat info
-                        try {
-                            $chatInfo = $this->service->getChat($chatId);
-                            $enriched = $chatInfo['result'] ?? $chatInfo;
-                            $chats[] = $enriched;
-                        } catch (\Throwable) {
-                            // Fall back to basic chat info from the update
-                            $chats[] = $chat;
-                        }
+                    if ($chat !== null && !isset($seenIds[$chat['id']])) {
+                        $seenIds[$chat['id']] = true;
+                        $chats[] = [
+                            'id' => $chat['id'],
+                            'type' => $chat['type'] ?? 'unknown',
+                            'title' => $chat['title'] ?? null,
+                            'username' => $chat['username'] ?? null,
+                            'first_name' => $chat['first_name'] ?? null,
+                            'last_name' => $chat['last_name'] ?? null,
+                        ];
                     }
                 }
             }
 
-            // Apply limit
-            $chats = array_slice($chats, 0, $limit);
-
-            return ToolResult::success([
-                'chats' => $chats,
-                'count' => count($chats),
-            ]);
+            return ToolResult::success($chats);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }
-    }
-
-    /**
-     * Extract chat information from a Telegram update object.
-     *
-     * @param  array<string, mixed>  $update  A Telegram Update object
-     * @return array<string, mixed>|null Chat object or null if no chat found
-     */
-    private function extractChatFromUpdate(array $update): ?array
-    {
-        // Check common update types for chat info
-        $messageTypes = ['message', 'edited_message', 'channel_post', 'edited_channel_post'];
-
-        foreach ($messageTypes as $type) {
-            if (isset($update[$type]['chat'])) {
-                return $update[$type]['chat'];
-            }
-        }
-
-        // Callback queries contain a message with a chat
-        if (isset($update['callback_query']['message']['chat'])) {
-            return $update['callback_query']['message']['chat'];
-        }
-
-        // My chat member updates
-        if (isset($update['my_chat_member']['chat'])) {
-            return $update['my_chat_member']['chat'];
-        }
-
-        // Chat member updates
-        if (isset($update['chat_member']['chat'])) {
-            return $update['chat_member']['chat'];
-        }
-
-        return null;
     }
 }

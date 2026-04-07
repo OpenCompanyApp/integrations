@@ -6,62 +6,47 @@ use Illuminate\Support\Facades\Http;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Square\Tools\SquareCreateCustomer;
-use OpenCompany\Integrations\Square\Tools\SquareCreatePayment;
-use OpenCompany\Integrations\Square\Tools\SquareGetCurrentUser;
+use OpenCompany\Integrations\Square\Tools\SquareListPayments;
 use OpenCompany\Integrations\Square\Tools\SquareGetPayment;
 use OpenCompany\Integrations\Square\Tools\SquareListCustomers;
-use OpenCompany\Integrations\Square\Tools\SquareListLocations;
-use OpenCompany\Integrations\Square\Tools\SquareListPayments;
+use OpenCompany\Integrations\Square\Tools\SquareGetCustomer;
+use OpenCompany\Integrations\Square\Tools\SquareListOrders;
+use OpenCompany\Integrations\Square\Tools\SquareGetOrder;
+use OpenCompany\Integrations\Square\Tools\SquareGetCurrentUser;
 
+/**
+ * Registers all Square tools and provides integration metadata.
+ */
 class SquareToolProvider implements ToolProvider, ConfigurableIntegration
 {
-    /**
-     * Get the application name identifier.
-     */
     public function appName(): string
     {
         return 'square';
     }
 
-    /**
-     * Get metadata for the app display.
-     *
-     * @return array<string, mixed>
-     */
     public function appMeta(): array
     {
         return [
-            'label' => 'payments, customers, locations',
-            'description' => 'Payments and POS platform',
+            'label' => 'payments, orders, customers',
+            'description' => 'Square payments and POS',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:square',
         ];
     }
 
-    /**
-     * Get integration metadata for display in the integrations UI.
-     *
-     * @return array<string, mixed>
-     */
     public function integrationMeta(): array
     {
         return [
             'name' => 'Square',
-            'description' => 'Payments and POS platform for businesses',
+            'description' => 'Payment processing, point of sale, customer management, and orders',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:square',
-            'category' => 'finance',
+            'category' => 'sales',
             'badge' => 'verified',
-            'docs_url' => 'https://developer.squareup.com/docs/payments-api',
+            'docs_url' => 'https://developer.squareup.com/reference/square',
         ];
     }
 
-    /**
-     * Get the configuration schema for the Square integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function configSchema(): array
     {
         return [
@@ -69,196 +54,163 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Enter your Square access token',
-                'hint' => 'Generate an access token in the Square Developer Dashboard under Credentials',
+                'placeholder' => 'EAAAEO...',
+                'hint' => 'Find in Square Developer Dashboard → Credentials. Use a sandbox token for testing or a production token for live data.',
                 'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'API Base URL',
-                'placeholder' => 'https://connect.squareup.com/v2',
-                'hint' => 'Use the default Square API URL, or a sandbox URL like <code>https://connect.squareupsandbox.com/v2</code> for testing',
-                'default' => 'https://connect.squareup.com/v2',
             ],
         ];
     }
 
-    /**
-     * Test the connection to the Square API.
-     *
-     * @param  array<string, mixed>  $config  Configuration values
-     * @return array<string, mixed>  Result with success/error keys
-     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://connect.squareup.com/v2', '/');
 
         if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided'];
+            return ['success' => false, 'error' => 'No access token provided. Find yours at Square Developer Dashboard → Credentials.'];
         }
 
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-                'Square-Version' => '2024-12-18',
-            ])->timeout(10)->get($baseUrl . '/locations');
+            $response = Http::withToken($accessToken)
+                ->withHeaders(['Square-Version' => '2024-12-18'])
+                ->timeout(10)
+                ->get('https://api.squareup.com/v2/merchants/me');
 
-            $json = $response->json();
+            if ($response->successful()) {
+                $data = $response->json() ?? [];
+                $merchant = $data['merchant'] ?? [];
+                $name = $merchant['business_name'] ?? ($merchant['id'] ?? 'Unknown');
 
-            if ($json === null) {
                 return [
-                    'success' => false,
-                    'error' => "Could not reach Square API at {$baseUrl}. Check the URL.",
+                    'success' => true,
+                    'message' => "Connected to Square as \"{$name}\".",
                 ];
             }
 
-            if (!$response->successful()) {
-                $errors = $json['errors'] ?? [];
-                $errorMsg = !empty($errors) ? ($errors[0]['detail'] ?? $errors[0]['message'] ?? 'Unknown error') : "HTTP {$response->status()}";
-                return [
-                    'success' => false,
-                    'error' => "Square API error: {$errorMsg}",
-                ];
-            }
+            $errors = $response->json('errors') ?? [];
+            $errorMessages = array_map(function (array $e) {
+                return $e['detail'] ?? ($e['message'] ?? 'Unknown error');
+            }, $errors);
 
-            $locationCount = count($json['locations'] ?? []);
-            $locationName = $json['locations'][0]['name'] ?? 'Unknown';
+            $combined = ! empty($errorMessages)
+                ? implode('; ', $errorMessages)
+                : $response->body();
 
             return [
-                'success' => true,
-                'message' => "Connected to Square API — {$locationCount} location(s) found ({$locationName}).",
+                'success' => false,
+                'error' => 'Square API error (' . $response->status() . '): ' . $combined,
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /**
-     * Get validation rules for the configuration.
-     *
-     * @return array<string, mixed>
-     */
+    /** @return array<string, string|array<int, string>> */
     public function validationRules(): array
     {
         return [
             'access_token' => 'nullable|string',
-            'url' => 'nullable|url',
         ];
     }
 
-    /**
-     * Get the list of tools provided by this integration.
-     *
-     * @return array<string, array<string, mixed>>
-     */
     public function tools(): array
     {
         return [
+            // Payments
             'square_list_payments' => [
                 'class' => SquareListPayments::class,
                 'type' => 'read',
                 'name' => 'List Payments',
-                'description' => 'List payments with optional filtering by date, location, and status.',
-                'icon' => 'ph:list-bullets',
+                'description' => 'List Square payments with optional filtering.',
+                'icon' => 'ph:credit-card',
             ],
             'square_get_payment' => [
                 'class' => SquareGetPayment::class,
                 'type' => 'read',
                 'name' => 'Get Payment',
-                'description' => 'Get details of a specific payment by ID.',
+                'description' => 'Retrieve a Square payment by ID.',
                 'icon' => 'ph:credit-card',
             ],
-            'square_create_payment' => [
-                'class' => SquareCreatePayment::class,
-                'type' => 'write',
-                'name' => 'Create Payment',
-                'description' => 'Create a new payment with a payment source.',
-                'icon' => 'ph:plus-circle',
-            ],
+            // Customers
             'square_list_customers' => [
                 'class' => SquareListCustomers::class,
                 'type' => 'read',
                 'name' => 'List Customers',
-                'description' => 'List customer profiles.',
+                'description' => 'List Square customers.',
                 'icon' => 'ph:users',
             ],
-            'square_create_customer' => [
-                'class' => SquareCreateCustomer::class,
-                'type' => 'write',
-                'name' => 'Create Customer',
-                'description' => 'Create a new customer profile.',
-                'icon' => 'ph:user-plus',
-            ],
-            'square_list_locations' => [
-                'class' => SquareListLocations::class,
+            'square_get_customer' => [
+                'class' => SquareGetCustomer::class,
                 'type' => 'read',
-                'name' => 'List Locations',
-                'description' => 'List all business locations.',
-                'icon' => 'ph:map-pin',
+                'name' => 'Get Customer',
+                'description' => 'Retrieve a Square customer by ID.',
+                'icon' => 'ph:user',
             ],
+            // Orders
+            'square_list_orders' => [
+                'class' => SquareListOrders::class,
+                'type' => 'read',
+                'name' => 'List Orders',
+                'description' => 'List Square orders for a location.',
+                'icon' => 'ph:receipt',
+            ],
+            'square_get_order' => [
+                'class' => SquareGetOrder::class,
+                'type' => 'read',
+                'name' => 'Get Order',
+                'description' => 'Retrieve a Square order by ID.',
+                'icon' => 'ph:receipt',
+            ],
+            // Current User
             'square_get_current_user' => [
                 'class' => SquareGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Health check — returns the first location name to verify connectivity.',
-                'icon' => 'ph:identification-badge',
+                'description' => 'Get the current authenticated Square merchant.',
+                'icon' => 'ph:storefront',
             ],
         ];
     }
 
-    /**
-     * Get the path to the Lua documentation file.
-     */
     public function luaDocsPath(): ?string
     {
-        return null;
+        return __DIR__ . '/../lua-docs/square.md';
     }
 
-    /**
-     * Get the credential fields for this integration.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
-            ['key' => 'url', 'type' => 'url', 'label' => 'Square API URL', 'required' => false, 'default' => 'https://connect.squareup.com/v2'],
         ];
     }
 
-    /**
-     * Confirm this is an integration (not a standalone tool).
-     */
     public function isIntegration(): bool
     {
         return true;
     }
 
-    /**
-     * Create a tool instance with the given context.
-     *
-     * @param  string  $class  Fully-qualified tool class name
-     * @param  array<string, mixed>  $context  Context with optional 'account' key
-     */
+    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
+    {
+        return new $class($this->resolveService($context));
+    }
+
+    /**
+     * Resolve the SquareService, with optional account-specific credentials.
+     *
+     * @param  array<string, mixed>  $context
+     */
+    private function resolveService(array $context = []): SquareService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            $service = new SquareService(
+            return new SquareService(
                 accessToken: $creds->get('square', 'access_token', '', $account),
-                baseUrl: $creds->get('square', 'url', 'https://connect.squareup.com/v2', $account),
             );
-
-            return new $class($service);
         }
 
-        return new $class(app(SquareService::class));
+        return app(SquareService::class);
     }
 }

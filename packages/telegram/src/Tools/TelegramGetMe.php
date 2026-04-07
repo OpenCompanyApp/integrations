@@ -7,10 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Tool for getting information about the authenticated Telegram bot.
+ * Get information about the authenticated Telegram bot.
  *
- * Returns the bot's user profile including username, name, and bot capabilities.
- * Useful for verifying the connection and identity of the bot.
+ * Returns the bot User object including id, is_bot, first_name,
+ * username, and can_join_groups/can_read_all_group_messages support flags.
  */
 class TelegramGetMe implements Tool
 {
@@ -25,7 +25,7 @@ class TelegramGetMe implements Tool
 
     public function description(): string
     {
-        return 'Get information about the authenticated bot — username, display name, and capabilities.';
+        return 'Get information about the authenticated Telegram bot. Returns the bot ID, username, display name, and capability flags.';
     }
 
     public function parameters(): array
@@ -42,9 +42,7 @@ class TelegramGetMe implements Tool
 
             $result = $this->service->getMe();
 
-            $bot = $result['result'] ?? $result;
-
-            return ToolResult::success($bot);
+            return ToolResult::success($result);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

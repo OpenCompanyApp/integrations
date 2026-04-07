@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get details for a specific Zendesk ticket.
+ * Retrieve a Zendesk ticket by ID.
+ *
+ * Returns the full ticket including description, comments, and metadata.
  */
 class ZendeskGetTicket implements Tool
 {
@@ -25,37 +27,41 @@ class ZendeskGetTicket implements Tool
 
     public function description(): string
     {
-        return 'Get details for a specific Zendesk ticket by its ID. Returns subject, description, status, priority, assignee, and all fields.';
+        return <<<'MD'
+        Retrieve a Zendesk ticket by its ID.
+        Returns the full ticket including subject, description, status, priority, and metadata.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The ticket ID.'],
+            'ticket_id' => ['type' => 'string', 'required' => true, 'description' => 'Zendesk ticket ID.'],
         ];
     }
 
     /**
-     * Retrieve a Zendesk ticket by its ID.
+     * Retrieve a Zendesk ticket by ID.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (id)
+     * @param  array<string, mixed>  $args  Tool arguments (ticket_id)
      */
     public function execute(array $args): ToolResult
     {
-        if (! $this->service->isConfigured()) {
-            return ToolResult::error('Zendesk is not configured. Missing email, API token, or subdomain.');
-        }
-
-        $id = $args['id'] ?? '';
-
-        if (empty($id)) {
-            return ToolResult::error('Ticket ID is required.');
-        }
-
         try {
-            $result = $this->service->getTicket((int) $id);
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Zendesk integration is not configured.');
+            }
 
-            return ToolResult::success($result);
+            $id = $args['ticket_id'] ?? '';
+            if (empty($id)) {
+                return ToolResult::error('ticket_id is required.');
+            }
+
+            $result = $this->service->getTicket($id);
+
+            $ticket = $result['ticket'] ?? $result;
+
+            return ToolResult::success($ticket);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

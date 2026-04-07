@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Get details for a specific Zendesk user.
+ * Retrieve a Zendesk user by ID.
+ *
+ * Returns the user's ID, name, email, role, and profile details.
  */
 class ZendeskGetUser implements Tool
 {
@@ -25,37 +27,41 @@ class ZendeskGetUser implements Tool
 
     public function description(): string
     {
-        return 'Get details for a specific Zendesk user by their ID. Returns name, email, role, and other profile information.';
+        return <<<'MD'
+        Retrieve a Zendesk user by its ID.
+        Returns the user's ID, name, email, role, and profile details.
+        MD;
     }
 
     public function parameters(): array
     {
         return [
-            'id' => ['type' => 'integer', 'required' => true, 'description' => 'The user ID.'],
+            'user_id' => ['type' => 'string', 'required' => true, 'description' => 'Zendesk user ID.'],
         ];
     }
 
     /**
-     * Retrieve a Zendesk user by their ID.
+     * Retrieve a Zendesk user by ID.
      *
-     * @param  array<string, mixed>  $args  Tool arguments (id)
+     * @param  array<string, mixed>  $args  Tool arguments (user_id)
      */
     public function execute(array $args): ToolResult
     {
-        if (! $this->service->isConfigured()) {
-            return ToolResult::error('Zendesk is not configured. Missing email, API token, or subdomain.');
-        }
-
-        $id = $args['id'] ?? '';
-
-        if (empty($id)) {
-            return ToolResult::error('User ID is required.');
-        }
-
         try {
-            $result = $this->service->getUser((int) $id);
+            if (! $this->service->isConfigured()) {
+                return ToolResult::error('Zendesk integration is not configured.');
+            }
 
-            return ToolResult::success($result);
+            $id = $args['user_id'] ?? '';
+            if (empty($id)) {
+                return ToolResult::error('user_id is required.');
+            }
+
+            $result = $this->service->getUser($id);
+
+            $user = $result['user'] ?? $result;
+
+            return ToolResult::success($user);
         } catch (\Throwable $e) {
             return ToolResult::error($e->getMessage());
         }

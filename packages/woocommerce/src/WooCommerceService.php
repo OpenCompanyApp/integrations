@@ -1,50 +1,33 @@
 <?php
 
-namespace OpenCompany\Integrations\WooCommerce;
+namespace OpenCompany\Integrations\Woocommerce;
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-/**
- * WooCommerce REST API service.
- *
- * Handles authentication via HTTP Basic Auth (consumer_key / consumer_secret)
- * and provides methods for all supported WooCommerce endpoints.
- */
-class WooCommerceService
+class WoocommerceService
 {
-    /**
-     * Create a new WooCommerce service instance.
-     *
-     * @param  string  $consumerKey   WooCommerce REST API consumer key.
-     * @param  string  $consumerSecret WooCommerce REST API consumer secret.
-     * @param  string  $baseUrl       Store base URL (e.g. https://example.com).
-     */
     public function __construct(
-        private string $consumerKey = '',
-        private string $consumerSecret = '',
-        private string $baseUrl = '',
+        private string $accessToken = '',
+        private string $baseUrl = 'https://api.woocommerce.com/v3',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the service has enough configuration to make requests.
+     * Check whether the service is properly configured with credentials.
      */
     public function isConfigured(): bool
     {
-        return ! empty($this->consumerKey)
-            && ! empty($this->consumerSecret)
-            && ! empty($this->baseUrl);
+        return !empty($this->accessToken);
     }
 
-    // ── Products ────────────────────────────────────────────────────────
+    // ─── Products ──────────────────────────────────────────────────────────
 
     /**
-     * List products.
+     * List products from the catalog.
      *
-     * @param  array<string, mixed>  $params  Query parameters (per_page, status, search, etc.).
+     * @param  array<string, mixed>  $params  Query parameters (per_page, page, search, status, etc.)
      * @return array<string, mixed>
      */
     public function listProducts(array $params = []): array
@@ -55,18 +38,18 @@ class WooCommerceService
     /**
      * Get a single product by ID.
      *
-     * @param  int  $id  Product ID.
+     * @param  array<string, mixed>  $params  Optional query parameters
      * @return array<string, mixed>
      */
-    public function getProduct(int $id): array
+    public function getProduct(int $productId, array $params = []): array
     {
-        return $this->request('GET', '/products/' . $id);
+        return $this->request('GET', '/products/' . $productId, $params);
     }
 
     /**
      * Create a new product.
      *
-     * @param  array<string, mixed>  $data  Product data (name, type, regular_price, etc.).
+     * @param  array<string, mixed>  $data  Product data (name, regular_price, type, sku, etc.)
      * @return array<string, mixed>
      */
     public function createProduct(array $data): array
@@ -74,35 +57,12 @@ class WooCommerceService
         return $this->request('POST', '/products', $data);
     }
 
-    /**
-     * Update an existing product.
-     *
-     * @param  int  $id  Product ID.
-     * @param  array<string, mixed>  $data  Fields to update.
-     * @return array<string, mixed>
-     */
-    public function updateProduct(int $id, array $data): array
-    {
-        return $this->request('PUT', '/products/' . $id, $data);
-    }
-
-    /**
-     * Delete a product.
-     *
-     * @param  int  $id  Product ID.
-     * @return array<string, mixed>
-     */
-    public function deleteProduct(int $id): array
-    {
-        return $this->request('DELETE', '/products/' . $id);
-    }
-
-    // ── Orders ──────────────────────────────────────────────────────────
+    // ─── Orders ────────────────────────────────────────────────────────────
 
     /**
      * List orders.
      *
-     * @param  array<string, mixed>  $params  Query parameters (per_page, status, customer, etc.).
+     * @param  array<string, mixed>  $params  Query parameters (per_page, page, status, etc.)
      * @return array<string, mixed>
      */
     public function listOrders(array $params = []): array
@@ -113,32 +73,19 @@ class WooCommerceService
     /**
      * Get a single order by ID.
      *
-     * @param  int  $id  Order ID.
      * @return array<string, mixed>
      */
-    public function getOrder(int $id): array
+    public function getOrder(int $orderId): array
     {
-        return $this->request('GET', '/orders/' . $id);
+        return $this->request('GET', '/orders/' . $orderId);
     }
 
-    /**
-     * Update an existing order.
-     *
-     * @param  int  $id  Order ID.
-     * @param  array<string, mixed>  $data  Fields to update.
-     * @return array<string, mixed>
-     */
-    public function updateOrder(int $id, array $data): array
-    {
-        return $this->request('PUT', '/orders/' . $id, $data);
-    }
-
-    // ── Customers ───────────────────────────────────────────────────────
+    // ─── Customers ─────────────────────────────────────────────────────────
 
     /**
      * List customers.
      *
-     * @param  array<string, mixed>  $params  Query parameters (per_page, search, role, etc.).
+     * @param  array<string, mixed>  $params  Query parameters (per_page, page, search, etc.)
      * @return array<string, mixed>
      */
     public function listCustomers(array $params = []): array
@@ -146,59 +93,24 @@ class WooCommerceService
         return $this->request('GET', '/customers', $params);
     }
 
-    /**
-     * Get a single customer by ID.
-     *
-     * @param  int  $id  Customer ID.
-     * @return array<string, mixed>
-     */
-    public function getCustomer(int $id): array
-    {
-        return $this->request('GET', '/customers/' . $id);
-    }
+    // ─── Current User ──────────────────────────────────────────────────────
 
     /**
-     * Create a new customer.
-     *
-     * @param  array<string, mixed>  $data  Customer data (email, first_name, last_name, etc.).
-     * @return array<string, mixed>
-     */
-    public function createCustomer(array $data): array
-    {
-        return $this->request('POST', '/customers', $data);
-    }
-
-    // ── System Status ───────────────────────────────────────────────────
-
-    /**
-     * Get system status (used to verify credentials / "get current user").
+     * Get the currently authenticated user.
      *
      * @return array<string, mixed>
      */
-    public function getSystemStatus(): array
+    public function getCurrentUser(): array
     {
         return $this->request('GET', '/system_status');
     }
 
-    // ── Internal helpers ────────────────────────────────────────────────
+    // ─── HTTP Layer ────────────────────────────────────────────────────────
 
     /**
-     * Build the full API URL for a given path.
-     */
-    private function apiUrl(string $path): string
-    {
-        return $this->baseUrl . '/wp-json/wc/v3' . $path;
-    }
-
-    /**
-     * Make an API request and return parsed JSON.
+     * Make an API request and return parsed JSON data.
      *
-     * For GET requests, `$data` is sent as query parameters.
-     * For POST/PUT/DELETE requests, `$data` is sent as JSON body.
-     *
-     * @param  string  $method  HTTP method (GET, POST, PUT, DELETE).
-     * @param  string  $path    API path (e.g. "/products").
-     * @param  array<string, mixed>  $data  Request payload or query params.
+     * @param  array<string, mixed>  $data  Query params (GET) or body (POST/PUT)
      * @return array<string, mixed>
      */
     private function request(string $method, string $path, array $data = []): array
@@ -209,52 +121,52 @@ class WooCommerceService
     }
 
     /**
-     * Make a raw HTTP request to the WooCommerce REST API.
+     * Make a raw HTTP request to the WooCommerce API.
      *
-     * @param  string  $method  HTTP method.
-     * @param  string  $path    API path.
-     * @param  array<string, mixed>  $data  Payload or query parameters.
-     * @return \Illuminate\Http\Client\Response
-     *
-     * @throws \RuntimeException
+     * @param  array<string, mixed>  $data
      */
-    private function rawRequest(string $method, string $path, array $data = []): Response
+    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
     {
-        if (! $this->isConfigured()) {
-            throw new \RuntimeException('WooCommerce integration is not configured. Provide store URL, consumer key, and consumer secret.');
+        if (!$this->isConfigured()) {
+            throw new \RuntimeException('WooCommerce integration is not configured. Access token is required.');
         }
 
-        $url = $this->apiUrl($path);
+        $url = $this->baseUrl . $path;
 
         try {
-            $http = Http::withBasicAuth($this->consumerKey, $this->consumerSecret)
-                ->timeout(30)
-                ->withHeaders(['Content-Type' => 'application/json']);
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->timeout(30);
 
             $response = match (strtoupper($method)) {
-                'GET'    => $http->get($url, $data),
-                'POST'   => $http->post($url, $data),
-                'PUT'    => $http->put($url, $data),
+                'GET' => $http->get($url, $data),
+                'POST' => $http->post($url, $data),
+                'PUT' => $http->put($url, $data),
                 'DELETE' => $http->delete($url, $data),
-                default  => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
             };
 
-            if (! $response->successful()) {
-                $body = $response->body();
-                $json = $response->json();
+            if (!$response->successful()) {
+                $errorBody = $response->json();
+                $errorMessage = $errorBody['message'] ?? $response->body();
+                $errorCode = $errorBody['code'] ?? '';
 
-                $error = is_array($json)
-                    ? ($json['message'] ?? json_encode($json))
-                    : $body;
+                if (is_array($errorMessage)) {
+                    $errorMessage = json_encode($errorMessage);
+                }
+
+                if (!empty($errorCode)) {
+                    $errorMessage = "{$errorCode}: {$errorMessage}";
+                }
 
                 Log::error("WooCommerce API error: {$method} {$path}", [
                     'status' => $response->status(),
-                    'error'  => $error,
+                    'error' => $errorMessage,
                 ]);
 
-                throw new \RuntimeException(
-                    "WooCommerce API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error))
-                );
+                throw new \RuntimeException("WooCommerce API error ({$response->status()}): {$errorMessage}");
             }
 
             return $response;

@@ -6,6 +6,12 @@ use OpenCompany\Integrations\Pinterest\PinterestService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
+/**
+ * List pins for the authenticated Pinterest user.
+ *
+ * Retrieves pins with optional pagination via bookmark cursor
+ * and configurable page size.
+ */
 class PinterestListPins implements Tool
 {
     public function __construct(
@@ -19,15 +25,14 @@ class PinterestListPins implements Tool
 
     public function description(): string
     {
-        return 'List pins on a specific Pinterest board. Returns pin titles, descriptions, images, and links.';
+        return 'List pins for the authenticated Pinterest user. Supports pagination with bookmark cursor and page size. Returns pin IDs, titles, descriptions, and media.';
     }
 
     public function parameters(): array
     {
         return [
-            'board_id' => ['type' => 'string', 'required' => true, 'description' => 'The unique identifier of the board.'],
-            'limit' => ['type' => 'integer', 'description' => 'Maximum number of pins to return (default: 25, max: 250).'],
-            'bookmark' => ['type' => 'string', 'description' => 'Cursor for pagination — pass the bookmark from a previous response to get the next page.'],
+            'bookmark' => ['type' => 'string', 'description' => 'Pagination cursor from a previous response.'],
+            'pageSize' => ['type' => 'integer', 'description' => 'Number of pins to return per page (max 250).'],
         ];
     }
 
@@ -38,12 +43,10 @@ class PinterestListPins implements Tool
                 return ToolResult::error('Pinterest integration is not configured.');
             }
 
-            if (empty($args['board_id'])) {
-                return ToolResult::error('board_id is required.');
-            }
-
-            $limit = isset($args['limit']) ? (int) $args['limit'] : 25;
-            $result = $this->service->listPins($args['board_id'], $limit, $args['bookmark'] ?? null);
+            $result = $this->service->listPins(
+                bookmark: $args['bookmark'] ?? null,
+                pageSize: isset($args['pageSize']) ? (int) $args['pageSize'] : null,
+            );
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

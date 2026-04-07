@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-grafana",
-    "description": "Grafana integration for Laravel — manage dashboards, datasources, teams, users, and alerts.",
+    "description": "Grafana integration for Laravel — manage dashboards, datasources, teams, and alerts.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "grafana", "monitoring", "dashboards", "opencompany"],
+    "keywords": ["tools", "grafana", "analytics", "dashboards", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"

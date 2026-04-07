@@ -45,7 +45,7 @@ class BigCommerceGetProduct implements Tool
                 $params['include'] = $args['include'];
             }
 
-            $result = $this->service->getProduct((int) $args['id']);
+            $result = $this->service->getProduct((int) $args['id'], $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

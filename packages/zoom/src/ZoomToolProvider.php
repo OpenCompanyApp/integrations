@@ -3,31 +3,17 @@
 namespace OpenCompany\Integrations\Zoom;
 
 use Illuminate\Support\Facades\Http;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\Integrations\Zoom\Tools\ZoomCreateMeeting;
-use OpenCompany\Integrations\Zoom\Tools\ZoomCreateUser;
-use OpenCompany\Integrations\Zoom\Tools\ZoomCreateWebinar;
-use OpenCompany\Integrations\Zoom\Tools\ZoomDeleteMeeting;
-use OpenCompany\Integrations\Zoom\Tools\ZoomGetAccount;
-use OpenCompany\Integrations\Zoom\Tools\ZoomGetMeeting;
-use OpenCompany\Integrations\Zoom\Tools\ZoomGetUser;
-use OpenCompany\Integrations\Zoom\Tools\ZoomGetUserSettings;
-use OpenCompany\Integrations\Zoom\Tools\ZoomGetWebinar;
 use OpenCompany\Integrations\Zoom\Tools\ZoomListMeetings;
-use OpenCompany\Integrations\Zoom\Tools\ZoomListPastMeetings;
-use OpenCompany\Integrations\Zoom\Tools\ZoomListRecordings;
+use OpenCompany\Integrations\Zoom\Tools\ZoomGetMeeting;
+use OpenCompany\Integrations\Zoom\Tools\ZoomCreateMeeting;
 use OpenCompany\Integrations\Zoom\Tools\ZoomListUsers;
-use OpenCompany\Integrations\Zoom\Tools\ZoomListWebinars;
-use OpenCompany\Integrations\Zoom\Tools\ZoomUpdateMeeting;
+use OpenCompany\Integrations\Zoom\Tools\ZoomGetUser;
+use OpenCompany\Integrations\Zoom\Tools\ZoomListRecordings;
+use OpenCompany\Integrations\Zoom\Tools\ZoomGetCurrentUser;
 
-/**
- * Registers all Zoom tools and provides integration metadata.
- *
- * Exposes 15 tools covering meetings, webinars, users,
- * recordings, and account management via the ToolProvider contract.
- */
 class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
 {
     public function appName(): string
@@ -38,8 +24,8 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'meetings, webinars, users, recordings',
-            'description' => 'Video Conferencing',
+            'label' => 'meetings, users, recordings',
+            'description' => 'Video conferencing and meetings',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:zoom',
         ];
@@ -49,12 +35,12 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             'name' => 'Zoom',
-            'description' => 'Meetings, webinars, users, recordings, and account management',
+            'description' => 'Video conferencing, online meetings, and group messaging platform',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:zoom',
-            'category' => 'productivity',
+            'category' => 'communication',
             'badge' => 'verified',
-            'docs_url' => 'https://developers.zoom.us/docs/api/rest/reference/zoom-api/methods/',
+            'docs_url' => 'https://developers.zoom.us/docs/api/',
         ];
     }
 
@@ -65,134 +51,91 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
                 'key' => 'access_token',
                 'type' => 'secret',
                 'label' => 'Access Token',
-                'placeholder' => 'Zoom OAuth2 access token',
-                'hint' => 'OAuth2 access token obtained from the Zoom OAuth2 flow. Requires Server-to-Server or OAuth app credentials.',
+                'placeholder' => 'Enter your Zoom access token',
+                'hint' => 'Use OAuth 2.0 or a Server-to-Server OAuth token from the Zoom App Marketplace',
                 'required' => true,
+            ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.zoom.us/v2',
+                'hint' => 'The Zoom API base URL (typically https://api.zoom.us/v2)',
+                'default' => 'https://api.zoom.us/v2',
             ],
         ];
     }
 
-    /**
-     * Test the Zoom connection using the provided credentials.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'access_token'
-     * @return array{success: bool, message?: string, error?: string}
-     */
     public function testConnection(array $config): array
     {
         $accessToken = $config['access_token'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.zoom.us/v2', '/');
 
         if (empty($accessToken)) {
-            return ['success' => false, 'error' => 'No access token provided. Obtain one via the Zoom OAuth2 flow.'];
+            return ['success' => false, 'error' => 'No access token provided'];
         }
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json',
-            ])->timeout(10)->get('https://api.zoom.us/v2/users/me');
+            ])->timeout(10)->get($baseUrl . '/users/me');
 
-            if ($response->successful()) {
-                $body = $response->json() ?? [];
-                $firstName = $body['first_name'] ?? '';
-                $lastName = $body['last_name'] ?? '';
-                $name = trim("$firstName $lastName") ?: ($body['email'] ?? 'Unknown');
+            $json = $response->json();
 
+            if ($json === null) {
                 return [
-                    'success' => true,
-                    'message' => "Connected to Zoom as {$name}.",
+                    'success' => false,
+                    'error' => "Could not reach Zoom API at {$baseUrl}. Check the URL.",
                 ];
             }
 
-            $body = $response->json() ?? [];
-            $error = $body['message'] ?? $response->body();
+            $firstName = $json['first_name'] ?? '';
+            $lastName = $json['last_name'] ?? '';
+            $email = $json['email'] ?? 'unknown';
+            $name = trim("{$firstName} {$lastName}") ?: $email;
 
             return [
-                'success' => false,
-                'error' => 'Zoom API error: ' . (is_string($error) ? $error : json_encode($error)),
+                'success' => true,
+                'message' => "Connected to Zoom as {$name}.",
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    /** @return array<string, string> */
     public function validationRules(): array
     {
         return [
             'access_token' => 'nullable|string',
+            'url' => 'nullable|url',
         ];
     }
 
     public function tools(): array
     {
         return [
-            // Meetings
-            'zoom_create_meeting' => [
-                'class' => ZoomCreateMeeting::class,
-                'type' => 'write',
-                'name' => 'Create Meeting',
-                'description' => 'Create a Zoom meeting for a user.',
-                'icon' => 'ph:video-camera-plus',
+            'zoom_list_meetings' => [
+                'class' => ZoomListMeetings::class,
+                'type' => 'read',
+                'name' => 'List Meetings',
+                'description' => 'List meetings for a user.',
+                'icon' => 'ph:video-camera',
             ],
             'zoom_get_meeting' => [
                 'class' => ZoomGetMeeting::class,
                 'type' => 'read',
                 'name' => 'Get Meeting',
-                'description' => 'Get details of a Zoom meeting.',
+                'description' => 'Get details of a specific meeting.',
                 'icon' => 'ph:video-camera',
             ],
-            'zoom_update_meeting' => [
-                'class' => ZoomUpdateMeeting::class,
+            'zoom_create_meeting' => [
+                'class' => ZoomCreateMeeting::class,
                 'type' => 'write',
-                'name' => 'Update Meeting',
-                'description' => 'Update an existing Zoom meeting.',
-                'icon' => 'ph:pencil-simple',
+                'name' => 'Create Meeting',
+                'description' => 'Create a new meeting.',
+                'icon' => 'ph:plus-circle',
             ],
-            'zoom_delete_meeting' => [
-                'class' => ZoomDeleteMeeting::class,
-                'type' => 'write',
-                'name' => 'Delete Meeting',
-                'description' => 'Delete a Zoom meeting.',
-                'icon' => 'ph:trash',
-            ],
-            'zoom_list_meetings' => [
-                'class' => ZoomListMeetings::class,
-                'type' => 'read',
-                'name' => 'List Meetings',
-                'description' => 'List meetings for a Zoom user.',
-                'icon' => 'ph:list',
-            ],
-            'zoom_list_past_meetings' => [
-                'class' => ZoomListPastMeetings::class,
-                'type' => 'read',
-                'name' => 'List Past Meetings',
-                'description' => 'List past instances of a Zoom meeting.',
-                'icon' => 'ph:clock-counter-clockwise',
-            ],
-            // Webinars
-            'zoom_create_webinar' => [
-                'class' => ZoomCreateWebinar::class,
-                'type' => 'write',
-                'name' => 'Create Webinar',
-                'description' => 'Create a Zoom webinar.',
-                'icon' => 'ph:presentation-chart',
-            ],
-            'zoom_list_webinars' => [
-                'class' => ZoomListWebinars::class,
-                'type' => 'read',
-                'name' => 'List Webinars',
-                'description' => 'List webinars for a Zoom user.',
-                'icon' => 'ph:list',
-            ],
-            'zoom_get_webinar' => [
-                'class' => ZoomGetWebinar::class,
-                'type' => 'read',
-                'name' => 'Get Webinar',
-                'description' => 'Get details of a Zoom webinar.',
-                'icon' => 'ph:presentation-chart',
-            ],
-            // Users
             'zoom_list_users' => [
                 'class' => ZoomListUsers::class,
                 'type' => 'read',
@@ -204,38 +147,22 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
                 'class' => ZoomGetUser::class,
                 'type' => 'read',
                 'name' => 'Get User',
-                'description' => 'Get a Zoom user by ID or email.',
+                'description' => 'Get details of a specific user.',
                 'icon' => 'ph:user',
             ],
-            'zoom_create_user' => [
-                'class' => ZoomCreateUser::class,
-                'type' => 'write',
-                'name' => 'Create User',
-                'description' => 'Create a new Zoom user.',
-                'icon' => 'ph:user-plus',
-            ],
-            'zoom_get_user_settings' => [
-                'class' => ZoomGetUserSettings::class,
-                'type' => 'read',
-                'name' => 'Get User Settings',
-                'description' => 'Get settings for a Zoom user.',
-                'icon' => 'ph:gear',
-            ],
-            // Account
-            'zoom_get_account' => [
-                'class' => ZoomGetAccount::class,
-                'type' => 'read',
-                'name' => 'Get Account',
-                'description' => 'Get Zoom account information.',
-                'icon' => 'ph:buildings',
-            ],
-            // Recordings
             'zoom_list_recordings' => [
                 'class' => ZoomListRecordings::class,
                 'type' => 'read',
                 'name' => 'List Recordings',
-                'description' => 'List cloud recordings for a Zoom user.',
+                'description' => 'List cloud recordings for a user.',
                 'icon' => 'ph:record',
+            ],
+            'zoom_get_current_user' => [
+                'class' => ZoomGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the currently authenticated user profile.',
+                'icon' => 'ph:user-circle',
             ],
         ];
     }
@@ -249,6 +176,7 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.zoom.us/v2'],
         ];
     }
 
@@ -257,29 +185,21 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration
         return true;
     }
 
-    /** @param  array<string, mixed>  $context */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
-    }
-
-    /**
-     * Resolve the ZoomService, with optional account-specific credentials.
-     *
-     * @param  array<string, mixed>  $context
-     */
-    private function resolveService(array $context = []): ZoomService
     {
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
-            return new ZoomService(
+            $service = new ZoomService(
                 accessToken: $creds->get('zoom', 'access_token', '', $account),
+                baseUrl: $creds->get('zoom', 'url', 'https://api.zoom.us/v2', $account),
             );
+
+            return new $class($service);
         }
 
-        return app(ZoomService::class);
+        return new $class(app(ZoomService::class));
     }
 }

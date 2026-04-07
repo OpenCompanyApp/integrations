@@ -1,76 +1,122 @@
 # PagerDuty — Lua API Reference
 
-## pagerduty_list_incidents
+## list_incidents
 
-List PagerDuty incidents with optional filtering.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of incidents to return (1–100, default 25). |
-| `offset` | integer | no | Offset for pagination (default 0). |
-| `status` | array | no | Filter by incident status. Values: `"triggered"`, `"acknowledged"`, `"resolved"`. |
-| `service_ids` | array | no | Filter by service IDs (array of service ID strings). |
-| `urgency` | string | no | Filter by urgency. Values: `"high"`, `"low"`. |
-
-## pagerduty_get_incident
-
-Get detailed information about a PagerDuty incident.
+List PagerDuty incidents with optional filters.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | PagerDuty incident ID (e.g., `"Q02JFSRXI65D55"`). |
+| `status` | string | no | Filter by status: `"triggered"`, `"acknowledged"`, or `"resolved"` |
+| `urgency` | string | no | Filter by urgency: `"high"` or `"low"` |
+| `service_id` | string | no | Filter by service ID |
+| `team_id` | string | no | Filter by team ID |
+| `limit` | integer | no | Max results (default: 25, max: 100) |
+| `offset` | integer | no | Offset for pagination (default: 0) |
 
-## pagerduty_update_incident
+### Example
 
-Update a PagerDuty incident (status, priority, resolution).
+```lua
+-- List all triggered incidents
+local result = app.integrations.pagerduty.list_incidents({
+  status = "triggered"
+})
 
-### Parameters
+for _, incident in ipairs(result.incidents) do
+  print(incident.incident_number .. ": " .. incident.title .. " (" .. incident.status .. ")")
+end
 
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `incident_id` | string | yes | The PagerDuty incident ID. |
-| `status` | string | no | New status: `"triggered"`, `"acknowledged"`, or `"resolved"`. |
-| `priority` | string | no | Priority ID to assign to the incident. |
-| `resolution` | string | no | Resolution note to add when resolving the incident. |
+-- List high-urgency incidents for a specific service
+local result = app.integrations.pagerduty.list_incidents({
+  service_id = "PIJ90N7",
+  urgency = "high",
+  limit = 10
+})
+```
 
-## pagerduty_create_incident_note
+---
 
-Add a note to a PagerDuty incident.
+## get_incident
 
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `incident_id` | string | yes | The PagerDuty incident ID. |
-| `content` | string | yes | The note content. |
-
-## pagerduty_list_services
-
-List PagerDuty services.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of services to return (1–100, default 25). |
-| `offset` | integer | no | Offset for pagination (default 0). |
-| `team_ids` | array | no | Filter by team IDs (array of team ID strings). |
-
-## pagerduty_get_service
-
-Get detailed information about a PagerDuty service.
+Get full details for a single PagerDuty incident.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | PagerDuty service ID (e.g., `"PIJ90N7"`). |
+| `id` | string | yes | The incident ID (e.g., `"Q02JTSZO2VGFBH"`) |
 
-## pagerduty_list_teams
+### Example
+
+```lua
+local result = app.integrations.pagerduty.get_incident({
+  id = "Q02JTSZO2VGFBH"
+})
+
+print("Incident: " .. result.title)
+print("Status: " .. result.status)
+print("Urgency: " .. result.urgency)
+print("Service: " .. (result.service.summary or "unknown"))
+
+for _, assignment in ipairs(result.assignments or {}) do
+  print("Assigned to: " .. assignment.assignee.summary)
+end
+```
+
+---
+
+## list_services
+
+List PagerDuty services with optional team filter.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `team_id` | string | no | Filter services by team ID |
+| `limit` | integer | no | Max results (default: 25, max: 100) |
+| `offset` | integer | no | Offset for pagination (default: 0) |
+
+### Example
+
+```lua
+local result = app.integrations.pagerduty.list_services({
+  limit = 50
+})
+
+for _, service in ipairs(result.services) do
+  print(service.name .. " — status: " .. service.status)
+end
+```
+
+---
+
+## get_service
+
+Get full details for a single PagerDuty service.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | The service ID (e.g., `"PIJ90N7"`) |
+
+### Example
+
+```lua
+local result = app.integrations.pagerduty.get_service({
+  id = "PIJ90N7"
+})
+
+print("Service: " .. result.name)
+print("Status: " .. result.status)
+print("Escalation Policy: " .. (result.escalation_policy.summary or "none"))
+```
+
+---
+
+## list_teams
 
 List PagerDuty teams.
 
@@ -78,102 +124,82 @@ List PagerDuty teams.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `limit` | integer | no | Number of teams to return (1–100, default 25). |
-| `offset` | integer | no | Offset for pagination (default 0). |
+| `limit` | integer | no | Max results (default: 25, max: 100) |
+| `offset` | integer | no | Offset for pagination (default: 0) |
 
-## pagerduty_list_users
-
-List PagerDuty users.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of users to return (1–100, default 25). |
-| `offset` | integer | no | Offset for pagination (default 0). |
-| `team_ids` | array | no | Filter by team IDs (array of team ID strings). |
-
-## pagerduty_get_user
-
-Get detailed information about a PagerDuty user.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `id` | string | yes | PagerDuty user ID (e.g., `"PXPGF42"`). |
-
-## pagerduty_list_on_calls
-
-List current PagerDuty on-call entries.
-
-### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `limit` | integer | no | Number of on-call entries to return (1–100, default 25). |
-| `escalation_policy_ids` | array | no | Filter by escalation policy IDs (array of escalation policy ID strings). |
-
-## Examples
-
-### List triggered incidents
+### Example
 
 ```lua
-local result = app.integrations.pagerduty.pagerduty_list_incidents({
-  status = {"triggered"},
-  limit = 10
+local result = app.integrations.pagerduty.list_teams({
+  limit = 50
 })
-for _, incident in ipairs(result.incidents) do
-  print(incident.id .. ": " .. incident.title)
+
+for _, team in ipairs(result.teams) do
+  print(team.name .. " — " .. (team.description or "no description"))
 end
 ```
 
-### Resolve an incident
+---
+
+## get_team
+
+Get full details for a single PagerDuty team.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `id` | string | yes | The team ID (e.g., `"PIMJOGV"`) |
+
+### Example
 
 ```lua
-local result = app.integrations.pagerduty.pagerduty_update_incident({
-  incident_id = "Q02JFSRXI65D55",
-  status = "resolved",
-  resolution = "Issue resolved by restarting the service."
+local result = app.integrations.pagerduty.get_team({
+  id = "PIMJOGV"
 })
+
+print("Team: " .. result.name)
+print("Description: " .. (result.description or "none"))
+print("Default Role: " .. (result.default_role or "none"))
 ```
 
-### Add a note to an incident
+---
+
+## get_current_user
+
+Get the authenticated PagerDuty user's profile.
+
+### Parameters
+
+None.
+
+### Example
 
 ```lua
-local result = app.integrations.pagerduty.pagerduty_create_incident_note({
-  incident_id = "Q02JFSRXI65D55",
-  content = "Investigating the root cause of the memory spike."
-})
-```
+local result = app.integrations.pagerduty.get_current_user({})
 
-### List on-call entries
-
-```lua
-local result = app.integrations.pagerduty.pagerduty_list_on_calls({
-  limit = 25
-})
-for _, entry in ipairs(result.oncalls) do
-  print(entry.user.name .. " - " .. entry.escalation_policy.name)
-end
+print("Logged in as: " .. result.name)
+print("Email: " .. result.email)
+print("Role: " .. (result.role or "unknown"))
+print("Time Zone: " .. (result.time_zone or "unknown"))
 ```
 
 ---
 
 ## Multi-Account Usage
 
-If you have multiple pagerduty accounts configured, use account-specific namespaces:
+If you have multiple PagerDuty accounts configured, use account-specific namespaces:
 
 ```lua
 -- Default account (always works)
-app.integrations.pagerduty.function_name({...})
+app.integrations.pagerduty.list_incidents({})
 
 -- Explicit default (portable across setups)
-app.integrations.pagerduty.default.function_name({...})
+app.integrations.pagerduty.default.list_incidents({})
 
 -- Named accounts
-app.integrations.pagerduty.work.function_name({...})
-app.integrations.pagerduty.personal.function_name({...})
+app.integrations.pagerduty.production.list_incidents({})
+app.integrations.pagerduty.staging.list_incidents({})
 ```
 
 All functions are identical across accounts — only the credentials differ.

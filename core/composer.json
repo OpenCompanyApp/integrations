@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-core",
-    "description": "Core framework for OpenCompany integration packages — contracts, credential abstraction, and auto-discovery registry.",
+    "description": "Core framework for OpenCompany integration packages \u2014 contracts, credential abstraction, and auto-discovery registry.",
     "license": "MIT",
     "authors": [
         {
@@ -8,10 +8,15 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["integrations", "tools", "agents", "opencompany"],
+    "keywords": [
+        "integrations",
+        "tools",
+        "agents",
+        "opencompany"
+    ],
     "require": {
         "php": "^8.2",
-        "illuminate/support": "^11.0 || ^12.0"
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0"
     },
     "autoload": {
         "psr-4": {

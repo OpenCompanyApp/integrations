@@ -122,7 +122,7 @@ class TrustMrrToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/trustmrr.md';
     }
 
     public function credentialFields(): array

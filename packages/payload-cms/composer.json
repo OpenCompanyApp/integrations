@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-payload-cms",
+    "description": "Payload CMS integration for OpenCompany — collections, documents, and user management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "payload-cms", "cms", "headless", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\PayloadCms\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\PayloadCms\\PayloadCmsServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

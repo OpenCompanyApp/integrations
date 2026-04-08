@@ -122,3 +122,23 @@ app.integrations.ticktick.create_task({
   priority = 1
 })
 ```
+
+---
+
+## Multi-Account Usage
+
+If you have multiple ticktick accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.ticktick.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.ticktick.default.function_name({...})
+
+-- Named accounts
+app.integrations.ticktick.work.function_name({...})
+app.integrations.ticktick.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

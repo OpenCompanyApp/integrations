@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-modal",
+    "description": "Modal integration for OpenCompany — serverless GPU apps, functions, schedules, volumes, and secrets.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "modal", "serverless", "gpu", "cloud", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Modal\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Modal\\ModalServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

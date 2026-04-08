@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-builder-io",
+    "description": "Builder.io integration for OpenCompany — models, content, symbols, and user management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "builder-io", "visual-cms", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\BuilderIo\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\BuilderIo\\BuilderIoServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

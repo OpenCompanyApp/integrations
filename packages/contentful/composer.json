@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-contentful",
+    "description": "Contentful integration for OpenCompany — content types, entries, assets, and space management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "contentful", "cms", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Contentful\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Contentful\\ContentfulServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

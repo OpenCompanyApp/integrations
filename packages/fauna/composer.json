@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-fauna",
+    "description": "Fauna integration for OpenCompany — databases, collections, FQL queries, and auth.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "fauna", "database", "fql", "nosql", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Fauna\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Fauna\\FaunaServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

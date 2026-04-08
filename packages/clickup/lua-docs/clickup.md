@@ -205,3 +205,23 @@ app.integrations.clickup.create_task({
 - **Assignees** use comma-separated numeric user IDs, not names -- always resolve first
 - **Statuses** are list-specific strings (e.g., `"open"`, `"in progress"`, `"closed"`) -- check the list for valid values
 - **time_estimate** on `update_task` is in **minutes** (converted to ms internally)
+
+---
+
+## Multi-Account Usage
+
+If you have multiple clickup accounts configured, use account-specific namespaces:
+
+```lua
+-- Default account (always works)
+app.integrations.clickup.function_name({...})
+
+-- Explicit default (portable across setups)
+app.integrations.clickup.default.function_name({...})
+
+-- Named accounts
+app.integrations.clickup.work.function_name({...})
+app.integrations.clickup.personal.function_name({...})
+```
+
+All functions are identical across accounts — only the credentials differ.

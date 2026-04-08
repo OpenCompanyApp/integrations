@@ -1,0 +1,21 @@
+{
+    "name": "opencompanyapp/integration-jenkins",
+    "description": "Jenkins CI/CD integration for OpenCompany — jobs, builds, nodes, and more.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "jenkins", "ci-cd", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {"OpenCompany\\Integrations\\Jenkins\\": "src/"}
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["OpenCompany\\Integrations\\Jenkins\\JenkinsServiceProvider"]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

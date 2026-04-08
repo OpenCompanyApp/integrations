@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-zapier",
+    "description": "Zapier integration for OpenCompany — zaps, executions, and connections.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "zapier", "automation", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Zapier\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Zapier\\ZapierServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

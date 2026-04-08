@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-zoho-crm",
+    "description": "Zoho CRM integration for OpenCompany — leads, contacts, accounts, deals, and users.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "zoho", "crm", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\ZohoCrm\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\ZohoCrm\\ZohoCrmServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

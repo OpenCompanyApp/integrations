@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-ifttt",
+    "description": "IFTTT integration for OpenCompany — services, applets, and connections.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "ifttt", "automation", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Ifttt\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Ifttt\\IftttServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

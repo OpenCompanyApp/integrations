@@ -1,0 +1,28 @@
+{
+    "name": "opencompanyapp/integration-taxjar",
+    "description": "TaxJar integration for Laravel — calculate, collect, and report sales tax.",
+    "license": "MIT",
+    "authors": [{ "name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp" }],
+    "keywords": ["tools", "taxjar", "sales-tax", "tax", "ecommerce", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/ai-tool-taxjar": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Taxjar\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Taxjar\\TaxjarServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

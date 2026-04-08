@@ -1,0 +1,211 @@
+<?php
+
+namespace OpenCompany\Integrations\Freshsales;
+
+use Illuminate\Support\Facades\Http;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListContacts;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetContact;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesCreateContact;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListDeals;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetDeal;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListAccounts;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetCurrentUser;
+
+class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration
+{
+    public function appName(): string
+    {
+        return 'freshsales';
+    }
+
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'contacts, deals, accounts',
+            'description' => 'CRM & sales management',
+            'icon' => 'ph:handshake',
+            'logo' => 'simple-icons:freshworks',
+        ];
+    }
+
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Freshsales',
+            'description' => 'CRM platform for managing contacts, deals, and sales accounts',
+            'icon' => 'ph:handshake',
+            'logo' => 'simple-icons:freshworks',
+            'category' => 'sales',
+            'badge' => 'verified',
+            'docs_url' => 'https://developers.freshworks.com/crm/api/',
+        ];
+    }
+
+    public function configSchema(): array
+    {
+        return [
+            [
+                'key' => 'api_key',
+                'type' => 'secret',
+                'label' => 'API Key',
+                'placeholder' => 'Enter your Freshsales API key',
+                'hint' => 'Find your API key in Freshsales under Profile Settings → API Settings',
+                'required' => true,
+            ],
+            [
+                'key' => 'domain',
+                'type' => 'string',
+                'label' => 'Domain',
+                'placeholder' => 'mycompany',
+                'hint' => 'Your Freshsales subdomain (the part before <code>.myfreshworks.com</code>). For example, if your URL is <code>https://mycompany.myfreshworks.com/crm/sales</code>, enter <code>mycompany</code>.',
+                'required' => true,
+            ],
+        ];
+    }
+
+    public function testConnection(array $config): array
+    {
+        $apiKey = $config['api_key'] ?? '';
+        $domain = $config['domain'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No API key provided'];
+        }
+
+        if (empty($domain)) {
+            return ['success' => false, 'error' => 'No domain provided'];
+        }
+
+        $baseUrl = 'https://' . $domain . '.myfreshworks.com/crm/sales';
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Token token=' . $apiKey,
+                'Content-Type' => 'application/json',
+            ])->timeout(10)->get($baseUrl . '/api/users/me');
+
+            if ($response->successful()) {
+                $user = $response->json();
+
+                return [
+                    'success' => true,
+                    'message' => 'Connected to Freshsales as ' . ($user['user']['display_name'] ?? $user['user']['email'] ?? 'unknown user') . '.',
+                ];
+            }
+
+            return [
+                'success' => false,
+                'error' => "Connection failed (HTTP {$response->status()}): " . ($response->json('error') ?? $response->body()),
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    public function validationRules(): array
+    {
+        return [
+            'api_key' => 'nullable|string',
+            'domain' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'freshsales_list_contacts' => [
+                'class' => FreshsalesListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List contacts from Freshsales CRM with pagination and sorting.',
+                'icon' => 'ph:users',
+            ],
+            'freshsales_get_contact' => [
+                'class' => FreshsalesGetContact::class,
+                'type' => 'read',
+                'name' => 'Get Contact',
+                'description' => 'Get details for a specific Freshsales contact.',
+                'icon' => 'ph:user',
+            ],
+            'freshsales_create_contact' => [
+                'class' => FreshsalesCreateContact::class,
+                'type' => 'write',
+                'name' => 'Create Contact',
+                'description' => 'Create a new contact in Freshsales CRM.',
+                'icon' => 'ph:user-plus',
+            ],
+            'freshsales_list_deals' => [
+                'class' => FreshsalesListDeals::class,
+                'type' => 'read',
+                'name' => 'List Deals',
+                'description' => 'List deals from Freshsales CRM with pagination.',
+                'icon' => 'ph:currency-dollar',
+            ],
+            'freshsales_get_deal' => [
+                'class' => FreshsalesGetDeal::class,
+                'type' => 'read',
+                'name' => 'Get Deal',
+                'description' => 'Get details for a specific Freshsales deal.',
+                'icon' => 'ph:currency-dollar',
+            ],
+            'freshsales_list_accounts' => [
+                'class' => FreshsalesListAccounts::class,
+                'type' => 'read',
+                'name' => 'List Accounts',
+                'description' => 'List sales accounts from Freshsales CRM with pagination.',
+                'icon' => 'ph:buildings',
+            ],
+            'freshsales_get_current_user' => [
+                'class' => FreshsalesGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the currently authenticated Freshsales user profile.',
+                'icon' => 'ph:identification-badge',
+            ],
+        ];
+    }
+
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__ . '/../lua-docs/freshsales.md';
+    }
+
+    public function credentialFields(): array
+    {
+        return [
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'domain', 'type' => 'string', 'label' => 'Domain', 'required' => true],
+        ];
+    }
+
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
+    public function createTool(string $class, array $context = []): Tool
+    {
+        $account = $context['account'] ?? null;
+
+        if ($account !== null) {
+            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+
+            $domain = $creds->get('freshsales', 'domain', '', $account);
+            $baseUrl = $domain
+                ? 'https://' . $domain . '.myfreshworks.com/crm/sales'
+                : '';
+
+            $service = new FreshsalesService(
+                apiKey: $creds->get('freshsales', 'api_key', '', $account),
+                baseUrl: $baseUrl,
+            );
+
+            return new $class($service);
+        }
+
+        return new $class(app(FreshsalesService::class));
+    }
+}

@@ -44,7 +44,7 @@ class VegaLiteToolProvider implements ToolProvider
 
     public function luaDocsPath(): ?string
     {
-        return null;
+        return dirname(__DIR__) . '/lua-docs/vegalite.md';
     }
 
     public function credentialFields(): array

@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-slack",
+    "description": "Slack integration for OpenCompany — messages, channels, files, users, and reactions.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "slack", "messaging", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Slack\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Slack\\SlackServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-notion",
+    "description": "Notion integration for OpenCompany — pages, databases, blocks, search, and comments.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "notion", "wiki", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Notion\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Notion\\NotionServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

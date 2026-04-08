@@ -12,11 +12,18 @@ packages/
   celestial/                Astronomy: moon phases, sunrise/sunset, planet positions, eclipses
   clickup/                  ClickUp project management: tasks, lists, folders, time tracking
   coingecko/                CoinGecko cryptocurrency: prices, market data, trending, charts
+  constant-contact/         Constant Contact email marketing: contacts, campaigns, lists
+  etsy/                     Etsy e-commerce: listings, orders, inventory, seller account
   exchangerate/             Currency exchange rates: 340+ fiat, crypto, and metal conversions
   google/                   Google Calendar, Gmail, Drive, Sheets, Docs, Forms, Contacts, Tasks, Analytics, Search Console
   mermaid/                  Mermaid diagram rendering to PNG
+  microsoft-powerbi/        Microsoft Power BI: reports, datasets, workspaces, user info
   plantuml/                 PlantUML diagram rendering to PNG
   plausible/                Plausible Analytics: stats, realtime visitors, goals
+  recruitee/                Recruitee ATS: job offers, candidates, departments
+  splunk/                   Splunk log analytics: search, indexes, saved searches
+  statuspage/               Atlassian Statuspage: incidents, components, status management
+  tapfiliate/               Tapfiliate affiliate marketing: affiliates, conversions, tracking
   ticktick/                 TickTick task management with time tracking
   trustmrr/                 TrustMRR verified startup revenue data
   typst/                    Typst document rendering to PDF
@@ -86,11 +93,18 @@ Agents can also introspect available tools at runtime:
 | [celestial](packages/celestial/) | 9 | — | None | Data | Moon phases, sunrise/sunset, planet positions, eclipses, zodiac |
 | [clickup](packages/clickup/) | 34 | 4 | API token | Productivity | Tasks, lists, folders, time tracking, docs, chat |
 | [coingecko](packages/coingecko/) | 8 | — | None | Data | Crypto prices, market data, trending coins, historical charts |
+| [constant-contact](packages/constant-contact/) | 6 | — | Access token | Email | Contacts, campaigns, lists |
+| [etsy](packages/etsy/) | 6 | — | API token | E-commerce | Shop listings, orders, inventory, seller profile |
 | [exchangerate](packages/exchangerate/) | 5 | — | None | Data | 340+ currency conversions (fiat, crypto, metals) |
 | [google](packages/google/) | 117 | — | OAuth | Productivity | Calendar, Gmail, Drive, Sheets, Docs, Forms, Contacts, Tasks, Analytics, Search Console |
 | [mermaid](packages/mermaid/) | 1 | — | None | Rendering | Flowcharts, sequences, Gantt, class diagrams → PNG |
 | [plantuml](packages/plantuml/) | 1 | — | None | Rendering | UML class, sequence, activity, component, state → PNG |
+| [microsoft-powerbi](packages/microsoft-powerbi/) | 6 | — | Access token | Analytics | Reports, datasets, workspaces, user info |
 | [plausible](packages/plausible/) | 8 | — | None | Analytics | Stats, realtime visitors, site and goal management |
+| [recruitee](packages/recruitee/) | 6 | — | Access token | HR | Job offers, candidates, departments, user info |
+| [splunk](packages/splunk/) | 6 | — | Bearer token | Monitoring | Log search, indexes, saved searches, user context |
+| [statuspage](packages/statuspage/) | 5 | — | API key + Page ID | Monitoring | Incidents, components, status management |
+| [tapfiliate](packages/tapfiliate/) | 5 | — | API key | Marketing | Affiliates, conversions, referral tracking |
 | [ticktick](packages/ticktick/) | 9 | — | OAuth | Productivity | Projects, tasks, time tracking (TickTick and Dida365) |
 | [trustmrr](packages/trustmrr/) | 2 | — | API key | Data | Verified startup revenue, MRR, growth, acquisitions |
 | [typst](packages/typst/) | 1 | — | None | Rendering | Reports, invoices, proposals → PDF |

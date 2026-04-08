@@ -1,0 +1,23 @@
+{
+    "name": "opencompanyapp/integration-smartsheet",
+    "description": "Smartsheet integration for OpenCompany",
+    "type": "library",
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\Smartsheet\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\Smartsheet\\SmartsheetServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

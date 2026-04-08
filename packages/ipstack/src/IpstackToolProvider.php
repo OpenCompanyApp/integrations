@@ -1,0 +1,251 @@
+<?php
+
+namespace OpenCompany\Integrations\Ipstack;
+
+use Illuminate\Support\Facades\Http;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupIp;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackLookupBulk;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackCheckLocation;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackGetTimezone;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackGetCurrency;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackGetConnection;
+use OpenCompany\Integrations\Ipstack\Tools\IpstackGetCurrentUser;
+
+class IpstackToolProvider implements ToolProvider, ConfigurableIntegration
+{
+    /**
+     * The application name used as the integration identifier.
+     */
+    public function appName(): string
+    {
+        return 'ipstack';
+    }
+
+    /**
+     * Short metadata shown in tool listings and UI badges.
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'geolocation, IP lookup, timezone',
+            'description' => 'IP geolocation & data lookup',
+            'icon' => 'ph:globe-hemisphere-west',
+            'logo' => 'simple-icons:ipstack',
+        ];
+    }
+
+    /**
+     * Full integration metadata for the integrations catalog.
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'IPstack',
+            'description' => 'Lookup IP addresses for geolocation, timezone, currency, and connection data',
+            'icon' => 'ph:globe-hemisphere-west',
+            'logo' => 'simple-icons:ipstack',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://ipstack.com/documentation',
+        ];
+    }
+
+    /**
+     * Configuration schema for the IPstack integration.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function configSchema(): array
+    {
+        return [
+            [
+                'key' => 'api_key',
+                'type' => 'secret',
+                'label' => 'API Key',
+                'placeholder' => 'Enter your IPstack API access key',
+                'hint' => 'Find your access key in the IPstack dashboard at <strong>Dashboard → Access Key</strong>',
+                'required' => true,
+            ],
+            [
+                'key' => 'url',
+                'type' => 'url',
+                'label' => 'API Base URL',
+                'placeholder' => 'https://api.ipstack.com',
+                'hint' => 'Use <code>https://api.ipstack.com</code> (default). HTTPS may require a paid plan.',
+                'default' => 'https://api.ipstack.com',
+            ],
+        ];
+    }
+
+    /**
+     * Test the connection using the provided configuration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        $apiKey = $config['api_key'] ?? '';
+        $baseUrl = rtrim($config['url'] ?? 'https://api.ipstack.com', '/');
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No API key provided'];
+        }
+
+        try {
+            $response = Http::timeout(10)->get($baseUrl . '/check', [
+                'access_key' => $apiKey,
+            ]);
+
+            $json = $response->json();
+
+            if (isset($json['error'])) {
+                $error = $json['error']['info'] ?? $json['error']['type'] ?? 'Unknown error';
+                return ['success' => false, 'error' => "IPstack API error: {$error}"];
+            }
+
+            if ($json === null) {
+                return [
+                    'success' => false,
+                    'error' => "Could not reach IPstack API at {$baseUrl}. Check the URL.",
+                ];
+            }
+
+            return [
+                'success' => true,
+                'message' => "Connected to IPstack API at {$baseUrl}.",
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Laravel validation rules for the configuration fields.
+     *
+     * @return array<string, string>
+     */
+    public function validationRules(): array
+    {
+        return [
+            'api_key' => 'nullable|string',
+            'url' => 'nullable|url',
+        ];
+    }
+
+    /**
+     * Return the list of tools provided by this integration.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function tools(): array
+    {
+        return [
+            'ipstack_lookup_ip' => [
+                'class' => IpstackLookupIp::class,
+                'type' => 'read',
+                'name' => 'Lookup IP',
+                'description' => 'Look up geolocation data for a single IP address.',
+                'icon' => 'ph:map-pin',
+            ],
+            'ipstack_lookup_bulk' => [
+                'class' => IpstackLookupBulk::class,
+                'type' => 'read',
+                'name' => 'Bulk IP Lookup',
+                'description' => 'Look up geolocation data for multiple IP addresses at once.',
+                'icon' => 'ph:list-magnifying-glass',
+            ],
+            'ipstack_check_location' => [
+                'class' => IpstackCheckLocation::class,
+                'type' => 'read',
+                'name' => 'Check Location',
+                'description' => 'Check if an IP address is in a specific country or region.',
+                'icon' => 'ph:map-trifold',
+            ],
+            'ipstack_get_timezone' => [
+                'class' => IpstackGetTimezone::class,
+                'type' => 'read',
+                'name' => 'Get Timezone',
+                'description' => 'Get timezone information for an IP address.',
+                'icon' => 'ph:clock',
+            ],
+            'ipstack_get_currency' => [
+                'class' => IpstackGetCurrency::class,
+                'type' => 'read',
+                'name' => 'Get Currency',
+                'description' => 'Get local currency information for an IP address.',
+                'icon' => 'ph:currency-dollar',
+            ],
+            'ipstack_get_connection' => [
+                'class' => IpstackGetConnection::class,
+                'type' => 'read',
+                'name' => 'Get Connection',
+                'description' => 'Get connection and ISP information for an IP address.',
+                'icon' => 'ph:wifi-high',
+            ],
+            'ipstack_get_current_user' => [
+                'class' => IpstackGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Detect and geolocate the current requesting IP address.',
+                'icon' => 'ph:user-circle',
+            ],
+        ];
+    }
+
+    /**
+     * Path to the Lua API docs markdown file.
+     */
+    public function luaDocsPath(): ?string
+    {
+        return __DIR__ . '/../lua-docs/ipstack.md';
+    }
+
+    /**
+     * Credential fields for quick reference.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function credentialFields(): array
+    {
+        return [
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
+            ['key' => 'url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://api.ipstack.com'],
+        ];
+    }
+
+    /**
+     * Confirm this class represents an integration (not a standalone tool).
+     */
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Create a tool instance, optionally using account-specific credentials.
+     *
+     * @param  class-string<Tool>  $class  The tool class to instantiate.
+     * @param  array<string, mixed>  $context  Optional context with an 'account' key for multi-account support.
+     */
+    public function createTool(string $class, array $context = []): Tool
+    {
+        $account = $context['account'] ?? null;
+
+        if ($account !== null) {
+            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+
+            $service = new IpstackService(
+                apiKey: $creds->get('ipstack', 'api_key', '', $account),
+                baseUrl: $creds->get('ipstack', 'url', 'https://api.ipstack.com', $account),
+            );
+
+            return new $class($service);
+        }
+
+        return new $class(app(IpstackService::class));
+    }
+}

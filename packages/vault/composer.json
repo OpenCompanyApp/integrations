@@ -1,0 +1,21 @@
+{
+    "name": "opencompanyapp/integration-vault",
+    "description": "HashiCorp Vault integration for OpenCompany — secrets management, policies, and authentication.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "vault", "hashicorp", "secrets", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {"OpenCompany\\Integrations\\Vault\\": "src/"}
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["OpenCompany\\Integrations\\Vault\\VaultServiceProvider"]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

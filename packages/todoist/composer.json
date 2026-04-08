@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-todoist",
+    "description": "Todoist integration for OpenCompany — tasks, projects, labels, and user management.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "todoist", "tasks", "productivity", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Todoist\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Todoist\\TodoistServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

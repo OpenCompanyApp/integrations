@@ -1,0 +1,57 @@
+<?php
+
+namespace OpenCompany\Integrations\Instantly\Tools;
+
+use OpenCompany\Integrations\Instantly\InstantlyService;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Support\ToolResult;
+
+/**
+ * Get campaign step analytics.
+ */
+class InstantlyAnalyticsCampaignSteps implements Tool
+{
+    /**
+     * @param  InstantlyService  $service  The Instantly API client
+     */
+    public function __construct(
+        private InstantlyService $service,
+    ) {}
+
+    public function name(): string
+    {
+        return 'instantly_analytics_campaign_steps';
+    }
+
+    public function description(): string
+    {
+        return 'Get campaign step analytics.';
+    }
+
+    public function parameters(): array
+    {
+        return [
+            'campaign_id' => ['type' => 'string', 'required' => true, 'description' => 'Campaign ID'],
+            'from' => ['type' => 'string', 'required' => false, 'description' => 'Start date (YYYY-MM-DD)'],
+            'to' => ['type' => 'string', 'required' => false, 'description' => 'End date (YYYY-MM-DD)'],
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $args
+     */
+    public function execute(array $args): ToolResult
+    {
+        try {
+            if (!$this->service->isConfigured()) {
+                return ToolResult::error('Instantly integration is not configured.');
+            }
+
+            $result = $params = []; foreach (['campaign_id','from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->getAnalyticsCampaignSteps($params);
+
+            return ToolResult::success($result);
+        } catch (\Throwable $e) {
+            return ToolResult::error($e->getMessage());
+        }
+    }
+}

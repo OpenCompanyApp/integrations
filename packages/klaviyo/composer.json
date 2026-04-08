@@ -1,0 +1,12 @@
+{
+    "name": "opencompanyapp/integration-klaviyo",
+    "description": "Klaviyo integration for OpenCompany — profiles, events, lists, flows, and campaigns.",
+    "license": "MIT",
+    "authors": [{"name": "OpenCompany", "homepage": "https://github.com/OpenCompanyApp"}],
+    "keywords": ["tools", "klaviyo", "email", "marketing", "crm", "opencompany"],
+    "require": {"php": "^8.2", "opencompanyapp/integration-core": "^2.0 || @dev"},
+    "autoload": {"psr-4": {"OpenCompany\\Integrations\\Klaviyo\\": "src/"}},
+    "extra": {"laravel": {"providers": ["OpenCompany\\Integrations\\Klaviyo\\KlaviyoServiceProvider"]}},
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

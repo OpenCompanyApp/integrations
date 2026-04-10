@@ -2,9 +2,9 @@
 
 namespace OpenCompany\Integrations\Plane\Tools;
 
-use OpenCompany\Integrations\Plane\PlaneService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Plane\PlaneService;
 
 /**
  * Get a single Plane.so issue by ID.
@@ -27,6 +27,7 @@ class PlaneGetIssue implements Tool
     {
         return <<<'DESC'
 Get detailed information about a single Plane.so issue, including description, state, priority, assignees, labels, dates, and relations.
+The issue_id may be a UUID or an issue reference like KOS-55 on Plane deployments that support it.
 DESC;
     }
 
@@ -35,7 +36,7 @@ DESC;
         return [
             'workspace_slug' => ['type' => 'string', 'required' => false, 'description' => 'The workspace slug.'],
             'project_id' => ['type' => 'string', 'required' => true, 'description' => 'The project UUID.'],
-            'issue_id' => ['type' => 'string', 'required' => true, 'description' => 'The issue UUID.'],
+            'issue_id' => ['type' => 'string', 'required' => true, 'description' => 'The issue UUID or reference (for example KOS-55).'],
         ];
     }
 
@@ -45,7 +46,7 @@ DESC;
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Plane.so integration is not configured.');
             }
 

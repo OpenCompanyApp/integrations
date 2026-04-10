@@ -100,6 +100,91 @@ class PlaneService
         return $this->workspaceSlug;
     }
 
+    /**
+     * @param  array<string, mixed>  $project
+     */
+    public static function isProjectActive(array $project): ?bool
+    {
+        if (array_key_exists('is_active', $project)) {
+            return $project['is_active'] === null ? null : (bool) $project['is_active'];
+        }
+
+        if (array_key_exists('archived_at', $project)) {
+            return $project['archived_at'] === null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $issues
+     * @param  array<string, mixed>  $params
+     * @return list<array<string, mixed>>
+     */
+    public static function filterIssues(array $issues, array $params): array
+    {
+        $search = isset($params['search']) && is_string($params['search']) ? mb_strtolower(trim($params['search'])) : null;
+        $project = isset($params['project']) && is_string($params['project']) && $params['project'] !== '' ? $params['project'] : null;
+        $state = isset($params['state']) && is_string($params['state']) && $params['state'] !== '' ? $params['state'] : null;
+        $priority = isset($params['priority']) && is_string($params['priority']) && $params['priority'] !== '' ? $params['priority'] : null;
+        $assignee = isset($params['assignee']) && is_string($params['assignee']) && $params['assignee'] !== '' ? $params['assignee'] : null;
+        $parent = isset($params['parent']) && is_string($params['parent']) && $params['parent'] !== '' ? $params['parent'] : null;
+        $cycle = isset($params['cycle']) && is_string($params['cycle']) && $params['cycle'] !== '' ? $params['cycle'] : null;
+        $module = isset($params['module']) && is_string($params['module']) && $params['module'] !== '' ? $params['module'] : null;
+        $labels = self::normalizeCsvParam($params['labels'] ?? null);
+
+        return array_values(array_filter($issues, static function (array $issue) use ($search, $project, $state, $priority, $assignee, $parent, $cycle, $module, $labels): bool {
+            if ($project !== null && ($issue['project'] ?? null) !== $project) {
+                return false;
+            }
+
+            if ($state !== null && ($issue['state'] ?? null) !== $state) {
+                return false;
+            }
+
+            if ($priority !== null && ($issue['priority'] ?? null) !== $priority) {
+                return false;
+            }
+
+            if ($parent !== null && ($issue['parent'] ?? null) !== $parent) {
+                return false;
+            }
+
+            if ($cycle !== null && ($issue['cycle'] ?? null) !== $cycle) {
+                return false;
+            }
+
+            if ($module !== null && ($issue['module'] ?? null) !== $module) {
+                return false;
+            }
+
+            if ($assignee !== null && ! self::issueHasActor($issue['assignees'] ?? [], $assignee)) {
+                return false;
+            }
+
+            if ($labels !== [] && ! self::issueHasAnyActor($issue['labels'] ?? [], $labels)) {
+                return false;
+            }
+
+            if ($search !== null && $search !== '') {
+                $haystack = mb_strtolower(trim(
+                    implode(' ', array_filter([
+                        is_string($issue['name'] ?? null) ? $issue['name'] : null,
+                        is_string($issue['description_html'] ?? null) ? strip_tags($issue['description_html']) : null,
+                        is_string($issue['description_text'] ?? null) ? $issue['description_text'] : null,
+                        isset($issue['sequence_id']) ? (string) $issue['sequence_id'] : null,
+                    ]))
+                ));
+
+                if ($haystack === '' || ! str_contains($haystack, $search)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }));
+    }
+
     public function resolveWorkspaceSlug(?string $workspaceSlug = null): string
     {
         $resolved = self::normalizeWorkspaceSlug($workspaceSlug) ?? $this->workspaceSlug;
@@ -215,7 +300,18 @@ class PlaneService
     {
         $workspaceSlug = $this->resolveWorkspaceSlug($workspaceSlug);
 
-        return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/issues/{$issueId}/");
+        try {
+            return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/issues/{$issueId}/");
+        } catch (\RuntimeException $e) {
+            if (
+                ! str_contains($e->getMessage(), 'Plane.so API error (404)')
+                || ! self::looksLikeIssueReference($issueId)
+            ) {
+                throw $e;
+            }
+
+            return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/issues/{$issueId}/");
+        }
     }
 
     /**
@@ -381,7 +477,15 @@ class PlaneService
     {
         $workspaceSlug = $this->resolveWorkspaceSlug($workspaceSlug);
 
-        return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/search/", $params);
+        try {
+            return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/search/", $params);
+        } catch (\RuntimeException $e) {
+            if (! str_contains($e->getMessage(), 'Plane.so API error (404)')) {
+                throw $e;
+            }
+
+            return $this->fallbackSearchIssues($workspaceSlug, $params);
+        }
     }
 
     // ──────────────────────────────────────────────
@@ -504,7 +608,15 @@ class PlaneService
     {
         $workspaceSlug = $this->resolveWorkspaceSlug($workspaceSlug);
 
-        return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/members/");
+        try {
+            return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/members/");
+        } catch (\RuntimeException $e) {
+            if (! str_contains($e->getMessage(), 'Plane.so API error (404)')) {
+                throw $e;
+            }
+
+            return $this->fallbackWorkspaceMembers($workspaceSlug);
+        }
     }
 
     /**
@@ -582,7 +694,15 @@ class PlaneService
     {
         $workspaceSlug = $this->resolveWorkspaceSlug($workspaceSlug);
 
-        return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/pages/");
+        try {
+            return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/pages/");
+        } catch (\RuntimeException $e) {
+            if (! str_contains($e->getMessage(), 'Plane.so API error (404)')) {
+                throw $e;
+            }
+
+            throw new \RuntimeException('Plane.so pages are not available on this workspace or Plane deployment.');
+        }
     }
 
     /**
@@ -594,7 +714,15 @@ class PlaneService
     {
         $workspaceSlug = $this->resolveWorkspaceSlug($workspaceSlug);
 
-        return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/pages/{$pageId}/");
+        try {
+            return $this->request('GET', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/pages/{$pageId}/");
+        } catch (\RuntimeException $e) {
+            if (! str_contains($e->getMessage(), 'Plane.so API error (404)')) {
+                throw $e;
+            }
+
+            throw new \RuntimeException('Plane.so pages are not available on this workspace or Plane deployment.');
+        }
     }
 
     /**
@@ -607,7 +735,15 @@ class PlaneService
     {
         $workspaceSlug = $this->resolveWorkspaceSlug($workspaceSlug);
 
-        return $this->request('POST', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/pages/", $data);
+        try {
+            return $this->request('POST', "/api/v1/workspaces/{$workspaceSlug}/projects/{$projectId}/pages/", $data);
+        } catch (\RuntimeException $e) {
+            if (! str_contains($e->getMessage(), 'Plane.so API error (404)')) {
+                throw $e;
+            }
+
+            throw new \RuntimeException('Plane.so pages are not available on this workspace or Plane deployment.');
+        }
     }
 
     // ──────────────────────────────────────────────
@@ -796,7 +932,7 @@ class PlaneService
     {
         $paths = [$path];
 
-        if (str_starts_with($path, '/api/v1/')) {
+        if ($path === '/api/v1/users/me/') {
             $paths[] = '/api/'.substr($path, strlen('/api/v1/'));
         }
 
@@ -850,5 +986,119 @@ class PlaneService
             'owner' => null,
             'project_count_hint' => count($projects),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $params
+     * @return list<array<string, mixed>>
+     */
+    private function fallbackSearchIssues(string $workspaceSlug, array $params): array
+    {
+        $projectFilter = isset($params['project']) && is_string($params['project']) && $params['project'] !== ''
+            ? $params['project']
+            : null;
+
+        $projects = $projectFilter !== null
+            ? [$this->getProject($workspaceSlug, $projectFilter)]
+            : $this->listProjects($workspaceSlug);
+
+        $issues = [];
+        foreach ($projects as $project) {
+            $projectId = $project['id'] ?? null;
+            if (! is_string($projectId) || $projectId === '') {
+                continue;
+            }
+
+            foreach ($this->listIssues($workspaceSlug, $projectId) as $issue) {
+                $issue['project'] ??= $projectId;
+                $issue['project_detail'] ??= [
+                    'id' => $projectId,
+                    'name' => $project['name'] ?? null,
+                    'identifier' => $project['identifier'] ?? null,
+                ];
+                $issues[] = $issue;
+            }
+        }
+
+        return self::filterIssues($issues, $params);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function fallbackWorkspaceMembers(string $workspaceSlug): array
+    {
+        $projects = $this->listProjects($workspaceSlug);
+        $membersById = [];
+
+        foreach ($projects as $project) {
+            $projectId = $project['id'] ?? null;
+            if (! is_string($projectId) || $projectId === '') {
+                continue;
+            }
+
+            foreach ($this->listProjectMembers($workspaceSlug, $projectId) as $member) {
+                $data = is_array($member['member'] ?? null) ? $member['member'] : $member;
+                $memberId = is_string($data['id'] ?? null) && $data['id'] !== ''
+                    ? $data['id']
+                    : (is_string($data['email'] ?? null) ? $data['email'] : md5(json_encode($data) ?: uniqid('plane-member-', true)));
+
+                $membersById[$memberId] ??= $member;
+            }
+        }
+
+        return array_values($membersById);
+    }
+
+    private static function looksLikeIssueReference(string $issueId): bool
+    {
+        return (bool) preg_match('/^[A-Za-z][A-Za-z0-9_-]*-\d+$/', $issueId);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function normalizeCsvParam(mixed $value): array
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return [];
+        }
+
+        $parts = array_map(static fn (string $part): string => trim($part), explode(',', $value));
+
+        return array_values(array_filter($parts, static fn (string $part): bool => $part !== ''));
+    }
+
+    private static function issueHasActor(mixed $actors, string $needle): bool
+    {
+        if (! is_array($actors)) {
+            return false;
+        }
+
+        foreach ($actors as $actor) {
+            if (is_string($actor) && $actor === $needle) {
+                return true;
+            }
+
+            if (is_array($actor) && (($actor['id'] ?? null) === $needle || ($actor['label'] ?? null) === $needle)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  list<string>  $needles
+     */
+    private static function issueHasAnyActor(mixed $actors, array $needles): bool
+    {
+        foreach ($needles as $needle) {
+            if (self::issueHasActor($actors, $needle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace OpenCompany\Integrations\Plane\Tools;
 
-use OpenCompany\Integrations\Plane\PlaneService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Plane\PlaneService;
 
 /**
  * Get details of a Plane.so project.
@@ -44,7 +44,7 @@ DESC;
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Plane.so integration is not configured.');
             }
 
@@ -56,7 +56,9 @@ DESC;
                 'identifier' => $project['identifier'] ?? null,
                 'description' => $project['description'] ?? null,
                 'cover_image' => $project['cover_image'] ?? null,
-                'is_active' => $project['is_active'] ?? null,
+                'is_active' => PlaneService::isProjectActive($project),
+                'is_archived' => ($project['archived_at'] ?? null) !== null,
+                'is_deployed' => $project['is_deployed'] ?? null,
                 'is_favorite' => $project['is_favorite'] ?? null,
                 'is_member' => $project['is_member'] ?? null,
                 'default_assignee' => $project['default_assignee'] ?? null,

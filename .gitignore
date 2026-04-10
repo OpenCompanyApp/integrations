@@ -1,4 +1,5 @@
 /vendor/
+.phpunit.cache/
 .DS_Store
 *.log
 /inspiration/

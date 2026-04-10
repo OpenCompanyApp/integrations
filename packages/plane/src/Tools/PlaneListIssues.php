@@ -2,9 +2,9 @@
 
 namespace OpenCompany\Integrations\Plane\Tools;
 
-use OpenCompany\Integrations\Plane\PlaneService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Plane\PlaneService;
 
 /**
  * List issues in a Plane.so project.
@@ -53,7 +53,7 @@ DESC;
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Plane.so integration is not configured.');
             }
 
@@ -67,9 +67,16 @@ DESC;
                 }
             }
 
-            $issues = $this->service->listIssues($workspaceSlug, $projectId, $params);
+            $issues = PlaneService::filterIssues(
+                array_map(static function (array $issue) use ($projectId): array {
+                    $issue['project'] ??= $projectId;
 
-            $results = array_map(fn(array $issue) => [
+                    return $issue;
+                }, $this->service->listIssues($workspaceSlug, $projectId, $params)),
+                array_merge($params, ['project' => $projectId]),
+            );
+
+            $results = array_map(fn (array $issue) => [
                 'id' => $issue['id'] ?? null,
                 'name' => $issue['name'] ?? null,
                 'sequence_id' => $issue['sequence_id'] ?? null,

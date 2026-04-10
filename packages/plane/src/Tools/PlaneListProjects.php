@@ -2,9 +2,9 @@
 
 namespace OpenCompany\Integrations\Plane\Tools;
 
-use OpenCompany\Integrations\Plane\PlaneService;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
+use OpenCompany\Integrations\Plane\PlaneService;
 
 /**
  * List projects in a Plane.so workspace.
@@ -45,18 +45,20 @@ DESC;
     public function execute(array $args): ToolResult
     {
         try {
-            if (!$this->service->isConfigured()) {
+            if (! $this->service->isConfigured()) {
                 return ToolResult::error('Plane.so integration is not configured.');
             }
 
             $projects = $this->service->listProjects($this->service->resolveWorkspaceSlug($args['workspace_slug'] ?? null));
 
-            $results = array_map(fn(array $project) => [
+            $results = array_map(fn (array $project) => [
                 'id' => $project['id'] ?? null,
                 'name' => $project['name'] ?? null,
                 'identifier' => $project['identifier'] ?? null,
                 'description' => $project['description'] ?? null,
-                'is_active' => $project['is_active'] ?? null,
+                'is_active' => PlaneService::isProjectActive($project),
+                'is_archived' => ($project['archived_at'] ?? null) !== null,
+                'is_deployed' => $project['is_deployed'] ?? null,
                 'is_favorite' => $project['is_favorite'] ?? null,
                 'created_at' => $project['created_at'] ?? null,
             ], $projects);

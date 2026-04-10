@@ -2,6 +2,18 @@
 
 Guidance for building and maintaining integration packages in this monorepo.
 
+## What Good Looks Like
+
+When adding or modifying an integration in this repo, optimize for:
+
+- package quality over package count
+- stable host behavior across OpenCompany and KosmoKrator
+- clean metadata and naming in discovery UIs
+- Lua docs that help agents use tools correctly on the first try
+- deterministic tests with fake data only
+
+This repo is a package monorepo, not a dumping ground for thin wrappers. If an integration is redundant, inconsistent, undocumented, or untested, it is not ready.
+
 ## Codebase Overview
 
 This is a PHP 8.2+ monorepo of Composer packages that expose tools for AI agents. Each package under `packages/` is an independent Composer package built on a shared `core/`.
@@ -13,6 +25,14 @@ This is a PHP 8.2+ monorepo of Composer packages that expose tools for AI agents
 - **Service** — HTTP client class that encapsulates all API communication for an integration.
 
 For the full architecture, see `README.md`. For a step-by-step walkthrough, see `inspiration/AGENT-GUIDE.md`.
+
+## Monorepo Rules
+
+- Add new integrations under `packages/{name}` as Composer packages. Do not create separate repos for new integrations unless explicitly required.
+- Prefer one canonical package per service family. Do not add duplicate legacy wrappers when an existing package already owns that namespace.
+- If a legacy package must remain for compatibility, make it defer to the canonical package and declare the replacement clearly in Composer metadata.
+- Keep package ids, namespaces, app names, and Lua namespaces aligned. Avoid `google-docs` vs `google_docs` style drift.
+- Public-facing names must be human-readable. Do not use keyword blobs or SEO labels as the visible integration name.
 
 ## File Structure
 
@@ -30,6 +50,8 @@ packages/{name}/
   lua-docs/
     {name}.md                     # MANDATORY — supplementary docs for the AI agent
 ```
+
+If you add tests, they belong in this repository under `tests/`, not in a host app such as KosmoKrator or OpenCompany.
 
 ## PHPDoc Conventions
 
@@ -139,6 +161,10 @@ When implementing `ConfigurableIntegration`, `HasTriggers`, or other interfaces,
 - Throw `RuntimeException` on API failures — tools catch these and return `ToolResult::error()`
 - Use `Illuminate\Support\Facades\Http` for HTTP calls
 - Use `Illuminate\Support\Facades\Log` for error logging
+- Normalize host-specific configuration in the service layer, not in tools
+- Be conservative about fallback behavior: only add endpoint fallbacks that are known to be safe and intentional
+- Prefer explicit unsupported-capability errors over misleading 401/404 leakage when a host deployment lacks an endpoint
+- If an upstream API ignores filters, apply safe client-side filtering in the integration so tool behavior matches docs
 
 ### Tool class
 
@@ -150,6 +176,8 @@ When implementing `ConfigurableIntegration`, `HasTriggers`, or other interfaces,
 - Check `$this->service->isConfigured()` before API calls
 - Translate `snake_case` parameters to API's format in `execute()` (e.g., `camelCase`)
 - Return clean, focused data — not raw API response dumps
+- Do not expose obviously wrong or nonexistent fields just because a previous provider returned them
+- If a tool supports ids and human references, document both clearly
 
 ### ToolProvider
 
@@ -160,6 +188,8 @@ When implementing `ConfigurableIntegration`, `HasTriggers`, or other interfaces,
 - `integrationMeta()` includes `category`: `'productivity'`, `'analytics'`, `'data'`, or `'rendering'`
 - `testConnection()` makes a lightweight API call to verify credentials
 - `configSchema()` returns form field definitions for the UI
+- `integrationMeta()['name']` should be the clean canonical display name shown in settings and catalogs
+- Keep `appMeta()['label']` short and human-readable; do not stuff keywords into it
 
 ### ServiceProvider
 
@@ -196,6 +226,8 @@ private function resolveService(array $context = []): GitHubService
 - Parameters: `snake_case`
 - Icons: Phosphor (`ph:` prefix) via Iconify
 
+For package folder names, prefer the established package id over inventing a second alias. Do not introduce both `exchange-rate` and `exchangerate` variants, or both hyphen and underscore namespaces for the same service family.
+
 ## Integration Types
 
 | Type | Auth | Example | Key Differences |
@@ -211,6 +243,11 @@ private function resolveService(array $context = []): GitHubService
 2. Read the reference implementations: `plausible` (simple), `clickup` (complex), `coingecko` (public API)
 3. Research the API via inspiration repos (Pipedream for breadth, n8n for params, Nango for auth)
 4. One tool = one API operation. No god tools.
+5. Check whether the integration already exists under another package or namespace before adding anything new.
+6. Decide whether the integration is public API, API key, OAuth, or rendering before you start coding.
+7. Decide how the package behaves in both host apps:
+   - OpenCompany
+   - KosmoKrator
 
 ## Checklist
 
@@ -228,6 +265,49 @@ Every integration MUST have ALL applicable items checked. An integration is NOT 
 - [ ] `credentialFields()` for credential-based integrations
 - [ ] `testConnection()` for credential-based integrations
 - [ ] All PHP files pass `php -l` syntax checks
+- [ ] Tests added in this repo for non-trivial behavior, fallback logic, filters, or endpoint mapping
+- [ ] No confidential domains, real tokens, real emails, or private project names in tests or docs
+- [ ] Lua docs match the actual normalized tool output, not just the upstream API marketing docs
+- [ ] Host behavior checked in both OpenCompany and KosmoKrator when the change affects discovery, credentials, Lua docs, or namespaces
+
+### Strongly Recommended
+
+- [ ] Add issue/reference fallback support when the upstream service clearly supports both UUIDs and human ids
+- [ ] Add clear unsupported-feature messages for self-hosted or partial deployments
+- [ ] Add client-side normalization when upstream pagination or filtering is inconsistent
+- [ ] Keep response payloads small and shaped for agents, not humans reading raw REST blobs
+
+## Testing Rules
+
+- Put integration tests in this repository under `tests/`.
+- Use fake hosts such as `example.test`, `example.invalid`, or clearly dummy values.
+- Never put private domains, real workspace names, real project ids, real user emails, or real API keys into tests, fixtures, snapshots, or docs.
+- Prefer `Http::fake()` for service and tool behavior tests.
+- Test the integration layer's behavior, not Laravel internals.
+- Add regression tests for:
+  - endpoint fallbacks
+  - multi-account resolution
+  - filtered result shaping
+  - unsupported-host behavior
+  - metadata and naming regressions
+
+## Lua Docs Rules
+
+- `lua-docs/{name}.md` is required.
+- Document the namespace and the intended usage pattern.
+- Document return shapes or normalized response notes when the output is not obvious.
+- If the integration flattens or renames upstream fields, say so explicitly.
+- Keep examples minimal, fake, and safe to publish.
+- If a capability is host-version-specific or often unavailable on self-hosted deployments, say that explicitly instead of pretending it always works.
+
+## Compatibility Rules
+
+- Assume host apps may load packages dynamically from the monorepo without Composer requiring every package directly.
+- Do not rely on fragile discovery side effects or duplicate package registration.
+- Keep metadata compatible with both:
+  - settings UIs
+  - Lua namespace builders
+- If a change affects discovery, visible naming, or namespace shape, verify both catalog output and UI-facing metadata.
 
 ### Common Mistakes to Avoid
 
@@ -238,3 +318,8 @@ Every integration MUST have ALL applicable items checked. An integration is NOT 
 5. **Missing ServiceProvider** — Without it Laravel won't register the integration.
 6. **Forgetting triggers** — Services like GitHub, Slack, Stripe, Jira support webhooks. Add triggers for webhook-capable services.
 7. **Not running syntax checks** — Always `php -l` all files before finishing.
+8. **Leaking private data into tests** — Never use real customer, company, workspace, or token data in committed fixtures.
+9. **Adding duplicate packages** — Fix duplication at the source package structure, do not hide it with registry hacks.
+10. **Shipping keyword labels as names** — discovery UIs should show a clean integration name, not search terms.
+11. **Trusting upstream filters blindly** — if the API ignores filters, tool behavior becomes misleading unless you normalize it.
+12. **Writing docs from API assumptions** — inspect the actual normalized tool output before documenting examples.

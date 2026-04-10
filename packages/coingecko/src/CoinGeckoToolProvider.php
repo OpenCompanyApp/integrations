@@ -3,6 +3,10 @@
 namespace OpenCompany\Integrations\CoinGecko;
 
 use Illuminate\Support\Facades\Http;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoGlobal;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoHistory;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoInfo;
@@ -11,11 +15,8 @@ use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoOhlc;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoPrice;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoSearchCoins;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoTrending;
-use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
-use OpenCompany\IntegrationCore\Contracts\Tool;
-use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
+class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider
 {
     public function appName(): string
     {
@@ -54,7 +55,7 @@ class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
                 'label' => 'Demo API Key',
                 'placeholder' => 'CG-...',
                 'hint' => 'Free key from <a href="https://www.coingecko.com/en/api/pricing" target="_blank">CoinGecko Developer Dashboard</a>. 30 calls/min, 10k calls/month.',
-                'required' => true,
+                'required' => false,
             ],
         ];
     }
@@ -63,14 +64,12 @@ class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
     {
         $apiKey = $config['api_key'] ?? '';
 
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided. Get a free key at coingecko.com/en/api/pricing.'];
-        }
-
         try {
-            $response = Http::withHeaders([
-                'x-cg-demo-api-key' => $apiKey,
-            ])->timeout(10)->get('https://api.coingecko.com/api/v3/simple/price', [
+            $headers = $apiKey !== ''
+                ? ['x-cg-demo-api-key' => $apiKey]
+                : [];
+
+            $response = Http::withHeaders($headers)->timeout(10)->get('https://api.coingecko.com/api/v3/simple/price', [
                 'ids' => 'bitcoin',
                 'vs_currencies' => 'usd',
             ]);
@@ -81,8 +80,8 @@ class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
                 return [
                     'success' => true,
                     'message' => $price
-                        ? "Connected to CoinGecko. BTC = \${$price}"
-                        : 'Connected to CoinGecko.',
+                        ? ($apiKey !== '' ? "Connected to CoinGecko. BTC = \${$price}" : "Connected to CoinGecko without API key. BTC = \${$price}")
+                        : ($apiKey !== '' ? 'Connected to CoinGecko.' : 'Connected to CoinGecko without API key.'),
                 ];
             }
 
@@ -90,7 +89,7 @@ class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
 
             return [
                 'success' => false,
-                'error' => 'CoinGecko API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
+                'error' => 'CoinGecko API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)),
             ];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
@@ -174,7 +173,7 @@ class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
 
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/coingecko.md';
+        return __DIR__.'/../lua-docs/coingecko.md';
     }
 
     public function credentialFields(): array
@@ -190,7 +189,7 @@ class CoinGeckoToolProvider implements ToolProvider, ConfigurableIntegration
         $account = $context['account'] ?? null;
 
         if ($account !== null) {
-            $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
 
             $service = new CoinGeckoService(
                 apiKey: $creds->get('coingecko', 'api_key', '', $account),

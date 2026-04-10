@@ -3,6 +3,7 @@
 namespace OpenCompany\Integrations\Nasa;
 
 use Illuminate\Support\ServiceProvider;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 class NasaServiceProvider extends ServiceProvider
@@ -16,9 +17,11 @@ class NasaServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(NasaService::class, function ($app) {
+            $creds = $app->make(CredentialResolver::class);
+
             return new NasaService(
-                apiKey: config('services.nasa.api_key', 'DEMO_KEY'),
-                baseUrl: config('services.nasa.url', 'https://api.nasa.gov'),
+                apiKey: $creds->get('nasa', 'api_key', 'DEMO_KEY'),
+                baseUrl: $creds->get('nasa', 'url', 'https://api.nasa.gov'),
             );
         });
     }
@@ -30,7 +33,7 @@ class NasaServiceProvider extends ServiceProvider
     {
         if ($this->app->bound(ToolProviderRegistry::class)) {
             $this->app->make(ToolProviderRegistry::class)
-                ->register(new NasaToolProvider());
+                ->register(new NasaToolProvider);
         }
     }
 }

@@ -14,7 +14,7 @@ class CoinGeckoService
 
     public function isConfigured(): bool
     {
-        return $this->apiKey !== '';
+        return true;
     }
 
     /** Check API connectivity. */
@@ -50,7 +50,7 @@ class CoinGeckoService
         ];
 
         foreach (['include_market_cap', 'include_24hr_vol', 'include_24hr_change', 'include_last_updated_at'] as $opt) {
-            if (!empty($opts[$opt])) {
+            if (! empty($opts[$opt])) {
                 $query[$opt] = 'true';
             }
         }
@@ -160,15 +160,15 @@ class CoinGeckoService
 
         $response = Http::withHeaders($headers)
             ->timeout(15)
-            ->get(self::BASE_URL . $endpoint, array_filter($query, fn ($v) => $v !== '' && $v !== null));
+            ->get(self::BASE_URL.$endpoint, array_filter($query, fn ($v) => $v !== '' && $v !== null));
 
         if ($response->status() === 429) {
             throw new \RuntimeException('CoinGecko rate limit exceeded. Try again in a moment.');
         }
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             $error = $response->json('error') ?? $response->json('status.error_message') ?? $response->body();
-            throw new \RuntimeException('CoinGecko API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)));
+            throw new \RuntimeException('CoinGecko API error ('.$response->status().'): '.(is_string($error) ? $error : json_encode($error)));
         }
 
         return $response->json() ?? [];

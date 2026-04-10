@@ -1,3 +1,5 @@
 kosmokrator:
   tools:
     default_permission_mode: prometheus
+  agent:
+    mode: edit

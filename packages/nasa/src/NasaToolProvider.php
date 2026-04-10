@@ -2,14 +2,15 @@
 
 namespace OpenCompany\Integrations\Nasa;
 
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Nasa\Tools\NasaGetApod;
-use OpenCompany\Integrations\Nasa\Tools\NasaGetMarsRoverPhotos;
-use OpenCompany\Integrations\Nasa\Tools\NasaGetAsteroids;
 use OpenCompany\Integrations\Nasa\Tools\NasaGetAsteroid;
-use OpenCompany\Integrations\Nasa\Tools\NasaSearchImages;
+use OpenCompany\Integrations\Nasa\Tools\NasaGetAsteroids;
 use OpenCompany\Integrations\Nasa\Tools\NasaGetCurrentUser;
+use OpenCompany\Integrations\Nasa\Tools\NasaGetMarsRoverPhotos;
+use OpenCompany\Integrations\Nasa\Tools\NasaSearchImages;
 
 class NasaToolProvider implements ToolProvider
 {
@@ -89,12 +90,25 @@ class NasaToolProvider implements ToolProvider
         ];
     }
 
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
     /**
      * Get the path to the Lua documentation file.
      */
     public function luaDocsPath(): ?string
     {
-        return __DIR__ . '/../lua-docs/nasa.md';
+        return __DIR__.'/../lua-docs/nasa.md';
+    }
+
+    public function credentialFields(): array
+    {
+        return [
+            ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => false, 'placeholder' => 'DEMO_KEY'],
+            ['key' => 'url', 'type' => 'url', 'label' => 'Base URL', 'required' => false, 'default' => 'https://api.nasa.gov'],
+        ];
     }
 
     /**
@@ -106,6 +120,19 @@ class NasaToolProvider implements ToolProvider
      */
     public function createTool(string $class, array $context = []): Tool
     {
+        $account = $context['account'] ?? null;
+
+        if ($account !== null) {
+            $creds = app(CredentialResolver::class);
+
+            $service = new NasaService(
+                apiKey: $creds->get('nasa', 'api_key', 'DEMO_KEY', $account),
+                baseUrl: $creds->get('nasa', 'url', 'https://api.nasa.gov', $account),
+            );
+
+            return new $class($service);
+        }
+
         return new $class(app(NasaService::class));
     }
 }

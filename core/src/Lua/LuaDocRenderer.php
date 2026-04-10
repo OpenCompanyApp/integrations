@@ -15,12 +15,12 @@ class LuaDocRenderer
         if ($filterNamespace !== null) {
             $namespaces = array_filter(
                 $namespaces,
-                fn (mixed $_value, string $key) => $key === $filterNamespace || str_starts_with($key, $filterNamespace . '.'),
+                fn (mixed $_value, string $key) => $key === $filterNamespace || str_starts_with($key, $filterNamespace.'.'),
                 ARRAY_FILTER_USE_BOTH,
             );
 
             if ($namespaces === []) {
-                return "Namespace '{$filterNamespace}' not found. Available: " . implode(', ', array_keys($allNamespaces));
+                return "Namespace '{$filterNamespace}' not found. Available: ".implode(', ', array_keys($allNamespaces));
             }
         }
 
@@ -28,16 +28,15 @@ class LuaDocRenderer
 
         foreach ($namespaces as $namespaceName => $namespace) {
             $lines[] = "**app.{$namespaceName}** — {$namespace['description']}";
-
-            foreach ($namespace['functions'] as $function) {
-                $lines[] = '  app.' . $namespaceName . '.' . $this->buildSignature($function);
-            }
-
             $lines[] = '';
         }
 
+        $lines[] = 'Use `lua_read_doc` to inspect a namespace before calling its functions.';
+        $lines[] = 'Examples: `lua_read_doc(page: "integrations.coingecko")`, `lua_read_doc(page: "integrations.coingecko.price")`.';
+        $lines[] = '';
+
         if ($staticPages !== []) {
-            $lines[] = 'Supplementary docs: ' . implode(', ', array_keys($staticPages));
+            $lines[] = 'Supplementary docs: '.implode(', ', array_keys($staticPages));
             $lines[] = 'Use lua_read_doc to read any page or namespace in detail.';
         }
 
@@ -54,14 +53,14 @@ class LuaDocRenderer
         ?callable $supplementaryDocsResolver = null,
     ): string {
         if (! isset($namespaces[$namespace])) {
-            return "Namespace '{$namespace}' not found. Available: " . implode(', ', array_keys($namespaces));
+            return "Namespace '{$namespace}' not found. Available: ".implode(', ', array_keys($namespaces));
         }
 
         $namespaceData = $namespaces[$namespace];
         $lines = ["# app.{$namespace} — {$namespaceData['description']}", ''];
 
         foreach ($namespaceData['functions'] as $function) {
-            $lines[] = '## app.' . $namespace . '.' . $this->buildSignature($function);
+            $lines[] = '## app.'.$namespace.'.'.$this->buildSignature($function);
             $lines[] = '';
 
             if ($function['description'] !== '') {
@@ -112,7 +111,7 @@ class LuaDocRenderer
         }
 
         $lines = [
-            '# app.' . $namespace . '.' . $this->buildSignature($match),
+            '# app.'.$namespace.'.'.$this->buildSignature($match),
             '',
         ];
 
@@ -149,7 +148,7 @@ class LuaDocRenderer
                 if ($score > 0) {
                     $results[] = [
                         'score' => $score,
-                        'text' => '**app.' . $namespaceName . '.' . $this->buildSignature($function) . '** — ' . $function['description'],
+                        'text' => '**app.'.$namespaceName.'.'.$this->buildSignature($function).'** — '.$function['description'],
                     ];
                 }
             }
@@ -162,7 +161,7 @@ class LuaDocRenderer
 
             $results[] = [
                 'score' => 1,
-                'text' => "**[{$slug}]** (supplementary doc)\n" . $this->extractSearchContext($content, $query),
+                'text' => "**[{$slug}]** (supplementary doc)\n".$this->extractSearchContext($content, $query),
             ];
         }
 
@@ -173,7 +172,7 @@ class LuaDocRenderer
             return "No results found for '{$query}'.";
         }
 
-        $lines = ["Found " . count($results) . " result(s) for '{$query}':", ''];
+        $lines = ['Found '.count($results)." result(s) for '{$query}':", ''];
         foreach ($results as $result) {
             $lines[] = $result['text'];
             $lines[] = '';
@@ -218,15 +217,15 @@ class LuaDocRenderer
         $lines = [];
 
         if ($internal !== []) {
-            $lines[] = '  Internal: ' . implode(', ', $internal);
+            $lines[] = '  Internal: '.implode(', ', $internal);
         }
 
         if ($integrations !== []) {
-            $lines[] = '  Integrations: ' . implode(', ', $integrations);
+            $lines[] = '  Integrations: '.implode(', ', $integrations);
         }
 
         if ($mcp !== []) {
-            $lines[] = '  MCP: ' . implode(', ', $mcp);
+            $lines[] = '  MCP: '.implode(', ', $mcp);
         }
 
         $lines[] = '  Use lua_read_doc(page) for function signatures and parameters.';
@@ -244,10 +243,10 @@ class LuaDocRenderer
         foreach ($function['parameters'] as $parameter) {
             $required = (bool) ($parameter['required'] ?? false);
             $name = (string) ($parameter['name'] ?? 'arg');
-            $params[] = $required ? $name : $name . '?';
+            $params[] = $required ? $name : $name.'?';
         }
 
-        return $function['name'] . '({' . implode(', ', $params) . '})';
+        return $function['name'].'({'.implode(', ', $params).'})';
     }
 
     /**
@@ -276,7 +275,7 @@ class LuaDocRenderer
                     fn (mixed $value) => "`{$value}`",
                     $parameter['enum'],
                 ));
-                $description .= ($description !== '' ? ' ' : '') . "Values: {$enumValues}";
+                $description .= ($description !== '' ? ' ' : '')."Values: {$enumValues}";
             }
 
             $lines[] = sprintf(

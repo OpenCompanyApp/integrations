@@ -2,7 +2,14 @@
     "name": "opencompanyapp/integration-google",
     "description": "Google Workspace integration for the OpenCompany platform — Calendar, Gmail, Drive, Sheets, Docs, Forms, Contacts, Tasks, Analytics, and Search Console.",
     "replace": {
-        "opencompanyapp/ai-tool-google": "self.version"
+        "opencompanyapp/ai-tool-google": "self.version",
+        "opencompanyapp/integration-google-calendar": "self.version",
+        "opencompanyapp/integration-google-contacts": "self.version",
+        "opencompanyapp/integration-google-docs": "self.version",
+        "opencompanyapp/integration-google-drive": "self.version",
+        "opencompanyapp/integration-google-forms": "self.version",
+        "opencompanyapp/integration-google-search-console": "self.version",
+        "opencompanyapp/integration-google-tasks": "self.version"
     },
     "license": "MIT",
     "authors": [

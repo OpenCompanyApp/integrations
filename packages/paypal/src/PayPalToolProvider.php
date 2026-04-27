@@ -14,15 +14,70 @@ use OpenCompany\Integrations\PayPal\Tools\PayPalGetPayment;
 use OpenCompany\Integrations\PayPal\Tools\PayPalListInvoices;
 use OpenCompany\Integrations\PayPal\Tools\PayPalGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the PayPal integration.
- *
- * Implements ConfigurableIntegration for multi-account support,
- * config schema, connection testing, and tool registration.
+ * Registers the integration provider and exposes its tools.
  */
-class PayPalToolProvider implements ToolProvider, ConfigurableIntegration
+class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application name identifier.
      */
     public function appName(): string
@@ -30,7 +85,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration
         return 'paypal';
     }
 
-    /**
+/**
      * Short metadata for the integration UI.
      */
     public function appMeta(): array
@@ -43,7 +98,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integration catalog.
      */
     public function integrationMeta(): array
@@ -57,9 +112,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.paypal.com/api/rest/',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -236,8 +289,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Context containing optional 'account' key.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

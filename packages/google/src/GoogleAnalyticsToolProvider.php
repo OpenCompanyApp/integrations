@@ -12,8 +12,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleAnalyticsReport;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_analytics';
@@ -40,9 +101,7 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/analyticsdata.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -110,58 +169,7 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_analytics_list_properties' => [
-                'class' => GoogleAnalyticsListProperties::class,
-                'type' => 'read',
-                'name' => 'List GA4 Properties',
-                'description' => 'List all accessible GA4 properties with IDs and names.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'google_analytics_report' => [
-                'class' => GoogleAnalyticsReport::class,
-                'type' => 'read',
-                'name' => 'Analytics Report',
-                'description' => 'Run a GA4 analytics report with dimensions, metrics, filters, and date ranges.',
-                'icon' => 'ph:chart-bar',
-            ],
-            'google_analytics_realtime' => [
-                'class' => GoogleAnalyticsRealtime::class,
-                'type' => 'read',
-                'name' => 'Analytics Realtime',
-                'description' => 'Run a GA4 realtime report showing activity in the last 30 minutes.',
-                'icon' => 'ph:pulse',
-            ],
-            'google_analytics_metadata' => [
-                'class' => GoogleAnalyticsMetadata::class,
-                'type' => 'read',
-                'name' => 'Analytics Metadata',
-                'description' => 'List all available dimensions and metrics for a GA4 property.',
-                'icon' => 'ph:info',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

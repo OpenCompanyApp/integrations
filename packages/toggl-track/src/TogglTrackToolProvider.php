@@ -14,17 +14,69 @@ use OpenCompany\Integrations\TogglTrack\Tools\TogglGetProject;
 use OpenCompany\Integrations\TogglTrack\Tools\TogglListWorkspaces;
 use OpenCompany\Integrations\TogglTrack\Tools\TogglGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * TogglTrackToolProvider — registers Toggl Track tools with the integration framework.
- *
- * Implements ConfigurableIntegration for multi-account support, configuration schema,
- * connection testing, and credential field definitions.
- *
- * @see https://developers.track.toggl.com/docs/
+ * Registers the integration provider and exposes its tools.
  */
-class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration
+class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -32,7 +84,7 @@ class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration
         return 'toggl-track';
     }
 
-    /**
+/**
      * Get short metadata for the application.
      *
      * @return array<string, string> App metadata (label, description, icon, logo).
@@ -47,7 +99,7 @@ class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for display in the UI.
      *
      * @return array<string, string> Integration metadata (name, description, icon, logo, category, badge, docs_url).
@@ -63,9 +115,7 @@ class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.track.toggl.com/docs/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>> List of configuration field definitions.
@@ -243,8 +293,7 @@ class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

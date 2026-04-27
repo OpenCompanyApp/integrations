@@ -14,46 +14,68 @@ use OpenCompany\Integrations\Clerk\Tools\ClerkListOrganizations;
 use OpenCompany\Integrations\Clerk\Tools\ClerkListUsers;
 use OpenCompany\Integrations\Clerk\Tools\ClerkUpdateUser;
 
-class ClerkToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class ClerkToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'clerk';
-    }
-
-    /**
-     * Get metadata about the tools this provider offers.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'users, organizations, identity',
-            'description' => 'Authentication & identity management',
-            'icon' => 'ph:shield-check',
-            'logo' => 'simple-icons:clerk',
-        ];
-    }
-
-    /**
-     * Get integration metadata for display in the UI.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Clerk',
-            'description' => 'Authentication and identity platform — manage users and organizations',
-            'icon' => 'ph:shield-check',
-            'logo' => 'simple-icons:clerk',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://clerk.com/docs/reference/backend-api',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for this integration.
      */
     public function configSchema(): array

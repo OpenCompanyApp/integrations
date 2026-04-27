@@ -22,16 +22,69 @@ use OpenCompany\Integrations\PostHog\Tools\PostHogListDashboards;
 use OpenCompany\Integrations\PostHog\Tools\PostHogGetDashboard;
 use OpenCompany\Integrations\PostHog\Tools\PostHogListCohorts;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the PostHog integration.
- *
- * Registers 15 tools covering events, persons, feature flags, insights,
- * dashboards, and cohorts. Also provides connection testing, configuration
- * schema, and credential definitions for the integration framework.
+ * Registers the integration provider and exposes its tools.
  */
-class PostHogToolProvider implements ToolProvider, ConfigurableIntegration
+class PostHogToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      *
      * @return string The app name used internally.
@@ -41,7 +94,7 @@ class PostHogToolProvider implements ToolProvider, ConfigurableIntegration
         return 'posthog';
     }
 
-    /**
+/**
      * Get metadata for tool display and categorization.
      *
      * @return array<string, mixed> App-level metadata with label, description, and icons.
@@ -56,7 +109,7 @@ class PostHogToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration-level metadata for marketplace display.
      *
      * @return array<string, mixed> Integration metadata including name, category, and docs URL.
@@ -72,9 +125,7 @@ class PostHogToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://posthog.com/docs/api',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the PostHog integration.
      *
      * @return array<int, array<string, mixed>> The config field definitions.
@@ -312,8 +363,7 @@ class PostHogToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool with the appropriate service.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

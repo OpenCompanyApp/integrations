@@ -12,16 +12,69 @@ use OpenCompany\Integrations\JinaAI\Tools\JinaAIGround;
 use OpenCompany\Integrations\JinaAI\Tools\JinaAIEmbeddings;
 use OpenCompany\Integrations\JinaAI\Tools\JinaAIRerank;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * JinaAI Tool Provider.
- *
- * Implements ConfigurableIntegration and ToolProvider to expose Jina AI
- * capabilities (search, read, ground, embeddings, rerank) as agent tools
- * within the OpenCompany integration ecosystem.
+ * Registers the integration provider and exposes its tools.
  */
-class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration
+class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine name of the integration.
      */
     public function appName(): string
@@ -29,7 +82,7 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration
         return 'jinaai';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings.
      *
      * @return array<string, string> Label, description, icon, and logo
@@ -44,7 +97,7 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Extended metadata for the integration catalog.
      *
      * @return array<string, string> Name, description, icon, logo, category, badge, docs URL
@@ -60,9 +113,7 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://jina.ai/api/',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -215,8 +266,7 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

@@ -17,50 +17,69 @@ use OpenCompany\Integrations\HelpScout\Tools\HelpScoutListMailboxes;
 use OpenCompany\Integrations\HelpScout\Tools\HelpScoutGetMailbox;
 use OpenCompany\Integrations\HelpScout\Tools\HelpScoutGetCurrentUser;
 
-class HelpScoutToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class HelpScoutToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used as the integration identifier.
      */
     public function appName(): string
     {
         return 'helpscout';
-    }
-
-    /**
-     * Short metadata for the integration display.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'conversations, customers, mailboxes',
-            'description' => 'Help desk & customer support',
-            'icon' => 'ph:headset',
-            'logo' => 'simple-icons:helpscout',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations UI.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'HelpScout',
-            'description' => 'Customer service platform with shared inboxes, knowledge bases, and live chat',
-            'icon' => 'ph:headset',
-            'logo' => 'simple-icons:helpscout',
-            'category' => 'support',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.helpscout.com/docs-api/',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

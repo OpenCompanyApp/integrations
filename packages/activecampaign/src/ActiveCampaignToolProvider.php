@@ -23,16 +23,69 @@ use OpenCompany\Integrations\ActiveCampaign\Tools\ActiveCampaignUpdateDeal;
 use OpenCompany\Integrations\ActiveCampaign\Tools\ActiveCampaignListAutomations;
 use OpenCompany\Integrations\ActiveCampaign\Tools\ActiveCampaignCreateNote;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the ActiveCampaign integration.
- *
- * Registers all ActiveCampaign tools and provides integration configuration
- * including API key and account name fields, connection testing, and
- * multi-account support via credential resolution.
+ * Registers the integration provider and exposes its tools.
  */
-class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegration
+class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the internal app name identifier.
      *
      * @return string The app name slug.
@@ -42,7 +95,7 @@ class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegratio
         return 'activecampaign';
     }
 
-    /**
+/**
      * Get metadata for the app display.
      *
      * @return array{label: string, description: string, icon: string, logo: string} App metadata.
@@ -57,7 +110,7 @@ class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegratio
         ];
     }
 
-    /**
+/**
      * Get integration metadata for the marketplace display.
      *
      * @return array{name: string, description: string, icon: string, logo: string, category: string, badge: string, docs_url: string} Integration metadata.
@@ -73,9 +126,7 @@ class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegratio
             'badge' => 'verified',
             'docs_url' => 'https://developers.activecampaign.com/reference',
         ];
-    }
-
-    /**
+    }/**
      * Define the configuration schema for the ActiveCampaign integration.
      *
      * @return array<int, array{key: string, type: string, label: string, placeholder?: string, hint?: string, required?: bool}> The config field definitions.
@@ -315,8 +366,7 @@ class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegratio
      * @return Tool   The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(CredentialResolver::class);

@@ -13,17 +13,69 @@ use OpenCompany\Integrations\RabbitMQ\Tools\RabbitMQListConnections;
 use OpenCompany\Integrations\RabbitMQ\Tools\RabbitMQListVhosts;
 use OpenCompany\Integrations\RabbitMQ\Tools\RabbitMQGetOverview;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the RabbitMQ Management API integration.
- *
- * Implements {@see ConfigurableIntegration} to expose the config schema,
- * credential fields, validation rules, and connection test required by
- * the OpenCompany integration platform. Supports multi-account via the
- * account-aware {@see CredentialResolver}.
+ * Registers the integration provider and exposes its tools.
  */
-class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration
+class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'basic',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'username_password',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine name of the integration.
      */
     public function appName(): string
@@ -31,7 +83,7 @@ class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration
         return 'rabbitmq';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings.
      *
      * @return array{label: string, description: string, icon: string, logo: string}
@@ -46,7 +98,7 @@ class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integrations catalogue.
      *
      * @return array{name: string, description: string, icon: string, logo: string, category: string, badge: string, docs_url: string}
@@ -62,9 +114,7 @@ class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration
             'badge'       => 'verified',
             'docs_url'    => 'https://www.rabbitmq.com/docs/management',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -246,8 +296,7 @@ class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

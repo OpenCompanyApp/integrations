@@ -14,46 +14,68 @@ use OpenCompany\Integrations\Ipstack\Tools\IpstackGetCurrency;
 use OpenCompany\Integrations\Ipstack\Tools\IpstackGetConnection;
 use OpenCompany\Integrations\Ipstack\Tools\IpstackGetCurrentUser;
 
-class IpstackToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used as the integration identifier.
      */
     public function appName(): string
     {
         return 'ipstack';
-    }
-
-    /**
-     * Short metadata shown in tool listings and UI badges.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'geolocation, IP lookup, timezone',
-            'description' => 'IP geolocation & data lookup',
-            'icon' => 'ph:globe-hemisphere-west',
-            'logo' => 'simple-icons:ipstack',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations catalog.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'IPstack',
-            'description' => 'Lookup IP addresses for geolocation, timezone, currency, and connection data',
-            'icon' => 'ph:globe-hemisphere-west',
-            'logo' => 'simple-icons:ipstack',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://ipstack.com/documentation',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the IPstack integration.
      *
      * @return array<int, array<string, mixed>>

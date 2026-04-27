@@ -43,6 +43,7 @@ use OpenCompany\Integrations\Plane\Tools\PlaneSearchIssues;
 use OpenCompany\Integrations\Plane\Tools\PlaneUpdateIssue;
 use OpenCompany\Integrations\Plane\Triggers\PlaneWebhookTrigger;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Tool provider for the Plane.so project management integration.
  *
@@ -50,8 +51,60 @@ use OpenCompany\Integrations\Plane\Triggers\PlaneWebhookTrigger;
  * cycles, modules, pages, states, labels, members, and more.
  * Supports multi-account via ConfigurableIntegration.
  */
-class PlaneToolProvider implements ConfigurableIntegration, HasTriggers, ToolProvider
-{
+class PlaneToolProvider implements ConfigurableIntegration, HasTriggers, ToolProvider, HasIntegrationCapabilities {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+              0 => 'Triggers require a web-reachable host endpoint even if tool runtime works in CLI.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'plane';
@@ -418,9 +471,7 @@ class PlaneToolProvider implements ConfigurableIntegration, HasTriggers, ToolPro
     public function luaDocsPath(): ?string
     {
         return __DIR__.'/../lua-docs/plane.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],

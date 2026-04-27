@@ -14,15 +14,70 @@ use OpenCompany\Integrations\Splitwise\Tools\SplitwiseListExpenses;
 use OpenCompany\Integrations\Splitwise\Tools\SplitwiseListFriends;
 use OpenCompany\Integrations\Splitwise\Tools\SplitwiseListGroups;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * SplitwiseToolProvider — registers all Splitwise tools with the integration ecosystem.
- *
- * Implements ToolProvider for tool registration and ConfigurableIntegration
- * for the settings UI, connection testing, and multi-account support.
+ * Registers the integration provider and exposes its tools.
  */
-class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration
+class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the integration identifier.
      *
      * @return string The integration name used for namespacing.
@@ -32,7 +87,7 @@ class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration
         return 'splitwise';
     }
 
-    /**
+/**
      * Get short metadata for the integration listing.
      *
      * @return array<string, mixed> App metadata (label, description, icons).
@@ -47,7 +102,7 @@ class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get full integration metadata for the settings UI.
      *
      * @return array<string, mixed> Integration metadata (name, description, category, docs URL, etc.).
@@ -63,9 +118,7 @@ class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://dev.splitwise.com/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>> Array of config field definitions.
@@ -235,8 +288,7 @@ class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration
      * @return bool
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

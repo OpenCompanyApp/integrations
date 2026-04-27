@@ -13,15 +13,69 @@ use OpenCompany\Integrations\Wufoo\Tools\WufooGetEntry;
 use OpenCompany\Integrations\Wufoo\Tools\WufooListReports;
 use OpenCompany\Integrations\Wufoo\Tools\WufooGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Wufoo forms integration.
- *
- * Implements ConfigurableIntegration for multi-account support and
- * provides 6 tools for interacting with Wufoo forms, entries, reports, and users.
+ * Registers the integration provider and exposes its tools.
  */
-class WufooToolProvider implements ToolProvider, ConfigurableIntegration
+class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -29,7 +83,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
         return 'wufoo';
     }
 
-    /**
+/**
      * Get application metadata for display and categorization.
      */
     public function appMeta(): array
@@ -42,7 +96,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata including category and documentation links.
      */
     public function integrationMeta(): array
@@ -56,9 +110,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://wufoo.com/docs/api-v3/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the Wufoo integration.
      *
      * Defines the fields needed to connect to the Wufoo API:
@@ -217,8 +269,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration provider.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

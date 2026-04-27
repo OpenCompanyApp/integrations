@@ -14,50 +14,69 @@ use OpenCompany\Integrations\Attio\Tools\AttioGetObject;
 use OpenCompany\Integrations\Attio\Tools\AttioListWorkspaces;
 use OpenCompany\Integrations\Attio\Tools\AttioGetCurrentUser;
 
-class AttioToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class AttioToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The integration app name identifier.
      */
     public function appName(): string
     {
         return 'attio';
-    }
-
-    /**
-     * Short metadata for the app display.
-     *
-     * @return array<string, string>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'records, objects, workspaces',
-            'description' => 'CRM & Sales',
-            'icon' => 'ph:address-book',
-            'logo' => 'simple-icons:attio',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the UI.
-     *
-     * @return array<string, string>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Attio',
-            'description' => 'Modern CRM platform for managing contacts, companies, deals and more',
-            'icon' => 'ph:address-book',
-            'logo' => 'simple-icons:attio',
-            'category' => 'sales',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.attio.com/docs',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

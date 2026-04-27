@@ -17,18 +17,70 @@ use OpenCompany\Integrations\Smartsheet\Tools\SmartsheetGetWorkspace;
 use OpenCompany\Integrations\Smartsheet\Tools\SmartsheetSearch;
 use OpenCompany\Integrations\Smartsheet\Tools\SmartsheetGetCurrentUser;
 
-/**
- * Smartsheet tool provider for registering integration tools and metadata.
- *
- * Implements the ToolProvider and ConfigurableIntegration contracts to expose
- * 12 Smartsheet tools (sheets, rows, columns, workspaces, search, users)
- * along with configuration schema and connection testing.
- */
-class SmartsheetToolProvider implements ToolProvider
-{
-    use ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 
-    /**
+/**
+ * Registers the integration provider and exposes its tools.
+ */
+class SmartsheetToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
+{
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      *
      * @return string The app name used for credential resolution.
@@ -38,7 +90,7 @@ class SmartsheetToolProvider implements ToolProvider
         return 'smartsheet';
     }
 
-    /**
+/**
      * Get the application metadata for display purposes.
      *
      * @return array<string, mixed> App metadata including name, description, and icon.
@@ -52,7 +104,7 @@ class SmartsheetToolProvider implements ToolProvider
         ];
     }
 
-    /**
+/**
      * Get the integration-specific metadata.
      *
      * @return array<string, mixed> Integration metadata.
@@ -63,9 +115,7 @@ class SmartsheetToolProvider implements ToolProvider
             'name' => 'Smartsheet Integration',
             'description' => 'Connect to Smartsheet to manage sheets, rows, columns, and workspaces.',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the Smartsheet integration.
      *
      * @return array<string, mixed> The configuration schema defining required fields.
@@ -252,8 +302,7 @@ class SmartsheetToolProvider implements ToolProvider
      * @return object The instantiated tool.
      */
     public function createTool(string $class, array $context = []): object
-    {
-        $service = $this->resolveService($context);
+    {        $service = $this->resolveService($context);
 
         return new $class($service);
     }

@@ -14,50 +14,70 @@ use OpenCompany\Integrations\NetSuite\Tools\NetSuiteListInvoices;
 use OpenCompany\Integrations\NetSuite\Tools\NetSuiteListItems;
 use OpenCompany\Integrations\NetSuite\Tools\NetSuiteListSalesOrders;
 
-class NetSuiteToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class NetSuiteToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'netsuite';
-    }
-
-    /**
-     * Get metadata for the application display.
-     *
-     * @return array<string, string>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'customers, invoices, sales orders, items',
-            'description' => 'ERP & financial management',
-            'icon' => 'ph:buildings',
-            'logo' => 'simple-icons:oracle',
-        ];
-    }
-
-    /**
-     * Get integration metadata for display in the UI.
-     *
-     * @return array<string, string>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'NetSuite',
-            'description' => 'Cloud ERP — customers, invoices, sales orders, and inventory management',
-            'icon' => 'ph:buildings',
-            'logo' => 'simple-icons:oracle',
-            'category' => 'erp',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1540391674.html',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

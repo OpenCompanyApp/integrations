@@ -13,46 +13,68 @@ use OpenCompany\Integrations\Clearbit\Tools\ClearbitProspect;
 use OpenCompany\Integrations\Clearbit\Tools\ClearbitListAutocomplete;
 use OpenCompany\Integrations\Clearbit\Tools\ClearbitGetCurrentUser;
 
-class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used as the integration identifier.
      */
     public function appName(): string
     {
         return 'clearbit';
-    }
-
-    /**
-     * Short metadata shown in tool listings and UI badges.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'enrich, reveal, prospect',
-            'description' => 'Data enrichment & prospecting',
-            'icon' => 'ph:magnifying-glass',
-            'logo' => 'simple-icons:clearbit',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations catalog.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Clearbit',
-            'description' => 'Enrich people and companies, reveal visitor identity, and prospect by role',
-            'icon' => 'ph:magnifying-glass',
-            'logo' => 'simple-icons:clearbit',
-            'category' => 'enrichment',
-            'badge' => 'verified',
-            'docs_url' => 'https://clearbit.com/docs',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the Clearbit integration.
      *
      * @return array<int, array<string, mixed>>

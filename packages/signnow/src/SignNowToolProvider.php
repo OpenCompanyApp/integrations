@@ -13,46 +13,70 @@ use OpenCompany\Integrations\SignNow\Tools\SignNowListTemplates;
 use OpenCompany\Integrations\SignNow\Tools\SignNowSendInvite;
 use OpenCompany\Integrations\SignNow\Tools\SignNowGetCurrentUser;
 
-class SignNowToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class SignNowToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Unique integration identifier.
      */
     public function appName(): string
     {
         return 'signnow';
-    }
-
-    /**
-     * Short metadata displayed in UI tool listings.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'documents, templates, invites',
-            'description' => 'E-signature & document management',
-            'icon' => 'ph:signature',
-            'logo' => 'simple-icons:signnow',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations directory.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'SignNow',
-            'description' => 'Electronic signature and document management platform',
-            'icon' => 'ph:signature',
-            'logo' => 'simple-icons:signnow',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.signnow.com/docs/signnow/rest-api',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integrations settings UI.
      *
      * @return array<int, array<string, mixed>>

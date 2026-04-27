@@ -14,46 +14,69 @@ use OpenCompany\Integrations\Radar\Tools\RadarGetUser;
 use OpenCompany\Integrations\Radar\Tools\RadarListEvents;
 use OpenCompany\Integrations\Radar\Tools\RadarGetCurrentUser;
 
-class RadarToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class RadarToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used as the integration identifier.
      */
     public function appName(): string
     {
         return 'radar';
-    }
-
-    /**
-     * Short metadata shown in tool listings and UI badges.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'geofencing, location',
-            'description' => 'Geofencing & location tracking',
-            'icon' => 'ph:map-pin',
-            'logo' => 'simple-icons:radar',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations catalog.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Radar',
-            'description' => 'Geofencing, location tracking, and event management for building location-aware applications',
-            'icon' => 'ph:map-pin',
-            'logo' => 'simple-icons:radar',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://radar.com/documentation/api',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the Radar integration.
      *
      * @return array<int, array<string, mixed>>

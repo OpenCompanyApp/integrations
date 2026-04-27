@@ -16,46 +16,68 @@ use OpenCompany\Integrations\Eventbrite\Tools\EventbriteListVenues;
 use OpenCompany\Integrations\Eventbrite\Tools\EventbriteCreateVenue;
 use OpenCompany\Integrations\Eventbrite\Tools\EventbriteGetCurrentUser;
 
-class EventbriteToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class EventbriteToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The integration app name identifier.
      */
     public function appName(): string
     {
         return 'eventbrite';
-    }
-
-    /**
-     * Short metadata for tool listings and menus.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'events, attendees, venues',
-            'description' => 'Event management',
-            'icon' => 'ph:ticket',
-            'logo' => 'simple-icons:eventbrite',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations UI.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Eventbrite',
-            'description' => 'Event management and ticketing platform',
-            'icon' => 'ph:ticket',
-            'logo' => 'simple-icons:eventbrite',
-            'category' => 'events',
-            'badge' => 'verified',
-            'docs_url' => 'https://www.eventbrite.com/platform/api',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integrations UI.
      *
      * @return array<int, array<string, mixed>>

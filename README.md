@@ -954,6 +954,54 @@ class WeatherToolProvider implements ToolProvider, ConfigurableIntegration
 - `string_list` — Dynamic list of strings (e.g. site IDs)
 - `oauth_connect` — OAuth connection button, requires `authorize_url` and `redirect_uri`
 
+### Auth and Host Capabilities
+
+Credential field shape is not enough to decide whether an integration can be
+configured in OpenCompany, KosmoKrator, or both. For example, an OAuth access
+token can be manually pasted in a CLI, while an OAuth redirect flow needs a web
+callback during setup but may still run in CLI after tokens are stored.
+
+The catalog builder infers capability metadata for every integration:
+
+- `auth.strategy` — `none`, `api_key`, `api_token`, `bearer_token`,
+  `oauth2_authorization_code`, `oauth2_manual_token`,
+  `oauth2_client_credentials`, `basic`, or `custom`
+- `auth.setup_flows` — `none`, `manual_secret`, `manual_token`,
+  `web_redirect`, `local_redirect`, `device_code`, `service_account`,
+  `client_credentials`, or `cli_only`
+- `host_availability.web` — setup/runtime support in OpenCompany-style web hosts
+- `host_availability.cli` — setup/runtime support in KosmoKrator-style CLI hosts
+- `runtime_requirements` — local binaries or services required at runtime
+
+If inference is not precise enough, implement
+`OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities` on the
+provider and return explicit metadata:
+
+```php
+public function integrationCapabilities(): array
+{
+    return [
+        'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'setup_flows' => ['web_redirect'],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+        ],
+        'host_availability' => [
+            'web' => ['setup_supported' => true, 'runtime_supported' => true, 'setup_mode' => 'web_redirect'],
+            'cli' => ['setup_supported' => false, 'runtime_supported' => true, 'setup_mode' => 'unsupported'],
+        ],
+    ];
+}
+```
+
+Use `local_redirect` or `device_code` when an OAuth integration can be
+configured from a CLI host. Google OAuth is the main current example: web hosts
+use the registered redirect callback, while CLI hosts can use a desktop
+loopback redirect and, for supported scopes, device-code setup. Keep purely
+browser-callback OAuth integrations as `web_redirect` with CLI setup disabled;
+their tools may still run in CLI once the host already has stored tokens.
+
 **Conditional fields** — Show a field only when another field has a specific value:
 ```php
 [

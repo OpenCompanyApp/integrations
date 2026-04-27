@@ -14,50 +14,68 @@ use OpenCompany\Integrations\Elastic\Tools\ElasticIndexDocument;
 use OpenCompany\Integrations\Elastic\Tools\ElasticListIndices;
 use OpenCompany\Integrations\Elastic\Tools\ElasticSearchDocuments;
 
-class ElasticToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class ElasticToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'basic',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'username_password',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the integration app name.
      */
     public function appName(): string
     {
         return 'elastic';
-    }
-
-    /**
-     * Get metadata for app display.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'search, index, cluster',
-            'description' => 'Search and analytics engine',
-            'icon' => 'ph:magnifying-glass',
-            'logo' => 'simple-icons:elasticsearch',
-        ];
-    }
-
-    /**
-     * Get integration metadata for marketplace display.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Elasticsearch',
-            'description' => 'Distributed search and analytics engine for full-text search, logging, and data exploration',
-            'icon' => 'ph:magnifying-glass',
-            'logo' => 'simple-icons:elasticsearch',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration.
      *
      * @return array<int, array<string, mixed>>

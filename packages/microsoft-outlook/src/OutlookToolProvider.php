@@ -14,15 +14,71 @@ use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookListEvents;
 use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookCreateEvent;
 use OpenCompany\Integrations\MicrosoftOutlook\Tools\OutlookGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Microsoft Outlook integration.
- *
- * Implements ConfigurableIntegration for multi-account support, configuration
- * schema, connection testing, and validation rules.
+ * Registers the integration provider and exposes its tools.
  */
-class OutlookToolProvider implements ToolProvider, ConfigurableIntegration
+class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine-name identifier for this integration.
      */
     public function appName(): string
@@ -30,7 +86,7 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration
         return 'microsoft-outlook';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings and UI.
      */
     public function appMeta(): array
@@ -43,7 +99,7 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Integration metadata for the Integrations UI.
      */
     public function integrationMeta(): array
@@ -57,9 +113,7 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration
             'badge'       => 'verified',
             'docs_url'    => 'https://learn.microsoft.com/en-us/graph/api/overview',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Integrations UI.
      *
      * @return array<int, array<string, mixed>>
@@ -228,8 +282,7 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

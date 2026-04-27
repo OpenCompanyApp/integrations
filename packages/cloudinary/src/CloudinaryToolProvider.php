@@ -13,46 +13,70 @@ use OpenCompany\Integrations\Cloudinary\Tools\CloudinaryDeleteResource;
 use OpenCompany\Integrations\Cloudinary\Tools\CloudinaryListFolders;
 use OpenCompany\Integrations\Cloudinary\Tools\CloudinaryGetCurrentUser;
 
-class CloudinaryToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class CloudinaryToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The machine name of this integration.
      */
     public function appName(): string
     {
         return 'cloudinary';
-    }
-
-    /**
-     * Short metadata shown in the OpenCompany tool catalog.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'upload, list, get, delete, folders',
-            'description' => 'Media asset management',
-            'icon' => 'ph:image',
-            'logo' => 'simple-icons:cloudinary',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the settings UI.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Cloudinary',
-            'description' => 'Cloud-based media management — upload, transform, and deliver images and video',
-            'icon' => 'ph:image',
-            'logo' => 'simple-icons:cloudinary',
-            'category' => 'media',
-            'badge' => 'verified',
-            'docs_url' => 'https://cloudinary.com/documentation/admin_api',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integration settings form.
      *
      * @return array<int, array<string, mixed>>

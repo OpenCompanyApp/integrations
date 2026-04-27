@@ -15,16 +15,71 @@ use OpenCompany\Integrations\Aircall\Tools\AircallListUsers;
 use OpenCompany\Integrations\Aircall\Tools\AircallListNumbers;
 use OpenCompany\Integrations\Aircall\Tools\AircallGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Aircall integration.
- *
- * Registers all Aircall tools with the integration core, defines the configuration
- * schema, and handles connection testing. Implements ConfigurableIntegration for
- * multi-account support and dynamic tool instantiation with per-account credentials.
+ * Registers the integration provider and exposes its tools.
  */
-class AircallToolProvider implements ToolProvider, ConfigurableIntegration
+class AircallToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -32,7 +87,7 @@ class AircallToolProvider implements ToolProvider, ConfigurableIntegration
         return 'aircall';
     }
 
-    /**
+/**
      * Get application metadata for UI rendering.
      *
      * @return array{label: string, description: string, icon: string, logo: string}
@@ -47,7 +102,7 @@ class AircallToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for the integrations catalog.
      *
      * @return array{name: string, description: string, icon: string, logo: string, category: string, badge: string, docs_url: string}
@@ -63,9 +118,7 @@ class AircallToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.aircall.io/api-references/',
         ];
-    }
-
-    /**
+    }/**
      * Define the configuration schema for the Aircall integration.
      *
      * @return array<int, array<string, mixed>>
@@ -247,8 +300,7 @@ class AircallToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration provider.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

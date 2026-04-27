@@ -14,15 +14,69 @@ use OpenCompany\Integrations\Wise\Tools\WiseListBalances;
 use OpenCompany\Integrations\Wise\Tools\WiseListProfiles;
 use OpenCompany\Integrations\Wise\Tools\WiseListTransfers;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Wise (TransferWise) tool provider.
- *
- * Implements ToolProvider and ConfigurableIntegration to expose Wise API
- * tools for managing profiles, balances, and transfers.
+ * Registers the integration provider and exposes its tools.
  */
-class WiseToolProvider implements ToolProvider, ConfigurableIntegration
+class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      *
      * @return string
@@ -32,7 +86,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration
         return 'wise';
     }
 
-    /**
+/**
      * Get short application metadata for display purposes.
      *
      * @return array
@@ -47,7 +101,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for marketplace / settings display.
      *
      * @return array
@@ -63,9 +117,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://docs.wise.com/api/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for Wise credentials.
      *
      * @return array
@@ -238,8 +290,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration
      * @return bool
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

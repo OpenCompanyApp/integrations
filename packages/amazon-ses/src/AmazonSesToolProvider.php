@@ -13,8 +13,62 @@ use OpenCompany\Integrations\AmazonSes\Tools\AmazonSesCreateTemplate;
 use OpenCompany\Integrations\AmazonSes\Tools\AmazonSesListSuppressions;
 use OpenCompany\Integrations\AmazonSes\Tools\AmazonSesGetCurrentUser;
 
-class AmazonSesToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class AmazonSesToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'amazon-ses';
@@ -41,9 +95,7 @@ class AmazonSesToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://docs.aws.amazon.com/ses/',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -157,9 +209,7 @@ class AmazonSesToolProvider implements ToolProvider, ConfigurableIntegration
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/amazon-ses.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],

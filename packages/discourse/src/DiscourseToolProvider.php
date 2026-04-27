@@ -15,16 +15,69 @@ use OpenCompany\Integrations\Discourse\Tools\DiscourseGetCategory;
 use OpenCompany\Integrations\Discourse\Tools\DiscourseCreatePost;
 use OpenCompany\Integrations\Discourse\Tools\DiscourseGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Discourse forum integration.
- *
- * Registers Discourse tools with the ToolProviderRegistry and implements
- * ConfigurableIntegration for the Integrations UI. Supports multi-account
- * usage via resolveService() / createTool().
+ * Registers the integration provider and exposes its tools.
  */
-class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration
+class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the short application name used as the integration key.
      */
     public function appName(): string
@@ -32,7 +85,7 @@ class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration
         return 'discourse';
     }
 
-    /**
+/**
      * Get metadata for the app display (tool listing).
      */
     public function appMeta(): array
@@ -45,7 +98,7 @@ class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for the Integrations UI.
      */
     public function integrationMeta(): array
@@ -59,9 +112,7 @@ class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://docs.discourse.org/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the Integrations UI.
      *
      * Defines the fields needed to connect to a Discourse instance:
@@ -247,8 +298,7 @@ class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class acts as an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

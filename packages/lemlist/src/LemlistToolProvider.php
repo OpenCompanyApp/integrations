@@ -14,15 +14,69 @@ use OpenCompany\Integrations\Lemlist\Tools\LemlistListLeads;
 use OpenCompany\Integrations\Lemlist\Tools\LemlistListSubaccounts;
 use OpenCompany\Integrations\Lemlist\Tools\LemlistListTeams;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Lemlist integration.
- *
- * Implements ConfigurableIntegration for multi-account support with
- * HTTP Basic auth (username + password).
+ * Registers the integration provider and exposes its tools.
  */
-class LemlistToolProvider implements ToolProvider, ConfigurableIntegration
+class LemlistToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'basic',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'username_password',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the machine name for this integration.
      */
     public function appName(): string
@@ -30,7 +84,7 @@ class LemlistToolProvider implements ToolProvider, ConfigurableIntegration
         return 'lemlist';
     }
 
-    /**
+/**
      * Get short metadata for tool display (labels, icons).
      */
     public function appMeta(): array
@@ -43,7 +97,7 @@ class LemlistToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get full integration metadata for the UI.
      */
     public function integrationMeta(): array
@@ -57,9 +111,7 @@ class LemlistToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.lemlist.com/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for this integration.
      *
      * @return array<int, array<string, mixed>>
@@ -240,8 +292,7 @@ class LemlistToolProvider implements ToolProvider, ConfigurableIntegration
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

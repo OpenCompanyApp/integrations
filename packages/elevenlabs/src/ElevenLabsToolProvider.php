@@ -15,16 +15,69 @@ use OpenCompany\Integrations\ElevenLabs\Tools\ElevenLabsGetModels;
 use OpenCompany\Integrations\ElevenLabs\Tools\ElevenLabsGetHistory;
 use OpenCompany\Integrations\ElevenLabs\Tools\ElevenLabsGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the ElevenLabs Text-to-Speech integration.
- *
- * Implements ConfigurableIntegration for settings UI and multi-account
- * credential resolution, and registers 8 tools for voice synthesis,
- * voice management, model listing, history browsing, and user info.
+ * Registers the integration provider and exposes its tools.
  */
-class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration
+class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine name of the integration.
      */
     public function appName(): string
@@ -32,7 +85,7 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration
         return 'elevenlabs';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings.
      */
     public function appMeta(): array
@@ -45,7 +98,7 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Metadata shown on the integration catalog / settings page.
      */
     public function integrationMeta(): array
@@ -59,9 +112,7 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration
             'badge'       => 'verified',
             'docs_url'    => 'https://elevenlabs.io/docs/api-reference',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings form.
      *
      * @return array<int, array<string, mixed>>
@@ -221,8 +272,7 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

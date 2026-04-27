@@ -12,15 +12,69 @@ use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOListTemplates;
 use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOGetTemplate;
 use OpenCompany\Integrations\ApiTemplateIO\Tools\ApiTemplateIOGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the API Template IO integration.
- *
- * Defines the integration metadata, configuration schema, credential fields,
- * available tools, and supports multi-account usage via createTool().
+ * Registers the integration provider and exposes its tools.
  */
-class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
+class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the app name identifier.
      *
      * @return string The integration identifier.
@@ -30,7 +84,7 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
         return 'apitemplateio';
     }
 
-    /**
+/**
      * Get the app metadata for display in the integration registry.
      *
      * @return array<string, mixed> App metadata (label, description, icons).
@@ -45,7 +99,7 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get the integration metadata for the OpenCompany integration catalog.
      *
      * @return array<string, mixed> Integration metadata including category and docs URL.
@@ -61,9 +115,7 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://apitemplate.io/apiv2/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for this integration.
      *
      * @return array<int, array<string, mixed>> The configuration field definitions.
@@ -225,8 +277,7 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
      * @return bool Always true.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

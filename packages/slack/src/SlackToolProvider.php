@@ -32,14 +32,66 @@ use OpenCompany\Integrations\Slack\Tools\SlackUpdateMessage;
 use OpenCompany\Integrations\Slack\Tools\SlackUpdateUsergroupMembers;
 use OpenCompany\Integrations\Slack\Tools\SlackUploadFile;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers all Slack tools and provides integration metadata.
  *
  * Exposes 25 tools covering messages, channels, files, users,
  * reactions, and usergroups via the ToolProvider contract.
  */
-class SlackToolProvider implements ToolProvider, ConfigurableIntegration
-{
+class SlackToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'slack';
@@ -322,9 +374,7 @@ class SlackToolProvider implements ToolProvider, ConfigurableIntegration
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/slack.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'bot_token', 'type' => 'secret', 'label' => 'Bot Token', 'required' => true],

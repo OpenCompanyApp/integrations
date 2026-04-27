@@ -14,15 +14,70 @@ use OpenCompany\Integrations\Calendly\Tools\CalendlyListEventTypes;
 use OpenCompany\Integrations\Calendly\Tools\CalendlyListOrganizations;
 use OpenCompany\Integrations\Calendly\Tools\CalendlyListUsers;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Registers all Calendly tools and provides integration metadata.
- *
- * Exposes 7 tools covering event types, bookings, organizations,
- * and users via the ToolProvider contract.
+ * Registers the integration provider and exposes its tools.
  */
-class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
+class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Unique identifier for the Calendly integration.
      */
     public function appName(): string
@@ -30,7 +85,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
         return 'calendly';
     }
 
-    /**
+/**
      * Short metadata for the system prompt and UI.
      *
      * @return array{label: string, description: string, icon: string, logo: string}
@@ -45,7 +100,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the settings UI.
      *
      * @return array{name: string, description: string, icon: string, logo: string, category: string, badge: string, docs_url: string}
@@ -61,9 +116,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.calendly.com/api-docs',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Calendly integration.
      *
      * @return array<int, array{key: string, type: string, label: string, placeholder: string, hint: string, required: bool}>
@@ -234,8 +287,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Optional context (e.g. account)
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
+    {        return new $class($this->resolveService($context));
     }
 
     /**

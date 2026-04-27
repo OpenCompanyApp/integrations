@@ -15,46 +15,68 @@ use OpenCompany\Integrations\MySQL\Tools\MySQLUpdate;
 use OpenCompany\Integrations\MySQL\Tools\MySQLDelete;
 use OpenCompany\Integrations\MySQL\Tools\MySQLGetCurrentUser;
 
-class MySQLToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class MySQLToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'mysql';
-    }
-
-    /**
-     * Get short metadata for the integration.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'query, databases, tables, CRUD',
-            'description' => 'MySQL database',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:mysql',
-        ];
-    }
-
-    /**
-     * Get detailed integration metadata.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'MySQL',
-            'description' => 'Query and manage MySQL databases via HTTP REST bridge',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:mysql',
-            'category' => 'database',
-            'badge' => 'verified',
-            'docs_url' => 'https://dev.mysql.com/doc/',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration.
      *
      * @return array<int, array<string, mixed>>

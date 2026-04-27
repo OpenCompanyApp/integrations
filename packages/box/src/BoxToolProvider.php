@@ -17,50 +17,70 @@ use OpenCompany\Integrations\Box\Tools\BoxShareFile;
 use OpenCompany\Integrations\Box\Tools\BoxSearch;
 use OpenCompany\Integrations\Box\Tools\BoxGetCurrentUser;
 
-class BoxToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the integration app name.
      */
     public function appName(): string
     {
         return 'box';
-    }
-
-    /**
-     * Get short metadata for the integration.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'files, folders, share, search',
-            'description' => 'Cloud file storage',
-            'icon' => 'ph:box',
-            'logo' => 'simple-icons:box',
-        ];
-    }
-
-    /**
-     * Get detailed integration metadata.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Box',
-            'description' => 'Secure cloud content management and file sharing',
-            'icon' => 'ph:box',
-            'logo' => 'simple-icons:box',
-            'category' => 'storage',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.box.com/reference/',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration.
      *
      * @return array<int, array<string, mixed>>

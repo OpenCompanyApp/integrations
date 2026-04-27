@@ -15,15 +15,69 @@ use OpenCompany\Integrations\RedisCloud\Tools\RedisCloudGetDatabase;
 use OpenCompany\Integrations\RedisCloud\Tools\RedisCloudListTeams;
 use OpenCompany\Integrations\RedisCloud\Tools\RedisCloudGetTeam;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Redis Cloud integration.
- *
- * Registers management-plane tools for Redis Cloud subscriptions, databases,
- * account info, and team/ACL management.
+ * Registers the integration provider and exposes its tools.
  */
-class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration
+class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Application identifier used for credential resolution.
      */
     public function appName(): string
@@ -31,7 +85,7 @@ class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration
         return 'redis-cloud';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings and navigation.
      */
     public function appMeta(): array
@@ -44,7 +98,7 @@ class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Extended metadata shown on the integration detail page.
      */
     public function integrationMeta(): array
@@ -58,9 +112,7 @@ class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://redis.io/docs/latest/operate/rc/api/',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings form.
      */
     public function configSchema(): array
@@ -221,8 +273,7 @@ class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

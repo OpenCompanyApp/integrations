@@ -14,8 +14,61 @@ use OpenCompany\Integrations\Appwrite\Tools\AppwriteListCollections;
 use OpenCompany\Integrations\Appwrite\Tools\AppwriteListDatabases;
 use OpenCompany\Integrations\Appwrite\Tools\AppwriteListDocuments;
 
-class AppwriteToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class AppwriteToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the integration app name identifier.
      *
@@ -24,42 +77,7 @@ class AppwriteToolProvider implements ToolProvider, ConfigurableIntegration
     public function appName(): string
     {
         return 'appwrite';
-    }
-
-    /**
-     * Get metadata for the app display.
-     *
-     * @return array
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'databases, collections, documents',
-            'description' => 'Backend-as-a-platform',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:appwrite',
-        ];
-    }
-
-    /**
-     * Get integration metadata for marketplace display.
-     *
-     * @return array
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Appwrite',
-            'description' => 'Open-source backend-as-a-platform for databases, auth, and storage',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:appwrite',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://appwrite.io/docs/references',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for this integration.
      *
      * @return array

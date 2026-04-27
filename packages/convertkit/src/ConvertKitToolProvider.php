@@ -14,16 +14,69 @@ use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListForms;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListSubscribers;
 use OpenCompany\Integrations\ConvertKit\Tools\ConvertKitListTags;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * ConvertKit tool provider and configurable integration.
- *
- * Registers all ConvertKit tools, defines the configuration schema for
- * API key authentication, provides connection testing, and supports
- * multi-account resolution via the CredentialResolver.
+ * Registers the integration provider and exposes its tools.
  */
-class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
+class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Return the application name used for namespace routing.
      */
     public function appName(): string
@@ -31,7 +84,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
         return 'convertkit';
     }
 
-    /**
+/**
      * Return short metadata for display in tool listings.
      */
     public function appMeta(): array
@@ -44,7 +97,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Return integration metadata for the marketplace / settings UI.
      */
     public function integrationMeta(): array
@@ -58,9 +111,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.convertkit.com/',
         ];
-    }
-
-    /**
+    }/**
      * Define the configuration fields required to set up the integration.
      *
      * @return array<int, array<string, mixed>> Configuration field definitions
@@ -253,8 +304,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Context containing optional 'account' key
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

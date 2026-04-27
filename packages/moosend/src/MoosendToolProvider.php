@@ -14,8 +14,61 @@ use OpenCompany\Integrations\Moosend\Tools\MoosendAddSubscriber;
 use OpenCompany\Integrations\Moosend\Tools\MoosendListCampaigns;
 use OpenCompany\Integrations\Moosend\Tools\MoosendGetCurrentUser;
 
-class MoosendToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class MoosendToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      *
@@ -24,42 +77,7 @@ class MoosendToolProvider implements ToolProvider, ConfigurableIntegration
     public function appName(): string
     {
         return 'moosend';
-    }
-
-    /**
-     * Get metadata about the application for display purposes.
-     *
-     * @return array
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'lists, subscribers, campaigns',
-            'description' => 'Email marketing platform',
-            'icon' => 'ph:envelope-simple',
-            'logo' => 'simple-icons:moosend',
-        ];
-    }
-
-    /**
-     * Get integration metadata including category and documentation URL.
-     *
-     * @return array
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Moosend',
-            'description' => 'Email marketing platform for managing lists, subscribers, and campaigns',
-            'icon' => 'ph:envelope-simple',
-            'logo' => 'simple-icons:moosend',
-            'category' => 'marketing',
-            'badge' => 'verified',
-            'docs_url' => 'https://moosend.com/docs/',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the Moosend integration.
      *
      * @return array

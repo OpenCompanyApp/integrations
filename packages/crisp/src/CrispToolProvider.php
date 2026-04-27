@@ -14,14 +14,66 @@ use OpenCompany\Integrations\Crisp\Tools\CrispGetContact;
 use OpenCompany\Integrations\Crisp\Tools\CrispListCampaigns;
 use OpenCompany\Integrations\Crisp\Tools\CrispGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * CrispToolProvider — registers Crisp tools and integration metadata.
  *
  * Implements ConfigurableIntegration for multi-account support and
  * provides configuration schema for the OpenCompany Integrations UI.
  */
-class CrispToolProvider implements ToolProvider, ConfigurableIntegration
-{
+class CrispToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'crisp';
@@ -190,9 +242,7 @@ class CrispToolProvider implements ToolProvider, ConfigurableIntegration
     public function luaDocsPath(): ?string
     {
         return __DIR__ . '/../lua-docs/crisp.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key (Token ID)', 'required' => true],

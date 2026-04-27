@@ -16,15 +16,69 @@ use OpenCompany\Integrations\MailerLite\Tools\MailerLiteListGroups;
 use OpenCompany\Integrations\MailerLite\Tools\MailerLiteListSubscribers;
 use OpenCompany\Integrations\MailerLite\Tools\MailerLiteUpdateSubscriber;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the MailerLite email marketing integration.
- *
- * Registers subscriber and group management tools, provides the configuration
- * schema for API key auth, and supports multi-account credential resolution.
+ * Registers the integration provider and exposes its tools.
  */
-class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration
+class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the integration app name identifier.
      */
     public function appName(): string
@@ -32,7 +86,7 @@ class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration
         return 'mailerlite';
     }
 
-    /**
+/**
      * Get short metadata for display in tool listings.
      */
     public function appMeta(): array
@@ -45,7 +99,7 @@ class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get full integration metadata for the marketplace / settings UI.
      */
     public function integrationMeta(): array
@@ -59,9 +113,7 @@ class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.mailerlite.com/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -223,8 +275,7 @@ class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration (not just standalone tools).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

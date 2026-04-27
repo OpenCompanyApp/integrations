@@ -14,14 +14,66 @@ use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdGetProject;
 use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdListRepositories;
 use OpenCompany\Integrations\ArgoCd\Tools\ArgoCdGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers the Argo CD integration and its tools with the integration platform.
  *
  * Provides application, project, and repository management tools
  * via the Argo CD GitOps API.
  */
-class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration
-{
+class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'argocd';
@@ -180,9 +232,7 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration
     public function luaDocsPath(): ?string
     {
         return dirname(__DIR__) . '/lua-docs/argocd.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'Bearer Token', 'required' => true],

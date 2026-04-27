@@ -14,8 +14,62 @@ use OpenCompany\Integrations\Supabase\Tools\SupabaseListProjects;
 use OpenCompany\Integrations\Supabase\Tools\SupabaseListRows;
 use OpenCompany\Integrations\Supabase\Tools\SupabaseListTables;
 
-class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the integration app name identifier.
      *
@@ -24,42 +78,7 @@ class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration
     public function appName(): string
     {
         return 'supabase';
-    }
-
-    /**
-     * Get metadata for the app display.
-     *
-     * @return array
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'projects, tables, rows',
-            'description' => 'Backend-as-a-service',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:supabase',
-        ];
-    }
-
-    /**
-     * Get integration metadata for marketplace display.
-     *
-     * @return array
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Supabase',
-            'description' => 'Open-source backend-as-a-service for databases, auth, and storage',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:supabase',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://supabase.com/docs/reference/api',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for this integration.
      *
      * @return array

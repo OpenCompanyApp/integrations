@@ -14,46 +14,69 @@ use OpenCompany\Integrations\Prismic\Tools\PrismicListRefs;
 use OpenCompany\Integrations\Prismic\Tools\PrismicListLanguages;
 use OpenCompany\Integrations\Prismic\Tools\PrismicGetCurrentUser;
 
-class PrismicToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class PrismicToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'prismic';
-    }
-
-    /**
-     * Get metadata for the application display.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'documents, types, tags, refs, languages',
-            'description' => 'Headless CMS',
-            'icon' => 'ph:file-text',
-            'logo' => 'simple-icons:prismic',
-        ];
-    }
-
-    /**
-     * Get integration metadata for display in the integrations catalog.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Prismic',
-            'description' => 'Headless CMS for content management',
-            'icon' => 'ph:file-text',
-            'logo' => 'simple-icons:prismic',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://prismic.io/docs/technical-reference/prismic-rest-api-v2',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the Prismic integration.
      */
     public function configSchema(): array

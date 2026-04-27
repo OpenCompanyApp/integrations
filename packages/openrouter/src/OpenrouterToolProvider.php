@@ -14,15 +14,69 @@ use OpenCompany\Integrations\Openrouter\Tools\OpenrouterListApiKeys;
 use OpenCompany\Integrations\Openrouter\Tools\OpenrouterGetUsage;
 use OpenCompany\Integrations\Openrouter\Tools\OpenrouterGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the OpenRouter integration.
- *
- * Registers all OpenRouter tools, defines configuration schema,
- * and supports multi-account via CredentialResolver.
+ * Registers the integration provider and exposes its tools.
  */
-class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration
+class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application name used for registration.
      */
     public function appName(): string
@@ -30,7 +84,7 @@ class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration
         return 'openrouter';
     }
 
-    /**
+/**
      * Short metadata for UI display.
      */
     public function appMeta(): array
@@ -43,7 +97,7 @@ class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integrations UI.
      */
     public function integrationMeta(): array
@@ -57,9 +111,7 @@ class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://openrouter.ai/docs/api-reference',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -238,8 +290,7 @@ class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

@@ -17,50 +17,68 @@ use OpenCompany\Integrations\Freshservice\Tools\FreshserviceListAssets;
 use OpenCompany\Integrations\Freshservice\Tools\FreshserviceGetAsset;
 use OpenCompany\Integrations\Freshservice\Tools\FreshserviceGetCurrentUser;
 
-class FreshserviceToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class FreshserviceToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name used for registration.
      */
     public function appName(): string
     {
         return 'freshservice';
-    }
-
-    /**
-     * Get metadata for the app catalog display.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'tickets, agents, assets',
-            'description' => 'IT service management',
-            'icon' => 'ph:headset',
-            'logo' => 'simple-icons:freshservice',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the integrations catalog.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Freshservice',
-            'description' => 'IT service management — tickets, agents, and assets',
-            'icon' => 'ph:headset',
-            'logo' => 'simple-icons:freshservice',
-            'category' => 'itsm',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.freshservice.com/docs/',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

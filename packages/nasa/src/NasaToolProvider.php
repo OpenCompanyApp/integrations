@@ -12,9 +12,64 @@ use OpenCompany\Integrations\Nasa\Tools\NasaGetCurrentUser;
 use OpenCompany\Integrations\Nasa\Tools\NasaGetMarsRoverPhotos;
 use OpenCompany\Integrations\Nasa\Tools\NasaSearchImages;
 
-class NasaToolProvider implements ToolProvider
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class NasaToolProvider implements ToolProvider, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+/**
      * Get the application name used for registration.
      */
     public function appName(): string
@@ -22,7 +77,7 @@ class NasaToolProvider implements ToolProvider
         return 'nasa';
     }
 
-    /**
+/**
      * Get metadata for the tool provider UI.
      *
      * @return array<string, mixed> UI metadata.
@@ -35,75 +90,7 @@ class NasaToolProvider implements ToolProvider
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:nasa',
         ];
-    }
-
-    /**
-     * Get the list of tools provided by this integration.
-     *
-     * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
-     */
-    public function tools(): array
-    {
-        return [
-            'nasa_get_apod' => [
-                'class' => NasaGetApod::class,
-                'type' => 'read',
-                'name' => 'Get APOD',
-                'description' => 'Get the Astronomy Picture of the Day from NASA.',
-                'icon' => 'ph:star-four',
-            ],
-            'nasa_get_mars_rover_photos' => [
-                'class' => NasaGetMarsRoverPhotos::class,
-                'type' => 'read',
-                'name' => 'Mars Rover Photos',
-                'description' => 'Get photos from Mars rovers (Curiosity, Opportunity, Spirit, Perseverance).',
-                'icon' => 'ph:camera',
-            ],
-            'nasa_get_asteroids' => [
-                'class' => NasaGetAsteroids::class,
-                'type' => 'read',
-                'name' => 'Get Asteroids',
-                'description' => 'Get Near Earth Objects (asteroids) for a date range.',
-                'icon' => 'ph:planet',
-            ],
-            'nasa_get_asteroid' => [
-                'class' => NasaGetAsteroid::class,
-                'type' => 'read',
-                'name' => 'Get Asteroid',
-                'description' => 'Get details for a specific asteroid by its NASA ID.',
-                'icon' => 'ph:planet',
-            ],
-            'nasa_search_images' => [
-                'class' => NasaSearchImages::class,
-                'type' => 'read',
-                'name' => 'Search Images',
-                'description' => 'Search the NASA Image and Video Library.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'nasa_get_current_user' => [
-                'class' => NasaGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Return info about the current NASA API configuration.',
-                'icon' => 'ph:user-circle',
-            ],
-        ];
-    }
-
-    public function isIntegration(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Get the path to the Lua documentation file.
-     */
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__.'/../lua-docs/nasa.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => false, 'placeholder' => 'DEMO_KEY'],

@@ -14,15 +14,69 @@ use OpenCompany\Integrations\CalCom\Tools\CalComCreateBooking;
 use OpenCompany\Integrations\CalCom\Tools\CalComListTeams;
 use OpenCompany\Integrations\CalCom\Tools\CalComGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Cal.com v2 scheduling integration.
- *
- * Implements ConfigurableIntegration for multi-account support and
- * provides all Cal.com tools (event types, bookings, teams, user info).
+ * Registers the integration provider and exposes its tools.
  */
-class CalComToolProvider implements ToolProvider, ConfigurableIntegration
+class CalComToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -30,7 +84,7 @@ class CalComToolProvider implements ToolProvider, ConfigurableIntegration
         return 'cal-com';
     }
 
-    /**
+/**
      * Get application metadata for display purposes.
      */
     public function appMeta(): array
@@ -43,7 +97,7 @@ class CalComToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata including category and documentation links.
      */
     public function integrationMeta(): array
@@ -57,9 +111,7 @@ class CalComToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.cal.com/api',
         ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for Cal.com credentials.
      */
     public function configSchema(): array

@@ -13,50 +13,69 @@ use OpenCompany\Integrations\Strava\Tools\StravaGetCurrentUser;
 use OpenCompany\Integrations\Strava\Tools\StravaListActivities;
 use OpenCompany\Integrations\Strava\Tools\StravaListClubs;
 
-class StravaToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class StravaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used for registration and credential resolution.
      */
     public function appName(): string
     {
         return 'strava';
-    }
-
-    /**
-     * Metadata shown in the OpenCompany integration catalog.
-     *
-     * @return array<string, string>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'activities, athlete, clubs',
-            'description' => 'Fitness & activity tracking',
-            'icon' => 'ph:person-simple-run',
-            'logo' => 'simple-icons:strava',
-        ];
-    }
-
-    /**
-     * Detailed integration metadata for the OpenCompany UI.
-     *
-     * @return array<string, string>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Strava',
-            'description' => 'Fitness and activity tracking — view workouts, athlete profiles, and clubs',
-            'icon' => 'ph:person-simple-run',
-            'logo' => 'simple-icons:strava',
-            'category' => 'fitness',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.strava.com/docs/reference/',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

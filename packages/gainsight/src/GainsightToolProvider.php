@@ -14,16 +14,71 @@ use OpenCompany\Integrations\Gainsight\Tools\GainsightListSurveys;
 use OpenCompany\Integrations\Gainsight\Tools\GainsightGetSurvey;
 use OpenCompany\Integrations\Gainsight\Tools\GainsightGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Gainsight customer success integration.
- *
- * Implements ConfigurableIntegration for credential management and
- * multi-account support. Provides tools for listing and retrieving
- * companies, users, and surveys from the Gainsight API.
+ * Registers the integration provider and exposes its tools.
  */
-class GainsightToolProvider implements ToolProvider, ConfigurableIntegration
+class GainsightToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -31,7 +86,7 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration
         return 'gainsight';
     }
 
-    /**
+/**
      * Get metadata for display in the OpenCompany UI.
      */
     public function appMeta(): array
@@ -44,7 +99,7 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for the marketplace / integration catalog.
      */
     public function integrationMeta(): array
@@ -58,9 +113,7 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://support.gainsight.com/s/article/Gainsight-API-Documentation',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for Gainsight credentials.
      *
      * @return array<int, array<string, mixed>>
@@ -245,8 +298,7 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

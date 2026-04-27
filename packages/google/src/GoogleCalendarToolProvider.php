@@ -16,8 +16,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleCalendarUpdateEvent;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_calendar';
@@ -44,9 +105,7 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/calendar-json.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -110,86 +169,7 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_calendar_list_calendars' => [
-                'class' => GoogleCalendarListCalendars::class,
-                'type' => 'read',
-                'name' => 'List Calendars',
-                'description' => 'List all calendars the user has access to.',
-                'icon' => 'ph:calendar-blank',
-            ],
-            'google_calendar_list_events' => [
-                'class' => GoogleCalendarListEvents::class,
-                'type' => 'read',
-                'name' => 'List Events',
-                'description' => 'List or search events in a calendar.',
-                'icon' => 'ph:calendar-blank',
-            ],
-            'google_calendar_get_event' => [
-                'class' => GoogleCalendarGetEvent::class,
-                'type' => 'read',
-                'name' => 'Get Event',
-                'description' => 'Get a single calendar event by ID.',
-                'icon' => 'ph:calendar-blank',
-            ],
-            'google_calendar_create_event' => [
-                'class' => GoogleCalendarCreateEvent::class,
-                'type' => 'write',
-                'name' => 'Create Event',
-                'description' => 'Create a new calendar event.',
-                'icon' => 'ph:calendar-plus',
-            ],
-            'google_calendar_update_event' => [
-                'class' => GoogleCalendarUpdateEvent::class,
-                'type' => 'write',
-                'name' => 'Update Event',
-                'description' => 'Update an existing calendar event.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_calendar_delete_event' => [
-                'class' => GoogleCalendarDeleteEvent::class,
-                'type' => 'write',
-                'name' => 'Delete Event',
-                'description' => 'Delete a calendar event.',
-                'icon' => 'ph:trash',
-            ],
-            'google_calendar_quick_add' => [
-                'class' => GoogleCalendarQuickAdd::class,
-                'type' => 'write',
-                'name' => 'Quick Add Event',
-                'description' => 'Create an event from natural language text.',
-                'icon' => 'ph:lightning',
-            ],
-            'google_calendar_freebusy' => [
-                'class' => GoogleCalendarFreeBusy::class,
-                'type' => 'read',
-                'name' => 'Check Availability',
-                'description' => 'Check free/busy status across calendars.',
-                'icon' => 'ph:clock',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

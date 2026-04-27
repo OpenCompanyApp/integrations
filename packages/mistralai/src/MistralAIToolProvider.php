@@ -14,46 +14,68 @@ use OpenCompany\Integrations\MistralAI\Tools\MistralAIListAgents;
 use OpenCompany\Integrations\MistralAI\Tools\MistralAICreateAgent;
 use OpenCompany\Integrations\MistralAI\Tools\MistralAIGetCurrentUser;
 
-class MistralAIToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class MistralAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'mistralai';
-    }
-
-    /**
-     * Get metadata for the application display.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'chat, embeddings, models, agents, fine-tuning',
-            'description' => 'AI models & agents',
-            'icon' => 'ph:sparkle',
-            'logo' => 'simple-icons:mistral',
-        ];
-    }
-
-    /**
-     * Get integration metadata for display and categorization.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'MistralAI',
-            'description' => 'European AI platform — chat completions, embeddings, fine-tuning, and agent management',
-            'icon' => 'ph:sparkle',
-            'logo' => 'simple-icons:mistral',
-            'category' => 'ai',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.mistral.ai/api/',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

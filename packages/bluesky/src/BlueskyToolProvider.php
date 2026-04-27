@@ -13,16 +13,71 @@ use OpenCompany\Integrations\Bluesky\Tools\BlueskyListFollowers;
 use OpenCompany\Integrations\Bluesky\Tools\BlueskyListFollowing;
 use OpenCompany\Integrations\Bluesky\Tools\BlueskySearchPosts;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Bluesky social integration.
- *
- * Implements {@see ConfigurableIntegration} so that the host application can
- * discover configuration requirements, test connections, and instantiate
- * tools — including for multi-account setups.
+ * Registers the integration provider and exposes its tools.
  */
-class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration
+class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine name used as the integration key.
      */
     public function appName(): string
@@ -30,7 +85,7 @@ class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration
         return 'bluesky';
     }
 
-    /**
+/**
      * Short metadata shown in UI tool listings.
      */
     public function appMeta(): array
@@ -43,7 +98,7 @@ class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integrations catalogue.
      */
     public function integrationMeta(): array
@@ -57,9 +112,7 @@ class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://docs.bsky.app/docs/api',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Bluesky integration.
      *
      * @return array<int, array<string, mixed>>
@@ -228,8 +281,7 @@ class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration (not a standalone tool).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

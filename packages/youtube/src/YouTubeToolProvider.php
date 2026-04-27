@@ -14,14 +14,66 @@ use OpenCompany\Integrations\YouTube\Tools\YouTubeListPlaylists;
 use OpenCompany\Integrations\YouTube\Tools\YouTubeGetPlaylist;
 use OpenCompany\Integrations\YouTube\Tools\YouTubeGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
 /**
  * Registers the YouTube integration and its tools with the integration platform.
  *
  * Provides video search, video details, channel, and playlist tools
  * via the YouTube Data API v3.
  */
-class YouTubeToolProvider implements ToolProvider, ConfigurableIntegration
-{
+class YouTubeToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'youtube';
@@ -170,9 +222,7 @@ class YouTubeToolProvider implements ToolProvider, ConfigurableIntegration
     public function luaDocsPath(): ?string
     {
         return dirname(__DIR__) . '/lua-docs/youtube.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],

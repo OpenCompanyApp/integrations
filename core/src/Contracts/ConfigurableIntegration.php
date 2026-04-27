@@ -42,6 +42,11 @@ interface ConfigurableIntegration
      *   'visible_when'     => array    Conditionally show field: ['field' => 'other_key', 'value' => 'match'] (optional)
      *                                  Value can be a string or array of strings for multi-match.
      *
+     * Use HasIntegrationCapabilities when auth/setup behavior differs by host,
+     * for example browser redirect OAuth, device-code OAuth, service accounts,
+     * or CLI-only integrations. Field shape alone is not enough to determine
+     * whether KosmoKrator can configure an integration.
+     *
      * @return array<int, array{key: string, type: string, label: string}>
      */
     public function configSchema(): array;

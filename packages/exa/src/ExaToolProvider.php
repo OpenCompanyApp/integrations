@@ -12,21 +12,73 @@ use OpenCompany\Integrations\Exa\Tools\ExaGetContents;
 use OpenCompany\Integrations\Exa\Tools\ExaSearchAndContents;
 use OpenCompany\Integrations\Exa\Tools\ExaGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Exa AI search integration.
- *
- * Declares 5 tools (search, findSimilar, getContents, searchAndContents,
- * getCurrentUser) and supports multi-account credential resolution through
- * the shared resolveService() method.
+ * Registers the integration provider and exposes its tools.
  */
-class ExaToolProvider implements ToolProvider, ConfigurableIntegration
+class ExaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    public function appName(): string
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+public function appName(): string
     {
         return 'exa';
     }
 
-    public function appMeta(): array
+public function appMeta(): array
     {
         return [
             'label' => 'search, find similar, get contents',
@@ -36,9 +88,7 @@ class ExaToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    // ── ConfigurableIntegration ───────────────────────────
-
-    public function integrationMeta(): array
+public function integrationMeta(): array
     {
         return [
             'name' => 'Exa AI',
@@ -49,130 +99,7 @@ class ExaToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://docs.exa.ai/reference',
         ];
-    }
-
-    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'api_key',
-                'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'Enter your Exa API key',
-                'hint' => 'Generate an API key at <a href="https://dashboard.exa.ai/api-keys" target="_blank">dashboard.exa.ai</a>',
-                'required' => true,
-            ],
-            [
-                'key' => 'url',
-                'type' => 'url',
-                'label' => 'Base URL',
-                'placeholder' => 'https://api.exa.ai',
-                'hint' => 'Override only if using a proxy or custom endpoint',
-                'default' => 'https://api.exa.ai',
-            ],
-        ];
-    }
-
-    public function testConnection(array $config): array
-    {
-        $apiKey = $config['api_key'] ?? '';
-        $baseUrl = rtrim($config['url'] ?? 'https://api.exa.ai', '/');
-
-        if (empty($apiKey)) {
-            return ['success' => false, 'error' => 'No API key provided.'];
-        }
-
-        try {
-            $response = Http::withHeaders([
-                'x-api-key' => $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(10)->get($baseUrl . '/user');
-
-            if ($response->successful()) {
-                $data = $response->json();
-                $email = $data['email'] ?? 'Unknown';
-
-                return [
-                    'success' => true,
-                    'message' => "Connected to Exa API as {$email}.",
-                ];
-            }
-
-            $error = $response->json('error') ?? $response->body();
-
-            return [
-                'success' => false,
-                'error' => 'Exa API error (' . $response->status() . '): ' . (is_string($error) ? $error : json_encode($error)),
-            ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-    }
-
-    public function validationRules(): array
-    {
-        return [
-            'api_key' => 'nullable|string',
-            'url' => 'nullable|url',
-        ];
-    }
-
-    // ── Tools ─────────────────────────────────────────────
-
-    public function tools(): array
-    {
-        return [
-            'exa_search' => [
-                'class' => ExaSearch::class,
-                'type' => 'read',
-                'name' => 'Search',
-                'description' => 'Perform a neural search query across the web.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'exa_find_similar' => [
-                'class' => ExaFindSimilar::class,
-                'type' => 'read',
-                'name' => 'Find Similar',
-                'description' => 'Find pages similar to a given URL.',
-                'icon' => 'ph:link',
-            ],
-            'exa_get_contents' => [
-                'class' => ExaGetContents::class,
-                'type' => 'read',
-                'name' => 'Get Contents',
-                'description' => 'Retrieve contents for a list of Exa document IDs.',
-                'icon' => 'ph:file-text',
-            ],
-            'exa_search_and_contents' => [
-                'class' => ExaSearchAndContents::class,
-                'type' => 'read',
-                'name' => 'Search and Contents',
-                'description' => 'Search the web and retrieve full page contents in one call.',
-                'icon' => 'ph:magnifying-glass-plus',
-            ],
-            'exa_get_current_user' => [
-                'class' => ExaGetCurrentUser::class,
-                'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile and usage info.',
-                'icon' => 'ph:user',
-            ],
-        ];
-    }
-
-    // ── Shared ────────────────────────────────────────────
-
-    public function isIntegration(): bool
-    {
-        return true;
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/exa.md';
-    }
-
-    public function credentialFields(): array
+    }public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],
@@ -187,8 +114,7 @@ class ExaToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Runtime context (may contain 'account' key)
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
+    {        return new $class($this->resolveService($context));
     }
 
     /**

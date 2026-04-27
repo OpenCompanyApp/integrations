@@ -23,8 +23,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleDriveUntrash;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_drive';
@@ -51,9 +112,7 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/drive.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -122,135 +181,7 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_drive_search_files' => [
-                'class' => GoogleDriveSearchFiles::class,
-                'type' => 'read',
-                'name' => 'Search Drive',
-                'description' => 'Search for files in Drive.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'google_drive_get_file' => [
-                'class' => GoogleDriveGetFile::class,
-                'type' => 'read',
-                'name' => 'Get File',
-                'description' => 'Get file metadata and content.',
-                'icon' => 'ph:file',
-            ],
-            'google_drive_create_folder' => [
-                'class' => GoogleDriveCreateFolder::class,
-                'type' => 'write',
-                'name' => 'Create Folder',
-                'description' => 'Create a folder in Drive.',
-                'icon' => 'ph:folder-plus',
-            ],
-            'google_drive_create_file' => [
-                'class' => GoogleDriveCreateFile::class,
-                'type' => 'write',
-                'name' => 'Create File',
-                'description' => 'Create an empty Doc, Sheet, or Presentation.',
-                'icon' => 'ph:file-plus',
-            ],
-            'google_drive_rename' => [
-                'class' => GoogleDriveRename::class,
-                'type' => 'write',
-                'name' => 'Rename',
-                'description' => 'Rename a file or folder.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_drive_move' => [
-                'class' => GoogleDriveMove::class,
-                'type' => 'write',
-                'name' => 'Move',
-                'description' => 'Move a file to a different folder.',
-                'icon' => 'ph:arrows-left-right',
-            ],
-            'google_drive_copy' => [
-                'class' => GoogleDriveCopy::class,
-                'type' => 'write',
-                'name' => 'Copy',
-                'description' => 'Duplicate a file.',
-                'icon' => 'ph:copy',
-            ],
-            'google_drive_trash' => [
-                'class' => GoogleDriveTrash::class,
-                'type' => 'write',
-                'name' => 'Trash',
-                'description' => 'Move a file to trash.',
-                'icon' => 'ph:trash',
-            ],
-            'google_drive_untrash' => [
-                'class' => GoogleDriveUntrash::class,
-                'type' => 'write',
-                'name' => 'Untrash',
-                'description' => 'Restore a file from trash.',
-                'icon' => 'ph:arrow-counter-clockwise',
-            ],
-            'google_drive_star' => [
-                'class' => GoogleDriveStar::class,
-                'type' => 'write',
-                'name' => 'Star',
-                'description' => 'Mark a file as starred.',
-                'icon' => 'ph:star',
-            ],
-            'google_drive_unstar' => [
-                'class' => GoogleDriveUnstar::class,
-                'type' => 'write',
-                'name' => 'Unstar',
-                'description' => 'Remove star from a file.',
-                'icon' => 'ph:star',
-            ],
-            'google_drive_delete' => [
-                'class' => GoogleDriveDelete::class,
-                'type' => 'write',
-                'name' => 'Delete',
-                'description' => 'Permanently delete a file.',
-                'icon' => 'ph:trash',
-            ],
-            'google_drive_share_file' => [
-                'class' => GoogleDriveShareFile::class,
-                'type' => 'write',
-                'name' => 'Share File',
-                'description' => 'Share a file or folder.',
-                'icon' => 'ph:share-network',
-            ],
-            'google_drive_unshare_file' => [
-                'class' => GoogleDriveUnshareFile::class,
-                'type' => 'write',
-                'name' => 'Unshare File',
-                'description' => 'Remove a sharing permission.',
-                'icon' => 'ph:share-network',
-            ],
-            'google_drive_list_permissions' => [
-                'class' => GoogleDriveListPermissions::class,
-                'type' => 'read',
-                'name' => 'List Permissions',
-                'description' => 'List sharing permissions on a file.',
-                'icon' => 'ph:users',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

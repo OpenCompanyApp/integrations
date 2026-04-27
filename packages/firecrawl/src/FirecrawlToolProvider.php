@@ -13,15 +13,66 @@ use OpenCompany\Integrations\Firecrawl\Tools\FirecrawlGetCrawlStatus;
 use OpenCompany\Integrations\Firecrawl\Tools\FirecrawlMap;
 use OpenCompany\Integrations\Firecrawl\Tools\FirecrawlScrape;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Firecrawl integration.
- *
- * Implements ConfigurableIntegration for multi-account support,
- * config schema, connection testing, and validation rules.
+ * Registers the integration provider and exposes its tools.
  */
-class FirecrawlToolProvider implements ToolProvider, ConfigurableIntegration
+class FirecrawlToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+/**
      * The integration identifier.
      */
     public function appName(): string

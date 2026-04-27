@@ -19,16 +19,69 @@ use OpenCompany\Integrations\Coda\Tools\CodaListRows;
 use OpenCompany\Integrations\Coda\Tools\CodaListTables;
 use OpenCompany\Integrations\Coda\Tools\CodaUpdateRow;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Coda integration.
- *
- * Registers 12 tools for interacting with the Coda API: docs, tables, rows,
- * columns, and pages. Implements ConfigurableIntegration for multi-account
- * credential management.
+ * Registers the integration provider and exposes its tools.
  */
-class CodaToolProvider implements ToolProvider, ConfigurableIntegration
+class CodaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * {@inheritdoc}
      */
     public function appName(): string
@@ -36,7 +89,7 @@ class CodaToolProvider implements ToolProvider, ConfigurableIntegration
         return 'coda';
     }
 
-    /**
+/**
      * {@inheritdoc}
      */
     public function appMeta(): array
@@ -49,7 +102,7 @@ class CodaToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * {@inheritdoc}
      */
     public function integrationMeta(): array
@@ -63,9 +116,7 @@ class CodaToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://coda.io/developers/apis/v1',
         ];
-    }
-
-    /**
+    }/**
      * {@inheritdoc}
      */
     public function configSchema(): array
@@ -259,8 +310,7 @@ class CodaToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

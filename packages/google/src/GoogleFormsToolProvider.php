@@ -21,8 +21,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleFormsUpdateSettings;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_forms';
@@ -49,9 +110,7 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/forms.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -112,121 +171,7 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_forms_get' => [
-                'class' => GoogleFormsGet::class,
-                'type' => 'read',
-                'name' => 'Forms Get',
-                'description' => 'Get form structure and questions.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_list_responses' => [
-                'class' => GoogleFormsListResponses::class,
-                'type' => 'read',
-                'name' => 'Forms List Responses',
-                'description' => 'List form responses with question labels.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_get_response' => [
-                'class' => GoogleFormsGetResponse::class,
-                'type' => 'read',
-                'name' => 'Forms Get Response',
-                'description' => 'Get a single form response by ID.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_create' => [
-                'class' => GoogleFormsCreate::class,
-                'type' => 'write',
-                'name' => 'Forms Create',
-                'description' => 'Create a new form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_update_info' => [
-                'class' => GoogleFormsUpdateInfo::class,
-                'type' => 'write',
-                'name' => 'Forms Update Info',
-                'description' => 'Update form title and description.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_update_settings' => [
-                'class' => GoogleFormsUpdateSettings::class,
-                'type' => 'write',
-                'name' => 'Forms Update Settings',
-                'description' => 'Update form settings (quiz mode, email collection).',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_add_question' => [
-                'class' => GoogleFormsAddQuestion::class,
-                'type' => 'write',
-                'name' => 'Forms Add Question',
-                'description' => 'Add a question to a form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_update_question' => [
-                'class' => GoogleFormsUpdateQuestion::class,
-                'type' => 'write',
-                'name' => 'Forms Update Question',
-                'description' => 'Update a question in a form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_delete_item' => [
-                'class' => GoogleFormsDeleteItem::class,
-                'type' => 'write',
-                'name' => 'Forms Delete Item',
-                'description' => 'Delete an item from a form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_move_item' => [
-                'class' => GoogleFormsMoveItem::class,
-                'type' => 'write',
-                'name' => 'Forms Move Item',
-                'description' => 'Move an item within a form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_add_section' => [
-                'class' => GoogleFormsAddSection::class,
-                'type' => 'write',
-                'name' => 'Forms Add Section',
-                'description' => 'Add a section/page break to a form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_add_text_item' => [
-                'class' => GoogleFormsAddTextItem::class,
-                'type' => 'write',
-                'name' => 'Forms Add Text Item',
-                'description' => 'Add a static text block to a form.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_forms_publish' => [
-                'class' => GoogleFormsPublish::class,
-                'type' => 'write',
-                'name' => 'Forms Publish',
-                'description' => 'Publish/unpublish form and manage response acceptance.',
-                'icon' => 'ph:list-checks',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

@@ -14,16 +14,77 @@ use OpenCompany\Integrations\GoogleContacts\Tools\GoogleContactsGetContactGroup;
 use OpenCompany\Integrations\GoogleContacts\Tools\GoogleContactsListOtherContacts;
 use OpenCompany\Integrations\GoogleContacts\Tools\GoogleContactsGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Google Contacts (People API) integration.
- *
- * Implements ConfigurableIntegration for multi-account support, exposes
- * configuration schema, connection testing, and the full list of available
- * tools for the Google People API.
+ * Registers the integration provider and exposes its tools.
  */
-class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegration
+class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine name of the integration.
      */
     public function appName(): string
@@ -31,7 +92,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
         return 'google_contacts';
     }
 
-    /**
+/**
      * Short metadata shown in UI tool listings.
      */
     public function appMeta(): array
@@ -44,7 +105,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integrations registry.
      */
     public function integrationMeta(): array
@@ -58,9 +119,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
             'badge' => 'verified',
             'docs_url' => 'https://developers.google.com/people/api/rest/v1',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -244,8 +303,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
      * @param  array<string, mixed> $context  Context containing optional 'account' key.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

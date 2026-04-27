@@ -12,46 +12,68 @@ use OpenCompany\Integrations\Sendy\Tools\SendyListSubscribers;
 use OpenCompany\Integrations\Sendy\Tools\SendyCreateCampaign;
 use OpenCompany\Integrations\Sendy\Tools\SendyGetCurrentUser;
 
-class SendyToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class SendyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'sendy';
-    }
-
-    /**
-     * Get metadata for app display.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'subscribe, unsubscribe, campaigns',
-            'description' => 'Email newsletter management',
-            'icon' => 'ph:envelope',
-            'logo' => 'simple-icons:sendy',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the UI.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Sendy',
-            'description' => 'Self-hosted email newsletter application',
-            'icon' => 'ph:envelope',
-            'logo' => 'simple-icons:sendy',
-            'category' => 'email',
-            'badge' => 'verified',
-            'docs_url' => 'https://sendy.co/api',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the Sendy integration.
      *
      * @return array<int, array<string, mixed>>

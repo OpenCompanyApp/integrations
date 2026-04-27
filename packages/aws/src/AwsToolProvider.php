@@ -15,8 +15,62 @@ use OpenCompany\Integrations\Aws\Tools\AwsListLambdaFunctions;
 use OpenCompany\Integrations\Aws\Tools\AwsListS3Buckets;
 use OpenCompany\Integrations\Aws\Tools\AwsListSnsTopics;
 
-class AwsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class AwsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the unique app name identifier.
      *
@@ -25,42 +79,7 @@ class AwsToolProvider implements ToolProvider, ConfigurableIntegration
     public function appName(): string
     {
         return 'aws';
-    }
-
-    /**
-     * Get metadata for UI display and search.
-     *
-     * @return array<string, string> Metadata with label, description, icon, and logo.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 's3, ec2, lambda, dynamodb, cloudwatch, sns, iam',
-            'description' => 'AWS cloud infrastructure',
-            'icon' => 'ph:cloud',
-            'logo' => 'simple-icons:amazonaws',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the OpenCompany settings UI.
-     *
-     * @return array<string, string> Integration metadata with name, description, icon, category, etc.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'AWS',
-            'description' => 'Amazon Web Services cloud infrastructure management',
-            'icon' => 'ph:cloud',
-            'logo' => 'simple-icons:amazonaws',
-            'category' => 'cloud',
-            'badge' => 'New',
-            'docs_url' => 'https://docs.aws.amazon.com/',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>> The config field definitions.

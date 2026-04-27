@@ -16,17 +16,69 @@ use OpenCompany\Integrations\Mautic\Tools\MauticListSegments;
 use OpenCompany\Integrations\Mautic\Tools\MauticListForms;
 use OpenCompany\Integrations\Mautic\Tools\MauticGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * MauticToolProvider — registers Mautic tools with the integration registry.
- *
- * Implements ConfigurableIntegration to define the config schema (username,
- * password, hostname), validation rules, connection test, and tool metadata.
- *
- * @see https://developer.mautic.org/#rest-api
+ * Registers the integration provider and exposes its tools.
  */
-class MauticToolProvider implements ToolProvider, ConfigurableIntegration
+class MauticToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'basic',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'username_password',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application identifier used in the tool provider registry.
      */
     public function appName(): string
@@ -34,7 +86,7 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration
         return 'mautic';
     }
 
-    /**
+/**
      * Short metadata for the application (label, description, icons).
      */
     public function appMeta(): array
@@ -47,7 +99,7 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Extended integration metadata for the UI (name, category, badge, docs URL).
      */
     public function integrationMeta(): array
@@ -61,9 +113,7 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.mautic.org/#rest-api',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Mautic integration.
      *
      * Defines the fields shown in the integration settings UI:
@@ -268,8 +318,7 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration (not a single tool).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

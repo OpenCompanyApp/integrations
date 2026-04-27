@@ -13,50 +13,69 @@ use OpenCompany\Integrations\Fellow\Tools\FellowListActionItems;
 use OpenCompany\Integrations\Fellow\Tools\FellowListGoals;
 use OpenCompany\Integrations\Fellow\Tools\FellowGetCurrentUser;
 
-class FellowToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class FellowToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Return the machine name for this integration.
      */
     public function appName(): string
     {
         return 'fellow';
-    }
-
-    /**
-     * Return metadata for the app listing.
-     *
-     * @return array<string, string>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'meetings, notes, action items, goals',
-            'description' => 'Meeting management',
-            'icon' => 'ph:calendar-check',
-            'logo' => 'simple-icons:fellow',
-        ];
-    }
-
-    /**
-     * Return metadata for the integration detail view.
-     *
-     * @return array<string, string>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Fellow',
-            'description' => 'Meeting management, notes, action items, and goals',
-            'icon' => 'ph:calendar-check',
-            'logo' => 'simple-icons:fellow',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.fellow.app',
-        ];
-    }
-
-    /**
+    }    /**
      * Return the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

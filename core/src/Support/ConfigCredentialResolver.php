@@ -26,7 +26,21 @@ class ConfigCredentialResolver implements CredentialResolver
 
     public function isConfigured(string $integration, ?string $account = null): bool
     {
-        return ! empty($this->get($integration, 'api_key', null, $account));
+        $config = $account !== null
+            ? config("ai-tools.{$integration}.{$account}", [])
+            : config("ai-tools.{$integration}", []);
+
+        if (! is_array($config)) {
+            return false;
+        }
+
+        foreach (['api_key', 'access_token', 'refresh_token', 'token', 'api_token', 'client_secret', 'password'] as $key) {
+            if (! empty($config[$key])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getAccounts(string $integration): array

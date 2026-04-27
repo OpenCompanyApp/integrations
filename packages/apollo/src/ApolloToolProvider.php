@@ -13,16 +13,69 @@ use OpenCompany\Integrations\Apollo\Tools\ApolloListOrganizations;
 use OpenCompany\Integrations\Apollo\Tools\ApolloGetOrganization;
 use OpenCompany\Integrations\Apollo\Tools\ApolloGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Apollo.io sales intelligence integration.
- *
- * Implements ConfigurableIntegration for multi-account support and exposes
- * six tools for searching contacts, enriching person data, managing
- * organizations, and retrieving the authenticated user profile.
+ * Registers the integration provider and exposes its tools.
  */
-class ApolloToolProvider implements ToolProvider, ConfigurableIntegration
+class ApolloToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The machine name of this integration.
      */
     public function appName(): string
@@ -30,7 +83,7 @@ class ApolloToolProvider implements ToolProvider, ConfigurableIntegration
         return 'apollo';
     }
 
-    /**
+/**
      * Short metadata for tooling UI display.
      *
      * @return array<string, string> Label, description, icon, and logo.
@@ -45,7 +98,7 @@ class ApolloToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Integration metadata for the marketplace / settings UI.
      *
      * @return array<string, string> Name, description, icons, category, badge, and docs URL.
@@ -61,9 +114,7 @@ class ApolloToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.apollo.io',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>> Field definitions for api_key and url.
@@ -243,8 +294,7 @@ class ApolloToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

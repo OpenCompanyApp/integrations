@@ -15,15 +15,69 @@ use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use Illuminate\Support\Facades\Http;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for Kafka (Confluent Cloud) integration.
- *
- * Registers 7 tools for topics, clusters, producers, and user info.
- * Implements ConfigurableIntegration for multi-account support with api_token and cluster_id fields.
+ * Registers the integration provider and exposes its tools.
  */
-class KafkaToolProvider implements ToolProvider, ConfigurableIntegration
+class KafkaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -31,7 +85,7 @@ class KafkaToolProvider implements ToolProvider, ConfigurableIntegration
         return 'kafka';
     }
 
-    /**
+/**
      * Get metadata for the app listing.
      *
      * @return array<string, mixed>
@@ -46,7 +100,7 @@ class KafkaToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get metadata for the integration catalog.
      *
      * @return array<string, mixed>
@@ -62,9 +116,7 @@ class KafkaToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://docs.confluent.io/platform/current/rest.html',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for Kafka credentials.
      *
      * @return array<int, array<string, mixed>>
@@ -225,8 +277,7 @@ class KafkaToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class is an integration provider.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

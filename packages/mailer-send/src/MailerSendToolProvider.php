@@ -14,46 +14,68 @@ use OpenCompany\Integrations\MailerSend\Tools\MailerSendListDomains;
 use OpenCompany\Integrations\MailerSend\Tools\MailerSendListRecipients;
 use OpenCompany\Integrations\MailerSend\Tools\MailerSendGetCurrentUser;
 
-class MailerSendToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class MailerSendToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application slug for this integration.
      */
     public function appName(): string
     {
         return 'mailer-send';
-    }
-
-    /**
-     * Metadata shown in the app catalogue.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'send, messages, templates, domains, recipients',
-            'description' => 'Email delivery & marketing',
-            'icon' => 'ph:envelope',
-            'logo' => 'simple-icons:mailersend',
-        ];
-    }
-
-    /**
-     * Integration metadata including category and documentation URL.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'MailerSend',
-            'description' => 'Transactional and marketing email delivery API',
-            'icon' => 'ph:envelope',
-            'logo' => 'simple-icons:mailersend',
-            'category' => 'marketing',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.mailersend.com/',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the MailerSend integration.
      */
     public function configSchema(): array

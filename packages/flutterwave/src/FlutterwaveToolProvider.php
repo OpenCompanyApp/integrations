@@ -14,46 +14,68 @@ use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveListCustomers;
 use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveListTransactions;
 use OpenCompany\Integrations\Flutterwave\Tools\FlutterwaveVerifyTransaction;
 
-class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used to identify this integration.
      */
     public function appName(): string
     {
         return 'flutterwave';
-    }
-
-    /**
-     * Short metadata about the tools this provider exposes.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'transactions, payments, customers, banks',
-            'description' => 'African payments platform',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:flutterwave',
-        ];
-    }
-
-    /**
-     * Extended metadata for the integration marketplace / settings UI.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Flutterwave',
-            'description' => 'African payments platform — accept payments, manage transactions, and look up banks across Africa.',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:flutterwave',
-            'category' => 'finance',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.flutterwave.com/docs',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the Flutterwave integration.
      *
      * Defines the `secret_key` credential that the user must provide.

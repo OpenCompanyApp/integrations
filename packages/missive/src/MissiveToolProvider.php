@@ -13,15 +13,70 @@ use OpenCompany\Integrations\Missive\Tools\MissiveListTasks;
 use OpenCompany\Integrations\Missive\Tools\MissiveCreateTask;
 use OpenCompany\Integrations\Missive\Tools\MissiveGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Missive integration.
- *
- * Registers 6 tools for interacting with Missive conversations, comments,
- * tasks, and user profile. Supports multi-account via createTool().
+ * Registers the integration provider and exposes its tools.
  */
-class MissiveToolProvider implements ToolProvider, ConfigurableIntegration
+class MissiveToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application name used as the integration identifier.
      */
     public function appName(): string
@@ -29,7 +84,7 @@ class MissiveToolProvider implements ToolProvider, ConfigurableIntegration
         return 'missive';
     }
 
-    /**
+/**
      * Short metadata for the app selector UI.
      */
     public function appMeta(): array
@@ -42,7 +97,7 @@ class MissiveToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the Integrations UI.
      */
     public function integrationMeta(): array
@@ -56,9 +111,7 @@ class MissiveToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://missiveapp.com/help/api/rest',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -218,8 +271,7 @@ class MissiveToolProvider implements ToolProvider, ConfigurableIntegration
      * Whether this class represents an integration (always true).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

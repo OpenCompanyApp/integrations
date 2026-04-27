@@ -16,8 +16,61 @@ use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoPrice;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoSearchCoins;
 use OpenCompany\Integrations\CoinGecko\Tools\CoinGeckoTrending;
 
-class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'coingecko';
@@ -44,9 +97,7 @@ class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider
             'badge' => 'verified',
             'docs_url' => 'https://docs.coingecko.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -94,89 +145,7 @@ class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'api_key' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'coingecko_search_coins' => [
-                'class' => CoinGeckoSearchCoins::class,
-                'type' => 'read',
-                'name' => 'Search Coins',
-                'description' => 'Find cryptocurrencies by name or ticker symbol.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'coingecko_trending' => [
-                'class' => CoinGeckoTrending::class,
-                'type' => 'read',
-                'name' => 'Trending Coins',
-                'description' => 'Top trending cryptocurrencies in the last 24 hours.',
-                'icon' => 'ph:fire',
-            ],
-            'coingecko_global' => [
-                'class' => CoinGeckoGlobal::class,
-                'type' => 'read',
-                'name' => 'Global Market Overview',
-                'description' => 'Overall crypto market statistics and BTC dominance.',
-                'icon' => 'ph:globe',
-            ],
-            'coingecko_price' => [
-                'class' => CoinGeckoPrice::class,
-                'type' => 'read',
-                'name' => 'Coin Price',
-                'description' => 'Current price for one or more coins with 24h change and volume.',
-                'icon' => 'ph:currency-circle-dollar',
-            ],
-            'coingecko_markets' => [
-                'class' => CoinGeckoMarkets::class,
-                'type' => 'read',
-                'name' => 'Market Rankings',
-                'description' => 'Top coins ranked by market cap with full market data.',
-                'icon' => 'ph:chart-line-up',
-            ],
-            'coingecko_info' => [
-                'class' => CoinGeckoInfo::class,
-                'type' => 'read',
-                'name' => 'Coin Info',
-                'description' => 'Full coin profile with description, links, and market data.',
-                'icon' => 'ph:info',
-            ],
-            'coingecko_history' => [
-                'class' => CoinGeckoHistory::class,
-                'type' => 'read',
-                'name' => 'Price History',
-                'description' => 'Historical price, volume, and market cap chart data.',
-                'icon' => 'ph:clock-counter-clockwise',
-            ],
-            'coingecko_ohlc' => [
-                'class' => CoinGeckoOhlc::class,
-                'type' => 'read',
-                'name' => 'OHLC Data',
-                'description' => 'Candlestick data for technical analysis.',
-                'icon' => 'ph:chart-bar',
-            ],
-        ];
-    }
-
-    public function isIntegration(): bool
-    {
-        return true;
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__.'/../lua-docs/coingecko.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => false, 'placeholder' => 'Optional — increases rate limits'],

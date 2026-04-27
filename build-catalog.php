@@ -440,6 +440,239 @@ function credentialKeys(array $credentials): array
     )));
 }
 
+function deepMerge(array $base, array $override): array
+{
+    foreach ($override as $key => $value) {
+        if (is_array($value) && isset($base[$key]) && is_array($base[$key]) && array_is_list($value) === false) {
+            $base[$key] = deepMerge($base[$key], $value);
+            continue;
+        }
+
+        $base[$key] = $value;
+    }
+
+    return $base;
+}
+
+function fieldValues(array $fields, string $key): array
+{
+    $values = [];
+    foreach ($fields as $field) {
+        if (is_array($field) && array_key_exists($key, $field)) {
+            $values[] = $field[$key];
+        }
+    }
+
+    return $values;
+}
+
+function inferIntegrationCapabilities(
+    string $authType,
+    array $credentials,
+    array $configSchema,
+    string $source,
+    string $pkgSlug,
+    string $category,
+    bool $hasTriggers,
+    array $explicitCapabilities = [],
+): array {
+    $keys = array_values(array_unique(array_map(
+        'strtolower',
+        array_merge(credentialKeys($credentials), fieldValues($configSchema, 'key'))
+    )));
+    $types = array_values(array_unique(array_map(
+        'strtolower',
+        array_merge(fieldValues($credentials, 'type'), fieldValues($configSchema, 'type'))
+    )));
+    $hints = strtolower(implode(' ', array_map('cleanText', fieldValues($configSchema, 'hint'))));
+
+    $hasOauthConnect = in_array('oauth_connect', $types, true);
+    $hasAccessToken = in_array('access_token', $keys, true);
+    $hasRefreshToken = in_array('refresh_token', $keys, true) || str_contains($source, 'refresh_token') || str_contains($source, 'refreshToken');
+    if ($pkgSlug === 'google' && $hasOauthConnect) {
+        $hasRefreshToken = true;
+        foreach (['refresh_token', 'expires_at'] as $googleTokenKey) {
+            if (!in_array($googleTokenKey, $keys, true)) {
+                $keys[] = $googleTokenKey;
+            }
+        }
+    }
+    $hasClientId = in_array('client_id', $keys, true);
+    $hasClientSecret = in_array('client_secret', $keys, true);
+    $hasPassword = in_array('password', $keys, true) || in_array('password', $types, true);
+    $hasUserKey = in_array('username', $keys, true) || in_array('email', $keys, true) || in_array('user', $keys, true);
+    $hasTokenKey = false;
+    foreach ($keys as $key) {
+        if (str_contains($key, 'token')) {
+            $hasTokenKey = true;
+            break;
+        }
+    }
+
+    $runtimeRequirements = [];
+    $setupFlows = ['manual_secret'];
+    $strategy = 'api_key';
+    $credentialMode = 'secret';
+    $requiresBrowser = false;
+    $refreshable = false;
+    $webSetup = true;
+    $webRuntime = true;
+    $cliSetup = true;
+    $cliRuntime = true;
+    $webSetupMode = 'manual_secret';
+    $cliSetupMode = 'manual_secret';
+    $notes = [];
+
+    if (empty($credentials) && empty($configSchema)) {
+        $strategy = 'none';
+        $credentialMode = 'none';
+        $setupFlows = ['none'];
+        $webSetupMode = 'none';
+        $cliSetupMode = 'none';
+    } elseif ($hasOauthConnect) {
+        $strategy = 'oauth2_authorization_code';
+        $credentialMode = 'stored_token';
+        $setupFlows = ['web_redirect'];
+        $requiresBrowser = true;
+        $refreshable = $hasRefreshToken;
+        $cliSetup = false;
+        $cliRuntime = $hasAccessToken;
+        $webSetupMode = 'web_redirect';
+        $cliSetupMode = 'unsupported';
+        $notes[] = 'Setup requires a browser redirect callback. CLI can run only after tokens are already stored.';
+
+        if ($pkgSlug === 'google') {
+            $setupFlows = ['web_redirect', 'local_redirect', 'device_code'];
+            $cliSetup = true;
+            $cliSetupMode = 'local_redirect_or_device_code';
+            $notes = [
+                'Web hosts use the registered OAuth redirect callback.',
+                'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+                'CLI runtime works with stored access and refresh tokens.',
+            ];
+        }
+    } elseif ($hasAccessToken) {
+        $strategy = str_contains($hints, 'oauth') ? 'oauth2_manual_token' : 'bearer_token';
+        $credentialMode = 'stored_token';
+        $setupFlows = ['manual_token'];
+        $webSetupMode = 'manual_token';
+        $cliSetupMode = 'manual_token';
+        $refreshable = $hasRefreshToken;
+        if ($strategy === 'oauth2_manual_token') {
+            $notes[] = 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.';
+        }
+    } elseif ($hasClientId && $hasClientSecret) {
+        $strategy = 'oauth2_client_credentials';
+        $credentialMode = 'client_credentials';
+        $setupFlows = ['client_credentials'];
+        $webSetupMode = 'client_credentials';
+        $cliSetupMode = 'client_credentials';
+    } elseif ($hasPassword && $hasUserKey) {
+        $strategy = 'basic';
+        $credentialMode = 'username_password';
+    } elseif ($hasTokenKey || $authType === 'api_token') {
+        $strategy = 'api_token';
+        $credentialMode = 'secret';
+    } elseif ($authType === 'none') {
+        $strategy = 'none';
+        $credentialMode = 'none';
+        $setupFlows = ['none'];
+        $webSetupMode = 'none';
+        $cliSetupMode = 'none';
+    }
+
+    $renderingRequirements = [
+        'mermaid' => [['type' => 'binary', 'name' => 'mmdc', 'description' => 'Mermaid CLI is required to render diagrams.']],
+        'plantuml' => [['type' => 'binary', 'name' => 'java', 'description' => 'Java is required to run PlantUML.']],
+        'typst' => [['type' => 'binary', 'name' => 'typst', 'description' => 'Typst CLI is required to render PDFs.']],
+        'vegalite' => [['type' => 'binary', 'name' => 'node', 'description' => 'Node.js is required to render Vega-Lite charts.']],
+    ];
+
+    if (isset($renderingRequirements[$pkgSlug])) {
+        $runtimeRequirements = $renderingRequirements[$pkgSlug];
+        $notes[] = 'Runtime depends on local rendering binaries being installed in the host environment.';
+    } elseif ($category === 'rendering') {
+        $notes[] = 'Rendering integrations may require host-specific local runtime dependencies.';
+    }
+
+    if ($hasTriggers) {
+        $notes[] = 'Triggers require a web-reachable host endpoint even if tool runtime works in CLI.';
+    }
+
+    $capabilities = [
+        'auth' => [
+            'strategy' => $strategy,
+            'legacy_auth_type' => $authType,
+            'credential_mode' => $credentialMode,
+            'setup_flows' => $setupFlows,
+            'requires_browser_for_setup' => $requiresBrowser,
+            'refreshable' => $refreshable,
+            'token_keys' => array_values(array_intersect($keys, ['access_token', 'refresh_token', 'expires_at'])),
+            'confidence' => empty($explicitCapabilities) ? 'inferred' : 'explicit',
+            'notes' => $notes,
+        ],
+        'host_availability' => [
+            'web' => [
+                'setup_supported' => $webSetup,
+                'runtime_supported' => $webRuntime,
+                'setup_mode' => $webSetupMode,
+            ],
+            'cli' => [
+                'setup_supported' => $cliSetup,
+                'runtime_supported' => $cliRuntime,
+                'setup_mode' => $cliSetupMode,
+                'runtime_mode' => $cliRuntime && !$cliSetup && $hasOauthConnect ? 'stored_credentials_only' : 'normal',
+            ],
+        ],
+        'runtime_requirements' => $runtimeRequirements,
+        'compatibility' => [
+            'web_setup_supported' => $webSetup,
+            'web_runtime_supported' => $webRuntime,
+            'cli_setup_supported' => $cliSetup,
+            'cli_runtime_supported' => $cliRuntime,
+        ],
+    ];
+
+    if (!empty($explicitCapabilities)) {
+        $capabilities = deepMerge($capabilities, $explicitCapabilities);
+        $capabilities['auth']['confidence'] = 'explicit';
+    }
+
+    $capabilities['summary'] = summarizeCapabilities($capabilities);
+
+    return $capabilities;
+}
+
+function summarizeCapabilities(array $capabilities): string
+{
+    $auth = $capabilities['auth']['strategy'] ?? 'unknown';
+    $webSetup = !empty($capabilities['host_availability']['web']['setup_supported']);
+    $cliSetup = !empty($capabilities['host_availability']['cli']['setup_supported']);
+    $cliRuntime = !empty($capabilities['host_availability']['cli']['runtime_supported']);
+
+    if ($auth === 'none') {
+        return 'No credentials required; available in web and CLI hosts when runtime dependencies are installed.';
+    }
+
+    if ($auth === 'oauth2_authorization_code' && $cliSetup && in_array('local_redirect', $capabilities['auth']['setup_flows'] ?? [], true)) {
+        return 'OAuth can be configured in web hosts through redirect and in CLI hosts through local/device authorization; runtime works with stored tokens.';
+    }
+
+    if ($auth === 'oauth2_authorization_code' && !$cliSetup && $cliRuntime) {
+        return 'OAuth setup requires a web browser redirect, but CLI runtime works after credentials are stored.';
+    }
+
+    if ($cliSetup && $cliRuntime && $webSetup) {
+        return 'Credentials can be configured manually in web or CLI hosts.';
+    }
+
+    if (!$cliSetup && !$cliRuntime) {
+        return 'This integration is web-only unless explicit CLI credentials are provided by the host.';
+    }
+
+    return 'Host compatibility depends on the declared setup flow and stored credentials.';
+}
+
 function fallbackIntegrationMeta(string $appName): array
 {
     $fallbacks = [
@@ -602,6 +835,7 @@ foreach ($providerFiles as $providerFile) {
     $credFields = extractReturnArray($source, 'credentialFields') ?? [];
     $configSchema = extractReturnArray($source, 'configSchema') ?? [];
     $validationRules = extractReturnArray($source, 'validationRules') ?? [];
+    $explicitCapabilities = extractReturnArray($source, 'integrationCapabilities') ?? [];
 
     $integrationMeta = array_merge(
         fallbackIntegrationMeta($appName ?? ''),
@@ -768,6 +1002,17 @@ foreach ($providerFiles as $providerFile) {
     $description = $integrationMeta['description'] ?? $appMeta['description'] ?? $composer['description'] ?? '';
     $shortDescription = $appMeta['description'] ?? truncateText($description, 90);
     $authType = inferAuthType($credFields);
+    $category = $integrationMeta['category'] ?? 'other';
+    $capabilities = inferIntegrationCapabilities(
+        authType: $authType,
+        credentials: $credentials,
+        configSchema: $configSchema,
+        source: $source,
+        pkgSlug: $pkgSlug,
+        category: $category,
+        hasTriggers: !empty($triggerDefs),
+        explicitCapabilities: $explicitCapabilities,
+    );
     $supportsMultiAccount = str_contains($source, '$context[\'account\']')
         || str_contains($source, '$context["account"]')
         || str_contains($source, 'context[\'account\']')
@@ -793,12 +1038,18 @@ foreach ($providerFiles as $providerFile) {
         'description' => $description,
         'short_description' => $shortDescription,
         'label' => $appMeta['label'] ?? '',
-        'category' => $integrationMeta['category'] ?? 'other',
+        'category' => $category,
         'badge' => $integrationMeta['badge'] ?? 'verified',
         'icon' => $icon,
         'logo' => $logo,
         'docs_url' => $docsUrl,
         'auth_type' => $authType,
+        'auth_strategy' => $capabilities['auth']['strategy'] ?? null,
+        'auth' => $capabilities['auth'],
+        'host_availability' => $capabilities['host_availability'],
+        'runtime_requirements' => $capabilities['runtime_requirements'],
+        'compatibility' => $capabilities['compatibility'],
+        'compatibility_summary' => $capabilities['summary'],
         'keywords' => $composer['keywords'] ?? [],
         'composer_description' => $composer['description'] ?? null,
         'package_meta' => [
@@ -825,6 +1076,12 @@ foreach ($providerFiles as $providerFile) {
             'og_title' => $displayName . ' Integration for AI Agents',
             'og_description' => $metaDescription,
             'og_image' => null,
+            'auth_summary' => $capabilities['summary'],
+            'auth_strategy' => $capabilities['auth']['strategy'] ?? null,
+            'cli_setup_supported' => $capabilities['compatibility']['cli_setup_supported'] ?? null,
+            'cli_runtime_supported' => $capabilities['compatibility']['cli_runtime_supported'] ?? null,
+            'web_setup_supported' => $capabilities['compatibility']['web_setup_supported'] ?? null,
+            'web_runtime_supported' => $capabilities['compatibility']['web_runtime_supported'] ?? null,
         ],
         'readme' => $readme,
         'tool_count' => count($tools),
@@ -839,6 +1096,9 @@ foreach ($providerFiles as $providerFile) {
         'credential_keys' => credentialKeys($credentials),
         'setup' => [
             'auth_type' => $authType,
+            'auth_strategy' => $capabilities['auth']['strategy'] ?? null,
+            'auth' => $capabilities['auth'],
+            'host_availability' => $capabilities['host_availability'],
             'supports_multi_account' => $supportsMultiAccount,
             'credentials' => $credentials,
             'config_schema' => $configSchema,

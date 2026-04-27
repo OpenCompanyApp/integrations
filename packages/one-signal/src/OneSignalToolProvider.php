@@ -14,15 +14,69 @@ use OpenCompany\Integrations\OneSignal\Tools\OneSignalGetDevice;
 use OpenCompany\Integrations\OneSignal\Tools\OneSignalListApps;
 use OpenCompany\Integrations\OneSignal\Tools\OneSignalGetCurrentApp;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the OneSignal push notification integration.
- *
- * Implements {@see ConfigurableIntegration} for multi-account support,
- * configuration schema, connection testing, and credential management.
+ * Registers the integration provider and exposes its tools.
  */
-class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration
+class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The integration identifier used for credential resolution.
      */
     public function appName(): string
@@ -30,7 +84,7 @@ class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration
         return 'one-signal';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings and UI summaries.
      */
     public function appMeta(): array
@@ -43,7 +97,7 @@ class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the Integrations UI.
      */
     public function integrationMeta(): array
@@ -57,9 +111,7 @@ class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://documentation.onesignal.com/docs/rest-api',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -235,8 +287,7 @@ class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration (not a standalone tool).
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

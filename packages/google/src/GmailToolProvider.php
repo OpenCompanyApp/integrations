@@ -25,8 +25,69 @@ use OpenCompany\IntegrationCore\Contracts\AgentFileStorage;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GmailToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GmailToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'gmail';
@@ -116,142 +177,7 @@ class GmailToolProvider implements ToolProvider, ConfigurableIntegration
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'gmail_search_emails' => [
-                'class' => GmailSearchEmails::class,
-                'type' => 'read',
-                'name' => 'Search Emails',
-                'description' => 'Search email messages.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'gmail_count_by_sender' => [
-                'class' => GmailCountBySender::class,
-                'type' => 'read',
-                'name' => 'Count by Sender',
-                'description' => 'Count messages grouped by sender.',
-                'icon' => 'ph:chart-bar',
-            ],
-            'gmail_list_labels' => [
-                'class' => GmailListLabels::class,
-                'type' => 'read',
-                'name' => 'List Labels',
-                'description' => 'List all mailbox labels.',
-                'icon' => 'ph:tag',
-            ],
-            'gmail_read' => [
-                'class' => GmailRead::class,
-                'type' => 'read',
-                'name' => 'Read Email',
-                'description' => 'Get full email content.',
-                'icon' => 'ph:envelope-open',
-            ],
-            'gmail_send_email' => [
-                'class' => GmailSendEmail::class,
-                'type' => 'write',
-                'name' => 'Send Email',
-                'description' => 'Send an email directly.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'gmail_create_draft' => [
-                'class' => GmailCreateDraft::class,
-                'type' => 'write',
-                'name' => 'Create Draft',
-                'description' => 'Create a draft email.',
-                'icon' => 'ph:note',
-            ],
-            'gmail_send_draft' => [
-                'class' => GmailSendDraft::class,
-                'type' => 'write',
-                'name' => 'Send Draft',
-                'description' => 'Send a previously created draft.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'gmail_reply' => [
-                'class' => GmailReply::class,
-                'type' => 'write',
-                'name' => 'Reply',
-                'description' => 'Reply to an existing email thread.',
-                'icon' => 'ph:arrow-bend-up-left',
-            ],
-            'gmail_mark_read' => [
-                'class' => GmailMarkRead::class,
-                'type' => 'write',
-                'name' => 'Mark Read',
-                'description' => 'Mark messages as read.',
-                'icon' => 'ph:envelope-open',
-            ],
-            'gmail_mark_unread' => [
-                'class' => GmailMarkUnread::class,
-                'type' => 'write',
-                'name' => 'Mark Unread',
-                'description' => 'Mark messages as unread.',
-                'icon' => 'ph:envelope',
-            ],
-            'gmail_trash' => [
-                'class' => GmailTrash::class,
-                'type' => 'write',
-                'name' => 'Trash',
-                'description' => 'Move messages to trash.',
-                'icon' => 'ph:trash',
-            ],
-            'gmail_untrash' => [
-                'class' => GmailUntrash::class,
-                'type' => 'write',
-                'name' => 'Untrash',
-                'description' => 'Restore messages from trash.',
-                'icon' => 'ph:arrow-counter-clockwise',
-            ],
-            'gmail_archive' => [
-                'class' => GmailArchive::class,
-                'type' => 'write',
-                'name' => 'Archive',
-                'description' => 'Archive messages (remove from inbox).',
-                'icon' => 'ph:archive',
-            ],
-            'gmail_add_labels' => [
-                'class' => GmailAddLabels::class,
-                'type' => 'write',
-                'name' => 'Add Labels',
-                'description' => 'Add labels to messages.',
-                'icon' => 'ph:tag',
-            ],
-            'gmail_remove_labels' => [
-                'class' => GmailRemoveLabels::class,
-                'type' => 'write',
-                'name' => 'Remove Labels',
-                'description' => 'Remove labels from messages.',
-                'icon' => 'ph:tag',
-            ],
-            'gmail_save_attachment' => [
-                'class' => GmailSaveAttachment::class,
-                'type' => 'write',
-                'name' => 'Save Attachment',
-                'description' => 'Download and save an email attachment to workspace files.',
-                'icon' => 'ph:paperclip',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

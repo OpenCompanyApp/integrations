@@ -14,46 +14,68 @@ use OpenCompany\Integrations\GoogleMaps\Tools\GoogleMapsGetDirections;
 use OpenCompany\Integrations\GoogleMaps\Tools\GoogleMapsGetDistanceMatrix;
 use OpenCompany\Integrations\GoogleMaps\Tools\GoogleMapsGetCurrentUser;
 
-class GoogleMapsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleMapsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * The application name used as the integration identifier.
      */
     public function appName(): string
     {
         return 'google-maps';
-    }
-
-    /**
-     * Short metadata shown in tool listings and UI badges.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'geocoding, places, directions, distance',
-            'description' => 'Google Maps geocoding, places, directions & distance',
-            'icon' => 'ph:map-pin',
-            'logo' => 'simple-icons:googlemaps',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the integrations catalog.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Google Maps',
-            'description' => 'Geocode addresses, search places, get directions, and calculate distances using Google Maps Platform',
-            'icon' => 'ph:map-pin',
-            'logo' => 'simple-icons:googlemaps',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.google.com/maps/documentation',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the Google Maps integration.
      *
      * @return array<int, array<string, mixed>>

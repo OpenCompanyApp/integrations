@@ -19,15 +19,71 @@ use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksListEstimates;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksCreateEstimate;
 use OpenCompany\Integrations\ZohoBooks\Tools\ZohoBooksGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Zoho Books integration.
- *
- * Implements ConfigurableIntegration for multi-account support with
- * access_token and organization_id as required credential fields.
+ * Registers the integration provider and exposes its tools.
  */
-class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration
+class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application name used as the integration identifier.
      */
     public function appName(): string
@@ -35,7 +91,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration
         return 'zoho_books';
     }
 
-    /**
+/**
      * Short metadata for the app, shown in tool listings.
      */
     public function appMeta(): array
@@ -48,7 +104,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the UI integration catalog.
      */
     public function integrationMeta(): array
@@ -62,9 +118,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://www.zoho.com/books/api/v3/',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Zoho Books integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -288,8 +342,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

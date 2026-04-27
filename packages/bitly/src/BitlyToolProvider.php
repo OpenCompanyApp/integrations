@@ -15,16 +15,70 @@ use OpenCompany\Integrations\Bitly\Tools\BitlyGetGroup;
 use OpenCompany\Integrations\Bitly\Tools\BitlyCreateBitlink;
 use OpenCompany\Integrations\Bitly\Tools\BitlyGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Bitly integration.
- *
- * Registers all Bitly tools with the integration core, provides configuration
- * schema for the access token credential, and supports multi-account usage
- * through account-aware service resolution.
+ * Registers the integration provider and exposes its tools.
  */
-class BitlyToolProvider implements ToolProvider, ConfigurableIntegration
+class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application identifier for this integration.
      *
      * @return string The integration app name
@@ -34,7 +88,7 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration
         return 'bitly';
     }
 
-    /**
+/**
      * Get metadata for display in the OpenCompany UI.
      *
      * @return array UI metadata (label, description, icons)
@@ -49,7 +103,7 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for the OpenCompany integrations directory.
      *
      * @return array Integration metadata (name, description, category, etc.)
@@ -65,9 +119,7 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://dev.bitly.com/api-reference',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the Bitly integration.
      *
      * Defines the access_token field required to authenticate with the Bitly API.
@@ -245,8 +297,7 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration
      * @return bool Always true
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

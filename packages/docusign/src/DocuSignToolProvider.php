@@ -15,50 +15,70 @@ use OpenCompany\Integrations\DocuSign\Tools\DocuSignListDocuments;
 use OpenCompany\Integrations\DocuSign\Tools\DocuSignListEnvelopes;
 use OpenCompany\Integrations\DocuSign\Tools\DocuSignListTemplates;
 
-class DocuSignToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class DocuSignToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Unique identifier for this integration.
      */
     public function appName(): string
     {
         return 'docusign';
-    }
-
-    /**
-     * Short metadata for tool badges and labels.
-     *
-     * @return array<string, string>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'envelopes, templates, documents',
-            'description' => 'Electronic signatures',
-            'icon' => 'ph:sign',
-            'logo' => 'simple-icons:docusign',
-        ];
-    }
-
-    /**
-     * Full integration metadata for the marketplace / settings UI.
-     *
-     * @return array<string, string>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'DocuSign',
-            'description' => 'Electronic signature and agreement management',
-            'icon' => 'ph:sign',
-            'logo' => 'simple-icons:docusign',
-            'category' => 'productivity',
-            'badge' => 'verified',
-            'docs_url' => 'https://developers.docusign.com/docs/esign-rest-api/reference/',
-        ];
-    }
-
-    /**
+    }    /**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

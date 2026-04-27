@@ -13,16 +13,70 @@ use OpenCompany\Integrations\WhatsApp\Tools\WhatsAppListContacts;
 use OpenCompany\Integrations\WhatsApp\Tools\WhatsAppSendTemplate;
 use OpenCompany\Integrations\WhatsApp\Tools\WhatsAppGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the WhatsApp Business API integration.
- *
- * Implements {@see ConfigurableIntegration} so the OpenCompany platform can
- * render configuration UI, test connections, and manage multi-account
- * credentials automatically.
+ * Registers the integration provider and exposes its tools.
  */
-class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration
+class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Machine name used as the integration key.
      */
     public function appName(): string
@@ -30,7 +84,7 @@ class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration
         return 'whatsapp';
     }
 
-    /**
+/**
      * Short metadata shown in tool-chips and navigation.
      */
     public function appMeta(): array
@@ -43,7 +97,7 @@ class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the marketplace / settings UI.
      */
     public function integrationMeta(): array
@@ -57,9 +111,7 @@ class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.facebook.com/docs/whatsapp/cloud-api',
         ];
-    }
-
-    /**
+    }/**
      * Schema describing every configuration field the integration needs.
      *
      * @return array<int, array<string, mixed>>

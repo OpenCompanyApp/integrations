@@ -22,8 +22,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleDocsSetHeading;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_docs';
@@ -50,9 +111,7 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/docs.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -114,128 +173,7 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_docs_get' => [
-                'class' => GoogleDocsGet::class,
-                'type' => 'read',
-                'name' => 'Docs Get',
-                'description' => 'Get document content as text or structured outline.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_get_structure' => [
-                'class' => GoogleDocsGetStructure::class,
-                'type' => 'read',
-                'name' => 'Docs Get Structure',
-                'description' => 'Get document structure with heading hierarchy and indexes.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_search_text' => [
-                'class' => GoogleDocsSearchText::class,
-                'type' => 'read',
-                'name' => 'Docs Search Text',
-                'description' => 'Find text occurrences with start/end indexes.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_create' => [
-                'class' => GoogleDocsCreate::class,
-                'type' => 'write',
-                'name' => 'Docs Create',
-                'description' => 'Create a new blank document.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_insert_text' => [
-                'class' => GoogleDocsInsertText::class,
-                'type' => 'write',
-                'name' => 'Docs Insert Text',
-                'description' => 'Insert text at a position or end of document.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_replace_all' => [
-                'class' => GoogleDocsReplaceAll::class,
-                'type' => 'write',
-                'name' => 'Docs Replace All',
-                'description' => 'Find and replace all occurrences of text.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_delete_range' => [
-                'class' => GoogleDocsDeleteRange::class,
-                'type' => 'write',
-                'name' => 'Docs Delete Range',
-                'description' => 'Delete content by index range.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_format_text' => [
-                'class' => GoogleDocsFormatText::class,
-                'type' => 'write',
-                'name' => 'Docs Format Text',
-                'description' => 'Apply formatting (bold, italic, font, color, etc.) to a text range.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_set_heading' => [
-                'class' => GoogleDocsSetHeading::class,
-                'type' => 'write',
-                'name' => 'Docs Set Heading',
-                'description' => 'Set paragraph style (heading level, title, subtitle).',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_add_bullets' => [
-                'class' => GoogleDocsAddBullets::class,
-                'type' => 'write',
-                'name' => 'Docs Add Bullets',
-                'description' => 'Add bullet or numbered list formatting.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_remove_bullets' => [
-                'class' => GoogleDocsRemoveBullets::class,
-                'type' => 'write',
-                'name' => 'Docs Remove Bullets',
-                'description' => 'Remove list formatting from a range.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_insert_table' => [
-                'class' => GoogleDocsInsertTable::class,
-                'type' => 'write',
-                'name' => 'Docs Insert Table',
-                'description' => 'Insert a table with specified rows and columns.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_insert_image' => [
-                'class' => GoogleDocsInsertImage::class,
-                'type' => 'write',
-                'name' => 'Docs Insert Image',
-                'description' => 'Insert an image from a URL.',
-                'icon' => 'ph:file-doc',
-            ],
-            'google_docs_insert_page_break' => [
-                'class' => GoogleDocsInsertPageBreak::class,
-                'type' => 'write',
-                'name' => 'Docs Insert Page Break',
-                'description' => 'Insert a page break.',
-                'icon' => 'ph:file-doc',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

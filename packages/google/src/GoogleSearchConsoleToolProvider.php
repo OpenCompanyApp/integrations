@@ -17,8 +17,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleSearchConsoleSubmitSitemap;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_search_console';
@@ -45,9 +106,7 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/searchconsole.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -109,93 +168,7 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_search_console_list_sites' => [
-                'class' => GoogleSearchConsoleListSites::class,
-                'type' => 'read',
-                'name' => 'List Sites',
-                'description' => 'List all verified Search Console properties.',
-                'icon' => 'ph:globe',
-            ],
-            'google_search_console_performance' => [
-                'class' => GoogleSearchConsolePerformance::class,
-                'type' => 'read',
-                'name' => 'Search Performance',
-                'description' => 'Query search performance data (clicks, impressions, CTR, position).',
-                'icon' => 'ph:chart-line-up',
-            ],
-            'google_search_console_inspect_url' => [
-                'class' => GoogleSearchConsoleInspectUrl::class,
-                'type' => 'read',
-                'name' => 'Inspect URL',
-                'description' => 'Check a URL\'s indexing status.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'google_search_console_list_sitemaps' => [
-                'class' => GoogleSearchConsoleListSitemaps::class,
-                'type' => 'read',
-                'name' => 'List Sitemaps',
-                'description' => 'List all submitted sitemaps for a property.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'google_search_console_get_sitemap' => [
-                'class' => GoogleSearchConsoleGetSitemap::class,
-                'type' => 'read',
-                'name' => 'Get Sitemap',
-                'description' => 'Get details of a specific sitemap.',
-                'icon' => 'ph:file-text',
-            ],
-            'google_search_console_submit_sitemap' => [
-                'class' => GoogleSearchConsoleSubmitSitemap::class,
-                'type' => 'write',
-                'name' => 'Submit Sitemap',
-                'description' => 'Submit a new sitemap.',
-                'icon' => 'ph:file-arrow-up',
-            ],
-            'google_search_console_delete_sitemap' => [
-                'class' => GoogleSearchConsoleDeleteSitemap::class,
-                'type' => 'write',
-                'name' => 'Delete Sitemap',
-                'description' => 'Remove a sitemap.',
-                'icon' => 'ph:trash',
-            ],
-            'google_search_console_add_site' => [
-                'class' => GoogleSearchConsoleAddSite::class,
-                'type' => 'write',
-                'name' => 'Add Site',
-                'description' => 'Add a new site property.',
-                'icon' => 'ph:plus',
-            ],
-            'google_search_console_delete_site' => [
-                'class' => GoogleSearchConsoleDeleteSite::class,
-                'type' => 'write',
-                'name' => 'Delete Site',
-                'description' => 'Remove a site property.',
-                'icon' => 'ph:trash',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

@@ -13,15 +13,69 @@ use OpenCompany\Integrations\AssemblyAI\Tools\AssemblyAIUpload;
 use OpenCompany\Integrations\AssemblyAI\Tools\AssemblyAIGetLemons;
 use OpenCompany\Integrations\AssemblyAI\Tools\AssemblyAIGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the AssemblyAI integration.
- *
- * Registers all AssemblyAI tools, defines configuration schema,
- * and supports multi-account via CredentialResolver.
+ * Registers the integration provider and exposes its tools.
  */
-class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration
+class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application name used for registration.
      */
     public function appName(): string
@@ -29,7 +83,7 @@ class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration
         return 'assemblyai';
     }
 
-    /**
+/**
      * Short metadata for UI display.
      */
     public function appMeta(): array
@@ -42,7 +96,7 @@ class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integrations UI.
      */
     public function integrationMeta(): array
@@ -56,9 +110,7 @@ class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://www.assemblyai.com/docs',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -227,8 +279,7 @@ class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration
      * @return Tool The instantiated tool.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

@@ -16,50 +16,69 @@ use OpenCompany\Integrations\Mollie\Tools\MollieCreateSubscription;
 use OpenCompany\Integrations\Mollie\Tools\MollieListInvoices;
 use OpenCompany\Integrations\Mollie\Tools\MollieGetCurrentUser;
 
-class MollieToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class MollieToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'mollie';
-    }
-
-    /**
-     * Get metadata for the application display.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'payments, customers, subscriptions, invoices',
-            'description' => 'Payment processing',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:mollie',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the marketplace/UI.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Mollie',
-            'description' => 'Payment processing, subscriptions and invoicing',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:mollie',
-            'category' => 'payments',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.mollie.com',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

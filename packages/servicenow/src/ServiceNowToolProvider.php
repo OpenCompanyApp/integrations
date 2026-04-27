@@ -17,16 +17,69 @@ use OpenCompany\Integrations\ServiceNow\Tools\ServiceNowListTasks;
 use OpenCompany\Integrations\ServiceNow\Tools\ServiceNowListUsers;
 use OpenCompany\Integrations\ServiceNow\Tools\ServiceNowUpdateIncident;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider and configurable integration for ServiceNow.
- *
- * Implements {@see ToolProvider} to expose 10 ServiceNow tools and
- * {@see ConfigurableIntegration} for multi-account support with
- * username, password, and instance configuration fields.
+ * Registers the integration provider and exposes its tools.
  */
-class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration
+class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'basic',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'username_password',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application identifier used for credential resolution and routing.
      */
     public function appName(): string
@@ -34,7 +87,7 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration
         return 'servicenow';
     }
 
-    /**
+/**
      * Short metadata for the integration registry.
      */
     public function appMeta(): array
@@ -47,7 +100,7 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Detailed metadata shown in the integration catalog.
      */
     public function integrationMeta(): array
@@ -61,9 +114,7 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developer.servicenow.com/dev.do#!/reference/api/now/rest',
         ];
-    }
-
-    /**
+    }/**
      * Schema for the per-account configuration form.
      *
      * @return array<int, array<string, mixed>>
@@ -254,8 +305,7 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

@@ -15,8 +15,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleContactsUpdate;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_contacts';
@@ -41,9 +102,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/people.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -108,79 +167,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_contacts_search_contacts' => [
-                'class' => GoogleContactsSearchContacts::class,
-                'type' => 'read',
-                'name' => 'Search Contacts',
-                'description' => 'Fuzzy search contacts by name, email, or phone.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'google_contacts_get' => [
-                'class' => GoogleContactsGet::class,
-                'type' => 'read',
-                'name' => 'Get Contact',
-                'description' => 'Get full details of a single contact.',
-                'icon' => 'ph:user',
-            ],
-            'google_contacts_list' => [
-                'class' => GoogleContactsList::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List all contacts with pagination.',
-                'icon' => 'ph:address-book',
-            ],
-            'google_contacts_list_groups' => [
-                'class' => GoogleContactsListGroups::class,
-                'type' => 'read',
-                'name' => 'List Groups',
-                'description' => 'List all contact groups/labels with member counts.',
-                'icon' => 'ph:users-three',
-            ],
-            'google_contacts_create' => [
-                'class' => GoogleContactsCreate::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create a new contact.',
-                'icon' => 'ph:user-plus',
-            ],
-            'google_contacts_update' => [
-                'class' => GoogleContactsUpdate::class,
-                'type' => 'write',
-                'name' => 'Update Contact',
-                'description' => 'Update an existing contact.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_contacts_delete' => [
-                'class' => GoogleContactsDelete::class,
-                'type' => 'write',
-                'name' => 'Delete Contact',
-                'description' => 'Permanently delete a contact.',
-                'icon' => 'ph:trash',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

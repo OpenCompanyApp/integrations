@@ -15,50 +15,70 @@ use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsSendMessage;
 use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsListChats;
 use OpenCompany\Integrations\MicrosoftTeams\Tools\MicrosoftTeamsGetCurrentUser;
 
-class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class MicrosoftTeamsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'microsoft-teams';
-    }
-
-    /**
-     * Get application metadata for UI display.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'teams, channels, messages, chats',
-            'description' => 'Team collaboration',
-            'icon' => 'ph:microsoft-teams-logo',
-            'logo' => 'logos:microsoft-teams',
-        ];
-    }
-
-    /**
-     * Get integration metadata for marketplace display.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Microsoft Teams',
-            'description' => 'Team collaboration and messaging via Microsoft Graph API',
-            'icon' => 'ph:microsoft-teams-logo',
-            'logo' => 'logos:microsoft-teams',
-            'category' => 'communication',
-            'badge' => 'verified',
-            'docs_url' => 'https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for this integration.
      *
      * @return array<int, array<string, mixed>>

@@ -15,50 +15,70 @@ use OpenCompany\Integrations\Spotify\Tools\SpotifyCreatePlaylist;
 use OpenCompany\Integrations\Spotify\Tools\SpotifyListAlbums;
 use OpenCompany\Integrations\Spotify\Tools\SpotifyGetCurrentUser;
 
-class SpotifyToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class SpotifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_manual_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+              0 => 'Token acquisition may happen outside this package, but the host only needs to store the resulting token.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name used for registration.
      */
     public function appName(): string
     {
         return 'spotify';
-    }
-
-    /**
-     * Get metadata for the tool provider UI.
-     *
-     * @return array<string, mixed> UI metadata.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'search, tracks, artists, playlists, albums',
-            'description' => 'Music streaming',
-            'icon' => 'ph:music-note',
-            'logo' => 'simple-icons:spotify',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the marketplace UI.
-     *
-     * @return array<string, mixed> Integration metadata.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Spotify',
-            'description' => 'Music streaming and playlist management',
-            'icon' => 'ph:music-note',
-            'logo' => 'simple-icons:spotify',
-            'category' => 'media',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.spotify.com/documentation/web-api',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>> The configuration fields.

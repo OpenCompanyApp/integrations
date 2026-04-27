@@ -18,20 +18,73 @@ use OpenCompany\Integrations\ClickSend\Tools\ClickSendSendPostLetter;
 use OpenCompany\Integrations\ClickSend\Tools\ClickSendSendSms;
 use OpenCompany\Integrations\ClickSend\Tools\ClickSendSendVoice;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Registers all ClickSend tools and provides integration metadata.
- *
- * Exposes 10 tools covering SMS, email, voice, post letters,
- * contact lists, and account management via the ToolProvider contract.
+ * Registers the integration provider and exposes its tools.
  */
-class ClickSendToolProvider implements ToolProvider, ConfigurableIntegration
+class ClickSendToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    public function appName(): string
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+public function appName(): string
     {
         return 'clicksend';
     }
 
-    public function appMeta(): array
+public function appMeta(): array
     {
         return [
             'label' => 'ClickSend',
@@ -41,7 +94,7 @@ class ClickSendToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    public function integrationMeta(): array
+public function integrationMeta(): array
     {
         return [
             'name' => 'ClickSend',
@@ -52,170 +105,7 @@ class ClickSendToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.clicksend.com/docs/rest/',
         ];
-    }
-
-    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'username',
-                'type' => 'text',
-                'label' => 'Username',
-                'placeholder' => 'your-username',
-                'hint' => 'Your ClickSend account username.',
-                'required' => true,
-            ],
-            [
-                'key' => 'api_key',
-                'type' => 'secret',
-                'label' => 'API Key',
-                'placeholder' => 'your-api-key',
-                'hint' => 'Your ClickSend API key from account settings.',
-                'required' => true,
-            ],
-        ];
-    }
-
-    /**
-     * Test the ClickSend connection using the provided credentials.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'username' and 'api_key'
-     * @return array{success: bool, message?: string, error?: string}
-     */
-    public function testConnection(array $config): array
-    {
-        $username = $config['username'] ?? '';
-        $apiKey = $config['api_key'] ?? '';
-
-        if (empty($username) || empty($apiKey)) {
-            return ['success' => false, 'error' => 'ClickSend username and API key are required.'];
-        }
-
-        try {
-            $response = Http::withBasicAuth($username, $apiKey)
-                ->timeout(10)
-                ->get('https://rest.clicksend.com/v3/account');
-
-            $body = $response->json() ?? [];
-
-            if ($response->successful()) {
-                $data = $body['data'] ?? [];
-                $email = $data['email'] ?? 'Unknown';
-
-                return [
-                    'success' => true,
-                    'message' => "Connected to ClickSend account ({$email}).",
-                ];
-            }
-
-            $error = $body['response_msg'] ?? $response->body();
-
-            return [
-                'success' => false,
-                'error' => 'ClickSend API error: ' . (is_string($error) ? $error : json_encode($error)),
-            ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-    }
-
-    /** @return array<string, string> */
-    public function validationRules(): array
-    {
-        return [
-            'username' => 'nullable|string',
-            'api_key' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            // SMS
-            'clicksend_send_sms' => [
-                'class' => ClickSendSendSms::class,
-                'type' => 'write',
-                'name' => 'Send SMS',
-                'description' => 'Send one or more SMS messages via ClickSend.',
-                'icon' => 'ph:chat-circle-text',
-            ],
-            'clicksend_get_sms_history' => [
-                'class' => ClickSendGetSmsHistory::class,
-                'type' => 'read',
-                'name' => 'Get SMS History',
-                'description' => 'Get SMS message history with date filtering and pagination.',
-                'icon' => 'ph:clock-counter-clockwise',
-            ],
-            'clicksend_get_sms_price' => [
-                'class' => ClickSendGetSmsPrice::class,
-                'type' => 'read',
-                'name' => 'Get SMS Price',
-                'description' => 'Get pricing for SMS messages before sending.',
-                'icon' => 'ph:currency-dollar',
-            ],
-            // Email
-            'clicksend_send_email' => [
-                'class' => ClickSendSendEmail::class,
-                'type' => 'write',
-                'name' => 'Send Email',
-                'description' => 'Send an email message via ClickSend.',
-                'icon' => 'ph:envelope-simple',
-            ],
-            'clicksend_get_email_history' => [
-                'class' => ClickSendGetEmailHistory::class,
-                'type' => 'read',
-                'name' => 'Get Email History',
-                'description' => 'Get email message history with pagination.',
-                'icon' => 'ph:clock-counter-clockwise',
-            ],
-            // Voice
-            'clicksend_send_voice' => [
-                'class' => ClickSendSendVoice::class,
-                'type' => 'write',
-                'name' => 'Send Voice',
-                'description' => 'Send one or more voice messages via ClickSend.',
-                'icon' => 'ph:phone',
-            ],
-            'clicksend_get_voice_history' => [
-                'class' => ClickSendGetVoiceHistory::class,
-                'type' => 'read',
-                'name' => 'Get Voice History',
-                'description' => 'Get voice message history with pagination.',
-                'icon' => 'ph:clock-counter-clockwise',
-            ],
-            // Post Letters
-            'clicksend_send_post_letter' => [
-                'class' => ClickSendSendPostLetter::class,
-                'type' => 'write',
-                'name' => 'Send Post Letter',
-                'description' => 'Send a post letter via ClickSend.',
-                'icon' => 'ph:envelope',
-            ],
-            // Account
-            'clicksend_get_account_balance' => [
-                'class' => ClickSendGetAccountBalance::class,
-                'type' => 'read',
-                'name' => 'Get Account Balance',
-                'description' => 'Get the current ClickSend account balance.',
-                'icon' => 'ph:wallet',
-            ],
-            // Contact Lists
-            'clicksend_list_contact_lists' => [
-                'class' => ClickSendListContactLists::class,
-                'type' => 'read',
-                'name' => 'List Contact Lists',
-                'description' => 'List all contact lists in ClickSend.',
-                'icon' => 'ph:users',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/clicksend.md';
-    }
-
-    public function credentialFields(): array
+    }public function credentialFields(): array
     {
         return [
             ['key' => 'username', 'type' => 'text', 'label' => 'Username', 'required' => true],
@@ -235,8 +125,7 @@ class ClickSendToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed> $context  Optional context with account credentials
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
+    {        return new $class($this->resolveService($context));
     }
 
     /**

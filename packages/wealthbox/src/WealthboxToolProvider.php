@@ -16,50 +16,69 @@ use OpenCompany\Integrations\Wealthbox\Tools\WealthboxListWorkflows;
 use OpenCompany\Integrations\Wealthbox\Tools\WealthboxListEvents;
 use OpenCompany\Integrations\Wealthbox\Tools\WealthboxGetCurrentUser;
 
-class WealthboxToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class WealthboxToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'bearer_token',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'manual_token',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_token',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'wealthbox';
-    }
-
-    /**
-     * Get metadata for displaying the integration in the UI.
-     *
-     * @return array{label: string, description: string, icon: string, logo: string}
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'contacts, tasks, opportunities, workflows, events',
-            'description' => 'CRM for financial advisors',
-            'icon' => 'ph:address-book',
-            'logo' => 'simple-icons:wealthbox',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the marketplace / integrations page.
-     *
-     * @return array{name: string, description: string, icon: string, logo: string, category: string, badge: string, docs_url: string}
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Wealthbox',
-            'description' => 'CRM platform for financial advisors — manage contacts, tasks, opportunities, workflows, and events.',
-            'icon' => 'ph:address-book',
-            'logo' => 'simple-icons:wealthbox',
-            'category' => 'crm',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.wealthbox.com',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the Wealthbox integration.
      *
      * @return array<int, array<string, mixed>>

@@ -14,15 +14,66 @@ use OpenCompany\Integrations\SparkPost\Tools\SparkPostSendTransmission;
 use OpenCompany\Integrations\SparkPost\Tools\SparkPostListWebhooks;
 use OpenCompany\Integrations\SparkPost\Tools\SparkPostGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the SparkPost email delivery integration.
- *
- * Registers 7 tools for managing sending domains, templates, transmissions,
- * webhooks, and account information via the SparkPost REST API.
+ * Registers the integration provider and exposes its tools.
  */
-class SparkPostToolProvider implements ToolProvider, ConfigurableIntegration
+class SparkPostToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+/**
      * {@inheritdoc}
      */
     public function appName(): string

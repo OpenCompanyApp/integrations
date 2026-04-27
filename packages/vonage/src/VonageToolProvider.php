@@ -14,50 +14,68 @@ use OpenCompany\Integrations\Vonage\Tools\VonageListApplications;
 use OpenCompany\Integrations\Vonage\Tools\VonageVerifyRequest;
 use OpenCompany\Integrations\Vonage\Tools\VonageVerifyCheck;
 
-class VonageToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'vonage';
-    }
-
-    /**
-     * Get application metadata for display purposes.
-     *
-     * @return array<string, mixed>
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'sms, verify, numbers',
-            'description' => 'Communications API',
-            'icon' => 'ph:chat-circle-text',
-            'logo' => 'simple-icons:vonage',
-        ];
-    }
-
-    /**
-     * Get integration metadata for the marketplace UI.
-     *
-     * @return array<string, mixed>
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Vonage',
-            'description' => 'Communications platform for SMS, voice, and verification',
-            'icon' => 'ph:chat-circle-text',
-            'logo' => 'simple-icons:vonage',
-            'category' => 'communication',
-            'badge' => 'verified',
-            'docs_url' => 'https://developer.vonage.com/api',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration settings.
      *
      * @return array<int, array<string, mixed>>

@@ -28,8 +28,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleSheetsWriteRange;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_sheets';
@@ -56,9 +117,7 @@ class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/sheets.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -127,170 +186,7 @@ class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_sheets_get_metadata' => [
-                'class' => GoogleSheetsGetMetadata::class,
-                'type' => 'read',
-                'name' => 'Get Metadata',
-                'description' => 'Get spreadsheet title and sheet list.',
-                'icon' => 'ph:table',
-            ],
-            'google_sheets_read_range' => [
-                'class' => GoogleSheetsReadRange::class,
-                'type' => 'read',
-                'name' => 'Read Range',
-                'description' => 'Read cell values from a range.',
-                'icon' => 'ph:table',
-            ],
-            'google_sheets_batch_read' => [
-                'class' => GoogleSheetsBatchRead::class,
-                'type' => 'read',
-                'name' => 'Batch Read',
-                'description' => 'Read multiple ranges in one call.',
-                'icon' => 'ph:table',
-            ],
-            'google_sheets_find' => [
-                'class' => GoogleSheetsFind::class,
-                'type' => 'read',
-                'name' => 'Find Text',
-                'description' => 'Search for text in a spreadsheet.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'google_sheets_create' => [
-                'class' => GoogleSheetsCreate::class,
-                'type' => 'write',
-                'name' => 'Create Spreadsheet',
-                'description' => 'Create a new empty spreadsheet.',
-                'icon' => 'ph:plus',
-            ],
-            'google_sheets_write_range' => [
-                'class' => GoogleSheetsWriteRange::class,
-                'type' => 'write',
-                'name' => 'Write Range',
-                'description' => 'Write values to a range.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_sheets_append' => [
-                'class' => GoogleSheetsAppend::class,
-                'type' => 'write',
-                'name' => 'Append Rows',
-                'description' => 'Append rows after the last data row.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_sheets_clear' => [
-                'class' => GoogleSheetsClear::class,
-                'type' => 'write',
-                'name' => 'Clear Range',
-                'description' => 'Clear all values from a range.',
-                'icon' => 'ph:eraser',
-            ],
-            'google_sheets_batch_write' => [
-                'class' => GoogleSheetsBatchWrite::class,
-                'type' => 'write',
-                'name' => 'Batch Write',
-                'description' => 'Write to multiple ranges in one call.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_sheets_add_sheet' => [
-                'class' => GoogleSheetsAddSheet::class,
-                'type' => 'write',
-                'name' => 'Add Sheet',
-                'description' => 'Add a new sheet/tab.',
-                'icon' => 'ph:plus',
-            ],
-            'google_sheets_delete_sheet' => [
-                'class' => GoogleSheetsDeleteSheet::class,
-                'type' => 'write',
-                'name' => 'Delete Sheet',
-                'description' => 'Delete a sheet/tab.',
-                'icon' => 'ph:trash',
-            ],
-            'google_sheets_rename_sheet' => [
-                'class' => GoogleSheetsRenameSheet::class,
-                'type' => 'write',
-                'name' => 'Rename Sheet',
-                'description' => 'Rename a sheet/tab.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_sheets_duplicate_sheet' => [
-                'class' => GoogleSheetsDuplicateSheet::class,
-                'type' => 'write',
-                'name' => 'Duplicate Sheet',
-                'description' => 'Copy a sheet/tab within the spreadsheet.',
-                'icon' => 'ph:copy',
-            ],
-            'google_sheets_insert_rows' => [
-                'class' => GoogleSheetsInsertRows::class,
-                'type' => 'write',
-                'name' => 'Insert Rows',
-                'description' => 'Insert blank rows.',
-                'icon' => 'ph:rows',
-            ],
-            'google_sheets_delete_rows' => [
-                'class' => GoogleSheetsDeleteRows::class,
-                'type' => 'write',
-                'name' => 'Delete Rows',
-                'description' => 'Delete rows.',
-                'icon' => 'ph:rows',
-            ],
-            'google_sheets_insert_columns' => [
-                'class' => GoogleSheetsInsertColumns::class,
-                'type' => 'write',
-                'name' => 'Insert Columns',
-                'description' => 'Insert blank columns.',
-                'icon' => 'ph:columns',
-            ],
-            'google_sheets_delete_columns' => [
-                'class' => GoogleSheetsDeleteColumns::class,
-                'type' => 'write',
-                'name' => 'Delete Columns',
-                'description' => 'Delete columns.',
-                'icon' => 'ph:columns',
-            ],
-            'google_sheets_sort_range' => [
-                'class' => GoogleSheetsSortRange::class,
-                'type' => 'write',
-                'name' => 'Sort Range',
-                'description' => 'Sort data by column.',
-                'icon' => 'ph:sort-ascending',
-            ],
-            'google_sheets_add_filter' => [
-                'class' => GoogleSheetsAddFilter::class,
-                'type' => 'write',
-                'name' => 'Add Filter',
-                'description' => 'Apply filter dropdowns to a range.',
-                'icon' => 'ph:funnel',
-            ],
-            'google_sheets_remove_filter' => [
-                'class' => GoogleSheetsRemoveFilter::class,
-                'type' => 'write',
-                'name' => 'Remove Filter',
-                'description' => 'Remove filter from a sheet.',
-                'icon' => 'ph:funnel',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

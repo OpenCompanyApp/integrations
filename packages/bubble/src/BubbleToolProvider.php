@@ -12,15 +12,69 @@ use OpenCompany\Integrations\Bubble\Tools\BubbleCreateRecord;
 use OpenCompany\Integrations\Bubble\Tools\BubbleUpdateRecord;
 use OpenCompany\Integrations\Bubble\Tools\BubbleDeleteRecord;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Bubble integration.
- *
- * Implements ConfigurableIntegration for multi-account support,
- * connection testing, and configuration schema.
+ * Registers the integration provider and exposes its tools.
  */
-class BubbleToolProvider implements ToolProvider, ConfigurableIntegration
+class BubbleToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application identifier used for namespacing.
      */
     public function appName(): string
@@ -28,7 +82,7 @@ class BubbleToolProvider implements ToolProvider, ConfigurableIntegration
         return 'bubble';
     }
 
-    /**
+/**
      * Short metadata shown in tool listings and UI badges.
      */
     public function appMeta(): array
@@ -41,7 +95,7 @@ class BubbleToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Full integration metadata for the integrations registry.
      */
     public function integrationMeta(): array
@@ -55,9 +109,7 @@ class BubbleToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://manual.bubble.io/core-resources/api/data-api',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Bubble integration.
      *
      * @return array<int, array<string, mixed>>
@@ -228,8 +280,7 @@ class BubbleToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Context with optional 'account' key for multi-account.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

@@ -16,16 +16,69 @@ use OpenCompany\Integrations\Close\Tools\CloseListContacts;
 use OpenCompany\Integrations\Close\Tools\CloseListLeads;
 use OpenCompany\Integrations\Close\Tools\CloseUpdateLead;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for Close CRM integration.
- *
- * Implements ConfigurableIntegration for multi-account support, config schema,
- * connection testing, and credential field definitions. Registers all Close
- * CRM tools (leads, contacts, activities, tasks, user).
+ * Registers the integration provider and exposes its tools.
  */
-class CloseToolProvider implements ToolProvider, ConfigurableIntegration
+class CloseToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application identifier for this integration.
      */
     public function appName(): string
@@ -33,7 +86,7 @@ class CloseToolProvider implements ToolProvider, ConfigurableIntegration
         return 'close';
     }
 
-    /**
+/**
      * Get short metadata describing the integration's capabilities.
      */
     public function appMeta(): array
@@ -46,7 +99,7 @@ class CloseToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get full integration metadata for display and categorization.
      */
     public function integrationMeta(): array
@@ -60,9 +113,7 @@ class CloseToolProvider implements ToolProvider, ConfigurableIntegration
             'badge'       => 'verified',
             'docs_url'    => 'https://developer.close.com/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the Close integration settings UI.
      *
      * @return array<int, array<string, mixed>>
@@ -243,8 +294,7 @@ class CloseToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

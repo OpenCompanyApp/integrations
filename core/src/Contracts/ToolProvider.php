@@ -67,6 +67,9 @@ interface ToolProvider
      *
      * Used by CLI setup flows (KosmoKrator) to prompt users for credentials.
      * Return an empty array if the integration doesn't need credentials.
+     * For OAuth redirect, device-code, service-account, web-only, or CLI-only
+     * setup behavior, expose explicit host capability metadata through the
+     * optional HasIntegrationCapabilities contract.
      *
      * Each entry:
      *   'key'         => string  Config storage key (e.g., 'api_key')

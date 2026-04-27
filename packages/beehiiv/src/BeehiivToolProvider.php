@@ -17,15 +17,69 @@ use OpenCompany\Integrations\Beehiiv\Tools\BeehiivListPosts;
 use OpenCompany\Integrations\Beehiiv\Tools\BeehiivListSubscribers;
 use OpenCompany\Integrations\Beehiiv\Tools\BeehiivUpdatePost;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Beehiiv newsletter platform integration.
- *
- * Implements ConfigurableIntegration for API key + publication_id configuration
- * and provides all Beehiiv tools (posts, subscribers, stats).
+ * Registers the integration provider and exposes its tools.
  */
-class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration
+class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the application name identifier.
      */
     public function appName(): string
@@ -33,7 +87,7 @@ class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration
         return 'beehiiv';
     }
 
-    /**
+/**
      * Get metadata for display in the application UI.
      */
     public function appMeta(): array
@@ -46,7 +100,7 @@ class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get integration metadata for the marketplace / integration catalog.
      */
     public function integrationMeta(): array
@@ -60,9 +114,7 @@ class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.beehiiv.com/docs',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for this integration.
      *
      * Defines the fields required: API key and publication ID.
@@ -243,8 +295,7 @@ class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration
      * Confirm this class represents an integration.
      */
     public function isIntegration(): bool
-    {
-        return true;
+    {        return true;
     }
 
     /**

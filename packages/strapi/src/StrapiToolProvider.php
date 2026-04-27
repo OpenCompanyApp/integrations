@@ -15,46 +15,68 @@ use OpenCompany\Integrations\Strapi\Tools\StrapiListContentTypes;
 use OpenCompany\Integrations\Strapi\Tools\StrapiListEntries;
 use OpenCompany\Integrations\Strapi\Tools\StrapiUpdateEntry;
 
-class StrapiToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class StrapiToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the application name identifier.
      */
     public function appName(): string
     {
         return 'strapi';
-    }
-
-    /**
-     * Get application metadata for display.
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'entries, content types, CRUD',
-            'description' => 'Headless CMS',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:strapi',
-        ];
-    }
-
-    /**
-     * Get integration metadata for display.
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Strapi',
-            'description' => 'Open-source headless CMS to manage content',
-            'icon' => 'ph:database',
-            'logo' => 'simple-icons:strapi',
-            'category' => 'data',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.strapi.io',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the integration.
      */
     public function configSchema(): array

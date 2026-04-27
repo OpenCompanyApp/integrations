@@ -19,8 +19,69 @@ use OpenCompany\Integrations\Google\Tools\GoogleTasksUpdate;
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
-class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'oauth2_authorization_code',
+            'legacy_auth_type' => 'oauth',
+            'credential_mode' => 'stored_token',
+            'setup_flows' =>
+            [
+              0 => 'web_redirect',
+              1 => 'local_redirect',
+              2 => 'device_code',
+            ],
+            'requires_browser_for_setup' => true,
+            'refreshable' => true,
+            'token_keys' =>
+            [
+              0 => 'access_token',
+              1 => 'refresh_token',
+              2 => 'expires_at',
+            ],
+            'notes' =>
+            [
+              0 => 'Web hosts use the registered OAuth redirect callback.',
+              1 => 'CLI hosts can support Google OAuth with a desktop loopback redirect; device-code setup is possible where scopes allow it.',
+              2 => 'CLI runtime works with stored access and refresh tokens.',
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'web_redirect',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'local_redirect_or_device_code',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     public function appName(): string
     {
         return 'google_tasks';
@@ -47,9 +108,7 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://console.cloud.google.com/apis/library/tasks.googleapis.com',
         ];
-    }
-
-    public function configSchema(): array
+    }    public function configSchema(): array
     {
         return [
             [
@@ -113,107 +172,7 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }
-
-    /** @return array<string, string|array<int, string>> */
-    public function validationRules(): array
-    {
-        return [
-            'client_id' => 'nullable|string',
-            'client_secret' => 'nullable|string',
-            'access_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            'google_tasks_list_lists' => [
-                'class' => GoogleTasksListLists::class,
-                'type' => 'read',
-                'name' => 'List Task Lists',
-                'description' => 'List all task lists.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_tasks_list_tasks' => [
-                'class' => GoogleTasksListTasks::class,
-                'type' => 'read',
-                'name' => 'List Tasks',
-                'description' => 'List tasks in a task list.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_tasks_get_task' => [
-                'class' => GoogleTasksGetTask::class,
-                'type' => 'read',
-                'name' => 'Get Task',
-                'description' => 'Get full details of a single task.',
-                'icon' => 'ph:list-checks',
-            ],
-            'google_tasks_create' => [
-                'class' => GoogleTasksCreate::class,
-                'type' => 'write',
-                'name' => 'Create Task',
-                'description' => 'Create a new task.',
-                'icon' => 'ph:plus',
-            ],
-            'google_tasks_update' => [
-                'class' => GoogleTasksUpdate::class,
-                'type' => 'write',
-                'name' => 'Update Task',
-                'description' => 'Update task fields.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'google_tasks_complete' => [
-                'class' => GoogleTasksComplete::class,
-                'type' => 'write',
-                'name' => 'Complete Task',
-                'description' => 'Mark a task as completed.',
-                'icon' => 'ph:check',
-            ],
-            'google_tasks_delete' => [
-                'class' => GoogleTasksDelete::class,
-                'type' => 'write',
-                'name' => 'Delete Task',
-                'description' => 'Delete a task.',
-                'icon' => 'ph:trash',
-            ],
-            'google_tasks_move' => [
-                'class' => GoogleTasksMove::class,
-                'type' => 'write',
-                'name' => 'Move Task',
-                'description' => 'Reorder or reparent a task.',
-                'icon' => 'ph:arrows-left-right',
-            ],
-            'google_tasks_clear_completed' => [
-                'class' => GoogleTasksClearCompleted::class,
-                'type' => 'write',
-                'name' => 'Clear Completed',
-                'description' => 'Remove all completed tasks from a list.',
-                'icon' => 'ph:broom',
-            ],
-            'google_tasks_create_list' => [
-                'class' => GoogleTasksCreateList::class,
-                'type' => 'write',
-                'name' => 'Create List',
-                'description' => 'Create a new task list.',
-                'icon' => 'ph:list-plus',
-            ],
-            'google_tasks_delete_list' => [
-                'class' => GoogleTasksDeleteList::class,
-                'type' => 'write',
-                'name' => 'Delete List',
-                'description' => 'Delete a task list.',
-                'icon' => 'ph:trash',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/google.md';
-    }
-
-    public function credentialFields(): array
+    }    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

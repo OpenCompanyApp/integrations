@@ -13,8 +13,61 @@ use OpenCompany\Integrations\Recurly\Tools\RecurlyListAccounts;
 use OpenCompany\Integrations\Recurly\Tools\RecurlyListPlans;
 use OpenCompany\Integrations\Recurly\Tools\RecurlyListSubscriptions;
 
-class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
     /**
      * Get the app name identifier.
      *
@@ -23,42 +76,7 @@ class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function appName(): string
     {
         return 'recurly';
-    }
-
-    /**
-     * Get the app metadata for display and categorization.
-     *
-     * @return array The app metadata (label, description, icon, logo).
-     */
-    public function appMeta(): array
-    {
-        return [
-            'label' => 'accounts, subscriptions, plans',
-            'description' => 'Subscription billing',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:recurly',
-        ];
-    }
-
-    /**
-     * Get the integration metadata for the UI.
-     *
-     * @return array The integration metadata (name, description, icon, logo, category, badge, docs_url).
-     */
-    public function integrationMeta(): array
-    {
-        return [
-            'name' => 'Recurly',
-            'description' => 'Subscription billing and recurring revenue management',
-            'icon' => 'ph:credit-card',
-            'logo' => 'simple-icons:recurly',
-            'category' => 'finance',
-            'badge' => 'verified',
-            'docs_url' => 'https://docs.recurly.com/docs/api',
-        ];
-    }
-
-    /**
+    }    /**
      * Get the configuration schema for the Recurly integration.
      *
      * @return array The config schema fields.

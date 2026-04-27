@@ -15,15 +15,69 @@ use OpenCompany\Integrations\Razorpay\Tools\RazorpayListRefunds;
 use OpenCompany\Integrations\Razorpay\Tools\RazorpayListCustomers;
 use OpenCompany\Integrations\Razorpay\Tools\RazorpayGetCurrentUser;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Tool provider for the Razorpay integration.
- *
- * Implements ConfigurableIntegration for multi-account credential management,
- * and ToolProvider for registering Razorpay tools with the integration registry.
+ * Registers the integration provider and exposes its tools.
  */
-class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration
+class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_key',
+            'legacy_auth_type' => 'api_key',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * The application name identifier.
      */
     public function appName(): string
@@ -31,7 +85,7 @@ class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration
         return 'razorpay';
     }
 
-    /**
+/**
      * Metadata for the app display in the integration UI.
      *
      * @return array<string, mixed>
@@ -46,7 +100,7 @@ class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Integration metadata describing the Razorpay integration.
      *
      * @return array<string, mixed>
@@ -62,9 +116,7 @@ class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://razorpay.com/docs/api/',
         ];
-    }
-
-    /**
+    }/**
      * Configuration schema for the Razorpay integration.
      *
      * Defines the fields required to configure the integration: key_id, key_secret,
@@ -265,8 +317,7 @@ class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Context containing optional 'account' for multi-account support.
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

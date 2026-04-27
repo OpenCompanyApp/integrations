@@ -15,20 +15,73 @@ use OpenCompany\Integrations\Sinch\Tools\SinchListGroups;
 use OpenCompany\Integrations\Sinch\Tools\SinchGetGroup;
 use OpenCompany\Integrations\Sinch\Tools\SinchListBatches;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Registers all Sinch tools and provides integration metadata.
- *
- * Exposes 7 tools covering SMS messaging, phone number management,
- * groups, and batch operations via the ToolProvider contract.
+ * Registers the integration provider and exposes its tools.
  */
-class SinchToolProvider implements ToolProvider, ConfigurableIntegration
+class SinchToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    public function appName(): string
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+public function appName(): string
     {
         return 'sinch';
     }
 
-    public function appMeta(): array
+public function appMeta(): array
     {
         return [
             'label' => 'Sinch',
@@ -38,7 +91,7 @@ class SinchToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    public function integrationMeta(): array
+public function integrationMeta(): array
     {
         return [
             'name' => 'Sinch',
@@ -49,146 +102,7 @@ class SinchToolProvider implements ToolProvider, ConfigurableIntegration
             'badge' => 'verified',
             'docs_url' => 'https://developers.sinch.com/docs/sms/',
         ];
-    }
-
-    public function configSchema(): array
-    {
-        return [
-            [
-                'key' => 'service_plan_id',
-                'type' => 'text',
-                'label' => 'Service Plan ID',
-                'placeholder' => 'your-service-plan-id',
-                'hint' => 'Your Sinch Service Plan ID from the SMS API dashboard.',
-                'required' => true,
-            ],
-            [
-                'key' => 'api_token',
-                'type' => 'secret',
-                'label' => 'API Token',
-                'placeholder' => 'your-api-token',
-                'hint' => 'Your Sinch API token (Bearer token) from the SMS API dashboard.',
-                'required' => true,
-            ],
-        ];
-    }
-
-    /**
-     * Test the Sinch connection using the provided credentials.
-     *
-     * @param  array<string, mixed>  $config  Configuration containing 'service_plan_id' and 'api_token'
-     * @return array{success: bool, message?: string, error?: string}
-     */
-    public function testConnection(array $config): array
-    {
-        $servicePlanId = $config['service_plan_id'] ?? '';
-        $apiToken = $config['api_token'] ?? '';
-
-        if (empty($servicePlanId) || empty($apiToken)) {
-            return ['success' => false, 'error' => 'Sinch Service Plan ID and API token are required.'];
-        }
-
-        try {
-            $response = Http::withToken($apiToken)
-                ->timeout(10)
-                ->get("https://us.sms.api.sinch.com/xms/v1/{$servicePlanId}/batches", [
-                    'page' => 0,
-                    'page_size' => 1,
-                ]);
-
-            if ($response->successful()) {
-                return [
-                    'success' => true,
-                    'message' => 'Connected to Sinch SMS API successfully.',
-                ];
-            }
-
-            $body = $response->json() ?? [];
-            $error = $body['message'] ?? $response->body();
-
-            return [
-                'success' => false,
-                'error' => 'Sinch API error: ' . (is_string($error) ? $error : json_encode($error)),
-            ];
-        } catch (\Exception $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-    }
-
-    /** @return array<string, string> */
-    public function validationRules(): array
-    {
-        return [
-            'service_plan_id' => 'nullable|string',
-            'api_token' => 'nullable|string',
-        ];
-    }
-
-    public function tools(): array
-    {
-        return [
-            // Messages
-            'sinch_list_messages' => [
-                'class' => SinchListMessages::class,
-                'type' => 'read',
-                'name' => 'List Messages',
-                'description' => 'List inbound and outbound SMS messages from Sinch.',
-                'icon' => 'ph:chat-circle-text',
-            ],
-            'sinch_send_sms' => [
-                'class' => SinchSendSms::class,
-                'type' => 'write',
-                'name' => 'Send SMS',
-                'description' => 'Send an SMS message to one or more recipients via Sinch.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            // Phone Numbers
-            'sinch_list_phone_numbers' => [
-                'class' => SinchListPhoneNumbers::class,
-                'type' => 'read',
-                'name' => 'List Phone Numbers',
-                'description' => 'List all rented phone numbers in your Sinch account.',
-                'icon' => 'ph:device-mobile',
-            ],
-            'sinch_get_phone_number' => [
-                'class' => SinchGetPhoneNumber::class,
-                'type' => 'read',
-                'name' => 'Get Phone Number',
-                'description' => 'Get details for a specific phone number in Sinch.',
-                'icon' => 'ph:device-mobile',
-            ],
-            // Groups
-            'sinch_list_groups' => [
-                'class' => SinchListGroups::class,
-                'type' => 'read',
-                'name' => 'List Groups',
-                'description' => 'List all groups in your Sinch account.',
-                'icon' => 'ph:users',
-            ],
-            'sinch_get_group' => [
-                'class' => SinchGetGroup::class,
-                'type' => 'read',
-                'name' => 'Get Group',
-                'description' => 'Get details for a specific group in Sinch.',
-                'icon' => 'ph:users',
-            ],
-            // Batches
-            'sinch_list_batches' => [
-                'class' => SinchListBatches::class,
-                'type' => 'read',
-                'name' => 'List Batches',
-                'description' => 'List all message batches in your Sinch account.',
-                'icon' => 'ph:stack',
-            ],
-        ];
-    }
-
-    public function luaDocsPath(): ?string
-    {
-        return __DIR__ . '/../lua-docs/sinch.md';
-    }
-
-    public function credentialFields(): array
+    }public function credentialFields(): array
     {
         return [
             ['key' => 'service_plan_id', 'type' => 'text', 'label' => 'Service Plan ID', 'required' => true],
@@ -208,8 +122,7 @@ class SinchToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed> $context  Optional context with account credentials
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        return new $class($this->resolveService($context));
+    {        return new $class($this->resolveService($context));
     }
 
     /**

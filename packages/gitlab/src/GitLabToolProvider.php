@@ -27,15 +27,69 @@ use OpenCompany\Integrations\GitLab\Tools\GitLabSearchIssues;
 use OpenCompany\Integrations\GitLab\Tools\GitLabUpdateIssue;
 use OpenCompany\Integrations\GitLab\Tools\GitLabUpdateMergeRequest;
 
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
 /**
- * Registers the GitLab integration and its tools with the integration platform.
- *
- * Provides project, issue, merge request, repository, group, and member
- * management tools via the GitLab REST API v4.
+ * Registers the integration provider and exposes its tools.
  */
-class GitLabToolProvider implements ToolProvider, ConfigurableIntegration
+class GitLabToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
-    /**
+
+/**
+     * Describe host and authentication capabilities for catalog and setup flows.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationCapabilities(): array
+    {
+        return [
+          'auth' => [
+            'strategy' => 'api_token',
+            'legacy_auth_type' => 'api_token',
+            'credential_mode' => 'secret',
+            'setup_flows' =>
+            [
+              0 => 'manual_secret',
+            ],
+            'requires_browser_for_setup' => false,
+            'refreshable' => false,
+            'token_keys' =>
+            [
+            ],
+            'notes' =>
+            [
+            ],
+          ],
+          'host_availability' => [
+            'web' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+            ],
+            'cli' =>
+            [
+              'setup_supported' => true,
+              'runtime_supported' => true,
+              'setup_mode' => 'manual_secret',
+              'runtime_mode' => 'normal',
+            ],
+          ],
+          'runtime_requirements' => [
+          ],
+          'compatibility' => [
+            'web_setup_supported' => true,
+            'web_runtime_supported' => true,
+            'cli_setup_supported' => true,
+            'cli_runtime_supported' => true,
+          ],
+        ];
+    }
+
+
+
+
+/**
      * Get the integration app name identifier.
      */
     public function appName(): string
@@ -43,7 +97,7 @@ class GitLabToolProvider implements ToolProvider, ConfigurableIntegration
         return 'gitlab';
     }
 
-    /**
+/**
      * Get the short metadata for the integration card.
      *
      * @return array<string, string>
@@ -58,7 +112,7 @@ class GitLabToolProvider implements ToolProvider, ConfigurableIntegration
         ];
     }
 
-    /**
+/**
      * Get the detailed integration metadata for configuration UI.
      *
      * @return array<string, string>
@@ -73,9 +127,7 @@ class GitLabToolProvider implements ToolProvider, ConfigurableIntegration
             'category' => 'productivity',
             'docs_url' => 'https://docs.gitlab.com/ee/api/rest/',
         ];
-    }
-
-    /**
+    }/**
      * Get the configuration schema for the integration settings form.
      *
      * @return array<int, array<string, mixed>>
@@ -344,8 +396,7 @@ class GitLabToolProvider implements ToolProvider, ConfigurableIntegration
      * @param  array<string, mixed>  $context  Optional context (may contain 'account' for multi-account)
      */
     public function createTool(string $class, array $context = []): Tool
-    {
-        $account = $context['account'] ?? null;
+    {        $account = $context['account'] ?? null;
 
         if ($account !== null) {
             $creds = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);

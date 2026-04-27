@@ -46,7 +46,7 @@ class InstantlyDeleteLeadLabel implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; if (isset($args['new_label'])) $body['new_label'] = $args['new_label']; $this->service->deleteLeadLabel($args['id'], $body);
+            $body = []; if (isset($args['new_label'])) $body['new_label'] = $args['new_label']; $result = $this->service->deleteLeadLabel($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

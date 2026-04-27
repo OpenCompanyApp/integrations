@@ -47,7 +47,7 @@ class InstantlyUpdateEnrichmentSettings implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['auto_update','skip_rows_without_email'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateEnrichmentSettings($args['resource_id'], $body);
+            $body = []; foreach (['auto_update','skip_rows_without_email'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateEnrichmentSettings($args['resource_id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

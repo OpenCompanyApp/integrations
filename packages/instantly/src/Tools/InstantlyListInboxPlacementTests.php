@@ -49,7 +49,7 @@ class InstantlyListInboxPlacementTests implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','search','status','sort_order'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listInboxPlacementTests($params);
+            $params = []; foreach (['limit','starting_after','search','status','sort_order'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listInboxPlacementTests($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

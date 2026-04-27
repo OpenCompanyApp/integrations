@@ -53,7 +53,7 @@ class InstantlyListBackgroundJobs implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','ids','type','entity_type','entity_id','status','sort_column','sort_order'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listBackgroundJobs($params);
+            $params = []; foreach (['limit','starting_after','ids','type','entity_type','entity_id','status','sort_column','sort_order'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listBackgroundJobs($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

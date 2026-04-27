@@ -48,7 +48,7 @@ class InstantlyToggleCustomTags implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['tag_ids' => array_map('trim', explode(',', $args['tag_ids'])), 'resource_ids' => array_map('trim', explode(',', $args['resource_ids'])), 'resource_type' => (int)$args['resource_type'], 'assign' => $args['assign']]; $this->service->toggleCustomTags($body);
+            $body = ['tag_ids' => array_map('trim', explode(',', $args['tag_ids'])), 'resource_ids' => array_map('trim', explode(',', $args['resource_ids'])), 'resource_type' => (int)$args['resource_type'], 'assign' => $args['assign']]; $result = $this->service->toggleCustomTags($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

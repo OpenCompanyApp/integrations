@@ -47,7 +47,7 @@ class InstantlyListLeadLists implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','search'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listLeadLists($params);
+            $params = []; foreach (['limit','starting_after','search'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listLeadLists($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

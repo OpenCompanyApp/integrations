@@ -46,7 +46,7 @@ class InstantlyRunEnrichment implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['resource_id' => $args['resource_id']]; if (isset($args['lead_ids'])) { $ids = $args['lead_ids']; $body['lead_ids'] = is_string($ids) ? array_map('trim', explode(',', $ids)) : $ids; } $this->service->runEnrichment($body);
+            $body = ['resource_id' => $args['resource_id']]; if (isset($args['lead_ids'])) { $ids = $args['lead_ids']; $body['lead_ids'] = is_string($ids) ? array_map('trim', explode(',', $ids)) : $ids; } $result = $this->service->runEnrichment($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

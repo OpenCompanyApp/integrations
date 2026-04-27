@@ -49,7 +49,7 @@ class InstantlyBulkAddLeads implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $leads = $args['leads']; if (is_string($leads)) $leads = json_decode($leads, true); $body = ['leads' => $leads]; foreach (['campaign_id','list_id','skip_if_in_workspace','skip_if_in_campaign'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->bulkAddLeads($body);
+            $leads = $args['leads']; if (is_string($leads)) $leads = json_decode($leads, true); $body = ['leads' => $leads]; foreach (['campaign_id','list_id','skip_if_in_workspace','skip_if_in_campaign'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->bulkAddLeads($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

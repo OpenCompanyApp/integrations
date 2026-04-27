@@ -47,7 +47,7 @@ class InstantlyCreateDfyOrder implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $items = $args['items']; if (is_string($items)) $items = json_decode($items, true); $body = ['items' => $items, 'order_type' => $args['order_type']]; if (isset($args['simulation'])) $body['simulation'] = $args['simulation']; $this->service->createDfyOrder($body);
+            $items = $args['items']; if (is_string($items)) $items = json_decode($items, true); $body = ['items' => $items, 'order_type' => $args['order_type']]; if (isset($args['simulation'])) $body['simulation'] = $args['simulation']; $result = $this->service->createDfyOrder($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

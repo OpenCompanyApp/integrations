@@ -45,7 +45,7 @@ class InstantlyWarmupEnable implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $ids = $args['account_ids']; if (is_string($ids)) $ids = array_map('trim', explode(',', $ids)); $this->service->enableWarmup($ids);
+            $ids = $args['account_ids']; if (is_string($ids)) $ids = array_map('trim', explode(',', $ids)); $result = $this->service->enableWarmup($ids);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

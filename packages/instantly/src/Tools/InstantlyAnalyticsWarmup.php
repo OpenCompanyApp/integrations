@@ -45,7 +45,7 @@ class InstantlyAnalyticsWarmup implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $emails = $args['emails']; if (is_string($emails)) $emails = array_map('trim', explode(',', $emails)); $this->service->getAnalyticsWarmup($emails);
+            $emails = $args['emails']; if (is_string($emails)) $emails = array_map('trim', explode(',', $emails)); $result = $this->service->getAnalyticsWarmup($emails);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

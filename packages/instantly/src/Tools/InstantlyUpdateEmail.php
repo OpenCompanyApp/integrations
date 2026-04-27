@@ -47,7 +47,7 @@ class InstantlyUpdateEmail implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['assigned_to','label'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateEmail($args['id'], $body);
+            $body = []; foreach (['assigned_to','label'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateEmail($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

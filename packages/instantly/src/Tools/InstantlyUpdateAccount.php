@@ -53,7 +53,7 @@ class InstantlyUpdateAccount implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $email = $args['email']; $fields = ['first_name','last_name','daily_limit','tracking_domain_name','enable_slow_ramp','sending_gap','signature','remove_tracking_domain']; $this->service->updateAccount($email, array_intersect_key($args, array_flip($fields)));
+            $email = $args['email']; $fields = ['first_name','last_name','daily_limit','tracking_domain_name','enable_slow_ramp','sending_gap','signature','remove_tracking_domain']; $result = $this->service->updateAccount($email, array_intersect_key($args, array_flip($fields)));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

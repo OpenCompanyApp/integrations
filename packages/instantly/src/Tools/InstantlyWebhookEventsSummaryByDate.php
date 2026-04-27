@@ -46,7 +46,7 @@ class InstantlyWebhookEventsSummaryByDate implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->getWebhookEventsSummaryByDate($params);
+            $params = []; foreach (['from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->getWebhookEventsSummaryByDate($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

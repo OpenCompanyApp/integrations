@@ -49,7 +49,7 @@ class InstantlyCreateSubsequence implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['parent_campaign' => $args['parent_campaign'], 'name' => $args['name'], 'conditions' => is_string($args['conditions']) ? json_decode($args['conditions'], true) : $args['conditions'], 'subsequence_schedule' => is_string($args['subsequence_schedule']) ? json_decode($args['subsequence_schedule'], true) : $args['subsequence_schedule'], 'sequences' => is_string($args['sequences']) ? json_decode($args['sequences'], true) : $args['sequences']]; $this->service->createSubsequence($body);
+            $body = ['parent_campaign' => $args['parent_campaign'], 'name' => $args['name'], 'conditions' => is_string($args['conditions']) ? json_decode($args['conditions'], true) : $args['conditions'], 'subsequence_schedule' => is_string($args['subsequence_schedule']) ? json_decode($args['subsequence_schedule'], true) : $args['subsequence_schedule'], 'sequences' => is_string($args['sequences']) ? json_decode($args['sequences'], true) : $args['sequences']]; $result = $this->service->createSubsequence($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

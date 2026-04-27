@@ -52,7 +52,7 @@ class InstantlyCreateLead implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $fields = ['email','campaign_id','list_id','first_name','last_name','company_name','website','phone']; $this->service->createLead(array_intersect_key($args, array_flip($fields)));
+            $fields = ['email','campaign_id','list_id','first_name','last_name','company_name','website','phone']; $result = $this->service->createLead(array_intersect_key($args, array_flip($fields)));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -48,7 +48,7 @@ class InstantlyCreateEmailTemplate implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['template_name' => $args['template_name'], 'subject' => $args['subject'], 'body' => $args['body']]; foreach (['category'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->createEmailTemplate($body);
+            $body = ['template_name' => $args['template_name'], 'subject' => $args['subject'], 'body' => $args['body']]; foreach (['category'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->createEmailTemplate($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

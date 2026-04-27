@@ -51,7 +51,7 @@ class InstantlyInboxPlacementStatsByDate implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['test_id' => $args['test_id']]; foreach (['date_from','date_to','sender_email'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; foreach (['recipient_geo','recipient_type','recipient_esp'] as $k) if (isset($args[$k])) $body[$k] = array_map('intval', array_map('trim', explode(',', $args[$k]))); $this->service->getInboxPlacementStatsByDate($body);
+            $body = ['test_id' => $args['test_id']]; foreach (['date_from','date_to','sender_email'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; foreach (['recipient_geo','recipient_type','recipient_esp'] as $k) if (isset($args[$k])) $body[$k] = array_map('intval', array_map('trim', explode(',', $args[$k]))); $result = $this->service->getInboxPlacementStatsByDate($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

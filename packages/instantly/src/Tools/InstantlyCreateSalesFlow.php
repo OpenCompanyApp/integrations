@@ -45,7 +45,7 @@ class InstantlyCreateSalesFlow implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = is_string($args['body'] ?? '') ? json_decode($args['body'], true) : ($args['body'] ?? []); $this->service->createSalesFlow($body);
+            $body = is_string($args['body'] ?? '') ? json_decode($args['body'], true) : ($args['body'] ?? []); $result = $this->service->createSalesFlow($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

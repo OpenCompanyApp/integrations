@@ -47,7 +47,7 @@ class InstantlySearchCampaignsByContact implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['search','sort_column','sort_order'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->searchCampaignsByContact($params);
+            $params = []; foreach (['search','sort_column','sort_order'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->searchCampaignsByContact($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

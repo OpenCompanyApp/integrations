@@ -46,7 +46,7 @@ class InstantlyCreateCustomTag implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['label' => $args['label']]; if (isset($args['description'])) $body['description'] = $args['description']; $this->service->createCustomTag($body);
+            $body = ['label' => $args['label']]; if (isset($args['description'])) $body['description'] = $args['description']; $result = $this->service->createCustomTag($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -45,7 +45,7 @@ class InstantlyCheckDfyDomains implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $domains = $args['domains']; if (is_string($domains)) $domains = array_map('trim', explode(',', $domains)); $this->service->checkDfyDomains($domains);
+            $domains = $args['domains']; if (is_string($domains)) $domains = array_map('trim', explode(',', $domains)); $result = $this->service->checkDfyDomains($domains);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

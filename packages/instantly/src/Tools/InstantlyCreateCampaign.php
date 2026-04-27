@@ -55,7 +55,7 @@ class InstantlyCreateCampaign implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['name' => $args['name']]; foreach (['open_tracking','link_tracking','text_only','stop_on_reply','stop_on_auto_reply','daily_limit','email_gap'] as $f) if (isset($args[$f])) $body[$f] = $args[$f]; foreach (['email_list','sequences','campaign_schedule'] as $f) if (isset($args[$f])) { $v = $args[$f]; $body[$f] = is_string($v) ? json_decode($v, true) : $v; } $this->service->createCampaign($body);
+            $body = ['name' => $args['name']]; foreach (['open_tracking','link_tracking','text_only','stop_on_reply','stop_on_auto_reply','daily_limit','email_gap'] as $f) if (isset($args[$f])) $body[$f] = $args[$f]; foreach (['email_list','sequences','campaign_schedule'] as $f) if (isset($args[$f])) { $v = $args[$f]; $body[$f] = is_string($v) ? json_decode($v, true) : $v; } $result = $this->service->createCampaign($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

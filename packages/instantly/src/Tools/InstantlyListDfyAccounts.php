@@ -47,7 +47,7 @@ class InstantlyListDfyAccounts implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','with_passwords'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listDfyAccounts($params);
+            $params = []; foreach (['limit','starting_after','with_passwords'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listDfyAccounts($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

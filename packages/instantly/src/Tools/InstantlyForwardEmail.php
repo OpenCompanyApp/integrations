@@ -48,7 +48,7 @@ class InstantlyForwardEmail implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = array_intersect_key($args, array_flip(['lead_id','campaign_id','forward_to','forward_body'])); $this->service->forwardEmail($body);
+            $body = array_intersect_key($args, array_flip(['lead_id','campaign_id','forward_to','forward_body'])); $result = $this->service->forwardEmail($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

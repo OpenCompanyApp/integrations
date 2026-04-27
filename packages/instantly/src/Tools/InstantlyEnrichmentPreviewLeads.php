@@ -45,7 +45,7 @@ class InstantlyEnrichmentPreviewLeads implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $filters = $args['search_filters']; if (is_string($filters)) $filters = json_decode($filters, true); $this->service->previewLeads(['search_filters' => $filters]);
+            $filters = $args['search_filters']; if (is_string($filters)) $filters = json_decode($filters, true); $result = $this->service->previewLeads(['search_filters' => $filters]);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -56,7 +56,7 @@ class InstantlyCreateAiEnrichment implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['resource_id' => $args['resource_id'], 'output_column' => $args['output_column'], 'resource_type' => $args['resource_type'], 'model_version' => $args['model_version']]; foreach (['input_columns','use_instantly_account','overwrite','auto_update','skip_leads_without_email','limit','prompt','template_id'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->createAiEnrichment($body);
+            $body = ['resource_id' => $args['resource_id'], 'output_column' => $args['output_column'], 'resource_type' => $args['resource_type'], 'model_version' => $args['model_version']]; foreach (['input_columns','use_instantly_account','overwrite','auto_update','skip_leads_without_email','limit','prompt','template_id'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->createAiEnrichment($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

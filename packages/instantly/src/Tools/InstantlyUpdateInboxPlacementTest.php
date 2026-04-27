@@ -47,7 +47,7 @@ class InstantlyUpdateInboxPlacementTest implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['name','status'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateInboxPlacementTest($args['id'], $body);
+            $body = []; foreach (['name','status'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateInboxPlacementTest($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

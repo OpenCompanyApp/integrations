@@ -49,7 +49,7 @@ class InstantlyUpdateEmailTemplate implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['template_name','subject','body','category'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateEmailTemplate($args['id'], $body);
+            $body = []; foreach (['template_name','subject','body','category'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateEmailTemplate($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

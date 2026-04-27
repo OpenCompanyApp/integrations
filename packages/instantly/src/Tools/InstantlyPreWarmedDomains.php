@@ -46,7 +46,7 @@ class InstantlyPreWarmedDomains implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; if (isset($args['extensions'])) $body['extensions'] = array_map('trim', explode(',', $args['extensions'])); if (isset($args['search'])) $body['search'] = $args['search']; $this->service->getPreWarmedDomains($body);
+            $body = []; if (isset($args['extensions'])) $body['extensions'] = array_map('trim', explode(',', $args['extensions'])); if (isset($args['search'])) $body['search'] = $args['search']; $result = $this->service->getPreWarmedDomains($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -53,7 +53,7 @@ class InstantlyDeliverabilityInsights implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['test_id' => $args['test_id']]; foreach (['date_from','date_to','previous_date_from','previous_date_to','show_previous'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; foreach (['recipient_geo','recipient_type','recipient_esp'] as $k) if (isset($args[$k])) $body[$k] = array_map('intval', array_map('trim', explode(',', $args[$k]))); $this->service->getDeliverabilityInsights($body);
+            $body = ['test_id' => $args['test_id']]; foreach (['date_from','date_to','previous_date_from','previous_date_to','show_previous'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; foreach (['recipient_geo','recipient_type','recipient_esp'] as $k) if (isset($args[$k])) $body[$k] = array_map('intval', array_map('trim', explode(',', $args[$k]))); $result = $this->service->getDeliverabilityInsights($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

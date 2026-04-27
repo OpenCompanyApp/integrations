@@ -48,7 +48,7 @@ class InstantlyListBlocklist implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','domains_only','search'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listBlocklist($params);
+            $params = []; foreach (['limit','starting_after','domains_only','search'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listBlocklist($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

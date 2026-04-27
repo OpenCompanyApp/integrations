@@ -46,7 +46,7 @@ class InstantlyVerifyEmail implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['email' => $args['email']]; if (isset($args['webhook_url'])) $body['webhook_url'] = $args['webhook_url']; $this->service->verifyEmail($args['email'], $args['webhook_url'] ?? null);
+            $body = ['email' => $args['email']]; if (isset($args['webhook_url'])) $body['webhook_url'] = $args['webhook_url']; $result = $this->service->verifyEmail($args['email'], $args['webhook_url'] ?? null);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

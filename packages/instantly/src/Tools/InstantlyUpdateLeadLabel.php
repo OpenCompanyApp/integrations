@@ -49,7 +49,7 @@ class InstantlyUpdateLeadLabel implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['label_name','color','icon','value'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateLeadLabel($args['id'], $body);
+            $body = []; foreach (['label_name','color','icon','value'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateLeadLabel($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

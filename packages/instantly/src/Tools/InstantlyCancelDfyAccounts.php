@@ -45,7 +45,7 @@ class InstantlyCancelDfyAccounts implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $accounts = $args['accounts']; if (is_string($accounts)) $accounts = array_map('trim', explode(',', $accounts)); $this->service->cancelDfyAccounts($accounts);
+            $accounts = $args['accounts']; if (is_string($accounts)) $accounts = array_map('trim', explode(',', $accounts)); $result = $this->service->cancelDfyAccounts($accounts);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

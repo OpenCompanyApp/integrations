@@ -47,7 +47,7 @@ class InstantlyMoveLeads implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['lead_ids' => array_map('trim', explode(',', $args['lead_ids'])), 'to_campaign_id' => $args['to_campaign_id']]; if (isset($args['from_campaign_id'])) $body['from_campaign_id'] = $args['from_campaign_id']; $this->service->moveLeads($body);
+            $body = ['lead_ids' => array_map('trim', explode(',', $args['lead_ids'])), 'to_campaign_id' => $args['to_campaign_id']]; if (isset($args['from_campaign_id'])) $body['from_campaign_id'] = $args['from_campaign_id']; $result = $this->service->moveLeads($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

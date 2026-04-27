@@ -46,7 +46,7 @@ class InstantlyUpdateWorkspaceMember implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; if (isset($args['role'])) $body['role'] = $args['role']; $this->service->updateWorkspaceMember($args['id'], $body);
+            $body = []; if (isset($args['role'])) $body['role'] = $args['role']; $result = $this->service->updateWorkspaceMember($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -48,7 +48,7 @@ class InstantlyReplyToEmail implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = array_intersect_key($args, array_flip(['lead_id','campaign_id','account_email','reply_body'])); $this->service->replyToEmail($body);
+            $body = array_intersect_key($args, array_flip(['lead_id','campaign_id','account_email','reply_body'])); $result = $this->service->replyToEmail($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

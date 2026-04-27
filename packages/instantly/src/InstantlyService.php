@@ -126,10 +126,13 @@ class InstantlyService
 
     /**
      * Test account vitals (DNS, SMTP, IMAP).
+     *
+     * @param  array<int, string>  $accounts  Optional email accounts to test
+     * @return array<string, mixed>
      */
-    public function testVitals(string $email): array
+    public function testVitals(array $accounts = []): array
     {
-        return $this->request('POST', '/accounts/test/vitals', ['email' => $email]);
+        return $this->request('POST', '/accounts/test/vitals', $accounts === [] ? [] : ['accounts' => $accounts]);
     }
 
     /**
@@ -138,6 +141,49 @@ class InstantlyService
     public function getCtdStatus(string $host): array
     {
         return $this->request('GET', '/accounts/ctd/status', [], ['host' => $host]);
+    }
+
+    /**
+     * Move email accounts between workspaces.
+     *
+     * @param  array<string, mixed>  $data  Move request payload
+     * @return array<string, mixed>
+     */
+    public function moveAccounts(array $data): array
+    {
+        return $this->request('POST', '/accounts/move', $data);
+    }
+
+    // ─── OAuth ─────────────────────────────────────────────────
+
+    /**
+     * Initialize a Google OAuth account-linking session.
+     *
+     * @return array<string, mixed>
+     */
+    public function initializeGoogleOauth(): array
+    {
+        return $this->request('POST', '/oauth/google/init');
+    }
+
+    /**
+     * Initialize a Microsoft OAuth account-linking session.
+     *
+     * @return array<string, mixed>
+     */
+    public function initializeMicrosoftOauth(): array
+    {
+        return $this->request('POST', '/oauth/microsoft/init');
+    }
+
+    /**
+     * Get the status of an OAuth account-linking session.
+     *
+     * @return array<string, mixed>
+     */
+    public function getOauthSessionStatus(string $sessionId): array
+    {
+        return $this->request('GET', '/oauth/session/status/' . urlencode($sessionId));
     }
 
     // ─── Account Campaign Mappings ─────────────────────────────
@@ -223,6 +269,50 @@ class InstantlyService
     public function duplicateCampaign(string $id, array $data = []): array
     {
         return $this->request('POST', '/campaigns/' . urlencode($id) . '/duplicate', $data);
+    }
+
+    /**
+     * Share a campaign and return sharing metadata.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function shareCampaign(string $id, array $data = []): array
+    {
+        return $this->request('POST', '/campaigns/' . urlencode($id) . '/share', $data);
+    }
+
+    /**
+     * Create a campaign from exported/shared campaign data.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function createCampaignFromExport(string $id, array $data = []): array
+    {
+        return $this->request('POST', '/campaigns/' . urlencode($id) . '/from-export', $data);
+    }
+
+    /**
+     * Export a campaign to JSON format.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function exportCampaign(string $id, array $data = []): array
+    {
+        return $this->request('POST', '/campaigns/' . urlencode($id) . '/export', $data);
+    }
+
+    /**
+     * Add custom variables to a campaign.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function addCampaignVariables(string $id, array $data): array
+    {
+        return $this->request('POST', '/campaigns/' . urlencode($id) . '/variables', $data);
     }
 
     /**
@@ -366,6 +456,17 @@ class InstantlyService
         return $this->request('POST', '/leads/subsequence/move', $data);
     }
 
+    /**
+     * Update the interest status of a lead.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function updateLeadInterestStatus(array $data): array
+    {
+        return $this->request('POST', '/leads/update-interest-status', $data);
+    }
+
     // ─── Lead Lists ────────────────────────────────────────────
 
     /**
@@ -473,7 +574,7 @@ class InstantlyService
      */
     public function getAnalyticsCampaign(array $params = []): array
     {
-        return $this->request('GET', '/campaigns/analytics', [], $params);
+        return $this->request('GET', '/campaigns/analytics', [], $this->normalizeAnalyticsParams($params));
     }
 
     /**
@@ -481,7 +582,7 @@ class InstantlyService
      */
     public function getAnalyticsCampaignOverview(array $params = []): array
     {
-        return $this->request('GET', '/campaigns/analytics/overview', [], $params);
+        return $this->request('GET', '/campaigns/analytics/overview', [], $this->normalizeAnalyticsParams($params));
     }
 
     /**
@@ -489,7 +590,7 @@ class InstantlyService
      */
     public function getAnalyticsDailyCampaign(array $params = []): array
     {
-        return $this->request('GET', '/campaigns/analytics/daily', [], $params);
+        return $this->request('GET', '/campaigns/analytics/daily', [], $this->normalizeAnalyticsParams($params));
     }
 
     /**
@@ -497,7 +598,7 @@ class InstantlyService
      */
     public function getAnalyticsCampaignSteps(array $params = []): array
     {
-        return $this->request('GET', '/campaigns/analytics/steps', [], $params);
+        return $this->request('GET', '/campaigns/analytics/steps', [], $this->normalizeAnalyticsParams($params));
     }
 
     /**
@@ -505,7 +606,7 @@ class InstantlyService
      */
     public function getAnalyticsDailyAccount(array $params = []): array
     {
-        return $this->request('GET', '/accounts/analytics/daily', [], $params);
+        return $this->request('GET', '/accounts/analytics/daily', [], $this->normalizeAnalyticsParams($params));
     }
 
     /**
@@ -526,6 +627,17 @@ class InstantlyService
     public function listEmails(array $params = []): array
     {
         return $this->request('GET', '/emails', [], $params);
+    }
+
+    /**
+     * Send a preview/test email without creating an Unibox email entity.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function sendTestEmail(array $data): array
+    {
+        return $this->request('POST', '/emails/test', $data);
     }
 
     /**
@@ -776,6 +888,49 @@ class InstantlyService
     public function deleteBlocklistEntry(string $id): array
     {
         return $this->request('DELETE', '/block-lists-entries/' . urlencode($id));
+    }
+
+    /**
+     * Delete all block list entries, optionally constrained by filters supported by Instantly.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function deleteAllBlocklistEntries(array $data = []): array
+    {
+        return $this->request('DELETE', '/block-lists-entries', $data);
+    }
+
+    /**
+     * Create block list entries in bulk.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function bulkCreateBlocklistEntries(array $data): array
+    {
+        return $this->request('POST', '/block-lists-entries/bulk-create', $data);
+    }
+
+    /**
+     * Delete block list entries in bulk.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function bulkDeleteBlocklistEntries(array $data): array
+    {
+        return $this->request('POST', '/block-lists-entries/bulk-delete', $data);
+    }
+
+    /**
+     * Download block list entries as CSV.
+     *
+     * @param  array<string, mixed>  $params
+     */
+    public function downloadBlocklistEntries(array $params = []): string
+    {
+        return $this->requestText('GET', '/block-lists-entries/download', [], $params);
     }
 
     // ─── Subsequences ──────────────────────────────────────────
@@ -1533,6 +1688,75 @@ class InstantlyService
 
             $json = $response->json();
             return is_array($json) ? $json : [];
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error("Instantly API connection error: {$method} {$path}", [
+                'error' => $e->getMessage(),
+            ]);
+            throw new \RuntimeException("Failed to connect to Instantly API: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Normalize legacy tool aliases to current Instantly analytics query names.
+     *
+     * @param  array<string, mixed>  $params
+     * @return array<string, mixed>
+     */
+    private function normalizeAnalyticsParams(array $params): array
+    {
+        $aliases = [
+            'campaign_id' => 'id',
+            'from' => 'start_date',
+            'to' => 'end_date',
+        ];
+
+        foreach ($aliases as $old => $new) {
+            if (array_key_exists($old, $params) && !array_key_exists($new, $params)) {
+                $params[$new] = $params[$old];
+            }
+            unset($params[$old]);
+        }
+
+        return $params;
+    }
+
+    /**
+     * Make an API request and return the raw response body.
+     *
+     * @param  array<string, mixed>  $body
+     * @param  array<string, mixed>  $query
+     */
+    private function requestText(string $method, string $path, array $body = [], array $query = []): string
+    {
+        if (!$this->apiKey) {
+            throw new \RuntimeException('Instantly API key is not configured.');
+        }
+
+        $url = $this->baseUrl . $path;
+
+        try {
+            $http = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+            ])->timeout(30);
+
+            $response = match (strtoupper($method)) {
+                'GET' => $http->get($url, array_merge($query, $body)),
+                'POST' => $http->post($url, $body ?: $query),
+                'PATCH' => $http->patch($url, $body),
+                'DELETE' => $http->delete($url, $body ?: $query),
+                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+            };
+
+            if (!$response->successful()) {
+                Log::error("Instantly API error: {$method} {$path}", [
+                    'status' => $response->status(),
+                    'error' => $response->body(),
+                ]);
+
+                throw new \RuntimeException("Instantly API error ({$response->status()}): " . $response->body());
+            }
+
+            return $response->body();
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error("Instantly API connection error: {$method} {$path}", [
                 'error' => $e->getMessage(),

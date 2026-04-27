@@ -46,7 +46,7 @@ class InstantlyCreateApiKey implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $scopes = $args['scopes']; if (is_string($scopes)) $scopes = array_map('trim', explode(',', $scopes)); $this->service->createApiKey($args['name'], $scopes);
+            $scopes = $args['scopes']; if (is_string($scopes)) $scopes = array_map('trim', explode(',', $scopes)); $result = $this->service->createApiKey($args['name'], $scopes);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

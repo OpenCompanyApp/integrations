@@ -46,7 +46,7 @@ class InstantlyGetBackgroundJob implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; if (isset($args['data_fields'])) $params['data_fields'] = $args['data_fields']; $this->service->getBackgroundJob($args['id'], $params);
+            $params = []; if (isset($args['data_fields'])) $params['data_fields'] = $args['data_fields']; $result = $this->service->getBackgroundJob($args['id'], $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

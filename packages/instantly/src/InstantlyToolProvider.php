@@ -8,6 +8,7 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyActivateCampaign;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyAddCampaignVariables;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyAiEnrichmentProgress;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyAnalyticsCampaign;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyAnalyticsCampaignOverview;
@@ -19,6 +20,8 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyBillingPlanDetails;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyBillingSubscriptionDetails;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyBulkAddLeads;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyBulkAssignLeads;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyBulkCreateBlocklistEntries;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyBulkDeleteBlocklistEntries;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyBulkDeleteLeads;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCampaignSendingStatus;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCancelDfyAccounts;
@@ -30,6 +33,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateAiEnrichment;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateApiKey;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateBlocklistEntry;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateCampaign;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateCampaignFromExport;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateCustomPromptTemplate;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateCustomTag;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateDfyOrder;
@@ -47,6 +51,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateWorkspaceGroupMember
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCreateWorkspaceMember;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyCtdStatus;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteAccount;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteAllBlocklistEntries;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteApiKey;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteBlocklistEntry;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteCampaign;
@@ -66,6 +71,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteWhitelabel;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteWorkspaceGroupMember;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeleteWorkspaceMember;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDeliverabilityInsights;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyDownloadBlocklistEntries;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDuplicateCampaign;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyDuplicateSubsequence;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyEmailUnreadCount;
@@ -74,6 +80,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyEnrichmentCountLeads;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyEnrichmentEnrichLeads;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyEnrichmentHistory;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyEnrichmentPreviewLeads;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyExportCampaign;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyForwardEmail;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetAccount;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetAccountMappings;
@@ -91,6 +98,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyGetInboxPlacementTest;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetLead;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetLeadLabel;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetLeadList;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyGetOauthSessionStatus;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetSalesFlow;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetWebhook;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyGetWebhookEvent;
@@ -102,6 +110,8 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyGetWorkspaceMember;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyInboxPlacementEspOptions;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyInboxPlacementStatsByDate;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyInboxPlacementStatsByTest;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyInitializeGoogleOauth;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyInitializeMicrosoftOauth;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyLeadListVerificationStats;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyListAccounts;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyListApiKeys;
@@ -132,6 +142,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyListWorkspaceMembers;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyMarkAccountFixed;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyMarkEmailRead;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyMergeLeads;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyMoveAccounts;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyMoveLeads;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyPauseAccount;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyPauseCampaign;
@@ -144,6 +155,8 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyResumeSubsequence;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyResumeWebhook;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyRunEnrichment;
 use OpenCompany\Integrations\Instantly\Tools\InstantlySearchCampaignsByContact;
+use OpenCompany\Integrations\Instantly\Tools\InstantlySendTestEmail;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyShareCampaign;
 use OpenCompany\Integrations\Instantly\Tools\InstantlySimilarDomains;
 use OpenCompany\Integrations\Instantly\Tools\InstantlySubsequenceMoveLeads;
 use OpenCompany\Integrations\Instantly\Tools\InstantlySubsequenceSendingStatus;
@@ -161,6 +174,7 @@ use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateEmailTemplate;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateEnrichmentSettings;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateInboxPlacementTest;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateLead;
+use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateLeadInterestStatus;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateLeadLabel;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateLeadList;
 use OpenCompany\Integrations\Instantly\Tools\InstantlyUpdateSalesFlow;
@@ -192,7 +206,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            "label" => "campaigns, leads, emails, analytics",
+            "label" => "Instantly",
             "description" => "Cold email outreach and deliverability platform",
             "icon" => "ph:envelope",
             "logo" => "simple-icons:instantly",
@@ -272,6 +286,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
     {
         return [
             "InstantlyActivateCampaign" => InstantlyActivateCampaign::class,
+            "InstantlyAddCampaignVariables" => InstantlyAddCampaignVariables::class,
             "InstantlyAiEnrichmentProgress" => InstantlyAiEnrichmentProgress::class,
             "InstantlyAnalyticsCampaign" => InstantlyAnalyticsCampaign::class,
             "InstantlyAnalyticsCampaignOverview" => InstantlyAnalyticsCampaignOverview::class,
@@ -283,6 +298,8 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyBillingSubscriptionDetails" => InstantlyBillingSubscriptionDetails::class,
             "InstantlyBulkAddLeads" => InstantlyBulkAddLeads::class,
             "InstantlyBulkAssignLeads" => InstantlyBulkAssignLeads::class,
+            "InstantlyBulkCreateBlocklistEntries" => InstantlyBulkCreateBlocklistEntries::class,
+            "InstantlyBulkDeleteBlocklistEntries" => InstantlyBulkDeleteBlocklistEntries::class,
             "InstantlyBulkDeleteLeads" => InstantlyBulkDeleteLeads::class,
             "InstantlyCampaignSendingStatus" => InstantlyCampaignSendingStatus::class,
             "InstantlyCancelDfyAccounts" => InstantlyCancelDfyAccounts::class,
@@ -294,6 +311,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyCreateApiKey" => InstantlyCreateApiKey::class,
             "InstantlyCreateBlocklistEntry" => InstantlyCreateBlocklistEntry::class,
             "InstantlyCreateCampaign" => InstantlyCreateCampaign::class,
+            "InstantlyCreateCampaignFromExport" => InstantlyCreateCampaignFromExport::class,
             "InstantlyCreateCustomPromptTemplate" => InstantlyCreateCustomPromptTemplate::class,
             "InstantlyCreateCustomTag" => InstantlyCreateCustomTag::class,
             "InstantlyCreateDfyOrder" => InstantlyCreateDfyOrder::class,
@@ -311,6 +329,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyCreateWorkspaceMember" => InstantlyCreateWorkspaceMember::class,
             "InstantlyCtdStatus" => InstantlyCtdStatus::class,
             "InstantlyDeleteAccount" => InstantlyDeleteAccount::class,
+            "InstantlyDeleteAllBlocklistEntries" => InstantlyDeleteAllBlocklistEntries::class,
             "InstantlyDeleteApiKey" => InstantlyDeleteApiKey::class,
             "InstantlyDeleteBlocklistEntry" => InstantlyDeleteBlocklistEntry::class,
             "InstantlyDeleteCampaign" => InstantlyDeleteCampaign::class,
@@ -330,6 +349,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyDeleteWorkspaceGroupMember" => InstantlyDeleteWorkspaceGroupMember::class,
             "InstantlyDeleteWorkspaceMember" => InstantlyDeleteWorkspaceMember::class,
             "InstantlyDeliverabilityInsights" => InstantlyDeliverabilityInsights::class,
+            "InstantlyDownloadBlocklistEntries" => InstantlyDownloadBlocklistEntries::class,
             "InstantlyDuplicateCampaign" => InstantlyDuplicateCampaign::class,
             "InstantlyDuplicateSubsequence" => InstantlyDuplicateSubsequence::class,
             "InstantlyEmailUnreadCount" => InstantlyEmailUnreadCount::class,
@@ -338,6 +358,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyEnrichmentEnrichLeads" => InstantlyEnrichmentEnrichLeads::class,
             "InstantlyEnrichmentHistory" => InstantlyEnrichmentHistory::class,
             "InstantlyEnrichmentPreviewLeads" => InstantlyEnrichmentPreviewLeads::class,
+            "InstantlyExportCampaign" => InstantlyExportCampaign::class,
             "InstantlyForwardEmail" => InstantlyForwardEmail::class,
             "InstantlyGetAccount" => InstantlyGetAccount::class,
             "InstantlyGetAccountMappings" => InstantlyGetAccountMappings::class,
@@ -355,6 +376,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyGetLead" => InstantlyGetLead::class,
             "InstantlyGetLeadLabel" => InstantlyGetLeadLabel::class,
             "InstantlyGetLeadList" => InstantlyGetLeadList::class,
+            "InstantlyGetOauthSessionStatus" => InstantlyGetOauthSessionStatus::class,
             "InstantlyGetSalesFlow" => InstantlyGetSalesFlow::class,
             "InstantlyGetWebhook" => InstantlyGetWebhook::class,
             "InstantlyGetWebhookEvent" => InstantlyGetWebhookEvent::class,
@@ -366,6 +388,8 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyInboxPlacementEspOptions" => InstantlyInboxPlacementEspOptions::class,
             "InstantlyInboxPlacementStatsByDate" => InstantlyInboxPlacementStatsByDate::class,
             "InstantlyInboxPlacementStatsByTest" => InstantlyInboxPlacementStatsByTest::class,
+            "InstantlyInitializeGoogleOauth" => InstantlyInitializeGoogleOauth::class,
+            "InstantlyInitializeMicrosoftOauth" => InstantlyInitializeMicrosoftOauth::class,
             "InstantlyLeadListVerificationStats" => InstantlyLeadListVerificationStats::class,
             "InstantlyListAccounts" => InstantlyListAccounts::class,
             "InstantlyListApiKeys" => InstantlyListApiKeys::class,
@@ -396,6 +420,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyMarkAccountFixed" => InstantlyMarkAccountFixed::class,
             "InstantlyMarkEmailRead" => InstantlyMarkEmailRead::class,
             "InstantlyMergeLeads" => InstantlyMergeLeads::class,
+            "InstantlyMoveAccounts" => InstantlyMoveAccounts::class,
             "InstantlyMoveLeads" => InstantlyMoveLeads::class,
             "InstantlyPauseAccount" => InstantlyPauseAccount::class,
             "InstantlyPauseCampaign" => InstantlyPauseCampaign::class,
@@ -408,6 +433,8 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyResumeWebhook" => InstantlyResumeWebhook::class,
             "InstantlyRunEnrichment" => InstantlyRunEnrichment::class,
             "InstantlySearchCampaignsByContact" => InstantlySearchCampaignsByContact::class,
+            "InstantlySendTestEmail" => InstantlySendTestEmail::class,
+            "InstantlyShareCampaign" => InstantlyShareCampaign::class,
             "InstantlySimilarDomains" => InstantlySimilarDomains::class,
             "InstantlySubsequenceMoveLeads" => InstantlySubsequenceMoveLeads::class,
             "InstantlySubsequenceSendingStatus" => InstantlySubsequenceSendingStatus::class,
@@ -425,6 +452,7 @@ class InstantlyToolProvider implements ToolProvider, ConfigurableIntegration
             "InstantlyUpdateEnrichmentSettings" => InstantlyUpdateEnrichmentSettings::class,
             "InstantlyUpdateInboxPlacementTest" => InstantlyUpdateInboxPlacementTest::class,
             "InstantlyUpdateLead" => InstantlyUpdateLead::class,
+            "InstantlyUpdateLeadInterestStatus" => InstantlyUpdateLeadInterestStatus::class,
             "InstantlyUpdateLeadLabel" => InstantlyUpdateLeadLabel::class,
             "InstantlyUpdateLeadList" => InstantlyUpdateLeadList::class,
             "InstantlyUpdateSalesFlow" => InstantlyUpdateSalesFlow::class,

@@ -52,7 +52,7 @@ class InstantlyListInboxPlacementAnalytics implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['test_id','limit','starting_after','date_from','date_to','recipient_geo','recipient_type','recipient_esp'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listInboxPlacementAnalytics($params);
+            $params = []; foreach (['test_id','limit','starting_after','date_from','date_to','recipient_geo','recipient_type','recipient_esp'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listInboxPlacementAnalytics($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

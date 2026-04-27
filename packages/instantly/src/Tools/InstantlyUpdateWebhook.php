@@ -50,7 +50,7 @@ class InstantlyUpdateWebhook implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['target_hook_url','event_type','campaign','name','custom_interest_value'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateWebhook($args['id'], $body);
+            $body = []; foreach (['target_hook_url','event_type','campaign','name','custom_interest_value'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateWebhook($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

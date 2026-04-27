@@ -46,7 +46,7 @@ class InstantlyUpdateWorkspace implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['name','org_logo_url'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateWorkspace($body);
+            $body = []; foreach (['name','org_logo_url'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateWorkspace($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -54,7 +54,7 @@ class InstantlyUpdateLead implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $id = $args['id']; $fields = ['first_name','last_name','company_name','website','phone','personalization','lt_interest_status','pl_value_lead','assigned_to']; $this->service->updateLead($id, array_intersect_key($args, array_flip($fields)));
+            $id = $args['id']; $fields = ['first_name','last_name','company_name','website','phone','personalization','lt_interest_status','pl_value_lead','assigned_to']; $result = $this->service->updateLead($id, array_intersect_key($args, array_flip($fields)));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

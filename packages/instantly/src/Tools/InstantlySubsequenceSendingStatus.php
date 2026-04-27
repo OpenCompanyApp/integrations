@@ -46,7 +46,7 @@ class InstantlySubsequenceSendingStatus implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; if (isset($args['with_ai_summary'])) $params['with_ai_summary'] = $args['with_ai_summary']; $this->service->getSubsequenceSendingStatus($args['id'], $params);
+            $params = []; if (isset($args['with_ai_summary'])) $params['with_ai_summary'] = $args['with_ai_summary']; $result = $this->service->getSubsequenceSendingStatus($args['id'], $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

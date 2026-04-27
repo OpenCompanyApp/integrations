@@ -46,7 +46,7 @@ class InstantlyUpdateSubsequence implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; if (isset($args['name'])) $body['name'] = $args['name']; $this->service->updateSubsequence($args['id'], $body);
+            $body = []; if (isset($args['name'])) $body['name'] = $args['name']; $result = $this->service->updateSubsequence($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

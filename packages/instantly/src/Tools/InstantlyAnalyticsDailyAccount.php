@@ -46,7 +46,7 @@ class InstantlyAnalyticsDailyAccount implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->getAnalyticsDailyAccount($params);
+            $params = []; foreach (['from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->getAnalyticsDailyAccount($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

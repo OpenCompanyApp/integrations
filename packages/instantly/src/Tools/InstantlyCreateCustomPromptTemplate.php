@@ -52,7 +52,7 @@ class InstantlyCreateCustomPromptTemplate implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['name' => $args['name'], 'prompt' => $args['prompt'], 'category' => (int)$args['category'], 'is_public' => $args['is_public']]; foreach (['description','model_version','template_type','from_shared'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->createCustomPromptTemplate($body);
+            $body = ['name' => $args['name'], 'prompt' => $args['prompt'], 'category' => (int)$args['category'], 'is_public' => $args['is_public']]; foreach (['description','model_version','template_type','from_shared'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->createCustomPromptTemplate($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -46,7 +46,7 @@ class InstantlyListDfyOrders implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listDfyOrders($params);
+            $params = []; foreach (['limit','starting_after'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listDfyOrders($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

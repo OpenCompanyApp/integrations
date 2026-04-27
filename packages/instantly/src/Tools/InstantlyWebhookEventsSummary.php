@@ -46,7 +46,7 @@ class InstantlyWebhookEventsSummary implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->getWebhookEventsSummary($params);
+            $params = []; foreach (['from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->getWebhookEventsSummary($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

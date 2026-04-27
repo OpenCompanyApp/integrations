@@ -45,7 +45,7 @@ class InstantlySimilarDomains implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = is_string($args['body'] ?? '') ? json_decode($args['body'], true) : ($args['body'] ?? []); $this->service->getSimilarDomains($body);
+            $body = is_string($args['body'] ?? '') ? json_decode($args['body'], true) : ($args['body'] ?? []); $result = $this->service->getSimilarDomains($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

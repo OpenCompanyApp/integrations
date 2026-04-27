@@ -49,7 +49,7 @@ class InstantlyListCustomTags implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','search','resource_ids','tag_ids'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listCustomTags($params);
+            $params = []; foreach (['limit','starting_after','search','resource_ids','tag_ids'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listCustomTags($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

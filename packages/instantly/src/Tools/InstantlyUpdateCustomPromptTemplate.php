@@ -53,7 +53,7 @@ class InstantlyUpdateCustomPromptTemplate implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['name','prompt','description','model_version','template_type'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; foreach (['category'] as $k) if (isset($args[$k])) $body[$k] = (int)$args[$k]; foreach (['is_public','from_shared'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $this->service->updateCustomPromptTemplate($args['id'], $body);
+            $body = []; foreach (['name','prompt','description','model_version','template_type'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; foreach (['category'] as $k) if (isset($args[$k])) $body[$k] = (int)$args[$k]; foreach (['is_public','from_shared'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; $result = $this->service->updateCustomPromptTemplate($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

@@ -56,7 +56,7 @@ class InstantlyCreateAccount implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $fields = ['email','first_name','last_name','smtp_host','smtp_port','smtp_username','smtp_password','imap_host','imap_port','imap_username','imap_password','daily_limit']; $this->service->createAccount(array_intersect_key($args, array_flip($fields)));
+            $fields = ['email','first_name','last_name','smtp_host','smtp_port','smtp_username','smtp_password','imap_host','imap_port','imap_username','imap_password','daily_limit']; $result = $this->service->createAccount(array_intersect_key($args, array_flip($fields)));
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

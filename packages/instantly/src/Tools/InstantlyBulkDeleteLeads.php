@@ -49,7 +49,7 @@ class InstantlyBulkDeleteLeads implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; foreach (['campaign_id','list_id','status','limit'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; if (isset($args['ids'])) $body['ids'] = array_map('trim', explode(',', $args['ids'])); $this->service->bulkDeleteLeads($body);
+            $body = []; foreach (['campaign_id','list_id','status','limit'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; if (isset($args['ids'])) $body['ids'] = array_map('trim', explode(',', $args['ids'])); $result = $this->service->bulkDeleteLeads($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

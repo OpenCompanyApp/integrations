@@ -47,7 +47,7 @@ class InstantlyAnalyticsDailyCampaign implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['campaign_id','from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->getAnalyticsDailyCampaign($params);
+            $params = []; foreach (['campaign_id','from','to'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->getAnalyticsDailyCampaign($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

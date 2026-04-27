@@ -46,7 +46,7 @@ class InstantlyGetInboxPlacementTest implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; if (isset($args['with_metadata'])) $params['with_metadata'] = $args['with_metadata']; $this->service->getInboxPlacementTest($args['id'], $params);
+            $params = []; if (isset($args['with_metadata'])) $params['with_metadata'] = $args['with_metadata']; $result = $this->service->getInboxPlacementTest($args['id'], $params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

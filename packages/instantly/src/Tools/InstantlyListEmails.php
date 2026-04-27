@@ -51,7 +51,7 @@ class InstantlyListEmails implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','search','campaign_id','label','assigned_to','type'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listEmails($params);
+            $params = []; foreach (['limit','starting_after','search','campaign_id','label','assigned_to','type'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listEmails($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

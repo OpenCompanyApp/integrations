@@ -7,7 +7,9 @@ use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
 
 /**
- * Test account vitals (DNS, SMTP, IMAP connectivity). Returns diagnostic results.
+ * Test account vitals (DNS, SMTP, IMAP connectivity).
+ *
+ * Accepts one or more account emails and returns Instantly's diagnostic results.
  */
 class InstantlyTestVitals implements Tool
 {
@@ -31,7 +33,8 @@ class InstantlyTestVitals implements Tool
     public function parameters(): array
     {
         return [
-            'email' => ['type' => 'string', 'required' => true, 'description' => 'Email to test'],
+            'accounts' => ['type' => 'array', 'required' => false, 'description' => 'Email accounts to test. If omitted, Instantly tests available accounts.', 'items' => ['type' => 'string']],
+            'email' => ['type' => 'string', 'required' => false, 'description' => 'Deprecated single email shortcut. Prefer accounts.'],
         ];
     }
 
@@ -45,7 +48,15 @@ class InstantlyTestVitals implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $this->service->testVitals($args['email']);
+            $accounts = $args['accounts'] ?? [];
+            if (is_string($accounts)) {
+                $accounts = array_filter(array_map('trim', explode(',', $accounts)));
+            }
+            if ($accounts === [] && isset($args['email'])) {
+                $accounts = [(string) $args['email']];
+            }
+
+            $result = $this->service->testVitals($accounts);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

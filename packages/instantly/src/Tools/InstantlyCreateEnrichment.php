@@ -49,7 +49,7 @@ class InstantlyCreateEnrichment implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['resource_id' => $args['resource_id'], 'type' => $args['type']]; foreach (['limit','filters','custom_flow'] as $k) if (isset($args[$k])) { $v = $args[$k]; $body[$k] = (in_array($k, ['filters','custom_flow']) && is_string($v)) ? json_decode($v, true) : $v; } $this->service->createEnrichment($body);
+            $body = ['resource_id' => $args['resource_id'], 'type' => $args['type']]; foreach (['limit','filters','custom_flow'] as $k) if (isset($args[$k])) { $v = $args[$k]; $body[$k] = (in_array($k, ['filters','custom_flow']) && is_string($v)) ? json_decode($v, true) : $v; } $result = $this->service->createEnrichment($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

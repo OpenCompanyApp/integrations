@@ -50,7 +50,7 @@ class InstantlyListAuditLogs implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after','activity_type','search','start_date','end_date'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listAuditLogs($params);
+            $params = []; foreach (['limit','starting_after','activity_type','search','start_date','end_date'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listAuditLogs($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

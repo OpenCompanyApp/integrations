@@ -49,7 +49,7 @@ class InstantlyBulkAssignLeads implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = ['organization_user_ids' => array_map('trim', explode(',', $args['organization_user_ids']))]; foreach (['campaign','list_id','limit'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; if (isset($args['ids'])) $body['ids'] = array_map('trim', explode(',', $args['ids'])); $this->service->bulkAssignLeads($body);
+            $body = ['organization_user_ids' => array_map('trim', explode(',', $args['organization_user_ids']))]; foreach (['campaign','list_id','limit'] as $k) if (isset($args[$k])) $body[$k] = $args[$k]; if (isset($args['ids'])) $body['ids'] = array_map('trim', explode(',', $args['ids'])); $result = $this->service->bulkAssignLeads($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

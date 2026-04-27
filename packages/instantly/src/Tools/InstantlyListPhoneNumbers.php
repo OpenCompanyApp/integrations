@@ -46,7 +46,7 @@ class InstantlyListPhoneNumbers implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $params = []; foreach (['limit','starting_after'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $this->service->listPhoneNumbers($params);
+            $params = []; foreach (['limit','starting_after'] as $k) if (isset($args[$k])) $params[$k] = $args[$k]; $result = $this->service->listPhoneNumbers($params);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

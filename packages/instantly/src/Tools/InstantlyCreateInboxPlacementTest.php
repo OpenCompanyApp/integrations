@@ -50,7 +50,7 @@ class InstantlyCreateInboxPlacementTest implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $emails = $args['emails']; if (is_string($emails)) $emails = array_map('trim', explode(',', $emails)); $body = ['name' => $args['name'], 'type' => (int)$args['type'], 'sending_method' => (int)$args['sending_method'], 'email_subject' => $args['email_subject'], 'email_body' => $args['email_body'], 'emails' => $emails]; $this->service->createInboxPlacementTest($body);
+            $emails = $args['emails']; if (is_string($emails)) $emails = array_map('trim', explode(',', $emails)); $body = ['name' => $args['name'], 'type' => (int)$args['type'], 'sending_method' => (int)$args['sending_method'], 'email_subject' => $args['email_subject'], 'email_body' => $args['email_body'], 'emails' => $emails]; $result = $this->service->createInboxPlacementTest($body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

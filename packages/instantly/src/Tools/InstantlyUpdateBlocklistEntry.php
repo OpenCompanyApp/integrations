@@ -46,7 +46,7 @@ class InstantlyUpdateBlocklistEntry implements Tool
                 return ToolResult::error('Instantly integration is not configured.');
             }
 
-            $result = $body = []; if (isset($args['bl_value'])) $body['bl_value'] = $args['bl_value']; $this->service->updateBlocklistEntry($args['id'], $body);
+            $body = []; if (isset($args['bl_value'])) $body['bl_value'] = $args['bl_value']; $result = $this->service->updateBlocklistEntry($args['id'], $body);
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

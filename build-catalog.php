@@ -279,6 +279,18 @@ function resolveFqcn(string $source): ?string
     return $ns[1] . '\\' . $cls[1];
 }
 
+/**
+ * Extract imported tool classes when a provider has no explicit tools() map.
+ *
+ * @return list<string>
+ */
+function extractImportedToolClasses(string $source): array
+{
+    preg_match_all('/^use\s+([\w\\\\]+\\\\Tools\\\\\w+)\s*;/m', $source, $matches);
+
+    return array_values(array_unique($matches[1] ?? []));
+}
+
 // --- Helpers ---
 
 /**
@@ -963,6 +975,9 @@ foreach ($providerFiles as $providerFile) {
 
     $appMeta = extractReturnArray($source, 'appMeta') ?? [];
     $toolDefs = extractReturnArray($source, 'tools') ?? [];
+    if (empty($toolDefs)) {
+        $toolDefs = extractImportedToolClasses($source);
+    }
     $credFields = extractReturnArray($source, 'credentialFields') ?? [];
     $configSchema = extractReturnArray($source, 'configSchema') ?? [];
     $validationRules = extractReturnArray($source, 'validationRules') ?? [];

@@ -34,7 +34,7 @@ class ConfigCredentialResolver implements CredentialResolver
             return false;
         }
 
-        foreach (['api_key', 'access_token', 'refresh_token', 'token', 'api_token', 'client_secret', 'password'] as $key) {
+        foreach (['api_key', 'api_token', 'access_token', 'refresh_token', 'token', 'bearer_token', 'client_secret', 'password'] as $key) {
             if (! empty($config[$key])) {
                 return true;
             }

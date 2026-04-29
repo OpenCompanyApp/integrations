@@ -2,7 +2,7 @@
 
 Monorepo for all [OpenCompany](https://github.com/OpenCompanyApp) integration packages. Each package exposes tools that AI agents can call — from rendering diagrams to querying APIs to managing tasks.
 
-Integrations are independent Composer packages built on a shared core. They work in any PHP 8.2+ application: [OpenCompany](https://github.com/OpenCompanyApp) (web), [KosmoKrator](https://github.com/OpenCompanyApp) (CLI), or your own consumer.
+Integrations are independent Composer packages built on a shared core. They work in any PHP 8.2+ application: [OpenCompany](https://github.com/OpenCompanyApp) (web), [KosmoKrator](https://github.com/OpenCompanyApp/kosmokrator) (CLI), or your own consumer.
 
 ## Repository Structure
 
@@ -130,6 +130,60 @@ Each package directory is an independent Composer package. In your consuming app
 ```
 
 Laravel auto-discovers service providers. For non-Laravel apps, use the contracts and registry directly.
+
+## Catalog and SEO Metadata
+
+`php build-catalog.php` writes `integrations-catalog.json`, the machine-readable catalog used by KosmoKrator docs, headless CLI discovery, Lua API docs, and SEO pages. Every integration stays in the catalog, including integrations that are not fully supported by a local CLI runtime yet, so hosts can document future proxy support without hiding available packages.
+
+The catalog includes:
+
+- `auth`, `auth_strategy`, and `auth_summary`
+- `host_availability` for CLI, web, proxy, and MCP gateway surfaces
+- `runtime_requirements` for binaries or services such as `mmdc`, Java, Typst, or Node.js
+- `compatibility`, `compatibility_summary`, `cli_setup_supported`, and `cli_runtime_supported`
+- `setup` with generated headless configure, doctor, status, and MCP gateway commands
+- `seo` with title, meta description, keyword phrases, setup summaries, and tool counts
+
+Most packages do not need explicit metadata. The catalog builder derives sensible defaults from `credentialFields()`, tool read/write types, package metadata, and Lua docs. For example, a ClickUp package with `api_token` and `workspace_id` credentials gets generated setup instructions like:
+
+```console
+kosmokrator integrations:configure clickup --set api_token="$CLICKUP_API_TOKEN" --set workspace_id="$CLICKUP_WORKSPACE_ID" --enable --read allow --write ask --json
+kosmokrator integrations:doctor clickup --json
+kosmokrator mcp:serve --integration=clickup --write=deny
+```
+
+When inference is not specific enough, implement `HasIntegrationCapabilities` on the provider or add the same keys to `appMeta()` / `integrationMeta()`:
+
+```php
+use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
+class AcmeToolProvider implements ToolProvider, HasIntegrationCapabilities
+{
+    public function integrationCapabilities(): array
+    {
+        return [
+            'auth_strategy' => 'oauth2_authorization_code',
+            'cli_setup_supported' => false,
+            'cli_runtime_supported' => true,
+            'host_availability' => [
+                'cli' => true,
+                'web' => true,
+                'proxy' => true,
+                'mcp_gateway' => true,
+            ],
+            'runtime_requirements' => [
+                ['name' => 'acme', 'type' => 'binary', 'required' => true],
+            ],
+            'seo' => [
+                'cli_setup_summary' => 'Acme can run from KosmoKrator after credentials are connected through OAuth.',
+                'mcp_setup_summary' => 'Expose Acme tools to MCP clients through the KosmoKrator MCP gateway.',
+            ],
+        ];
+    }
+}
+```
+
+Use `cli_setup_supported: false` when credentials cannot be configured fully headlessly, for example browser redirect OAuth without device-code or manual-token support. Use `cli_runtime_supported: false` only when the tool cannot currently run locally. The docs site should still render those integrations and explain the limitation.
 
 ### System Dependencies
 
@@ -1303,7 +1357,7 @@ $this->app->singleton(
 );
 ```
 
-The `$account` parameter on `CredentialResolver::get()` is defined for future multi-account support but currently unused in OpenCompany (workspace scoping serves as the default account boundary).
+The optional `$account` parameter on `CredentialResolver::get()`, `isConfigured()`, and `getAccounts()` is the shared path for multi-account hosts. KosmoKrator uses it for headless named credentials; OpenCompany can map it to workspace-scoped account aliases.
 
 ### Custom Credential Storage
 
@@ -1350,7 +1404,7 @@ cd packages/mermaid && ../../vendor/bin/phpstan analyse
 3. Create your service class and tool classes
 4. Add lua-docs if the integration has non-obvious workflows — use `app.integrations.{name}.{function}()` syntax
 5. Add a `phpstan.neon` and ensure level 5 passes
-6. Update this README's structure listing and integrations table
+6. Run `php build-catalog.php` and update this README's structure listing and integrations table
 
 ### Conventions
 
@@ -1368,10 +1422,12 @@ cd packages/mermaid && ../../vendor/bin/phpstan analyse
 - [ ] Service class encapsulating all API communication
 - [ ] Service provider with singleton service registration and `ToolProviderRegistry` boot
 - [ ] Tool provider implementing `ToolProvider` (and `ConfigurableIntegration` if credentials are needed)
+- [ ] Capability metadata checked; add `HasIntegrationCapabilities` only when catalog inference is not specific enough
 - [ ] Tool classes with clear `description()`, typed `parameters()`, and `ToolResult` returns
 - [ ] `credentialFields()` defined for any required API keys or tokens
 - [ ] `testConnection()` if implementing `ConfigurableIntegration`
 - [ ] `lua-docs/{name}.md` for integrations with complex workflows (using `app.integrations.*` calling convention)
+- [ ] `php build-catalog.php` run, with generated auth/setup/SEO fields reviewed for CLI, Lua, and MCP gateway docs
 - [ ] Entry added to README structure listing and integrations table
 - [ ] Lua-doc function names match `deriveFunctionName()` output (check auto-generated docs via `lua_read_doc`)
 

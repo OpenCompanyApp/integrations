@@ -71,4 +71,10 @@ interface ConfigurableIntegration
      * @return array<string, string|array>
      */
     public function validationRules(): array;
+
+    /**
+     * Optional capability metadata can also be supplied through ToolProvider
+     * appMeta()/integrationMeta() keys or by implementing
+     * HasIntegrationCapabilities on the provider class.
+     */
 }

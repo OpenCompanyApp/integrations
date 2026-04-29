@@ -82,4 +82,11 @@ interface ToolProvider
      * @return array<int, array{key: string, type: string, label: string, required?: bool, placeholder?: string, default?: string}>
      */
     public function credentialFields(): array;
+
+    /**
+     * Optional capability metadata can be exposed by also implementing
+     * HasIntegrationCapabilities. Hosts and catalog builders use it to
+     * distinguish CLI setup support, web-only OAuth, runtime requirements,
+     * and SEO/help text from simple credential-field inference.
+     */
 }

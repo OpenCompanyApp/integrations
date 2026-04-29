@@ -158,6 +158,9 @@ function extractReturnArray(string $source, string $methodName): ?array
         $arrayCode
     );
 
+    $prepared = replaceSchemaBuilderCalls($prepared);
+    $prepared = escapeDoubleQuotedStringVariables($prepared);
+
     // Note: we don't strip // comments because URLs like https:// contain //
     // The array code we extract is clean (no comments in metadata methods)
 
@@ -172,6 +175,66 @@ function extractReturnArray(string $source, string $methodName): ?array
     } finally {
         restore_error_handler();
     }
+}
+
+/**
+ * Keep dollar signs inside double-quoted metadata strings literal during eval.
+ */
+function escapeDoubleQuotedStringVariables(string $code): string
+{
+    $out = '';
+    $len = strlen($code);
+    $quote = null;
+
+    for ($i = 0; $i < $len; $i++) {
+        $ch = $code[$i];
+
+        if ($quote === null) {
+            if ($ch === "'" || $ch === '"') {
+                $quote = $ch;
+            }
+            $out .= $ch;
+            continue;
+        }
+
+        if ($ch === '\\' && $i + 1 < $len) {
+            $out .= $ch . $code[$i + 1];
+            $i++;
+            continue;
+        }
+
+        if ($ch === $quote) {
+            $quote = null;
+            $out .= $ch;
+            continue;
+        }
+
+        $out .= $quote === '"' && $ch === '$' ? '\\$' : $ch;
+    }
+
+    return $out;
+}
+
+/**
+ * Convert simple schema-builder calls used in metadata arrays into literals.
+ */
+function replaceSchemaBuilderCalls(string $code): string
+{
+    return preg_replace_callback(
+        '/\$schema\s*->\s*(string|integer|number|boolean|array|object)\s*\(\s*\)\s*(?:->\s*description\s*\(\s*((?:\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"))\s*\))?/s',
+        static function (array $m): string {
+            $type = $m[1];
+            $description = $m[2] ?? null;
+
+            $items = ["'type' => '{$type}'"];
+            if ($description !== null) {
+                $items[] = "'description' => {$description}";
+            }
+
+            return '[' . implode(', ', $items) . ']';
+        },
+        $code,
+    ) ?? $code;
 }
 
 /**
@@ -372,6 +435,66 @@ function truncateText(string $text, int $maxLength): string
     }
 
     return rtrim($cut, " \t\n\r\0\x0B.,;:") . '…';
+}
+
+function envVarName(string $slug, string $key): string
+{
+    $base = strtoupper(preg_replace('/[^A-Za-z0-9]+/', '_', $slug) ?? $slug);
+    $field = strtoupper(preg_replace('/[^A-Za-z0-9]+/', '_', $key) ?? $key);
+
+    return trim($base . '_' . $field, '_');
+}
+
+function buildHeadlessSetupMetadata(string $slug, string $displayName, array $credentials, array $capabilities): array
+{
+    $setupFlags = [];
+    foreach ($credentials as $field) {
+        if (!is_array($field)) {
+            continue;
+        }
+
+        $key = (string) ($field['key'] ?? '');
+        if ($key === '') {
+            continue;
+        }
+
+        $setupFlags[] = [
+            'key' => $key,
+            'flag' => '--set ' . $key . '="$' . envVarName($slug, $key) . '"',
+            'env' => envVarName($slug, $key),
+            'required' => (bool) ($field['required'] ?? true),
+        ];
+    }
+
+    $configureCommand = 'kosmokrator integrations:configure ' . $slug;
+    foreach ($setupFlags as $flag) {
+        if ($flag['required']) {
+            $configureCommand .= ' ' . $flag['flag'];
+        }
+    }
+    $configureCommand .= ' --enable --read allow --write ask --json';
+
+    $cliSetupSupported = (bool) ($capabilities['compatibility']['cli_setup_supported'] ?? false);
+    $cliRuntimeSupported = (bool) ($capabilities['compatibility']['cli_runtime_supported'] ?? false);
+
+    return [
+        'required_credentials' => array_values(array_map(
+            static fn (array $flag): string => $flag['key'],
+            array_filter($setupFlags, static fn (array $flag): bool => $flag['required']),
+        )),
+        'env_vars' => array_column($setupFlags, 'env'),
+        'cli_configure_command' => $configureCommand,
+        'doctor_command' => 'kosmokrator integrations:doctor ' . $slug . ' --json',
+        'status_command' => 'kosmokrator integrations:status --json',
+        'mcp_gateway_install_command' => 'kosmokrator mcp:gateway:install --integration=' . $slug . ' --write=deny --json',
+        'mcp_gateway_serve_command' => 'kosmokrator mcp:serve --integration=' . $slug . ' --write=deny',
+        'cli_setup_summary' => $cliSetupSupported
+            ? $displayName . ' can be configured headlessly with `kosmokrator integrations:configure ' . $slug . '`.'
+            : $displayName . ' is discoverable, but headless credential setup is not fully supported yet.',
+        'mcp_setup_summary' => $cliRuntimeSupported
+            ? 'Expose ' . $displayName . ' to MCP clients with `kosmokrator mcp:serve --integration=' . $slug . '`.'
+            : $displayName . ' is not currently exposed through the local MCP gateway runtime.',
+    ];
 }
 
 function humanizeSlug(string $slug): string
@@ -623,6 +746,12 @@ function inferIntegrationCapabilities(
                 'setup_mode' => $cliSetupMode,
                 'runtime_mode' => $cliRuntime && !$cliSetup && $hasOauthConnect ? 'stored_credentials_only' : 'normal',
             ],
+            'mcp_gateway' => [
+                'setup_supported' => $cliSetup,
+                'runtime_supported' => $cliRuntime,
+                'setup_mode' => 'kosmokrator_gateway',
+                'runtime_mode' => $cliRuntime ? 'kosmokrator_gateway' : 'unsupported',
+            ],
         ],
         'runtime_requirements' => $runtimeRequirements,
         'compatibility' => [
@@ -630,6 +759,8 @@ function inferIntegrationCapabilities(
             'web_runtime_supported' => $webRuntime,
             'cli_setup_supported' => $cliSetup,
             'cli_runtime_supported' => $cliRuntime,
+            'mcp_gateway_supported' => $cliRuntime,
+            'lua_supported' => $cliRuntime,
         ],
     ];
 
@@ -835,7 +966,9 @@ foreach ($providerFiles as $providerFile) {
     $credFields = extractReturnArray($source, 'credentialFields') ?? [];
     $configSchema = extractReturnArray($source, 'configSchema') ?? [];
     $validationRules = extractReturnArray($source, 'validationRules') ?? [];
-    $explicitCapabilities = extractReturnArray($source, 'integrationCapabilities') ?? [];
+    $explicitCapabilities = extractReturnArray($source, 'capabilities')
+        ?? extractReturnArray($source, 'integrationCapabilities')
+        ?? [];
 
     $integrationMeta = array_merge(
         fallbackIntegrationMeta($appName ?? ''),
@@ -1013,6 +1146,7 @@ foreach ($providerFiles as $providerFile) {
         hasTriggers: !empty($triggerDefs),
         explicitCapabilities: $explicitCapabilities,
     );
+    $headlessSetup = buildHeadlessSetupMetadata($appName, $displayName, $credentials, $capabilities);
     $supportsMultiAccount = str_contains($source, '$context[\'account\']')
         || str_contains($source, '$context["account"]')
         || str_contains($source, 'context[\'account\']')
@@ -1046,10 +1180,13 @@ foreach ($providerFiles as $providerFile) {
         'auth_type' => $authType,
         'auth_strategy' => $capabilities['auth']['strategy'] ?? null,
         'auth' => $capabilities['auth'],
+        'auth_summary' => $capabilities['summary'],
         'host_availability' => $capabilities['host_availability'],
         'runtime_requirements' => $capabilities['runtime_requirements'],
         'compatibility' => $capabilities['compatibility'],
         'compatibility_summary' => $capabilities['summary'],
+        'cli_setup_supported' => $capabilities['compatibility']['cli_setup_supported'] ?? null,
+        'cli_runtime_supported' => $capabilities['compatibility']['cli_runtime_supported'] ?? null,
         'keywords' => $composer['keywords'] ?? [],
         'composer_description' => $composer['description'] ?? null,
         'package_meta' => [
@@ -1082,6 +1219,17 @@ foreach ($providerFiles as $providerFile) {
             'cli_runtime_supported' => $capabilities['compatibility']['cli_runtime_supported'] ?? null,
             'web_setup_supported' => $capabilities['compatibility']['web_setup_supported'] ?? null,
             'web_runtime_supported' => $capabilities['compatibility']['web_runtime_supported'] ?? null,
+            'mcp_gateway_supported' => $capabilities['compatibility']['mcp_gateway_supported'] ?? null,
+            'lua_supported' => $capabilities['compatibility']['lua_supported'] ?? null,
+            'cli_setup_summary' => $headlessSetup['cli_setup_summary'],
+            'mcp_setup_summary' => $headlessSetup['mcp_setup_summary'],
+            'keywords' => [
+                strtolower($displayName) . ' cli',
+                strtolower($displayName) . ' mcp',
+                strtolower($displayName) . ' lua',
+                strtolower($displayName) . ' integration',
+                strtolower($displayName) . ' agent tools',
+            ],
         ],
         'readme' => $readme,
         'tool_count' => count($tools),
@@ -1094,7 +1242,7 @@ foreach ($providerFiles as $providerFile) {
         'triggers' => $triggers,
         'credentials' => $credentials,
         'credential_keys' => credentialKeys($credentials),
-        'setup' => [
+        'setup' => array_merge([
             'auth_type' => $authType,
             'auth_strategy' => $capabilities['auth']['strategy'] ?? null,
             'auth' => $capabilities['auth'],
@@ -1103,7 +1251,7 @@ foreach ($providerFiles as $providerFile) {
             'credentials' => $credentials,
             'config_schema' => $configSchema,
             'validation_rules' => $validationRules,
-        ],
+        ], $headlessSetup),
         'quality' => [
             'has_lua_docs' => $luaDocs !== '',
             'has_lua_docs_file' => !$luaDocsGenerated && $luaDocs !== '',

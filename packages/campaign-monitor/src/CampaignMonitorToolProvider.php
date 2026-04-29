@@ -77,7 +77,7 @@ class CampaignMonitorToolProvider implements ToolProvider, ConfigurableIntegrati
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, lists, subscribers',
+            'label' => 'Campaign Monitor',
             'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:campaignmonitor',

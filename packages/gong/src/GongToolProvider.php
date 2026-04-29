@@ -91,7 +91,7 @@ class GongToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, transcripts, users, deals, interactions',
+            'label' => 'Gong',
             'description' => 'Revenue intelligence',
             'icon' => 'ph:phone-call',
             'logo' => 'simple-icons:gong',

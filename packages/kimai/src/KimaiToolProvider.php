@@ -78,7 +78,7 @@ class KimaiToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'timesheets, projects, customers',
+            'label' => 'Kimai',
             'description' => 'Time tracking',
             'icon' => 'ph:clock-countdown',
             'logo' => 'simple-icons:kimai',

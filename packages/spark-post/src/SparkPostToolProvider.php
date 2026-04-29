@@ -87,7 +87,7 @@ class SparkPostToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'domains, templates, transmissions, webhooks',
+            'label' => 'SparkPost',
             'description' => 'Email delivery',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:sparkpost',

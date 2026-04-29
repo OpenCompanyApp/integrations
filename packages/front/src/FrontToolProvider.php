@@ -78,7 +78,7 @@ class FrontToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'conversations, messages, contacts',
+            'label' => 'Front',
             'description' => 'Customer communication platform',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:front',

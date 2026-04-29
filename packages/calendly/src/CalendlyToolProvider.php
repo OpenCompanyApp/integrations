@@ -93,7 +93,7 @@ class CalendlyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'event types, bookings, organizations',
+            'label' => 'Calendly',
             'description' => 'Scheduling',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calendly',

@@ -78,7 +78,7 @@ class KoFiToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'supporters, transactions, commissions, shop items',
+            'label' => 'Ko-fi',
             'description' => 'Creator platform',
             'icon' => 'ph:coffee',
             'logo' => 'simple-icons:kofi',

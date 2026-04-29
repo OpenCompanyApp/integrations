@@ -79,7 +79,7 @@ class LaterToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'profiles, posts, scheduling, media',
+            'label' => 'Later',
             'description' => 'Social media scheduling',
             'icon' => 'ph:calendar-dots',
             'logo' => 'simple-icons:later',

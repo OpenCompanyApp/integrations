@@ -77,7 +77,7 @@ class RenderToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'services, deploys, jobs',
+            'label' => 'Render',
             'description' => 'Cloud platform',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:render',

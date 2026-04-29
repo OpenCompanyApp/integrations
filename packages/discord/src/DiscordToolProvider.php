@@ -80,7 +80,7 @@ class DiscordToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, channels, guilds',
+            'label' => 'Discord',
             'description' => 'Messaging',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:discord',

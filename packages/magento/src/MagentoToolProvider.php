@@ -89,7 +89,7 @@ class MagentoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'products, orders, customers',
+            'label' => 'Magento',
             'description' => 'E-commerce platform',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:magento',

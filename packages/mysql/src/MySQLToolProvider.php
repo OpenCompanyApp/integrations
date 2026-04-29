@@ -76,7 +76,40 @@ class MySQLToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appName(): string
     {
         return 'mysql';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Mysql',
+            'description' => 'MySQL integration for Laravel — query databases, manage tables, and perform CRUD…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Mysql',
+            'description' => 'MySQL integration for Laravel — query databases, manage tables, and perform CRUD operations via HTTP REST bridge.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration.
      *
      * @return array<int, array<string, mixed>>

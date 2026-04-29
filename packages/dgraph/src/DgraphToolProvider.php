@@ -81,7 +81,7 @@ class DgraphToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'database, graphql, graph',
+            'label' => 'Dgraph',
             'description' => 'Distributed Graph Database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:dgraph',

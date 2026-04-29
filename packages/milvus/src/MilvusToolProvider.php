@@ -77,7 +77,7 @@ class MilvusToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'collections, documents, search',
+            'label' => 'Milvus',
             'description' => 'Vector database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:milvus',

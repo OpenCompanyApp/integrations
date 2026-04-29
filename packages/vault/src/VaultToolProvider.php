@@ -82,7 +82,7 @@ class VaultToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'secrets, policies, token management',
+            'label' => 'HashiCorp Vault',
             'description' => 'HashiCorp Vault integration for secrets management',
             'icon' => 'mdi:shield-lock-outline',
             'logo' => 'mdi:shield-lock-outline',

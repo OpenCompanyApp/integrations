@@ -75,7 +75,40 @@ class MistralAIToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appName(): string
     {
         return 'mistralai';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Mistralai',
+            'description' => 'MistralAI integration for Laravel — chat completions, embeddings, model management…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Mistralai',
+            'description' => 'MistralAI integration for Laravel — chat completions, embeddings, model management, fine-tuning, and agent management.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

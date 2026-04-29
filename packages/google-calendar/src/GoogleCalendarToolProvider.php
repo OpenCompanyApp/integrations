@@ -79,7 +79,7 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
     public function appMeta(): array
     {
         return [
-            'label' => 'events, calendars, colors',
+            'label' => 'Google Calendar',
             'description' => 'Google Calendar',
             'icon' => 'ph:calendar',
             'logo' => 'simple-icons:googlecalendar',

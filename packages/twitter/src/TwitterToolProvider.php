@@ -77,7 +77,7 @@ class TwitterToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'tweets, search, users',
+            'label' => 'Twitter / X',
             'description' => 'Social media platform',
             'icon' => 'ri:twitter-x-fill',
             'logo' => 'simple-icons:x',

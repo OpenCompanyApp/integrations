@@ -80,7 +80,7 @@ class RevolutToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'banking, accounts, transactions',
+            'label' => 'Revolut',
             'description' => 'Revolut Business Banking',
             'icon' => 'ph:bank',
             'logo' => 'simple-icons:revolut',

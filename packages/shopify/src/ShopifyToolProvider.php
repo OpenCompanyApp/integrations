@@ -78,7 +78,7 @@ class ShopifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'products, orders, customers',
+            'label' => 'Shopify',
             'description' => 'Shopify e-commerce',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:shopify',

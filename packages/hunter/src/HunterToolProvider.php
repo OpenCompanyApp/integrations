@@ -81,7 +81,7 @@ class HunterToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'domain search, email finder, verifier, leads',
+            'label' => 'Hunter',
             'description' => 'Email outreach and lead generation',
             'icon' => 'ph:at',
             'logo' => 'simple-icons:hunter',

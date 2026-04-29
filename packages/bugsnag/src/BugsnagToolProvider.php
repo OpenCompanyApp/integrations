@@ -77,7 +77,7 @@ class BugsnagToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, errors, events',
+            'label' => 'Bugsnag',
             'description' => 'Error monitoring',
             'icon' => 'ph:bug',
             'logo' => 'simple-icons:bugsnag',

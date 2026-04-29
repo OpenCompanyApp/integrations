@@ -78,7 +78,7 @@ class FacebookToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'pages, posts, insights',
+            'label' => 'Facebook',
             'description' => 'Social media management',
             'icon' => 'ph:facebook-logo',
             'logo' => 'simple-icons:facebook',

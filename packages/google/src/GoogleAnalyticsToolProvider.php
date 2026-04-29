@@ -83,7 +83,7 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
     public function appMeta(): array
     {
         return [
-            'label' => 'analytics, traffic, visitors, pageviews, conversions, revenue',
+            'label' => 'Google Analytics',
             'description' => 'Website analytics and reporting',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:googleanalytics',

@@ -93,7 +93,7 @@ class ZohoMailToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, folders, tasks',
+            'label' => 'Zoho Mail',
             'description' => 'Email communication',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:zoho',

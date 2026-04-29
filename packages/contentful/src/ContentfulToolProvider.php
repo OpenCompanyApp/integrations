@@ -85,7 +85,7 @@ class ContentfulToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'cms, content',
+            'label' => 'Contentful',
             'description' => 'Headless CMS',
             'icon' => 'ph:article',
             'logo' => 'simple-icons:contentful',

@@ -80,7 +80,7 @@ class ApifyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'actors, datasets, runs, stores',
+            'label' => 'Apify',
             'description' => 'Web scraping & automation',
             'icon' => 'ph:robot',
             'logo' => 'simple-icons:apify',

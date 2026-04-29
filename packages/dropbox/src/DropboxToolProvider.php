@@ -94,7 +94,7 @@ class DropboxToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'files, folders, sharing, search',
+            'label' => 'Dropbox',
             'description' => 'Dropbox integration for cloud storage',
             'icon' => 'mdi:dropbox',
             'logo' => 'mdi:dropbox',

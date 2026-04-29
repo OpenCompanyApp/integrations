@@ -78,7 +78,7 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, deploys, forms, dns',
+            'label' => 'Netlify',
             'description' => 'Deployment & hosting platform',
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:netlify',

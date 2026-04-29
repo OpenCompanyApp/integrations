@@ -91,7 +91,7 @@ class TaxjarToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'sales tax, orders, categories',
+            'label' => 'TaxJar',
             'description' => 'Sales tax calculation & reporting',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:taxjar',

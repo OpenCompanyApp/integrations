@@ -81,7 +81,7 @@ class LinkedinToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, organizations, ads',
+            'label' => 'LinkedIn',
             'description' => 'Professional networking and marketing platform',
             'icon' => 'ph:linkedin-logo',
             'logo' => 'simple-icons:linkedin',

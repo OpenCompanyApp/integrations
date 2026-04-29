@@ -82,7 +82,7 @@ class AmplitudeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'events, funnels, cohorts',
+            'label' => 'Amplitude Analytics',
             'description' => 'Product analytics',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:amplitude',

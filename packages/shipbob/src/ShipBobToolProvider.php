@@ -78,7 +78,7 @@ class ShipBobToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'orders, products, shipments',
+            'label' => 'ShipBob',
             'description' => 'E-commerce fulfillment',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:shipbob',

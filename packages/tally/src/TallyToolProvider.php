@@ -83,7 +83,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'forms, submissions, surveys',
+            'label' => 'Tally',
             'description' => 'Online forms and surveys',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:tally',

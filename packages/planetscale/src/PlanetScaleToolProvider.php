@@ -78,7 +78,7 @@ class PlanetScaleToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'databases, branches, organizations',
+            'label' => 'PlanetScale',
             'description' => 'Serverless MySQL database platform',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:planetscale',

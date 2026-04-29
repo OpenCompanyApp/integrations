@@ -75,7 +75,7 @@ class TapfiliateToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'affiliates, conversions, tracking',
+            'label' => 'Tapfiliate',
             'description' => 'Affiliate marketing',
             'icon' => 'ph:users-three',
             'logo' => 'simple-icons:tapfiliate',

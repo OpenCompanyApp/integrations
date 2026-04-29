@@ -77,7 +77,7 @@ class FalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'models, generation, files',
+            'label' => 'fal.ai',
             'description' => 'AI media generation',
             'icon' => 'ph:sparkle',
             'logo' => 'simple-icons:fal',

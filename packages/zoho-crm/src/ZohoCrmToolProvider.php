@@ -89,7 +89,7 @@ class ZohoCrmToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'crm, leads, contacts, deals',
+            'label' => 'Zoho CRM',
             'description' => 'CRM platform',
             'icon' => 'ph:buildings',
             'logo' => 'simple-icons:zoho',

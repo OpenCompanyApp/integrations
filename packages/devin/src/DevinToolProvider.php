@@ -75,7 +75,7 @@ class DevinToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'sessions, messages',
+            'label' => 'Devin',
             'description' => 'AI software engineer',
             'icon' => 'ph:robot',
             'logo' => 'simple-icons:devin',

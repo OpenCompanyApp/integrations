@@ -77,7 +77,7 @@ class QualifyingToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'accounts, contacts, deals',
+            'label' => 'Qualifying',
             'description' => 'Sales CRM',
             'icon' => 'ph:handshake',
             'logo' => 'ph:handshake',

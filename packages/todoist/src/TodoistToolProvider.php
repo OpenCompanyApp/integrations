@@ -75,7 +75,7 @@ class TodoistToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, projects, and labels',
+            'label' => 'Todoist',
             'description' => 'Task Management',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:todoist',

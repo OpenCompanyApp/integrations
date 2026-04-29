@@ -78,7 +78,7 @@ class ContaboToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'VPS, snapshots, images, networks',
+            'label' => 'Contabo',
             'description' => 'Cloud VPS infrastructure',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:contabo',

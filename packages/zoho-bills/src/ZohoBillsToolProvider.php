@@ -79,7 +79,7 @@ class ZohoBillsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'invoices, customers, items',
+            'label' => 'Zoho Bills',
             'description' => 'Billing & invoicing',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:zoho',

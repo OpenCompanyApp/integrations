@@ -79,7 +79,7 @@ class QuickBooksToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'accounting, invoicing, billing',
+            'label' => 'QuickBooks',
             'description' => 'QuickBooks accounting',
             'icon' => 'ph:book-open',
             'logo' => 'simple-icons:quickbooks',

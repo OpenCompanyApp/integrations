@@ -39,7 +39,7 @@ class MailgunGetDomain implements Tool
             $domainName = $args['domain'] ?? '';
 
             if (empty($domainName)) {
-                $domainName = $this->service->getDomain();
+                $domainName = $this->service->getConfiguredDomain();
             }
 
             if (empty($domainName)) {

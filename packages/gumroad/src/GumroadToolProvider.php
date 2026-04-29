@@ -78,7 +78,7 @@ class GumroadToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'products, sales, subscribers, offers',
+            'label' => 'Gumroad',
             'description' => 'Digital commerce',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:gumroad',

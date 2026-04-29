@@ -79,7 +79,7 @@ class FaunaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'database, nosql, fql',
+            'label' => 'Fauna',
             'description' => 'Serverless NoSQL Database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:fauna',

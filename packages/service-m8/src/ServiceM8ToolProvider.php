@@ -79,7 +79,7 @@ class ServiceM8ToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'jobs, clients, activities',
+            'label' => 'ServiceM8',
             'description' => 'Field service management',
             'icon' => 'ph:wrench',
             'logo' => 'simple-icons:servicem8',

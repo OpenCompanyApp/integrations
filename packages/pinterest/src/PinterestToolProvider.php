@@ -79,7 +79,7 @@ class PinterestToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'pins, boards, campaigns',
+            'label' => 'Pinterest',
             'description' => 'Visual discovery and marketing',
             'icon' => 'ph:pinterest-logo',
             'logo' => 'simple-icons:pinterest',

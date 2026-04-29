@@ -95,7 +95,7 @@ class SplitwiseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'expenses, groups, friends',
+            'label' => 'Splitwise',
             'description' => 'Shared expense tracking',
             'icon' => 'ph:split',
             'logo' => 'simple-icons:splitwise',

@@ -82,7 +82,7 @@ class BrazeToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, canvases, users',
+            'label' => 'Braze',
             'description' => 'Marketing automation',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:braze',

@@ -78,7 +78,7 @@ class MotionToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, projects, schedules',
+            'label' => 'Motion',
             'description' => 'Task and project management',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:motion',

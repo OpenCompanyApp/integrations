@@ -74,16 +74,38 @@ class TypstToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'typst';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'PDF reports, documents, invoices',
+            'label' => 'Typst',
             'description' => 'Typst document rendering to PDF',
             'icon' => 'ph:file-pdf',
             'logo' => 'ph:file-pdf',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Typst',
+            'description' => 'Typst document rendering to PDF',
+            'icon' => 'ph:file-pdf',
+            'logo' => 'ph:file-pdf',
+            'category' => 'rendering',
+            'badge' => 'verified',
+            'docs_url' => 'https://typst.app/docs/',
+        ];
+    }
     public function tools(): array
     {
         return [

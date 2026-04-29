@@ -78,7 +78,7 @@ class CockroachDbToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'clusters, databases, users',
+            'label' => 'CockroachDB',
             'description' => 'Cloud database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:cockroachlabs',

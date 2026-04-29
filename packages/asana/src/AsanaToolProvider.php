@@ -96,7 +96,7 @@ class AsanaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, projects, sections, workspaces, and teams',
+            'label' => 'Asana',
             'description' => 'Project Management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:asana',

@@ -93,7 +93,7 @@ class KafkaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'topics, clusters, producers',
+            'label' => 'Apache Kafka',
             'description' => 'Apache Kafka messaging via Confluent Cloud',
             'icon' => 'ph:waveform',
             'logo' => 'simple-icons:apachekafka',

@@ -79,7 +79,7 @@ class FreshBooksToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'invoices, clients, projects, payments',
+            'label' => 'FreshBooks',
             'description' => 'Accounting & invoicing',
             'icon' => 'ph:invoice',
             'logo' => 'simple-icons:freshbooks',

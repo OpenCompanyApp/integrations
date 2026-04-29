@@ -74,16 +74,38 @@ class VegaLiteToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'vegalite';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'charts: bar, line, scatter, heatmap, donut, boxplot',
+            'label' => 'Vega-Lite',
             'description' => 'Vega-Lite chart rendering',
             'icon' => 'ph:chart-bar',
             'logo' => 'ph:chart-bar',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Vega-Lite',
+            'description' => 'Vega-Lite chart rendering',
+            'icon' => 'ph:chart-bar',
+            'logo' => 'ph:chart-bar',
+            'category' => 'rendering',
+            'badge' => 'verified',
+            'docs_url' => 'https://vega.github.io/vega-lite/docs/',
+        ];
+    }
     public function tools(): array
     {
         return [

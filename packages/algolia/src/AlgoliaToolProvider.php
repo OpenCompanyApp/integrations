@@ -83,7 +83,7 @@ class AlgoliaToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'search, index',
+            'label' => 'Algolia',
             'description' => 'Search & indexing',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:algolia',

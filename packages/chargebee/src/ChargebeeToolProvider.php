@@ -91,7 +91,7 @@ class ChargebeeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'subscriptions, customers, invoices',
+            'label' => 'Chargebee',
             'description' => 'Billing & subscription management',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargebee',

@@ -79,7 +79,7 @@ class InstagramToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'media, comments, insights',
+            'label' => 'Instagram',
             'description' => 'Social media publishing & analytics',
             'icon' => 'ph:instagram-logo',
             'logo' => 'simple-icons:instagram',

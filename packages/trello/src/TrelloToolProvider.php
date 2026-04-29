@@ -78,7 +78,7 @@ class TrelloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'boards, lists, cards',
+            'label' => 'Trello',
             'description' => 'Project management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:trello',

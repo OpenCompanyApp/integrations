@@ -80,7 +80,40 @@ class BoxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appName(): string
     {
         return 'box';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Box',
+            'description' => 'Box integration for Laravel — manage files, folders, sharing, and search via the Box…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Box',
+            'description' => 'Box integration for Laravel — manage files, folders, sharing, and search via the Box API.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration.
      *
      * @return array<int, array<string, mixed>>

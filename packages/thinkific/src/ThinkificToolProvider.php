@@ -90,7 +90,7 @@ class ThinkificToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'courses, enrollments, users',
+            'label' => 'Thinkific',
             'description' => 'Online course platform',
             'icon' => 'ph:graduation-cap',
             'logo' => 'simple-icons:thinkific',

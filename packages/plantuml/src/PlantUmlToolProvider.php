@@ -74,16 +74,38 @@ class PlantUmlToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'plantuml';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'UML, class, sequence, activity diagrams',
+            'label' => 'PlantUML',
             'description' => 'PlantUML diagram rendering',
             'icon' => 'ph:tree-structure',
             'logo' => 'ph:tree-structure',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'PlantUML',
+            'description' => 'PlantUML diagram rendering',
+            'icon' => 'ph:tree-structure',
+            'logo' => 'ph:tree-structure',
+            'category' => 'rendering',
+            'badge' => 'verified',
+            'docs_url' => 'https://plantuml.com/',
+        ];
+    }
     public function tools(): array
     {
         return [

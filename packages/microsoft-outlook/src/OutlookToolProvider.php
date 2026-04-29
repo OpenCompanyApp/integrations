@@ -92,7 +92,7 @@ class OutlookToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label'       => 'email, calendar, contacts',
+            'label'       => 'Microsoft Outlook',
             'description' => 'Microsoft Outlook',
             'icon'        => 'ph:envelope',
             'logo'        => 'simple-icons:microsoftoutlook',

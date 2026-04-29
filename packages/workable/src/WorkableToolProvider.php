@@ -93,7 +93,7 @@ class WorkableToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'jobs, candidates, members',
+            'label' => 'Workable',
             'description' => 'Recruiting & ATS',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:workable',

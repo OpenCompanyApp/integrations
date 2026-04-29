@@ -78,7 +78,7 @@ class MatrixToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'rooms, messages, members, profiles',
+            'label' => 'Matrix',
             'description' => 'Decentralized messaging',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:matrix',

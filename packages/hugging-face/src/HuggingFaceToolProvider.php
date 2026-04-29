@@ -77,7 +77,7 @@ class HuggingFaceToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'models, datasets, spaces, inference',
+            'label' => 'Hugging Face',
             'description' => 'AI model hub & inference',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:huggingface',

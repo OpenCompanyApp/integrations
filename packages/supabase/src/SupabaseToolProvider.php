@@ -78,7 +78,40 @@ class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appName(): string
     {
         return 'supabase';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Supabase',
+            'description' => 'Supabase integration for Laravel — manage projects, tables, and rows.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Supabase',
+            'description' => 'Supabase integration for Laravel — manage projects, tables, and rows.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for this integration.
      *
      * @return array

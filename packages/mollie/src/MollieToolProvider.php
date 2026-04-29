@@ -78,7 +78,40 @@ class MollieToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appName(): string
     {
         return 'mollie';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Mollie',
+            'description' => 'Mollie payments integration for Laravel — manage payments, customers, subscriptions…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Mollie',
+            'description' => 'Mollie payments integration for Laravel — manage payments, customers, subscriptions and invoices.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

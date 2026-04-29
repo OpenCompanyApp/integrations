@@ -92,7 +92,7 @@ class ApiTemplateIOToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'PDF, images, templates',
+            'label' => 'API Template IO',
             'description' => 'Document & image generation',
             'icon' => 'ph:file-pdf',
             'logo' => 'simple-icons:apitemplateio',

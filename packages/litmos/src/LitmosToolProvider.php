@@ -90,7 +90,7 @@ class LitmosToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'users, courses, teams',
+            'label' => 'Litmos',
             'description' => 'Learning management system',
             'icon' => 'ph:graduation-cap',
             'logo' => 'simple-icons:litmos',

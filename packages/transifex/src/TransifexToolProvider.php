@@ -77,7 +77,7 @@ class TransifexToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, resources, translations, languages',
+            'label' => 'Transifex',
             'description' => 'Translation management platform',
             'icon' => 'ph:globe',
             'logo' => 'simple-icons:transifex',

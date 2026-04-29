@@ -75,7 +75,7 @@ class GranolaToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'meetings, notes, transcripts',
+            'label' => 'Granola',
             'description' => 'AI meeting notes',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:granola',

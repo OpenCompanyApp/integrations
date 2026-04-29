@@ -78,7 +78,7 @@ class LarkToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'chats, messages, members',
+            'label' => 'Lark Suite',
             'description' => 'Team messaging',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:lark',

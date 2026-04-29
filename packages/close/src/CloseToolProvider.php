@@ -92,7 +92,7 @@ class CloseToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label'       => 'leads, contacts, activities, tasks',
+            'label'       => 'Close CRM',
             'description' => 'CRM & sales engagement',
             'icon'        => 'ph:buildings',
             'logo'        => 'simple-icons:close',

@@ -87,7 +87,7 @@ class TerraformToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'workspaces, runs, variables, organizations',
+            'label' => 'Terraform Cloud',
             'description' => 'Infrastructure as code management',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:terraform',

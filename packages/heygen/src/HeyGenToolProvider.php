@@ -78,7 +78,7 @@ class HeyGenToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'videos, avatars, voices, templates',
+            'label' => 'HeyGen',
             'description' => 'AI video generation',
             'icon' => 'ph:video',
             'logo' => 'simple-icons:heygen',

@@ -91,7 +91,7 @@ class BlueskyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'post, profile, followers, following, search',
+            'label' => 'Bluesky',
             'description' => 'Social networking',
             'icon' => 'ph:blue butterfly',
             'logo' => 'simple-icons:bluesky',

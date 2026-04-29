@@ -78,20 +78,37 @@ class HackerNewsToolProvider implements ToolProvider, HasIntegrationCapabilities
     }
 
     /**
-     * App group metadata for system prompt catalog and UI.
+     * Metadata shown in app and catalog discovery UIs.
      *
-     * @return array{label: string, description: string, icon: string, logo?: string}
+     * @return array<string, mixed>
      */
     public function appMeta(): array
     {
         return [
-            'label' => 'stories, items, users',
+            'label' => 'Hacker News',
             'description' => 'Tech news & discussion',
             'icon' => 'ph:fire',
             'logo' => 'simple-icons:ycombinator',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Hacker News',
+            'description' => 'Tech news & discussion',
+            'icon' => 'ph:fire',
+            'logo' => 'simple-icons:ycombinator',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://github.com/HackerNews/API',
+        ];
+    }
     /**
      * Tool definitions with metadata.
      *

@@ -72,16 +72,38 @@ class RecaptchaToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'recaptcha';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'captcha, verification, bot detection, security',
+            'label' => 'reCAPTCHA',
             'description' => 'Google reCAPTCHA Enterprise verification',
             'icon' => 'ph:shield-check',
             'logo' => 'logos:google-recaptcha',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'reCAPTCHA',
+            'description' => 'Google reCAPTCHA Enterprise verification',
+            'icon' => 'ph:shield-check',
+            'logo' => 'logos:google-recaptcha',
+            'category' => 'authentication',
+            'badge' => 'verified',
+            'docs_url' => 'https://developers.google.com/recaptcha',
+        ];
+    }
     public function tools(): array
     {
         return [

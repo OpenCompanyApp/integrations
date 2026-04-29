@@ -78,7 +78,7 @@ class RunpodToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'pods, endpoints, serverless',
+            'label' => 'RunPod',
             'description' => 'GPU cloud computing',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:runpod',

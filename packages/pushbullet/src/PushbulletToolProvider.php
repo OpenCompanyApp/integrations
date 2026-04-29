@@ -76,7 +76,7 @@ class PushbulletToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'push, devices, user',
+            'label' => 'Pushbullet',
             'description' => 'Push notifications',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:pushbullet',

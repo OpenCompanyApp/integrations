@@ -78,7 +78,7 @@ class PatreonToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, members, posts',
+            'label' => 'Patreon',
             'description' => 'Creator platform',
             'icon' => 'ph:heart',
             'logo' => 'simple-icons:patreon',

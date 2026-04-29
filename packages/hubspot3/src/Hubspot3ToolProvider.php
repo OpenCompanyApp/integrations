@@ -81,7 +81,7 @@ class Hubspot3ToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, companies, deals',
+            'label' => 'HubSpot',
             'description' => 'Marketing and CRM platform',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:hubspot',

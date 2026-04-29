@@ -79,7 +79,7 @@ class SproutSocialToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'profiles, posts, messages',
+            'label' => 'Sprout Social',
             'description' => 'Social media management',
             'icon' => 'ph:chat-centered-dots',
             'logo' => 'simple-icons:sproutsocial',

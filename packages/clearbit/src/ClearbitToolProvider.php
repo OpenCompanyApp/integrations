@@ -74,7 +74,40 @@ class ClearbitToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appName(): string
     {
         return 'clearbit';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Clearbit',
+            'description' => 'Clearbit enrichment integration for Laravel — enrich people and companies, reveal…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Clearbit',
+            'description' => 'Clearbit enrichment integration for Laravel — enrich people and companies, reveal visitor identity, prospect by role.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the Clearbit integration.
      *
      * @return array<int, array<string, mixed>>

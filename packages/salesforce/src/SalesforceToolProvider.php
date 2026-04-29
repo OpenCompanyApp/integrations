@@ -92,7 +92,7 @@ class SalesforceToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'crm, sales, leads, contacts, accounts, opportunities',
+            'label' => 'Salesforce',
             'description' => 'CRM platform',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:salesforce',

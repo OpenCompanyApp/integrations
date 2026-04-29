@@ -82,7 +82,7 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'events, funnels, cohorts',
+            'label' => 'Mixpanel Analytics',
             'description' => 'Product analytics',
             'icon' => 'ph:chart-pie',
             'logo' => 'simple-icons:mixpanel',

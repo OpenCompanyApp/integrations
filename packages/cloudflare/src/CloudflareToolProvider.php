@@ -78,7 +78,7 @@ class CloudflareToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'zones, dns, pagerules, analytics',
+            'label' => 'Cloudflare',
             'description' => 'DNS & CDN management',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:cloudflare',

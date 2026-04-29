@@ -78,7 +78,7 @@ class SanityToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'query, documents, mutations, projects',
+            'label' => 'Sanity',
             'description' => 'Headless CMS',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:sanity',

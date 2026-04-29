@@ -87,7 +87,7 @@ class TwilioToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'SMS, voice, WhatsApp',
+            'label' => 'Twilio',
             'description' => 'Cloud communications',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:twilio',

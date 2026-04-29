@@ -89,7 +89,7 @@ class AssemblyAIToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'transcribe, upload, transcripts',
+            'label' => 'AssemblyAI',
             'description' => 'AI speech-to-text',
             'icon' => 'ph:microphone',
             'logo' => 'simple-icons:assemblyai',

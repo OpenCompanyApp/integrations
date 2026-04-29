@@ -75,7 +75,7 @@ class GotifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, health',
+            'label' => 'Gotify',
             'description' => 'Self-hosted notifications',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:gotify',

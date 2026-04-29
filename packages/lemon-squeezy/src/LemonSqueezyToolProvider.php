@@ -77,7 +77,7 @@ class LemonSqueezyToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'products, orders, customers, subscriptions',
+            'label' => 'Lemon Squeezy',
             'description' => 'E-commerce platform',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:lemonsqueezy',

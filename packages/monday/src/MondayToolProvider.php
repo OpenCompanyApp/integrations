@@ -79,7 +79,7 @@ class MondayToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'boards, items, workspaces',
+            'label' => 'Monday.com',
             'description' => 'Work OS',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:mondaydotcom',

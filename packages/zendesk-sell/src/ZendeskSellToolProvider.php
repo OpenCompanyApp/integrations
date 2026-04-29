@@ -78,7 +78,7 @@ class ZendeskSellToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, deals, leads',
+            'label' => 'Zendesk Sell',
             'description' => 'Sales CRM',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:zendesk',

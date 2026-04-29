@@ -77,7 +77,7 @@ class SentryToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, issues, releases',
+            'label' => 'Sentry',
             'description' => 'Error monitoring',
             'icon' => 'ph:bug',
             'logo' => 'simple-icons:sentry',

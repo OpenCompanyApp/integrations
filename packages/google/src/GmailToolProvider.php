@@ -96,7 +96,7 @@ class GmailToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'email, messages, drafts, send, search',
+            'label' => 'Gmail',
             'description' => 'Email management',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:gmail',

@@ -92,7 +92,7 @@ class NotionToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'wiki, docs, databases',
+            'label' => 'Notion',
             'description' => 'Knowledge management',
             'icon' => 'ph:book-open',
             'logo' => 'simple-icons:notion',

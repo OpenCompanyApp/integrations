@@ -93,7 +93,7 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'documents, writing, text, editing, formatting, docs',
+            'label' => 'Google Docs',
             'description' => 'Create, read, and edit Google Docs',
             'icon' => 'ph:file-doc',
             'logo' => 'simple-icons:googledocs',

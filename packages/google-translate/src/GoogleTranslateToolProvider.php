@@ -77,7 +77,7 @@ class GoogleTranslateToolProvider implements ToolProvider, ConfigurableIntegrati
     public function appMeta(): array
     {
         return [
-            'label' => 'translate, detect, languages, glossaries',
+            'label' => 'Google Translate',
             'description' => 'Google Cloud Translation API',
             'icon' => 'ph:translate',
             'logo' => 'logos:google-translate',

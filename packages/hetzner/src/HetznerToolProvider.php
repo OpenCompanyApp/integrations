@@ -78,7 +78,7 @@ class HetznerToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, volumes, networks',
+            'label' => 'Hetzner Cloud',
             'description' => 'Cloud infrastructure management',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:hetzner',

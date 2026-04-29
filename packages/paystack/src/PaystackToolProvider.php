@@ -77,7 +77,7 @@ class PaystackToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'transactions, customers, plans',
+            'label' => 'Paystack',
             'description' => 'Payments platform for Africa',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:paystack',

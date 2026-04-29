@@ -70,16 +70,38 @@ class ExchangeRateToolProvider implements ToolProvider, HasIntegrationCapabiliti
         return 'exchangerate';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'currency, exchange rate, forex, conversion, USD, EUR, crypto',
+            'label' => 'ExchangeRate',
             'description' => 'Currency exchange rates',
             'icon' => 'ph:currency-circle-dollar',
             'logo' => 'ph:currency-circle-dollar',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'ExchangeRate',
+            'description' => 'Currency exchange rates',
+            'icon' => 'ph:currency-circle-dollar',
+            'logo' => 'ph:currency-circle-dollar',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://www.exchangerate-api.com/docs/overview',
+        ];
+    }
     public function tools(): array
     {
         return [

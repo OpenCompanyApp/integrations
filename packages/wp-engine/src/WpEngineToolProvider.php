@@ -78,7 +78,7 @@ class WpEngineToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, installs, domains',
+            'label' => 'WP Engine',
             'description' => 'WordPress hosting management',
             'icon' => 'ph:wordpress-logo',
             'logo' => 'simple-icons:wpengine',

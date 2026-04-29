@@ -77,7 +77,7 @@ class CrowdinToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, strings, translations, languages',
+            'label' => 'Crowdin',
             'description' => 'Localization management platform',
             'icon' => 'ph:globe-stand',
             'logo' => 'simple-icons:crowdin',

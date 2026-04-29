@@ -79,7 +79,7 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'meetings, users, recordings',
+            'label' => 'Zoom',
             'description' => 'Video conferencing and meetings',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:zoom',

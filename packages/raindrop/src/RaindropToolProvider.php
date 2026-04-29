@@ -78,7 +78,7 @@ class RaindropToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'bookmarks, collections',
+            'label' => 'Raindrop.io',
             'description' => 'Bookmark manager',
             'icon' => 'ph:bookmark-simple',
             'logo' => 'simple-icons:raindropio',

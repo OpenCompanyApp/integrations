@@ -74,16 +74,38 @@ class MermaidToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'mermaid';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'diagrams, flowcharts, sequences',
+            'label' => 'Mermaid',
             'description' => 'Mermaid diagram rendering',
             'icon' => 'ph:graph',
             'logo' => 'ph:graph',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Mermaid',
+            'description' => 'Mermaid diagram rendering',
+            'icon' => 'ph:graph',
+            'logo' => 'ph:graph',
+            'category' => 'rendering',
+            'badge' => 'verified',
+            'docs_url' => 'https://mermaid.js.org/intro/',
+        ];
+    }
     public function tools(): array
     {
         return [

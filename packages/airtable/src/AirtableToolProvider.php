@@ -84,7 +84,7 @@ class AirtableToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'bases, tables, records, views',
+            'label' => 'Airtable',
             'description' => 'Spreadsheets & Database',
             'icon' => 'ph:table',
             'logo' => 'simple-icons:airtable',

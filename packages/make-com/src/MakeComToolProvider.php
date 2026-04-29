@@ -82,7 +82,7 @@ class MakeComToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'scenarios, executions, connections',
+            'label' => 'Make.com',
             'description' => 'Automation Platform',
             'icon' => 'ph:flow-arrow',
             'logo' => 'simple-icons:make',

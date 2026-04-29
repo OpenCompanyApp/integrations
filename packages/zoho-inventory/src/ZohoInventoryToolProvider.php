@@ -79,7 +79,7 @@ class ZohoInventoryToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'items, orders, shipments, packages',
+            'label' => 'Zoho Inventory',
             'description' => 'Inventory management',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:zoho',

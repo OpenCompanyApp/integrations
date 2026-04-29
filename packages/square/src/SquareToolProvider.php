@@ -80,7 +80,7 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'payments, orders, customers',
+            'label' => 'Square',
             'description' => 'Square payments and POS',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:square',

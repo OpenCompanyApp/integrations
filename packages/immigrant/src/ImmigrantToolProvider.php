@@ -88,7 +88,7 @@ class ImmigrantToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'applications, documents, statuses',
+            'label' => 'Immigrant',
             'description' => 'Immigration application management',
             'icon' => 'ph:identification-card',
             'logo' => 'simple-icons:immigrant',

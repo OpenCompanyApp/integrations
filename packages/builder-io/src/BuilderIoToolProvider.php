@@ -79,7 +79,7 @@ class BuilderIoToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'visual cms, content',
+            'label' => 'Builder.io',
             'description' => 'Visual CMS',
             'icon' => 'ph:layout',
             'logo' => 'simple-icons:builder',

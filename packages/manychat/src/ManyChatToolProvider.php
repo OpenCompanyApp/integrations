@@ -76,7 +76,7 @@ class ManyChatToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'flows, messages, tags, user',
+            'label' => 'ManyChat',
             'description' => 'Chat marketing automation',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:manychat',

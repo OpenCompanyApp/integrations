@@ -79,7 +79,7 @@ class BambooHRToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'employees, departments, time-off',
+            'label' => 'BambooHR',
             'description' => 'HR management',
             'icon' => 'ph:users-three',
             'logo' => 'simple-icons:bamboohr',

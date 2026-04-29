@@ -76,7 +76,7 @@ class ElevenLabsToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'speech, sound, voices, models',
+            'label' => 'ElevenLabs',
             'description' => 'AI voice & sound generation',
             'icon' => 'ph:speaker-high',
             'logo' => 'simple-icons:elevenlabs',

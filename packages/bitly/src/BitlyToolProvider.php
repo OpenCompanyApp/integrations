@@ -96,7 +96,7 @@ class BitlyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'shorten, links, clicks, groups',
+            'label' => 'Bitly',
             'description' => 'Link management',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:bitly',

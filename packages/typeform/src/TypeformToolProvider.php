@@ -86,7 +86,7 @@ class TypeformToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, responses, workspaces',
+            'label' => 'Typeform',
             'description' => 'Forms & Surveys',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:typeform',

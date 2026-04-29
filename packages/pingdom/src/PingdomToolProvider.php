@@ -77,7 +77,7 @@ class PingdomToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'checks, results, alerts',
+            'label' => 'Pingdom',
             'description' => 'Uptime monitoring',
             'icon' => 'ph:heartbeat',
             'logo' => 'simple-icons:pingdom',

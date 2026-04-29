@@ -95,7 +95,7 @@ class OpsgenieToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'alerts, incidents, teams',
+            'label' => 'Opsgenie',
             'description' => 'Incident management & alerting',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:opsgenie',

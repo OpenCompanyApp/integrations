@@ -79,7 +79,7 @@ class HootsuiteToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, social profiles, members',
+            'label' => 'Hootsuite',
             'description' => 'Social media management',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:hootsuite',

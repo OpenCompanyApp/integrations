@@ -78,7 +78,7 @@ class AbyssaleToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'generations, templates, formats',
+            'label' => 'Abyssale',
             'description' => 'Automated image generation',
             'icon' => 'ph:image',
             'logo' => 'simple-icons:abyssale',

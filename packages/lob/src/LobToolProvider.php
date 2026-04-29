@@ -77,7 +77,7 @@ class LobToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'letters, postcards, addresses',
+            'label' => 'Lob',
             'description' => 'Print & mail automation',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:lob',

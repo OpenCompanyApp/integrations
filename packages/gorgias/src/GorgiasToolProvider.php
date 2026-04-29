@@ -78,7 +78,7 @@ class GorgiasToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'tickets, customers, satisfaction surveys',
+            'label' => 'Gorgias',
             'description' => 'Customer support platform',
             'icon' => 'ph:headset',
             'logo' => 'simple-icons:gorgias',

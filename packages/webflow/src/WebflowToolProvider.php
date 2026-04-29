@@ -79,7 +79,7 @@ class WebflowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, collections, items',
+            'label' => 'Webflow',
             'description' => 'CMS management',
             'icon' => 'ph:browser',
             'logo' => 'simple-icons:webflow',

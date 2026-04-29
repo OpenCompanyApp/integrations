@@ -75,7 +75,40 @@ class MailerSendToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appName(): string
     {
         return 'mailer-send';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Mailer Send',
+            'description' => 'MailerSend integration for Laravel — send emails, list messages, templates, domains…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Mailer Send',
+            'description' => 'MailerSend integration for Laravel — send emails, list messages, templates, domains, and recipients.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the MailerSend integration.
      */
     public function configSchema(): array

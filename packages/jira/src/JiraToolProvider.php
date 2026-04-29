@@ -95,7 +95,7 @@ class JiraToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'issues, projects, boards, sprints, workflows',
+            'label' => 'Jira',
             'description' => 'Jira integration for project management and issue tracking',
             'icon' => 'simple-icons:jira',
             'logo' => 'simple-icons:jira',

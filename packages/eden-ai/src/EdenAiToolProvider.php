@@ -76,7 +76,7 @@ class EdenAiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'generate, analyze, translate, transcribe, OCR',
+            'label' => 'Eden AI',
             'description' => 'AI APIs aggregator',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:edenai',

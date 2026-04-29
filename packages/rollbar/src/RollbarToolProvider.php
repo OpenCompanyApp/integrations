@@ -91,7 +91,7 @@ class RollbarToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, items, deploys, teams',
+            'label' => 'Rollbar',
             'description' => 'Error monitoring',
             'icon' => 'ph:bug',
             'logo' => 'simple-icons:rollbar',

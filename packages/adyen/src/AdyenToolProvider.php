@@ -87,7 +87,7 @@ class AdyenToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'transactions, payments, stores',
+            'label' => 'Adyen',
             'description' => 'Global payments platform',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:adyen',

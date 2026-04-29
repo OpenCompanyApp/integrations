@@ -77,7 +77,7 @@ class AhrefsToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'backlinks, keywords, pages',
+            'label' => 'Ahrefs',
             'description' => 'SEO analytics',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:ahrefs',

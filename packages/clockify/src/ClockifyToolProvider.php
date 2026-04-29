@@ -87,7 +87,7 @@ class ClockifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'workspaces, projects, time entries, tasks',
+            'label' => 'Clockify',
             'description' => 'Time tracking and project management',
             'icon' => 'ph:clock',
             'logo' => 'simple-icons:clockify',

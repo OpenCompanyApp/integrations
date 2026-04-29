@@ -6,13 +6,14 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Mailgun API service — handles HTTP communication with the Mailgun v3 REST API.
+ * Mailgun API service — handles HTTP communication with the Mailgun REST API.
  *
  * Uses HTTP Basic Auth with the API key as the username and an empty password.
  */
 class MailgunService
 {
     private string $baseUrl = 'https://api.mailgun.net/v3';
+    private string $domainsBaseUrl = 'https://api.mailgun.net/v4';
 
     public function __construct(
         private string $apiKey = '',
@@ -30,7 +31,7 @@ class MailgunService
     /**
      * Get the configured sending domain.
      */
-    public function getDomain(): string
+    public function getConfiguredDomain(): string
     {
         return $this->domain;
     }
@@ -69,7 +70,7 @@ class MailgunService
      */
     public function listDomains(array $params = []): array
     {
-        return $this->request('GET', '/domains', $params);
+        return $this->request('GET', '/domains', $params, false, $this->domainsBaseUrl);
     }
 
     /**
@@ -80,7 +81,7 @@ class MailgunService
      */
     public function getDomain(string $domainName): array
     {
-        return $this->request('GET', "/domains/{$domainName}");
+        return $this->request('GET', "/domains/{$domainName}", [], false, $this->domainsBaseUrl);
     }
 
     /**
@@ -114,7 +115,7 @@ class MailgunService
      */
     public function getCurrentUser(): array
     {
-        return $this->request('GET', '/domains', ['limit' => 1]);
+        return $this->listDomains(['limit' => 1]);
     }
 
     /**
@@ -126,9 +127,9 @@ class MailgunService
      * @param  bool    $asForm     Whether to send data as form-encoded (for message sending).
      * @return array The parsed JSON response body.
      */
-    private function request(string $method, string $path, array $data = [], bool $asForm = false): array
+    private function request(string $method, string $path, array $data = [], bool $asForm = false, ?string $baseUrl = null): array
     {
-        $response = $this->rawRequest($method, $path, $data, $asForm);
+        $response = $this->rawRequest($method, $path, $data, $asForm, $baseUrl);
 
         if ($response->status() === 204) {
             return [];
@@ -150,13 +151,13 @@ class MailgunService
      *
      * @throws \RuntimeException If the API key is missing or the request fails.
      */
-    private function rawRequest(string $method, string $path, array $data = [], bool $asForm = false): \Illuminate\Http\Client\Response
+    private function rawRequest(string $method, string $path, array $data = [], bool $asForm = false, ?string $baseUrl = null): \Illuminate\Http\Client\Response
     {
         if (!$this->apiKey) {
             throw new \RuntimeException('Mailgun API key is not configured.');
         }
 
-        $url = $this->baseUrl . $path;
+        $url = rtrim($baseUrl ?? $this->baseUrl, '/') . $path;
 
         try {
             $http = Http::withBasicAuth($this->apiKey, '')

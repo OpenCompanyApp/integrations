@@ -80,7 +80,7 @@ class BannerbearToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'images, videos, gifs, templates',
+            'label' => 'Bannerbear',
             'description' => 'Automated media generation',
             'icon' => 'ph:image',
             'logo' => 'simple-icons:bannerbear',

@@ -78,7 +78,7 @@ class CloudwaysToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, apps, domains, projects',
+            'label' => 'Cloudways',
             'description' => 'Managed hosting',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:cloudways',

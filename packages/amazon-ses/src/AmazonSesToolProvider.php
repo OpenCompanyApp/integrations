@@ -77,7 +77,7 @@ class AmazonSesToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'send, templates, suppressions',
+            'label' => 'Amazon SES',
             'description' => 'Transactional email',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:amazons3',

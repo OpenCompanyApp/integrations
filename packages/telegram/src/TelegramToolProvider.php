@@ -78,7 +78,7 @@ class TelegramToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, photos, chats, updates',
+            'label' => 'Telegram',
             'description' => 'Bot messaging and communication',
             'icon' => 'ph:paper-plane-tilt',
             'logo' => 'simple-icons:telegram',

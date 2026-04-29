@@ -84,7 +84,7 @@ class DialpadToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, sms, users',
+            'label' => 'Dialpad',
             'description' => 'Business communications',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:dialpad',

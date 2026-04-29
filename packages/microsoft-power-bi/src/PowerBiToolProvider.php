@@ -79,7 +79,7 @@ class PowerBiToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'workspaces, datasets, reports',
+            'label' => 'Microsoft Power BI',
             'description' => 'Business intelligence & analytics',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:powerbi',

@@ -78,7 +78,7 @@ class KajabiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'offers, products, members',
+            'label' => 'Kajabi',
             'description' => 'Online courses & marketing',
             'icon' => 'ph:graduation-cap',
             'logo' => 'simple-icons:kajabi',

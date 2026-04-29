@@ -94,7 +94,7 @@ class GoogleDriveToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'files, folders, documents, drive, sharing',
+            'label' => 'Google Drive',
             'description' => 'File storage and management',
             'icon' => 'ph:google-drive-logo',
             'logo' => 'simple-icons:googledrive',

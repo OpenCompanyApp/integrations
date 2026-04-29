@@ -105,7 +105,7 @@ class GitHubToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'repos, issues, pull requests, commits, releases',
+            'label' => 'GitHub',
             'description' => 'GitHub integration for code collaboration',
             'icon' => 'mdi:github',
             'logo' => 'mdi:github',

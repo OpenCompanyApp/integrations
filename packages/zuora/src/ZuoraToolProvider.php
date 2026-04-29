@@ -92,7 +92,7 @@ class ZuoraToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'accounts, subscriptions, invoices, payments',
+            'label' => 'Zuora',
             'description' => 'Subscription billing',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:zuora',

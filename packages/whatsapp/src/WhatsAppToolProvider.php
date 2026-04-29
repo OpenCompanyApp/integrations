@@ -90,7 +90,7 @@ class WhatsAppToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'send, templates, contacts',
+            'label' => 'WhatsApp Business',
             'description' => 'WhatsApp Business messaging',
             'icon' => 'logos:whatsapp-icon',
             'logo' => 'logos:whatsapp-icon',

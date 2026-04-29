@@ -78,7 +78,7 @@ class WebexToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'rooms, messages, meetings',
+            'label' => 'Cisco Webex',
             'description' => 'Messaging & meetings',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:ciscowebex',

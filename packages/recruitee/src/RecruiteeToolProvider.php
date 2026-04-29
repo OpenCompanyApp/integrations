@@ -77,7 +77,7 @@ class RecruiteeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'offers, candidates, departments',
+            'label' => 'Recruitee',
             'description' => 'Applicant tracking system',
             'icon' => 'ph:users-three',
             'logo' => 'simple-icons:recruitee',

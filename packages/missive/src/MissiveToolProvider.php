@@ -90,7 +90,7 @@ class MissiveToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'conversations, comments, tasks',
+            'label' => 'Missive',
             'description' => 'Email & team chat',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:missive',

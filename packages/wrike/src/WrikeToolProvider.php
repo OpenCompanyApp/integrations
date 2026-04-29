@@ -90,7 +90,7 @@ class WrikeToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, projects, folders, and spaces',
+            'label' => 'Wrike',
             'description' => 'Project Management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:wrike',

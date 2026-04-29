@@ -76,7 +76,7 @@ class MessageBirdToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'sms, messages, balance, numbers',
+            'label' => 'MessageBird',
             'description' => 'SMS & messaging',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:messagebird',

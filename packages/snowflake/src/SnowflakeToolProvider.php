@@ -81,7 +81,7 @@ class SnowflakeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'query, databases, schemas, tables, warehouses',
+            'label' => 'Snowflake',
             'description' => 'Cloud data warehouse',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:snowflake',

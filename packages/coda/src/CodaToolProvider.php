@@ -95,7 +95,7 @@ class CodaToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'docs, tables, rows, pages',
+            'label' => 'Coda',
             'description' => 'Document and spreadsheet platform',
             'icon' => 'ph:table',
             'logo' => 'simple-icons:coda',

@@ -78,7 +78,7 @@ class LaunchDarklyToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'flags, projects, environments',
+            'label' => 'LaunchDarkly',
             'description' => 'Feature flags',
             'icon' => 'ph:flag',
             'logo' => 'simple-icons:launchdarkly',

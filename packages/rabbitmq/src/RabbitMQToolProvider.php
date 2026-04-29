@@ -91,7 +91,7 @@ class RabbitMQToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label'       => 'queues, exchanges, connections, vhosts, overview',
+            'label'       => 'RabbitMQ',
             'description' => 'Message broker monitoring',
             'icon'        => 'ph:rabbit',
             'logo'        => 'simple-icons:rabbitmq',

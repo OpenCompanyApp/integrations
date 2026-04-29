@@ -90,7 +90,7 @@ class ChurnZeroToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label'       => 'accounts, contacts, alerts, usage',
+            'label'       => 'ChurnZero',
             'description' => 'Customer success platform',
             'icon'        => 'ph:chart-line-up',
             'logo'        => 'simple-icons:churnzero',

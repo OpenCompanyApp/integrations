@@ -77,7 +77,7 @@ class LambdaLabsToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'GPU instances, SSH keys, images',
+            'label' => 'Lambda Labs',
             'description' => 'GPU cloud computing',
             'icon' => 'ph:gpu',
             'logo' => 'simple-icons:lambda',

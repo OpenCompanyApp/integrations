@@ -85,7 +85,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'invoices, contacts, items, payments',
+            'label' => 'Zoho Invoice',
             'description' => 'Invoicing & accounting',
             'icon' => 'ph:invoice',
             'logo' => 'simple-icons:zoho',

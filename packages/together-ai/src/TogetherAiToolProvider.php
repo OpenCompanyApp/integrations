@@ -77,7 +77,7 @@ class TogetherAiToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'models, completions, fine-tuning',
+            'label' => 'Together AI',
             'description' => 'AI inference & fine-tuning platform',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:togetherai',

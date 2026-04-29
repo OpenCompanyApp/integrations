@@ -76,7 +76,40 @@ class PrismicToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appName(): string
     {
         return 'prismic';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Prismic',
+            'description' => 'Prismic headless CMS integration for Laravel — list and search documents, types, tags…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Prismic',
+            'description' => 'Prismic headless CMS integration for Laravel — list and search documents, types, tags, refs, and languages.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the Prismic integration.
      */
     public function configSchema(): array

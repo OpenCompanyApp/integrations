@@ -79,7 +79,40 @@ class FreeAgentToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appName(): string
     {
         return 'freeagent';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Freeagent',
+            'description' => 'FreeAgent accounting integration for Laravel — manage invoices, contacts, projects and…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Freeagent',
+            'description' => 'FreeAgent accounting integration for Laravel — manage invoices, contacts, projects and expenses.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for setting up the integration.
      *
      * @return array<int, array<string, mixed>>

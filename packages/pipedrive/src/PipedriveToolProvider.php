@@ -90,7 +90,7 @@ class PipedriveToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label'       => 'deals, persons, organizations',
+            'label'       => 'Pipedrive',
             'description' => 'CRM & sales pipeline',
             'icon'        => 'ph:chart-line-up',
             'logo'        => 'simple-icons:pipedrive',

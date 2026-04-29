@@ -78,7 +78,7 @@ class LinodeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'instances, volumes, domains, stackscripts',
+            'label' => 'Linode',
             'description' => 'Cloud computing',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:linode',

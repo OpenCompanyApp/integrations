@@ -89,7 +89,7 @@ class BasecampToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, todos, messages',
+            'label' => 'Basecamp 3',
             'description' => 'Project management',
             'icon' => 'ph:mountains',
             'logo' => 'simple-icons:basecamp',

@@ -78,7 +78,7 @@ class IonosToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, volumes, LANs, NICs, images',
+            'label' => 'IONOS Cloud',
             'description' => 'Cloud infrastructure',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:ionos',

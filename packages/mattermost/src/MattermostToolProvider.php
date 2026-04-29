@@ -78,7 +78,7 @@ class MattermostToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'channels, posts, teams, messages',
+            'label' => 'Mattermost',
             'description' => 'Team messaging and communication',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:mattermost',

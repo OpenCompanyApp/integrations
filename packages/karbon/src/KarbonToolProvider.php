@@ -78,7 +78,7 @@ class KarbonToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, work items, users',
+            'label' => 'Karbon',
             'description' => 'Practice management',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:karbon',

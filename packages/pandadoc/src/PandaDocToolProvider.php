@@ -81,7 +81,7 @@ class PandaDocToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'documents, templates, e-signatures',
+            'label' => 'PandaDoc',
             'description' => 'Document management and e-signatures',
             'icon' => 'ph:file-text',
             'logo' => 'simple-icons:pandadoc',

@@ -77,7 +77,7 @@ class ReplicateToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'predictions, models, collections',
+            'label' => 'Replicate',
             'description' => 'AI model hosting & predictions',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:replicate',

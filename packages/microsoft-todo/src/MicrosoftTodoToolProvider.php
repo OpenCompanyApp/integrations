@@ -92,7 +92,7 @@ class MicrosoftTodoToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'lists, tasks, create',
+            'label' => 'Microsoft To Do',
             'description' => 'Microsoft To Do',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:microsofttodo',

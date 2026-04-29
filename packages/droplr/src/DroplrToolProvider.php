@@ -77,7 +77,7 @@ class DroplrToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'drops, links, boards',
+            'label' => 'Droplr',
             'description' => 'Link shortening & file sharing',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:droplr',

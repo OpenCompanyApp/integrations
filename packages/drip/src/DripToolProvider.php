@@ -77,7 +77,7 @@ class DripToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'subscribers, campaigns, workflows',
+            'label' => 'Drip',
             'description' => 'Email marketing automation',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:drip',

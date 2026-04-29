@@ -77,7 +77,7 @@ class TypesenseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'collections, search, index',
+            'label' => 'Typesense',
             'description' => 'Open-source search engine',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:typesense',

@@ -78,7 +78,40 @@ class AcuitySchedulingToolProvider implements ToolProvider, ConfigurableIntegrat
     public function appName(): string
     {
         return 'acuity-scheduling';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Acuity Scheduling',
+            'description' => 'Acuity Scheduling integration for Laravel — manage appointments, clients, calendars…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Acuity Scheduling',
+            'description' => 'Acuity Scheduling integration for Laravel — manage appointments, clients, calendars, and availability.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Schema for configuration fields shown in the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

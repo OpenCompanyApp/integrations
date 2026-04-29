@@ -77,7 +77,7 @@ class DailyCoToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'rooms, meetings, recordings',
+            'label' => 'Daily.co',
             'description' => 'Video conferencing and recordings',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:dailydotco',

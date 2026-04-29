@@ -75,7 +75,40 @@ class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appName(): string
     {
         return 'vonage';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Vonage',
+            'description' => 'Vonage Nexmo communications integration for Laravel — SMS, verify, and account manageme…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Vonage',
+            'description' => 'Vonage (Nexmo) communications integration for Laravel — SMS, verify, and account management.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration settings.
      *
      * @return array<int, array<string, mixed>>

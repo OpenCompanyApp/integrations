@@ -78,7 +78,7 @@ class ScalewayToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, volumes, snapshots, IPs',
+            'label' => 'Scaleway',
             'description' => 'Cloud infrastructure',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:scaleway',

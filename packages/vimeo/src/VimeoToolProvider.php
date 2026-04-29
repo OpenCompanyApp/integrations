@@ -83,7 +83,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'videos, albums, folders',
+            'label' => 'Vimeo',
             'description' => 'Video hosting',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:vimeo',

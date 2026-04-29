@@ -93,7 +93,7 @@ class AffinityToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, organizations, lists',
+            'label' => 'Affinity',
             'description' => 'CRM & relationship intelligence',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:affinity',

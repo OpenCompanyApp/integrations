@@ -88,7 +88,7 @@ class BubbleToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'list, get, create, update, delete',
+            'label' => 'Bubble',
             'description' => 'No-code app platform',
             'icon' => 'ph:circle-dot',
             'logo' => 'simple-icons:bubble',

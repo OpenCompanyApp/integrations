@@ -76,7 +76,40 @@ class RecurlyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appName(): string
     {
         return 'recurly';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Recurly',
+            'description' => 'Recurly subscription billing integration for Laravel — manage accounts, subscriptions…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Recurly',
+            'description' => 'Recurly subscription billing integration for Laravel — manage accounts, subscriptions, and plans.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the Recurly integration.
      *
      * @return array The config schema fields.

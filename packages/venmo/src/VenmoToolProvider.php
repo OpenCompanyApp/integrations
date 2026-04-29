@@ -81,7 +81,7 @@ class VenmoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'payments, transfers',
+            'label' => 'Venmo',
             'description' => 'Peer-to-peer payments',
             'icon' => 'ph:money',
             'logo' => 'simple-icons:venmo',

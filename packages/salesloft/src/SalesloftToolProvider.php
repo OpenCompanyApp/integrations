@@ -77,7 +77,7 @@ class SalesloftToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'sequences, rules, users',
+            'label' => 'Salesloft',
             'description' => 'Sales engagement platform',
             'icon' => 'ph:phone-outgoing',
             'logo' => 'simple-icons:salesloft',

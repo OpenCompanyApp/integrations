@@ -74,7 +74,7 @@ class PerplexityToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'chat, ask, models, user',
+            'label' => 'Perplexity AI',
             'description' => 'AI-powered search and answers',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:perplexity',

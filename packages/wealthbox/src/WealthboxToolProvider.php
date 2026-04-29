@@ -78,7 +78,40 @@ class WealthboxToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appName(): string
     {
         return 'wealthbox';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Wealthbox',
+            'description' => 'Wealthbox CRM integration for Laravel — manage contacts, tasks, opportunities, workflow…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Wealthbox',
+            'description' => 'Wealthbox CRM integration for Laravel — manage contacts, tasks, opportunities, workflows, and events.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the Wealthbox integration.
      *
      * @return array<int, array<string, mixed>>

@@ -90,7 +90,7 @@ class CalToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'event types, bookings, user',
+            'label' => 'Cal.com',
             'description' => 'Scheduling & bookings',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:calcom',

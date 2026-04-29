@@ -91,7 +91,7 @@ class ApolloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, organizations, enrich',
+            'label' => 'Apollo.io',
             'description' => 'Sales intelligence',
             'icon' => 'ph:rocket-launch',
             'logo' => 'simple-icons:apollo',

@@ -77,7 +77,7 @@ class HerokuToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'apps, dynos, addons, domains',
+            'label' => 'Heroku',
             'description' => 'Cloud platform',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:heroku',

@@ -78,7 +78,7 @@ class VultrToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'instances, plans, regions, snapshots, ssh keys',
+            'label' => 'Vultr',
             'description' => 'Cloud computing',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:vultr',

@@ -80,7 +80,7 @@ class ZendToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, lists, subscribers',
+            'label' => 'Zendesk Marketing',
             'description' => 'Email marketing automation',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:zendesk',

@@ -92,7 +92,7 @@ class FathomToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, pageviews, aggregates, events',
+            'label' => 'Fathom Analytics',
             'description' => 'Website analytics',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:fathomanalytics',

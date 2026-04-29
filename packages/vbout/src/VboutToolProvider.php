@@ -76,7 +76,7 @@ class VboutToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, campaigns, users',
+            'label' => 'VBout',
             'description' => 'Email marketing & CRM',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:vbout',

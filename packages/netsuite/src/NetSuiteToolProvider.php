@@ -77,7 +77,40 @@ class NetSuiteToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appName(): string
     {
         return 'netsuite';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Netsuite',
+            'description' => 'NetSuite ERP integration for Laravel — manage customers, invoices, sales orders, and…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Netsuite',
+            'description' => 'NetSuite ERP integration for Laravel — manage customers, invoices, sales orders, and items.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

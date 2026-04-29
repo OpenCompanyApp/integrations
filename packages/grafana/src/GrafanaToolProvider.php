@@ -88,7 +88,7 @@ class GrafanaToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'dashboards, datasources, teams, alerts',
+            'label' => 'Grafana',
             'description' => 'Analytics & monitoring dashboards',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:grafana',

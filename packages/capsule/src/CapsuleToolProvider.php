@@ -83,7 +83,7 @@ class CapsuleToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, opportunities, tasks',
+            'label' => 'Capsule CRM',
             'description' => 'CRM & sales',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:capsulecrm',

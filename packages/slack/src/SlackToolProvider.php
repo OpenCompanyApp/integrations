@@ -100,7 +100,7 @@ class SlackToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, channels, files, users',
+            'label' => 'Slack',
             'description' => 'Messaging',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:slack',

@@ -76,7 +76,7 @@ class BrevoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, lists, email',
+            'label' => 'Brevo',
             'description' => 'Email marketing & transactional email',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:brevo',

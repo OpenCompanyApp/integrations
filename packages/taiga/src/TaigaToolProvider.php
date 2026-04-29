@@ -78,7 +78,7 @@ class TaigaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, user stories, issues',
+            'label' => 'Taiga',
             'description' => 'Project management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:taiga',

@@ -82,7 +82,7 @@ class CrispToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'conversations, contacts, campaigns',
+            'label' => 'Crisp',
             'description' => 'Live chat & messaging',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:crisp',

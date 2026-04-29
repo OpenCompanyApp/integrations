@@ -91,7 +91,7 @@ class ActivelyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, contacts, organizations',
+            'label' => 'Actively',
             'description' => 'Sales CRM',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:actively',

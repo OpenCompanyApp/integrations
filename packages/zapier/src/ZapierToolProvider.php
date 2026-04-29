@@ -83,7 +83,7 @@ class ZapierToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'zaps, executions, and connections',
+            'label' => 'Zapier',
             'description' => 'Automation',
             'icon' => 'ph:lightning',
             'logo' => 'simple-icons:zapier',

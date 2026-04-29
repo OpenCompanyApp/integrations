@@ -82,7 +82,7 @@ class TelnyxToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'phone numbers, SMS, voice calls, recordings',
+            'label' => 'Telnyx',
             'description' => 'Voice and SMS communications',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:telnyx',

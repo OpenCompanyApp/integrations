@@ -75,7 +75,40 @@ class GoogleMapsToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appName(): string
     {
         return 'google-maps';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Google Maps',
+            'description' => 'Google Maps Platform integration for Laravel — geocoding, reverse geocoding, place…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Google Maps',
+            'description' => 'Google Maps Platform integration for Laravel — geocoding, reverse geocoding, place search, directions, and distance matrix.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the Google Maps integration.
      *
      * @return array<int, array<string, mixed>>

@@ -78,7 +78,7 @@ class MemberstackToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'members, plans, auth',
+            'label' => 'Memberstack',
             'description' => 'Membership & authentication',
             'icon' => 'ph:shield-check',
             'logo' => 'simple-icons:memberstack',

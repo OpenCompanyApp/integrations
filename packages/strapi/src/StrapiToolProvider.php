@@ -76,7 +76,40 @@ class StrapiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appName(): string
     {
         return 'strapi';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Strapi',
+            'description' => 'Strapi headless CMS integration for Laravel — manage content types, entries, and users.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Strapi',
+            'description' => 'Strapi headless CMS integration for Laravel — manage content types, entries, and users.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration.
      */
     public function configSchema(): array

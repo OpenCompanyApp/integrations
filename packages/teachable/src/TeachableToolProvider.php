@@ -90,7 +90,7 @@ class TeachableToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'courses, users, enrollments',
+            'label' => 'Teachable',
             'description' => 'Online courses platform',
             'icon' => 'ph:graduation-cap',
             'logo' => 'simple-icons:teachable',

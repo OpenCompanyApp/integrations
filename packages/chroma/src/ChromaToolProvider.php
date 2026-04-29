@@ -77,7 +77,7 @@ class ChromaToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'collections, documents, queries',
+            'label' => 'Chroma',
             'description' => 'Vector database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:chroma',

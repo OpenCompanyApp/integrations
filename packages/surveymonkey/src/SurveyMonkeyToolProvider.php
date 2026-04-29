@@ -80,7 +80,7 @@ class SurveyMonkeyToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'surveys, responses, collectors',
+            'label' => 'SurveyMonkey',
             'description' => 'Survey management',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:surveymonkey',

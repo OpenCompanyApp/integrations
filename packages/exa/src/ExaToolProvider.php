@@ -81,7 +81,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'search, find similar, get contents',
+            'label' => 'Exa AI',
             'description' => 'AI-powered web search',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:exa',

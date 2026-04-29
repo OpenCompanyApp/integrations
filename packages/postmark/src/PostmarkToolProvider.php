@@ -84,7 +84,7 @@ class PostmarkToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'email, delivery, templates',
+            'label' => 'Postmark',
             'description' => 'Email delivery service',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:postmark',

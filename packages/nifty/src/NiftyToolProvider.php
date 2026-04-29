@@ -77,7 +77,7 @@ class NiftyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, tasks, user',
+            'label' => 'Nifty',
             'description' => 'Project management',
             'icon' => 'ph:folder-open',
             'logo' => 'simple-icons:nifty',

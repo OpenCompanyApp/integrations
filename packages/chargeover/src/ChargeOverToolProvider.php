@@ -78,7 +78,7 @@ class ChargeOverToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'customers, subscriptions, invoices, transactions',
+            'label' => 'ChargeOver',
             'description' => 'Billing & subscription management',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargeover',

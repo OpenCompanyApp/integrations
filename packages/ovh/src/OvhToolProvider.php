@@ -78,7 +78,7 @@ class OvhToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, domains, VPS, IP, projects',
+            'label' => 'OVHcloud',
             'description' => 'Cloud infrastructure',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:ovh',

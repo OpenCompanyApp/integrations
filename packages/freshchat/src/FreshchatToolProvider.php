@@ -78,7 +78,7 @@ class FreshchatToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'conversations, agents, groups',
+            'label' => 'Freshchat',
             'description' => 'Customer support',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:freshchat',

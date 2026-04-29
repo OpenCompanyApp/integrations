@@ -77,7 +77,7 @@ class CustomerIOToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'identify, events, segments, campaigns, newsletters',
+            'label' => 'Customer.io',
             'description' => 'Customer engagement platform',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:customerio',

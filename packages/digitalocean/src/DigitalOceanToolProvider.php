@@ -81,7 +81,7 @@ class DigitalOceanToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'droplets, domains, spaces, k8s',
+            'label' => 'DigitalOcean',
             'description' => 'Cloud infrastructure',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:digitalocean',

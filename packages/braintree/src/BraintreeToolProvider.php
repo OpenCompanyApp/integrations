@@ -78,7 +78,7 @@ class BraintreeToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'transactions, customers, plans, subscriptions',
+            'label' => 'Braintree',
             'description' => 'Payment processing',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:braintree',

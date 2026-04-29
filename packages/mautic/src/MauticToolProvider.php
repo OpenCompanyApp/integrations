@@ -92,7 +92,7 @@ class MauticToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, emails, segments, forms',
+            'label' => 'Mautic',
             'description' => 'Marketing automation & CRM',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:mautic',

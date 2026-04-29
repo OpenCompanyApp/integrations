@@ -75,7 +75,7 @@ class FlyIoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'apps, machines, volumes',
+            'label' => 'Fly.io',
             'description' => 'Cloud platform',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:flyio',

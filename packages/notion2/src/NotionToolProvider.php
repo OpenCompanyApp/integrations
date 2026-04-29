@@ -75,7 +75,7 @@ class NotionToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'pages, databases, and users',
+            'label' => 'Notion',
             'description' => 'Workspace',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:notion',

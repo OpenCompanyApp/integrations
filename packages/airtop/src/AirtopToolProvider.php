@@ -78,7 +78,7 @@ class AirtopToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'browse, navigate, extract',
+            'label' => 'Airtop',
             'description' => 'Browser automation',
             'icon' => 'ph:globe',
             'logo' => 'simple-icons:airtop',

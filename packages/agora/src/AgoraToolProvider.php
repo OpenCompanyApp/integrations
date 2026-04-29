@@ -77,7 +77,7 @@ class AgoraToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, recordings, users',
+            'label' => 'Agora',
             'description' => 'Real-time communication and recordings',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:agora',

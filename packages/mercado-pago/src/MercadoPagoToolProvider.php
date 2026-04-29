@@ -78,7 +78,7 @@ class MercadoPagoToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'payments, customers, preferences',
+            'label' => 'Mercado Pago',
             'description' => 'Latin American payments platform',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:mercadopago',

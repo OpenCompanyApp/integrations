@@ -78,7 +78,7 @@ class AddEventToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'events, categories, groups',
+            'label' => 'AddEvent',
             'description' => 'Calendar event management',
             'icon' => 'ph:calendar',
             'logo' => 'simple-icons:addevent',

@@ -77,7 +77,7 @@ class GhostToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, pages, members, blog, cms',
+            'label' => 'Ghost CMS',
             'description' => 'Ghost CMS content management',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:ghost',

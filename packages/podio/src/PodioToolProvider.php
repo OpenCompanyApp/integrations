@@ -79,7 +79,7 @@ class PodioToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'spaces, apps, items',
+            'label' => 'Podio',
             'description' => 'Project management & collaboration',
             'icon' => 'ph:folders',
             'logo' => 'simple-icons:podio',

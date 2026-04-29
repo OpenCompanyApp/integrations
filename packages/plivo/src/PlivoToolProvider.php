@@ -92,7 +92,7 @@ class PlivoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'SMS, voice, numbers',
+            'label' => 'Plivo',
             'description' => 'Cloud communications — SMS and voice API',
             'icon' => 'ph:chat-centered-text',
             'logo' => 'simple-icons:plivo',

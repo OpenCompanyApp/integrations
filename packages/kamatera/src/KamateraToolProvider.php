@@ -78,7 +78,7 @@ class KamateraToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, networks, images, datacenters',
+            'label' => 'Kamatera',
             'description' => 'Cloud infrastructure',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:kamatera',

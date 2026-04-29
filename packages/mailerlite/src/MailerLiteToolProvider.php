@@ -92,7 +92,7 @@ class MailerLiteToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'subscribers, groups',
+            'label' => 'MailerLite',
             'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:mailerlite',

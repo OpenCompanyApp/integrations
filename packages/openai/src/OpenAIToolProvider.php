@@ -91,7 +91,7 @@ class OpenAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'chat, embeddings, images, audio, assistants',
+            'label' => 'OpenAI',
             'description' => 'OpenAI',
             'icon' => 'ph:openai-logo',
             'logo' => 'simple-icons:openai',

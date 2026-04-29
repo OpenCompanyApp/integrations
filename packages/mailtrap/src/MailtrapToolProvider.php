@@ -77,7 +77,7 @@ class MailtrapToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'inboxes, messages, test emails, suppressions',
+            'label' => 'Mailtrap',
             'description' => 'Email testing & delivery',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:mailtrap',

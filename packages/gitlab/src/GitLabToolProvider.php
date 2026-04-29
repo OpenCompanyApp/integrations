@@ -105,7 +105,7 @@ class GitLabToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, issues, merge requests, pipelines',
+            'label' => 'GitLab',
             'description' => 'GitLab integration for DevOps collaboration',
             'icon' => 'mdi:gitlab',
             'logo' => 'mdi:gitlab',

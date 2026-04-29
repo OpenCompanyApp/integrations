@@ -74,16 +74,38 @@ class CelestialToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'celestial';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'moon, sun, planets, sky, zodiac, eclipses, time',
+            'label' => 'Celestial',
             'description' => 'Astronomical calculations and night sky',
             'icon' => 'ph:moon-stars',
             'logo' => 'ph:moon-stars',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Celestial',
+            'description' => 'Astronomical calculations and night sky',
+            'icon' => 'ph:moon-stars',
+            'logo' => 'ph:moon-stars',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://aa.usno.navy.mil/data',
+        ];
+    }
     public function tools(): array
     {
         return [

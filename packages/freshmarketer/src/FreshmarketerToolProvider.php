@@ -91,7 +91,7 @@ class FreshmarketerToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, segments, users',
+            'label' => 'Freshmarketer',
             'description' => 'Marketing automation',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:freshworks',

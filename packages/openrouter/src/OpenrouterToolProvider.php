@@ -90,7 +90,7 @@ class OpenrouterToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'models, completions, generations',
+            'label' => 'OpenRouter',
             'description' => 'OpenRouter AI Gateway',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:openrouter',

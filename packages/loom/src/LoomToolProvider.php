@@ -92,7 +92,7 @@ class LoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'videos, workspaces, user',
+            'label' => 'Loom',
             'description' => 'Video platform',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:loom',

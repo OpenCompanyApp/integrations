@@ -82,7 +82,7 @@ class TeamworkToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, tasks, timers, and team management',
+            'label' => 'Teamwork',
             'description' => 'Project Management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:teamwork',

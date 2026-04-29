@@ -79,7 +79,7 @@ class OnfleetToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, workers, teams, recipients',
+            'label' => 'Onfleet',
             'description' => 'Delivery management',
             'icon' => 'ph:truck',
             'logo' => 'simple-icons:onfleet',

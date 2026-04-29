@@ -78,7 +78,7 @@ class FreshteamToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'candidates, jobs, employees',
+            'label' => 'Freshteam',
             'description' => 'HR & recruitment',
             'icon' => 'ph:users-three',
             'logo' => 'simple-icons:freshteam',

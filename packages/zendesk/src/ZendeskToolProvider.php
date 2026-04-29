@@ -81,7 +81,7 @@ class ZendeskToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'tickets, users, organizations',
+            'label' => 'Zendesk',
             'description' => 'Customer support platform',
             'icon' => 'ph:headset',
             'logo' => 'simple-icons:zendesk',

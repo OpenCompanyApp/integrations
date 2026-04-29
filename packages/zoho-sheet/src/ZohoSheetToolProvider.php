@@ -92,7 +92,7 @@ class ZohoSheetToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'spreadsheets, worksheets, rows',
+            'label' => 'Zoho Sheet',
             'description' => 'Spreadsheet management',
             'icon' => 'ph:table',
             'logo' => 'simple-icons:zoho',

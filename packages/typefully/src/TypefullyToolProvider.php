@@ -75,7 +75,7 @@ class TypefullyToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'drafts, scheduled, published',
+            'label' => 'Typefully',
             'description' => 'Social media scheduling',
             'icon' => 'ph:pen-nib',
             'logo' => 'simple-icons:typefully',

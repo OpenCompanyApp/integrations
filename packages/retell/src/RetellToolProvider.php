@@ -93,7 +93,7 @@ class RetellToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, agents, phone calls',
+            'label' => 'Retell AI',
             'description' => 'AI voice agents & calls',
             'icon' => 'ph:phone-call',
             'logo' => 'simple-icons:retell',

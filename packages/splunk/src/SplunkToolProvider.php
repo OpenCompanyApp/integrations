@@ -77,7 +77,7 @@ class SplunkToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'search, indexes, logs, saved searches',
+            'label' => 'Splunk',
             'description' => 'Log analytics and monitoring',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:splunk',

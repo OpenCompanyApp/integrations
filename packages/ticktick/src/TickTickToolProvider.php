@@ -81,7 +81,7 @@ class TickTickToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, tasks, complete, organize',
+            'label' => 'TickTick',
             'description' => 'Task management',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:ticktick',

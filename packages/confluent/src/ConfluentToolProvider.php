@@ -93,7 +93,7 @@ class ConfluentToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'topics, clusters, environments',
+            'label' => 'Confluent Cloud',
             'description' => 'Confluent Cloud Kafka managed streaming',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:confluent',

@@ -83,7 +83,7 @@ class IftttToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'services, applets, and connections',
+            'label' => 'IFTTT',
             'description' => 'Automation',
             'icon' => 'ph:plugs-connected',
             'logo' => 'simple-icons:ifttt',

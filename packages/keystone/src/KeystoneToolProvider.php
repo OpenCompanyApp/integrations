@@ -79,7 +79,7 @@ class KeystoneToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'lists, items, CRUD',
+            'label' => 'KeystoneJS',
             'description' => 'KeystoneJS headless CMS & data platform',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:keystonejs',

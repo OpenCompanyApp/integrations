@@ -81,7 +81,7 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'invoices, contacts, accounts',
+            'label' => 'Xero',
             'description' => 'Cloud accounting platform',
             'icon' => 'ph:calculator',
             'logo' => 'simple-icons:xero',

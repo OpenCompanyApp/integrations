@@ -75,7 +75,40 @@ class IpstackToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appName(): string
     {
         return 'ipstack';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Ipstack',
+            'description' => 'IPstack geolocation integration for Laravel — lookup IP addresses, check location…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Ipstack',
+            'description' => 'IPstack geolocation integration for Laravel — lookup IP addresses, check location, timezone, currency, and connection data.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the IPstack integration.
      *
      * @return array<int, array<string, mixed>>

@@ -78,7 +78,7 @@ class KintoneToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'records, apps, spaces',
+            'label' => 'Kintone',
             'description' => 'Business application platform',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:kintone',

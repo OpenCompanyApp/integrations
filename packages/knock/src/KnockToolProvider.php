@@ -77,7 +77,7 @@ class KnockToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'workflows, messages, recipients',
+            'label' => 'Knock',
             'description' => 'Notification engine',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:knock',

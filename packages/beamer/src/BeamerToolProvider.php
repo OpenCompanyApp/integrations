@@ -76,7 +76,7 @@ class BeamerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, comments, categories',
+            'label' => 'Beamer',
             'description' => 'Changelog & announcements',
             'icon' => 'ph:megaphone',
             'logo' => 'simple-icons:beamer',

@@ -91,7 +91,7 @@ class PineconeToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'indexes, vectors, collections',
+            'label' => 'Pinecone',
             'description' => 'Vector database',
             'icon' => 'ph:tree-structure',
             'logo' => 'simple-icons:pinecone',

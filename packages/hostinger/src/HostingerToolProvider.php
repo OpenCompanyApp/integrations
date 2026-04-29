@@ -78,7 +78,7 @@ class HostingerToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, domains, DNS, SSL',
+            'label' => 'Hostinger',
             'description' => 'Web hosting',
             'icon' => 'ph:globe',
             'logo' => 'simple-icons:hostinger',

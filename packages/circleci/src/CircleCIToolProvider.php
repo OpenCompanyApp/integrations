@@ -78,7 +78,7 @@ class CircleCIToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'pipelines, workflows, projects',
+            'label' => 'CircleCI',
             'description' => 'CI/CD pipeline management',
             'icon' => 'ph:git-branch',
             'logo' => 'simple-icons:circleci',

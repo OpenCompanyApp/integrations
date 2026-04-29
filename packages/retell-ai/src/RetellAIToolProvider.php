@@ -76,7 +76,7 @@ class RetellAIToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, agents, voice',
+            'label' => 'Retell AI',
             'description' => 'AI-powered voice calls',
             'icon' => 'ph:phone-call',
             'logo' => 'simple-icons:retellai',

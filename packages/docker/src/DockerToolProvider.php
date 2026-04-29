@@ -78,7 +78,7 @@ class DockerToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'repositories, tags, organizations',
+            'label' => 'Docker Hub',
             'description' => 'Container registry management',
             'icon' => 'ph:package',
             'logo' => 'simple-icons:docker',

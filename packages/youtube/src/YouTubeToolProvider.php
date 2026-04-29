@@ -82,7 +82,7 @@ class YouTubeToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'search videos, channels, playlists',
+            'label' => 'YouTube',
             'description' => 'YouTube video & channel data',
             'icon' => 'mdi:youtube',
             'logo' => 'mdi:youtube',

@@ -93,7 +93,7 @@ class BeehiivToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, subscribers, stats',
+            'label' => 'Beehiiv',
             'description' => 'Newsletter platform',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:beehiiv',

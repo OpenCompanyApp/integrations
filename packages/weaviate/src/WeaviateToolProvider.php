@@ -75,7 +75,40 @@ class WeaviateToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appName(): string
     {
         return 'weaviate';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Weaviate',
+            'description' => 'Weaviate vector database integration for Laravel — manage schemas, search and CRUD…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Weaviate',
+            'description' => 'Weaviate vector database integration for Laravel — manage schemas, search and CRUD objects.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the Weaviate integration.
      */
     public function configSchema(): array

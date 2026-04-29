@@ -79,7 +79,7 @@ class ModalToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'apps, functions, volumes',
+            'label' => 'Modal',
             'description' => 'Serverless GPU',
             'icon' => 'ph:lightning',
             'logo' => 'simple-icons:modal',

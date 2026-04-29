@@ -80,7 +80,7 @@ class PhraseToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'localization, translation, i18n',
+            'label' => 'Phrase',
             'description' => 'Localization platform',
             'icon' => 'ph:translate',
             'logo' => 'simple-icons:phrase',

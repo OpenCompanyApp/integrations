@@ -75,7 +75,7 @@ class BuyMeACoffeeToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'supporters, subscriptions, extras, shops',
+            'label' => 'Buy Me a Coffee',
             'description' => 'Creator platform',
             'icon' => 'ph:coffee',
             'logo' => 'simple-icons:buymeacoffee',

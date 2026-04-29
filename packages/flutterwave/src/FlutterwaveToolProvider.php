@@ -75,7 +75,40 @@ class FlutterwaveToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appName(): string
     {
         return 'flutterwave';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Flutterwave',
+            'description' => 'Flutterwave payments integration for Laravel — manage transactions, customers, and…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Flutterwave',
+            'description' => 'Flutterwave payments integration for Laravel — manage transactions, customers, and bank lookups.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the Flutterwave integration.
      *
      * Defines the `secret_key` credential that the user must provide.

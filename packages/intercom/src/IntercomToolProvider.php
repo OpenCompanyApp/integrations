@@ -80,7 +80,7 @@ class IntercomToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, conversations, support',
+            'label' => 'Intercom',
             'description' => 'Customer messaging platform',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:intercom',

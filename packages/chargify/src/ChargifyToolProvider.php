@@ -77,7 +77,7 @@ class ChargifyToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'subscriptions, customers, products, invoices',
+            'label' => 'Chargify',
             'description' => 'Billing & subscription management',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:chargify',

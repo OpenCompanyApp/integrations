@@ -95,7 +95,7 @@ class WordPressToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, pages, users, comments',
+            'label' => 'WordPress',
             'description' => 'Content management',
             'icon' => 'ph:file-text',
             'logo' => 'simple-icons:wordpress',

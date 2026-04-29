@@ -77,7 +77,7 @@ class CourierToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'send, messages, recipients, templates',
+            'label' => 'Courier',
             'description' => 'Notifications & messaging',
             'icon' => 'ph:paper-plane-tilt',
             'logo' => 'simple-icons:courier',

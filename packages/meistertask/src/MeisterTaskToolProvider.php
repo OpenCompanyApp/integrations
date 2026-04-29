@@ -78,7 +78,7 @@ class MeisterTaskToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, tasks',
+            'label' => 'MeisterTask',
             'description' => 'Project & task management',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:meistertask',

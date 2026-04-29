@@ -80,7 +80,7 @@ class OktaToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'users, groups, apps',
+            'label' => 'Okta',
             'description' => 'Identity & access management',
             'icon' => 'ph:shield-check',
             'logo' => 'simple-icons:okta',

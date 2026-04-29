@@ -79,7 +79,7 @@ class MailjetToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'email, contacts, campaigns, templates',
+            'label' => 'Mailjet',
             'description' => 'Email delivery & marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:mailjet',

@@ -77,7 +77,7 @@ class GravityToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, submissions, entries',
+            'label' => 'Gravity Forms',
             'description' => 'Gravity Forms — WordPress form management',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:gravity',

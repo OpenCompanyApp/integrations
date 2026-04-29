@@ -83,7 +83,7 @@ class KlipfolioToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'dashboards, metrics, datasources',
+            'label' => 'Klipfolio',
             'description' => 'Business analytics & dashboards',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:klipfolio',

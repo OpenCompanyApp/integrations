@@ -76,7 +76,7 @@ class LineToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'message, broadcast, profile, friends',
+            'label' => 'LINE Messaging',
             'description' => 'LINE Messaging',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:line',

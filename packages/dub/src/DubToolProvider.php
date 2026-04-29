@@ -78,7 +78,7 @@ class DubToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'links, domains, tags',
+            'label' => 'Dub.co',
             'description' => 'Link management',
             'icon' => 'ph:link',
             'logo' => 'simple-icons:dub',

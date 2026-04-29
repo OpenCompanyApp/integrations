@@ -76,7 +76,7 @@ class SendgridToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'email, templates, contacts',
+            'label' => 'SendGrid',
             'description' => 'Email delivery & communication',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:sendgrid',

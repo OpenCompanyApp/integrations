@@ -76,7 +76,40 @@ class SignNowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appName(): string
     {
         return 'signnow';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Signnow',
+            'description' => 'SignNow integration for Laravel — manage documents, templates, and signing invites.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Signnow',
+            'description' => 'SignNow integration for Laravel — manage documents, templates, and signing invites.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the integrations settings UI.
      *
      * @return array<int, array<string, mixed>>

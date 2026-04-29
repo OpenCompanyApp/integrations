@@ -78,7 +78,7 @@ class PaperspaceToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'machines, notebooks, datasets, projects',
+            'label' => 'Paperspace',
             'description' => 'GPU cloud computing',
             'icon' => 'ph:gpu',
             'logo' => 'simple-icons:paperspace',

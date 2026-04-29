@@ -78,7 +78,7 @@ class BrandfetchToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'brands, logos, colors, fonts',
+            'label' => 'Brandfetch',
             'description' => 'Brand asset lookup',
             'icon' => 'ph:palette',
             'logo' => 'simple-icons:brandfetch',

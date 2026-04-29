@@ -77,7 +77,7 @@ class ChartMogulToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'customers, subscriptions, plans, invoices, metrics',
+            'label' => 'ChartMogul',
             'description' => 'Subscription analytics',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:chartmogul',

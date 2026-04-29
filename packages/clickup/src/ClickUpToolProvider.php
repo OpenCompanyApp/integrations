@@ -111,7 +111,7 @@ class ClickUpToolProvider implements ToolProvider, ConfigurableIntegration, HasT
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, projects, docs, time tracking',
+            'label' => 'ClickUp',
             'description' => 'Project management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:clickup',

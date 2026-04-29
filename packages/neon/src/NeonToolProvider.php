@@ -78,7 +78,7 @@ class NeonToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, branches, databases',
+            'label' => 'Neon',
             'description' => 'Serverless Postgres',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:neon',

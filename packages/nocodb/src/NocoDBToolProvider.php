@@ -90,7 +90,7 @@ class NocoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'bases, tables, records, views',
+            'label' => 'NocoDB',
             'description' => 'Spreadsheets & Database',
             'icon' => 'ph:table',
             'logo' => 'simple-icons:nocodb',

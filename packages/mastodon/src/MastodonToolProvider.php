@@ -82,7 +82,7 @@ class MastodonToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'statuses, accounts, timelines',
+            'label' => 'Mastodon',
             'description' => 'Social networking',
             'icon' => 'ph:mastodon-logo',
             'logo' => 'simple-icons:mastodon',

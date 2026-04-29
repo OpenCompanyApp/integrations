@@ -91,7 +91,7 @@ class RingCentralToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, calls, SMS, contacts',
+            'label' => 'RingCentral',
             'description' => 'Business communication',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:ringcentral',

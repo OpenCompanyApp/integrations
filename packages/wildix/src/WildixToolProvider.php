@@ -77,7 +77,7 @@ class WildixToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, extensions, users',
+            'label' => 'Wildix',
             'description' => 'Business telephony',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:wildix',

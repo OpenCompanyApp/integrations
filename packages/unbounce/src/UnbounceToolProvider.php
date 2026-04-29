@@ -77,7 +77,7 @@ class UnbounceToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'pages, leads, sub accounts',
+            'label' => 'Unbounce',
             'description' => 'Landing page platform',
             'icon' => 'ph:browser',
             'logo' => 'simple-icons:unbounce',

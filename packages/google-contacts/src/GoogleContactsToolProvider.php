@@ -98,7 +98,7 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, groups, people',
+            'label' => 'Google Contacts',
             'description' => 'Google Contacts',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:google',

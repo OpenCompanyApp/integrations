@@ -78,7 +78,7 @@ class StoryblokToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'stories, components, content',
+            'label' => 'Storyblok',
             'description' => 'Headless CMS',
             'icon' => 'ph:file-text',
             'logo' => 'simple-icons:storyblok',

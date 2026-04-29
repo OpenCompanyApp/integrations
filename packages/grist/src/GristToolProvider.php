@@ -88,7 +88,7 @@ class GristToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'workspaces, docs, tables, records',
+            'label' => 'Grist',
             'description' => 'Spreadsheets & Database',
             'icon' => 'ph:table',
             'logo' => 'simple-icons:grist',

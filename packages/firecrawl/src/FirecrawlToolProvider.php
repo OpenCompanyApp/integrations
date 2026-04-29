@@ -86,7 +86,7 @@ class FirecrawlToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'scrape, crawl, map, extract',
+            'label' => 'Firecrawl',
             'description' => 'Web scraping & extraction',
             'icon' => 'ph:spider-web',
         ];

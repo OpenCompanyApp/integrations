@@ -71,16 +71,38 @@ class WorldBankToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'worldbank';
     }
 
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
     public function appMeta(): array
     {
         return [
-            'label' => 'economics, GDP, inflation, population, countries, development, poverty',
+            'label' => 'World Bank',
             'description' => 'World Bank economic indicators',
             'icon' => 'ph:globe',
             'logo' => 'ph:globe',
         ];
     }
 
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'World Bank',
+            'description' => 'World Bank economic indicators',
+            'icon' => 'ph:globe',
+            'logo' => 'ph:globe',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://datahelpdesk.worldbank.org/knowledgebase/topics/125589',
+        ];
+    }
     public function tools(): array
     {
         return [

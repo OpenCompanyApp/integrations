@@ -77,20 +77,39 @@ class NasaToolProvider implements ToolProvider, HasIntegrationCapabilities
         return 'nasa';
     }
 
-/**
-     * Get metadata for the tool provider UI.
+    /**
+     * Metadata shown in app and catalog discovery UIs.
      *
-     * @return array<string, mixed> UI metadata.
+     * @return array<string, mixed>
      */
     public function appMeta(): array
     {
         return [
-            'label' => 'apod, mars, asteroids, images',
+            'label' => 'NASA',
             'description' => 'NASA space and science data',
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:nasa',
         ];
-    }    public function credentialFields(): array
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'NASA',
+            'description' => 'NASA space and science data',
+            'icon' => 'ph:rocket',
+            'logo' => 'simple-icons:nasa',
+            'category' => 'data',
+            'badge' => 'verified',
+            'docs_url' => 'https://api.nasa.gov/',
+        ];
+    }
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => false, 'placeholder' => 'DEMO_KEY'],

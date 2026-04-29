@@ -78,7 +78,7 @@ class PipedreamToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'workflows, components, triggers, accounts',
+            'label' => 'Pipedream',
             'description' => 'Automation platform',
             'icon' => 'ph:flow-arrow',
             'logo' => 'simple-icons:pipedream',

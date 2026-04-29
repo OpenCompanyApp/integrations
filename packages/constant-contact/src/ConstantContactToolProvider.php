@@ -93,7 +93,7 @@ class ConstantContactToolProvider implements ToolProvider, ConfigurableIntegrati
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, campaigns, lists',
+            'label' => 'Constant Contact',
             'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:constantcontact',

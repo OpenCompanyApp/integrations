@@ -82,7 +82,7 @@ class ArgoCdToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'applications, projects, repositories',
+            'label' => 'Argo CD',
             'description' => 'Argo CD GitOps integration for Kubernetes application delivery',
             'icon' => 'mdi:kubernetes',
             'logo' => 'mdi:kubernetes',

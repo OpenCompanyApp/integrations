@@ -77,7 +77,7 @@ class AutopilotToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, lists, journeys',
+            'label' => 'Autopilot',
             'description' => 'Marketing automation',
             'icon' => 'ph:rocket',
             'logo' => 'simple-icons:autopilot',

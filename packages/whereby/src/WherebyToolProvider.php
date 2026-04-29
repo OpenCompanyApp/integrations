@@ -78,7 +78,7 @@ class WherebyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'rooms, meetings, user',
+            'label' => 'Whereby',
             'description' => 'Video meetings',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:whereby',

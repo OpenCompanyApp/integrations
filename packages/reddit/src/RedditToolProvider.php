@@ -79,7 +79,7 @@ class RedditToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'posts, subreddits, comments',
+            'label' => 'Reddit',
             'description' => 'Social news and discussion platform',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'simple-icons:reddit',

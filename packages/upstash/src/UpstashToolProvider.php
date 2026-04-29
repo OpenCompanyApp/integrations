@@ -91,7 +91,7 @@ class UpstashToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'get, set, delete, keys, databases',
+            'label' => 'Upstash Redis',
             'description' => 'Serverless Redis',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:upstash',

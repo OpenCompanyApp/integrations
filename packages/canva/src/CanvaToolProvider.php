@@ -78,7 +78,7 @@ class CanvaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'designs, folders, assets, user',
+            'label' => 'Canva',
             'description' => 'Graphic design platform',
             'icon' => 'ph:paint-brush',
             'logo' => 'simple-icons:canva',

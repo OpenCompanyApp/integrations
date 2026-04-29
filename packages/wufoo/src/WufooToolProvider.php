@@ -89,7 +89,7 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, entries, reports',
+            'label' => 'Wufoo',
             'description' => 'Online form builder',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:wufoo',

@@ -79,7 +79,7 @@ class ProductboardToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'features, notes, products, companies',
+            'label' => 'Productboard',
             'description' => 'Product management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:productboard',

@@ -81,7 +81,7 @@ class JenkinsToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'jobs, builds, nodes',
+            'label' => 'Jenkins',
             'description' => 'Jenkins CI/CD integration for continuous integration and delivery',
             'icon' => 'mdi:pipe',
             'logo' => 'mdi:pipe',

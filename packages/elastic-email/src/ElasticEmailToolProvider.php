@@ -76,7 +76,7 @@ class ElasticEmailToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'send, templates, contacts',
+            'label' => 'Elastic Email',
             'description' => 'Transactional email',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:elasticemail',

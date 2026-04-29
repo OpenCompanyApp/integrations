@@ -79,7 +79,7 @@ class GoToWebinarToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'webinars, sessions, panelists',
+            'label' => 'GoTo Webinar',
             'description' => 'Webinar management',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:goto',

@@ -77,7 +77,7 @@ class QuickBaseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'tables, records, queries',
+            'label' => 'QuickBase',
             'description' => 'Low-code database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:quickbase',

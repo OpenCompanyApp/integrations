@@ -78,7 +78,7 @@ class WoocommerceToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'products, orders, customers',
+            'label' => 'WooCommerce',
             'description' => 'WooCommerce e-commerce',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:woocommerce',

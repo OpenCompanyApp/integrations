@@ -73,7 +73,7 @@ class PushoverToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'send, sounds, validate',
+            'label' => 'Pushover',
             'description' => 'Push notifications',
             'icon' => 'ph:bell-ringing',
         ];

@@ -97,7 +97,7 @@ class StripeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'payments, billing, subscriptions',
+            'label' => 'Stripe',
             'description' => 'Online payments',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:stripe',

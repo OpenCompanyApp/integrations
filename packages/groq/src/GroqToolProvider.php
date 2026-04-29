@@ -77,7 +77,7 @@ class GroqToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'models, completions, messages, files',
+            'label' => 'Groq',
             'description' => 'Groq AI Inference',
             'icon' => 'ph:lightning',
             'logo' => 'logos:groq',

@@ -93,7 +93,7 @@ class InsightlyToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, opportunities, projects',
+            'label' => 'Insightly CRM',
             'description' => 'CRM & project management',
             'icon' => 'ph:address-book',
             'logo' => 'simple-icons:insightly',

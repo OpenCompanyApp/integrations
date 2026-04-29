@@ -77,7 +77,7 @@ class CloudConvertToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'jobs, tasks, conversions',
+            'label' => 'CloudConvert',
             'description' => 'File conversion & processing',
             'icon' => 'ph:file-arrow-down',
             'logo' => 'simple-icons:cloudconvert',

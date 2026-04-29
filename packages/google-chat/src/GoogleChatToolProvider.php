@@ -79,7 +79,7 @@ class GoogleChatToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'spaces, messages, memberships',
+            'label' => 'Google Chat',
             'description' => 'Team messaging',
             'icon' => 'ph:chat-circle-dots',
             'logo' => 'logos:google-chat',

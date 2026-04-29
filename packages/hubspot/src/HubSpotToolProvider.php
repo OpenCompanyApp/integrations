@@ -98,7 +98,7 @@ class HubSpotToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'crm, contacts, deals, tickets',
+            'label' => 'HubSpot',
             'description' => 'CRM platform',
             'icon' => 'ph:buildings',
             'logo' => 'simple-icons:hubspot',

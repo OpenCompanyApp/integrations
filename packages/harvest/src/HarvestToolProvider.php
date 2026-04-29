@@ -89,7 +89,7 @@ class HarvestToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label'       => 'time entries, projects, clients, users',
+            'label'       => 'Harvest',
             'description' => 'Time Tracking',
             'icon'        => 'ph:clock-countdown',
             'logo'        => 'simple-icons:harvest',

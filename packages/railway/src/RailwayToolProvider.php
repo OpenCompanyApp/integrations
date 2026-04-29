@@ -78,7 +78,7 @@ class RailwayToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, services, deployments',
+            'label' => 'Railway',
             'description' => 'Cloud hosting platform',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:railway',

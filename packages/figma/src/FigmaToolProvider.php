@@ -96,7 +96,7 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'files, images, components, styles',
+            'label' => 'Figma',
             'description' => 'Design',
             'icon' => 'ph:figma-logo',
             'logo' => 'simple-icons:figma',

@@ -80,7 +80,7 @@ class StripeConnectToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'accounts, payouts, balances, capabilities',
+            'label' => 'Stripe Connect',
             'description' => 'Stripe Connect platform management',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:stripe',

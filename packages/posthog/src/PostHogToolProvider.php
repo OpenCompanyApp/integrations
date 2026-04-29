@@ -102,7 +102,7 @@ class PostHogToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'events, feature flags, insights, dashboards',
+            'label' => 'PostHog',
             'description' => 'Product analytics & feature management',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:posthog',

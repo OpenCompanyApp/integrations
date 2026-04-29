@@ -95,7 +95,7 @@ class FormstackToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, submissions, folders',
+            'label' => 'Formstack',
             'description' => 'Online form builder',
             'icon' => 'ph:clipboard-text',
             'logo' => 'simple-icons:formstack',

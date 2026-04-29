@@ -92,7 +92,7 @@ class TogglTrackToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'time entries, projects, workspaces',
+            'label' => 'Toggl Track',
             'description' => 'Time tracking & productivity',
             'icon' => 'ph:timer',
             'logo' => 'simple-icons:toggltrack',

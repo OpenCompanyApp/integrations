@@ -77,7 +77,7 @@ class OneDriveToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'files, upload, download, shared',
+            'label' => 'Microsoft OneDrive',
             'description' => 'Cloud file storage',
             'icon' => 'ph:cloud-arrow-up',
             'logo' => 'simple-icons:microsoftonedrive',

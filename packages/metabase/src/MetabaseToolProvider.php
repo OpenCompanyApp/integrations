@@ -78,7 +78,7 @@ class MetabaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'dashboards, cards, databases',
+            'label' => 'Metabase',
             'description' => 'Business intelligence & analytics',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:metabase',

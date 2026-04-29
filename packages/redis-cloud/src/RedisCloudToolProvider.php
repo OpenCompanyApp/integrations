@@ -91,7 +91,7 @@ class RedisCloudToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'subscriptions, databases, teams, account',
+            'label' => 'Redis Cloud',
             'description' => 'Redis Cloud managed hosting',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:redis',

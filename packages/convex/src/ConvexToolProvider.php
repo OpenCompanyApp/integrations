@@ -83,7 +83,7 @@ class ConvexToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'tables, documents, queries',
+            'label' => 'Convex',
             'description' => 'Backend Platform',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:convex',

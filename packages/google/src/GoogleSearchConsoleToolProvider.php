@@ -88,7 +88,7 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'search, seo, indexing, sitemaps, performance, clicks, impressions',
+            'label' => 'Google Search Console',
             'description' => 'Search performance and indexing',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:googlesearchconsole',

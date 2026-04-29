@@ -91,7 +91,7 @@ class PayPalToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'orders, payments, invoices',
+            'label' => 'PayPal',
             'description' => 'Online payments',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:paypal',

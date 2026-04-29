@@ -80,7 +80,7 @@ class ZohoDeskToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'tickets, contacts, articles, departments',
+            'label' => 'Zoho Desk',
             'description' => 'Customer support helpdesk',
             'icon' => 'ph:headset',
             'logo' => 'simple-icons:zoho',

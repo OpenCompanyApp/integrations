@@ -78,7 +78,7 @@ class KeapToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, opportunities, tags',
+            'label' => 'Keap',
             'description' => 'CRM & sales automation',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:keap',

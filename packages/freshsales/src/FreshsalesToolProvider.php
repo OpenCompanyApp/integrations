@@ -77,7 +77,7 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, deals, accounts',
+            'label' => 'Freshsales',
             'description' => 'CRM & sales management',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:freshworks',

@@ -79,7 +79,7 @@ class GoogleSlidesToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'presentations, slides',
+            'label' => 'Google Slides',
             'description' => 'Google Slides',
             'icon' => 'ph:presentation-chart',
             'logo' => 'simple-icons:googleslides',

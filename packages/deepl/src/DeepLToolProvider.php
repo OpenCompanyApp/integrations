@@ -77,7 +77,7 @@ class DeepLToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'translate, languages, glossaries, usage',
+            'label' => 'DeepL',
             'description' => 'AI-powered translation',
             'icon' => 'ph:translate',
             'logo' => 'simple-icons:deepl',

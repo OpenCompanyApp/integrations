@@ -82,7 +82,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'identify, track, subscribe, unsubscribe',
+            'label' => 'Vero',
             'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:vero',

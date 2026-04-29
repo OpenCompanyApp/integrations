@@ -92,7 +92,7 @@ class LinearToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'issues, projects, teams',
+            'label' => 'Linear',
             'description' => 'Project management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:linear',

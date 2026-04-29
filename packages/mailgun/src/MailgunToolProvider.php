@@ -76,7 +76,7 @@ class MailgunToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'email delivery',
+            'label' => 'Mailgun',
             'description' => 'Email delivery service',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:mailgun',

@@ -82,7 +82,7 @@ class N8nToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'workflows, executions, credentials',
+            'label' => 'n8n',
             'description' => 'n8n integration for workflow automation',
             'icon' => 'mdi:api',
             'logo' => 'mdi:api',

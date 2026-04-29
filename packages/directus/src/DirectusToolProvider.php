@@ -79,7 +79,7 @@ class DirectusToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'collections, items, CRUD',
+            'label' => 'Directus',
             'description' => 'Headless CMS & data platform',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:directus',

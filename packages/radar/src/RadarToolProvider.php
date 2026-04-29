@@ -76,7 +76,40 @@ class RadarToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appName(): string
     {
         return 'radar';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Radar',
+            'description' => 'Radar integration for Laravel — geofencing, location tracking, and event management.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Radar',
+            'description' => 'Radar integration for Laravel — geofencing, location tracking, and event management.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the Radar integration.
      *
      * @return array<int, array<string, mixed>>

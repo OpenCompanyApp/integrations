@@ -77,7 +77,7 @@ class TableauToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'workbooks, views, projects',
+            'label' => 'Tableau',
             'description' => 'Business intelligence & dashboards',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:tableau',

@@ -93,7 +93,7 @@ class RazorpayToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'payments, orders, refunds, customers',
+            'label' => 'Razorpay',
             'description' => 'Payment gateway',
             'icon' => 'ph:credit-card',
             'logo' => 'simple-icons:razorpay',

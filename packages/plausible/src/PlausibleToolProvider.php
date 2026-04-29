@@ -78,7 +78,7 @@ class PlausibleToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'query, realtime, sites, goals',
+            'label' => 'Plausible Analytics',
             'description' => 'Website analytics',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:plausibleanalytics',

@@ -90,7 +90,7 @@ class InvoiceNinjaToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'invoices, clients, products, payments',
+            'label' => 'Invoice Ninja',
             'description' => 'Invoicing & accounting',
             'icon' => 'ph:invoice',
             'logo' => 'simple-icons:invoiceninja',

@@ -76,7 +76,40 @@ class AttioToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appName(): string
     {
         return 'attio';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Attio',
+            'description' => 'Attio CRM integration for Laravel — manage records, objects, workspaces and more.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Attio',
+            'description' => 'Attio CRM integration for Laravel — manage records, objects, workspaces and more.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>>

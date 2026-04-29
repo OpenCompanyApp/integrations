@@ -113,7 +113,7 @@ class PlaneToolProvider implements ConfigurableIntegration, HasTriggers, ToolPro
     public function appMeta(): array
     {
         return [
-            'label' => 'workspaces, projects, issues, cycles, modules, pages',
+            'label' => 'Plane',
             'description' => 'Project management',
             'icon' => 'ph:kanban',
             'logo' => 'simple-icons:plane',

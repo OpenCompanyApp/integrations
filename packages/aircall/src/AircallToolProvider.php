@@ -95,7 +95,7 @@ class AircallToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, contacts, users, numbers',
+            'label' => 'Aircall',
             'description' => 'Cloud phone system',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:aircall',

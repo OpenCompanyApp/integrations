@@ -88,7 +88,7 @@ class AcceloToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'tickets, tasks, projects',
+            'label' => 'Accelo',
             'description' => 'Professional services automation',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:accelo',

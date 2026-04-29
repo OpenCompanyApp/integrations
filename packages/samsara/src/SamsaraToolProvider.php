@@ -75,7 +75,40 @@ class SamsaraToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appName(): string
     {
         return 'samsara';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Samsara',
+            'description' => 'Samsara fleet and IoT management integration for Laravel — vehicles, drivers, sensors…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Samsara',
+            'description' => 'Samsara fleet and IoT management integration for Laravel — vehicles, drivers, sensors, and user info.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the settings UI.
      *
      * @return array<int, array<string, mixed>>

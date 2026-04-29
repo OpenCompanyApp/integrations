@@ -76,7 +76,7 @@ class EmailOctopusToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, campaigns, account',
+            'label' => 'EmailOctopus',
             'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:emailoctopus',

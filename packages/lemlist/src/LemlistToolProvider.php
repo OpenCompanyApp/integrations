@@ -90,7 +90,7 @@ class LemlistToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'campaigns, leads, teams',
+            'label' => 'Lemlist',
             'description' => 'Email outreach & sales engagement',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:lemlist',

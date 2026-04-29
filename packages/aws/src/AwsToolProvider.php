@@ -79,7 +79,40 @@ class AwsToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appName(): string
     {
         return 'aws';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'AWS',
+            'description' => 'AWS cloud integration for Laravel — manage S3 buckets, EC2 instances, Lambda functions…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'AWS',
+            'description' => 'AWS cloud integration for Laravel — manage S3 buckets, EC2 instances, Lambda functions, DynamoDB tables, CloudWatch metrics, SNS topics, and IAM users.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the integration settings UI.
      *
      * @return array<int, array<string, mixed>> The config field definitions.

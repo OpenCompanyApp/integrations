@@ -79,7 +79,7 @@ class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'crypto, bitcoin, ethereum, prices, market data, coins, tokens',
+            'label' => 'CoinGecko',
             'description' => 'Cryptocurrency market data',
             'icon' => 'ph:coin',
             'logo' => 'ph:coin',

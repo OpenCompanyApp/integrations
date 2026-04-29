@@ -88,7 +88,7 @@ class BlandAIToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'calls, analyze, telephony',
+            'label' => 'BlandAI',
             'description' => 'AI-powered phone calls',
             'icon' => 'ph:phone',
             'logo' => 'simple-icons:blandai',

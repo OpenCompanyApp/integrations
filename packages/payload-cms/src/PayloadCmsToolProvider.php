@@ -79,7 +79,7 @@ class PayloadCmsToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'cms, headless, content',
+            'label' => 'Payload CMS',
             'description' => 'Headless CMS',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:payloadcms',

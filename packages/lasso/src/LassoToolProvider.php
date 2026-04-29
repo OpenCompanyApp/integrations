@@ -90,7 +90,7 @@ class LassoToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label'       => 'contacts, deals, inventory',
+            'label'       => 'Lasso CRM',
             'description' => 'Real estate CRM',
             'icon'        => 'ph:buildings',
             'logo'        => 'simple-icons:lasso',

@@ -91,7 +91,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'repos, issues, pull requests, branches, commits',
+            'label' => 'Bitbucket',
             'description' => 'Bitbucket integration for code collaboration',
             'icon' => 'mdi:bitbucket',
             'logo' => 'mdi:bitbucket',

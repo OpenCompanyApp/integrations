@@ -77,7 +77,7 @@ class NewRelicToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'applications, deployments, alerts, dashboards',
+            'label' => 'New Relic',
             'description' => 'Application performance monitoring',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:newrelic',

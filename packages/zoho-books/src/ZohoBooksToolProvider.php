@@ -97,7 +97,7 @@ class ZohoBooksToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'invoices, contacts, items, estimates',
+            'label' => 'Zoho Books',
             'description' => 'Online accounting & invoicing',
             'icon' => 'ph:book-open',
             'logo' => 'simple-icons:zoho',

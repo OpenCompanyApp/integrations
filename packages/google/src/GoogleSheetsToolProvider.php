@@ -99,7 +99,7 @@ class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration,
     public function appMeta(): array
     {
         return [
-            'label' => 'spreadsheets, cells, rows, columns, data, tables',
+            'label' => 'Google Sheets',
             'description' => 'Spreadsheet data management',
             'icon' => 'ph:table',
             'logo' => 'simple-icons:googlesheets',

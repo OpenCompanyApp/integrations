@@ -82,7 +82,7 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'workspaces, projects, time entries',
+            'label' => 'Toggl',
             'description' => 'Time tracking and project management',
             'icon' => 'ph:timer',
             'logo' => 'simple-icons:toggl',

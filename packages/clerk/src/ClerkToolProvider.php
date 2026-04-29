@@ -75,7 +75,40 @@ class ClerkToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appName(): string
     {
         return 'clerk';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Clerk',
+            'description' => 'Clerk authentication integration for Laravel — manage users, organizations, and…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Clerk',
+            'description' => 'Clerk authentication integration for Laravel — manage users, organizations, and identity.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for this integration.
      */
     public function configSchema(): array

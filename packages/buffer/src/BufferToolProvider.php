@@ -79,7 +79,7 @@ class BufferToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'profiles, updates, scheduling',
+            'label' => 'Buffer',
             'description' => 'Social media management',
             'icon' => 'ph:calendar-check',
             'logo' => 'simple-icons:buffer',

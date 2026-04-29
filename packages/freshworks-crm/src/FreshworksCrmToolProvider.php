@@ -77,7 +77,7 @@ class FreshworksCrmToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, deals, accounts',
+            'label' => 'Freshworks CRM',
             'description' => 'CRM & Sales',
             'icon' => 'ph:handshake',
             'logo' => 'simple-icons:freshworks',

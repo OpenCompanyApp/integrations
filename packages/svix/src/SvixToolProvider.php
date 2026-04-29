@@ -77,7 +77,7 @@ class SvixToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'applications, endpoints, messages',
+            'label' => 'Svix',
             'description' => 'Webhook service',
             'icon' => 'ph:webhooks-logo',
             'logo' => 'simple-icons:svix',

@@ -90,7 +90,7 @@ class PagerDutyToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label'       => 'incidents, services, teams',
+            'label'       => 'PagerDuty',
             'description' => 'Incident management & response',
             'icon'        => 'ph:siren',
             'logo'        => 'simple-icons:pagerduty',

@@ -77,7 +77,7 @@ class NovuToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'notifications, subscribers, events',
+            'label' => 'Novu',
             'description' => 'Notification platform',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:novu',

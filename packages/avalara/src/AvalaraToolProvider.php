@@ -75,7 +75,7 @@ class AvalaraToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'transactions, companies, tax codes',
+            'label' => 'Avalara',
             'description' => 'Tax automation & compliance',
             'icon' => 'ph:receipt',
             'logo' => 'simple-icons:avalara',

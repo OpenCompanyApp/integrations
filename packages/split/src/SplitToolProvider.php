@@ -78,7 +78,7 @@ class SplitToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'splits, environments, workspaces',
+            'label' => 'Split',
             'description' => 'Feature flags',
             'icon' => 'ph:flag',
             'logo' => 'simple-icons:splitio',

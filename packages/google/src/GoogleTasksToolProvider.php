@@ -90,7 +90,7 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'tasks, to-do, checklist, reminders',
+            'label' => 'Google Tasks',
             'description' => 'Task management',
             'icon' => 'ph:check-square',
             'logo' => 'simple-icons:googletasks',

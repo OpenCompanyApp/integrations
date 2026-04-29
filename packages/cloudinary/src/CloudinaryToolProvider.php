@@ -76,7 +76,40 @@ class CloudinaryToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appName(): string
     {
         return 'cloudinary';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Cloudinary',
+            'description' => 'Cloudinary integration for Laravel — upload, list, get, and delete media resources and…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Cloudinary',
+            'description' => 'Cloudinary integration for Laravel — upload, list, get, and delete media resources and folders.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Configuration schema for the integration settings form.
      *
      * @return array<int, array<string, mixed>>

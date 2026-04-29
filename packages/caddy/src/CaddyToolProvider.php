@@ -78,7 +78,7 @@ class CaddyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, certificates, user',
+            'label' => 'Caddy',
             'description' => 'Web server management',
             'icon' => 'ph:globe',
             'logo' => 'simple-icons:caddy',

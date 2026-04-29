@@ -91,7 +91,7 @@ class DiscourseToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'topics, posts, categories',
+            'label' => 'Discourse',
             'description' => 'Forum & community',
             'icon' => 'ph:chat-circle-text',
             'logo' => 'simple-icons:discourse',

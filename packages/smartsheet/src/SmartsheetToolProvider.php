@@ -98,6 +98,7 @@ class SmartsheetToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
+            'label' => 'Smartsheet',
             'name' => 'Smartsheet',
             'description' => 'Enterprise work management platform for sheets, rows, columns, and workspaces.',
             'icon' => 'smartsheet',
@@ -112,7 +113,7 @@ class SmartsheetToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function integrationMeta(): array
     {
         return [
-            'name' => 'Smartsheet Integration',
+            'name' => 'Smartsheet',
             'description' => 'Connect to Smartsheet to manage sheets, rows, columns, and workspaces.',
         ];
     }/**

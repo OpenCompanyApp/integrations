@@ -103,7 +103,7 @@ class ActiveCampaignToolProvider implements ToolProvider, ConfigurableIntegratio
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, lists, deals, automations, notes',
+            'label' => 'ActiveCampaign',
             'description' => 'Email marketing & CRM',
             'icon' => 'ph:envelope-simple',
             'logo' => 'simple-icons:activecampaign',

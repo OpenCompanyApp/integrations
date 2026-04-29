@@ -83,7 +83,7 @@ class MuxToolProvider implements ToolProvider, ConfigurableIntegration, HasInteg
     public function appMeta(): array
     {
         return [
-            'label' => 'assets, live streams, realtime',
+            'label' => 'Mux',
             'description' => 'Video infrastructure',
             'icon' => 'ph:video-camera',
             'logo' => 'simple-icons:mux',

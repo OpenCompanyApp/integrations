@@ -87,7 +87,7 @@ class PrometheusToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'alerts, rules, targets, user',
+            'label' => 'Prometheus',
             'description' => 'Monitoring & alerting',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:prometheus',

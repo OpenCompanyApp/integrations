@@ -76,7 +76,7 @@ class LoopsToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, events',
+            'label' => 'Loops',
             'description' => 'Email marketing',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:loops',

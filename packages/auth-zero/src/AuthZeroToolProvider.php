@@ -83,7 +83,7 @@ class AuthZeroToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'users, connections, roles, settings',
+            'label' => 'Auth0',
             'description' => 'Identity & authentication platform',
             'icon' => 'ph:shield-check',
             'logo' => 'simple-icons:auth0',

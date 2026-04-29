@@ -78,7 +78,7 @@ class HubstaffToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'time entries, projects, organizations',
+            'label' => 'Hubstaff',
             'description' => 'Time tracking & productivity',
             'icon' => 'ph:clock-countdown',
             'logo' => 'simple-icons:hubstaff',

@@ -76,7 +76,7 @@ class PhantombusterToolProvider implements ToolProvider, ConfigurableIntegration
     public function appMeta(): array
     {
         return [
-            'label' => 'agents, launch, containers',
+            'label' => 'Phantombuster',
             'description' => 'Automation & scraping',
             'icon' => 'ph:robot',
             'logo' => 'simple-icons:phantombuster',

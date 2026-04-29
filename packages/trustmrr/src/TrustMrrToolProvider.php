@@ -72,7 +72,7 @@ class TrustMrrToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'startups, revenue, MRR, acquisitions',
+            'label' => 'TrustMRR',
             'description' => 'Verified startup revenue data',
             'icon' => 'ph:chart-line-up',
             'logo' => 'ph:chart-line-up',

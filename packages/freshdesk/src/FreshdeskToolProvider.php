@@ -90,7 +90,7 @@ class FreshdeskToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label'       => 'tickets, contacts, agents, companies',
+            'label'       => 'Freshdesk',
             'description' => 'Helpdesk & customer support',
             'icon'        => 'ph:headset',
             'logo'        => 'simple-icons:freshdesk',

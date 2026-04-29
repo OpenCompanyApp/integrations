@@ -78,7 +78,7 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'databases, tables, rows',
+            'label' => 'Baserow',
             'description' => 'Database management',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:baserow',

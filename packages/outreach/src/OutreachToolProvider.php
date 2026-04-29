@@ -79,7 +79,40 @@ class OutreachToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appName(): string
     {
         return 'outreach';
-    }    /**
+    }
+
+    /**
+     * Metadata shown in app and catalog discovery UIs.
+     *
+     * @return array<string, mixed>
+     */
+    public function appMeta(): array
+    {
+        return [
+            'label' => 'Outreach',
+            'description' => 'Outreach sales engagement platform integration for Laravel — manage prospects, sequence…',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+        ];
+    }
+
+    /**
+     * Canonical integration metadata used by settings and generated catalogs.
+     *
+     * @return array<string, mixed>
+     */
+    public function integrationMeta(): array
+    {
+        return [
+            'name' => 'Outreach',
+            'description' => 'Outreach sales engagement platform integration for Laravel — manage prospects, sequences, and accounts.',
+            'icon' => 'ph:plug',
+            'logo' => 'ph:plug',
+            'category' => 'other',
+            'badge' => 'verified',
+        ];
+    }
+/**
      * Get the configuration schema for the Outreach integration.
      *
      * @return array List of configuration field definitions.

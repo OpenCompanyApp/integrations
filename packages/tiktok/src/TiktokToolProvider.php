@@ -78,7 +78,7 @@ class TiktokToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'videos, campaigns, advertisers',
+            'label' => 'TikTok',
             'description' => 'TikTok Business advertising & content management',
             'icon' => 'ph:tiktok-logo',
             'logo' => 'simple-icons:tiktok',

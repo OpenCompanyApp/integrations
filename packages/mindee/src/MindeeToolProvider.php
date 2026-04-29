@@ -88,7 +88,7 @@ class MindeeToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'invoice OCR, receipt OCR, passport OCR, custom documents',
+            'label' => 'Mindee',
             'description' => 'Document OCR & parsing',
             'icon' => 'ph:scan',
             'logo' => 'simple-icons:mindee',

@@ -83,7 +83,7 @@ class AshbyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'jobs, applications, interviews',
+            'label' => 'Ashby',
             'description' => 'Applicant tracking system',
             'icon' => 'ph:briefcase',
             'logo' => 'simple-icons:ashby',

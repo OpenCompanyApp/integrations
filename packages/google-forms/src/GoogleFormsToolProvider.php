@@ -79,7 +79,7 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, responses',
+            'label' => 'Google Forms',
             'description' => 'Create forms and collect responses',
             'icon' => 'ph:clipboard-text',
             'logo' => 'logos:google-forms',

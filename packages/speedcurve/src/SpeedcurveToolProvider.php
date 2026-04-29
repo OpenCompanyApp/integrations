@@ -77,7 +77,7 @@ class SpeedcurveToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'sites, tests, deployments',
+            'label' => 'SpeedCurve',
             'description' => 'Performance monitoring',
             'icon' => 'ph:gauge',
             'logo' => 'simple-icons:speedcurve',

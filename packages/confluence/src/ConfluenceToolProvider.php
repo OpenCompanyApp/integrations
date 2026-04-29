@@ -87,7 +87,7 @@ class ConfluenceToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'pages, spaces, comments, labels, search',
+            'label' => 'Confluence',
             'description' => 'Confluence integration for knowledge base and documentation',
             'icon' => 'simple-icons:confluence',
             'logo' => 'simple-icons:confluence',

@@ -75,7 +75,7 @@ class StatuspageToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'incidents, components, status',
+            'label' => 'Atlassian Statuspage',
             'description' => 'Service status and incident management',
             'icon' => 'ph:signal',
             'logo' => 'simple-icons:atlassian',

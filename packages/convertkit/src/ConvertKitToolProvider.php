@@ -90,7 +90,7 @@ class ConvertKitToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'subscribers, tags, forms, broadcasts',
+            'label' => 'ConvertKit',
             'description' => 'Email marketing & newsletters',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:convertkit',

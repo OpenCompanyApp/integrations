@@ -79,7 +79,7 @@ class MongoDBToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'find, insert, update, delete, aggregate',
+            'label' => 'MongoDB Atlas',
             'description' => 'MongoDB Atlas database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:mongodb',

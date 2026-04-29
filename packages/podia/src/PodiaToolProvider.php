@@ -78,7 +78,7 @@ class PodiaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'courses, downloads, customers, sales',
+            'label' => 'Podia',
             'description' => 'Online courses & digital downloads',
             'icon' => 'ph:graduation-cap',
             'logo' => 'simple-icons:podia',

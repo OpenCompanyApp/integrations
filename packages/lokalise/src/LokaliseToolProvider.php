@@ -77,7 +77,7 @@ class LokaliseToolProvider implements ToolProvider, ConfigurableIntegration, Has
     public function appMeta(): array
     {
         return [
-            'label' => 'projects, keys, translations',
+            'label' => 'Lokalise',
             'description' => 'Localization management platform',
             'icon' => 'ph:globe-stand',
             'logo' => 'simple-icons:lokalise',

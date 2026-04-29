@@ -93,7 +93,7 @@ class ServiceNowToolProvider implements ToolProvider, ConfigurableIntegration, H
     public function appMeta(): array
     {
         return [
-            'label' => 'incidents, tasks, users',
+            'label' => 'ServiceNow',
             'description' => 'IT service management',
             'icon' => 'ph:cloud-lightning',
             'logo' => 'simple-icons:servicenow',

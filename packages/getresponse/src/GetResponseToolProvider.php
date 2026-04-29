@@ -80,7 +80,7 @@ class GetResponseToolProvider implements ToolProvider, ConfigurableIntegration, 
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, campaigns, newsletters',
+            'label' => 'GetResponse',
             'description' => 'Email marketing platform',
             'icon' => 'ph:envelope',
             'logo' => 'simple-icons:getresponse',

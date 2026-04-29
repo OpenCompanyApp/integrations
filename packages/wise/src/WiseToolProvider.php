@@ -94,7 +94,7 @@ class WiseToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'profiles, balances, transfers',
+            'label' => 'Wise',
             'description' => 'International money transfers',
             'icon' => 'ph:money',
             'logo' => 'simple-icons:wise',

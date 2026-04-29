@@ -77,7 +77,7 @@ class SellfyToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'products, orders, customers',
+            'label' => 'Sellfy',
             'description' => 'E-commerce platform',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:sellfy',

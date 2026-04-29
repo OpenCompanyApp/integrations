@@ -90,7 +90,7 @@ class JinaAIToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'search, read, ground, embeddings, rerank',
+            'label' => 'Jina AI',
             'description' => 'AI search, reader, grounding, embeddings & reranking',
             'icon' => 'ph:magnifying-glass',
             'logo' => 'simple-icons:jinaai',

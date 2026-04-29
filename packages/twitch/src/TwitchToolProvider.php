@@ -80,7 +80,7 @@ class TwitchToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'streams, users, channels, games',
+            'label' => 'Twitch',
             'description' => 'Live streaming platform',
             'icon' => 'ph:tv',
             'logo' => 'simple-icons:twitch',

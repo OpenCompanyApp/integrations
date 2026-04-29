@@ -98,7 +98,7 @@ class DatadogToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'monitors, metrics, dashboards, events',
+            'label' => 'Datadog',
             'description' => 'Infrastructure & application monitoring',
             'icon' => 'ph:chart-bar',
             'logo' => 'simple-icons:datadog',

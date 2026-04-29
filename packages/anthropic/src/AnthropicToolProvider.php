@@ -90,7 +90,7 @@ class AnthropicToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'messages, models, workspaces',
+            'label' => 'Anthropic',
             'description' => 'Anthropic Claude AI',
             'icon' => 'ph:brain',
             'logo' => 'simple-icons:anthropic',

@@ -83,7 +83,7 @@ public function appName(): string
 public function appMeta(): array
     {
         return [
-            'label' => 'tweets, users, post',
+            'label' => 'Twitter / X',
             'description' => 'Social media',
             'icon' => 'ph:twitter-logo',
             'logo' => 'simple-icons:x',

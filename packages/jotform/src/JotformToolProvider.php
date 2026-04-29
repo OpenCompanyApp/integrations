@@ -77,7 +77,7 @@ class JotformToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'forms, submissions, questions',
+            'label' => 'Jotform',
             'description' => 'Online form builder',
             'icon' => 'ph:notebook',
             'logo' => 'simple-icons:jotform',

@@ -78,7 +78,7 @@ class UpcloudToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'servers, storages, networks, IPs',
+            'label' => 'UpCloud',
             'description' => 'Cloud hosting management',
             'icon' => 'ph:cloud',
             'logo' => 'simple-icons:upcloud',

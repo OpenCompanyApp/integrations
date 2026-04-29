@@ -92,7 +92,7 @@ class GainsightToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'companies, users, surveys',
+            'label' => 'Gainsight',
             'description' => 'Customer success',
             'icon' => 'ph:chart-line-up',
             'logo' => 'simple-icons:gainsight',

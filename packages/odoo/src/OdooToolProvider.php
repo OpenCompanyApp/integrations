@@ -93,7 +93,7 @@ class OdooToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, sales orders, invoices, products, leads',
+            'label' => 'Odoo ERP',
             'description' => 'ERP & CRM',
             'icon' => 'ph:buildings',
             'logo' => 'simple-icons:odoo',

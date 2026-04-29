@@ -77,7 +77,7 @@ class GeminiToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'models, generate, files, tuned models',
+            'label' => 'Google Gemini',
             'description' => 'Google Gemini AI',
             'icon' => 'ph:brain',
             'logo' => 'logos:google-gemini',

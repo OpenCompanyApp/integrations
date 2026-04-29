@@ -90,7 +90,7 @@ class OneSignalToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     public function appMeta(): array
     {
         return [
-            'label' => 'notifications, devices, apps',
+            'label' => 'OneSignal',
             'description' => 'Push notifications',
             'icon' => 'ph:bell-ringing',
             'logo' => 'simple-icons:onesignal',

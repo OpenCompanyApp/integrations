@@ -78,7 +78,7 @@ class EtsyToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
     public function appMeta(): array
     {
         return [
-            'label' => 'listings, orders, inventory',
+            'label' => 'Etsy',
             'description' => 'Etsy e-commerce',
             'icon' => 'ph:storefront',
             'logo' => 'simple-icons:etsy',

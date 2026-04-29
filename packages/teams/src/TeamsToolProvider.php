@@ -83,7 +83,7 @@ class TeamsToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'teams, channels, messages, users',
+            'label' => 'Microsoft Teams',
             'description' => 'Communication',
             'icon' => 'ph:microsoft-teams-logo',
             'logo' => 'simple-icons:microsoftteams',

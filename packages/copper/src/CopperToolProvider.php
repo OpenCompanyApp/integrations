@@ -83,7 +83,7 @@ class CopperToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'contacts, companies, opportunities',
+            'label' => 'Copper CRM',
             'description' => 'CRM',
             'icon' => 'ph:users',
             'logo' => 'simple-icons:copper',

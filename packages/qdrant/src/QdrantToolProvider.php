@@ -76,7 +76,7 @@ class QdrantToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     public function appMeta(): array
     {
         return [
-            'label' => 'collections, search, upsert, cluster',
+            'label' => 'Qdrant',
             'description' => 'Vector database',
             'icon' => 'ph:database',
             'logo' => 'simple-icons:qdrant',

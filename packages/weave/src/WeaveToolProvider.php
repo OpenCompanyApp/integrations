@@ -78,7 +78,7 @@ class WeaveToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     public function appMeta(): array
     {
         return [
-            'label' => 'patients, appointments, messages',
+            'label' => 'Weave',
             'description' => 'Healthcare communications',
             'icon' => 'ph:heartbeat',
             'logo' => 'simple-icons:weave',

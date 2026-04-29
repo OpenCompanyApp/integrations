@@ -78,7 +78,7 @@ class SegmentToolProvider implements ToolProvider, ConfigurableIntegration, HasI
     public function appMeta(): array
     {
         return [
-            'label' => 'identify, track, page, group, workspace, sources',
+            'label' => 'Segment',
             'description' => 'Customer data platform',
             'icon' => 'ph:flow-arrow',
             'logo' => 'simple-icons:segment',

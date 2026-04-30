@@ -177,7 +177,141 @@ class GmailToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'gmail_add_labels' => [
+                'class' => GmailAddLabels::class,
+                'type' => 'write',
+                'name' => 'Gmail Add Labels',
+                'description' => 'Add labels to one or more Gmail messages. Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_archive' => [
+                'class' => GmailArchive::class,
+                'type' => 'read',
+                'name' => 'Gmail Archive',
+                'description' => 'Archive one or more Gmail messages (remove from inbox). Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_create_draft' => [
+                'class' => GmailCreateDraft::class,
+                'type' => 'write',
+                'name' => 'Gmail Create Draft',
+                'description' => 'Create a draft email in Gmail (not sent).',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_mark_read' => [
+                'class' => GmailMarkRead::class,
+                'type' => 'write',
+                'name' => 'Gmail Mark Read',
+                'description' => 'Mark one or more Gmail messages as read. Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_mark_unread' => [
+                'class' => GmailMarkUnread::class,
+                'type' => 'write',
+                'name' => 'Gmail Mark Unread',
+                'description' => 'Mark one or more Gmail messages as unread. Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_read' => [
+                'class' => GmailRead::class,
+                'type' => 'read',
+                'name' => 'Gmail Read',
+                'description' => 'Read the full content of a Gmail message by its ID. Returns headers (From, To, Subject, Date), the decoded text body, and a list of attachments. Use gmail_search first to find message IDs, then use this tool to read the full content.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_remove_labels' => [
+                'class' => GmailRemoveLabels::class,
+                'type' => 'write',
+                'name' => 'Gmail Remove Labels',
+                'description' => 'Remove labels from one or more Gmail messages. Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_reply' => [
+                'class' => GmailReply::class,
+                'type' => 'read',
+                'name' => 'Gmail Reply',
+                'description' => 'Reply to an existing Gmail message (maintains the thread).',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_count_by_sender' => [
+                'class' => GmailCountBySender::class,
+                'type' => 'read',
+                'name' => 'Gmail Count By Sender',
+                'description' => 'Count all matching Gmail messages grouped by sender. Automatically paginates through ALL results (handles thousands of messages). Returns top senders sorted by count. Use for questions like "who sends me the most email?" or "count unread by sender".',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_list_labels' => [
+                'class' => GmailListLabels::class,
+                'type' => 'read',
+                'name' => 'Gmail List Labels',
+                'description' => 'List all labels in the Gmail mailbox (INBOX, SENT, custom labels, etc.).',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_save_attachment' => [
+                'class' => GmailSaveAttachment::class,
+                'type' => 'read',
+                'name' => 'Gmail Save Attachment',
+                'description' => 'Download an email attachment and save it to workspace files. Requires a messageId and attachmentId (both returned by gmail_read). The file is saved under the agent\'s folder and can be browsed in the Files page.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_search_emails' => [
+                'class' => GmailSearchEmails::class,
+                'type' => 'read',
+                'name' => 'Gmail Search Emails',
+                'description' => 'Search Gmail messages using Gmail query syntax (e.g., "from:alice subject:meeting is:unread has:attachment after:2026-02-01"). Returns message summaries with headers. Max 100 per page.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_send_draft' => [
+                'class' => GmailSendDraft::class,
+                'type' => 'write',
+                'name' => 'Gmail Send Draft',
+                'description' => 'Send a previously created Gmail draft by its ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_send_email' => [
+                'class' => GmailSendEmail::class,
+                'type' => 'write',
+                'name' => 'Gmail Send Email',
+                'description' => 'Send an email directly via Gmail.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_trash' => [
+                'class' => GmailTrash::class,
+                'type' => 'read',
+                'name' => 'Gmail Trash',
+                'description' => 'Move one or more Gmail messages to trash. Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'gmail_untrash' => [
+                'class' => GmailUntrash::class,
+                'type' => 'read',
+                'name' => 'Gmail Untrash',
+                'description' => 'Remove one or more Gmail messages from trash. Provide messageIds (comma-separated) for batch operations.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

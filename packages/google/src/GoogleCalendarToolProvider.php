@@ -169,7 +169,85 @@ class GoogleCalendarToolProvider implements ToolProvider, ConfigurableIntegratio
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_calendar_create_event' => [
+                'class' => GoogleCalendarCreateEvent::class,
+                'type' => 'write',
+                'name' => 'Google Calendar Create Event',
+                'description' => 'Create a Google Calendar event. Use startDateTime/endDateTime for timed events, or startDate/endDate for all-day events.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_delete_event' => [
+                'class' => GoogleCalendarDeleteEvent::class,
+                'type' => 'write',
+                'name' => 'Google Calendar Delete Event',
+                'description' => 'Delete a Google Calendar event by its ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_freebusy' => [
+                'class' => GoogleCalendarFreeBusy::class,
+                'type' => 'read',
+                'name' => 'Google Calendar Freebusy',
+                'description' => 'Check free/busy availability across one or more Google Calendars. Returns busy time slots within the specified time range. Useful for finding open slots for scheduling meetings.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_get_event' => [
+                'class' => GoogleCalendarGetEvent::class,
+                'type' => 'read',
+                'name' => 'Google Calendar Get Event',
+                'description' => 'Get a single Google Calendar event by its ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_list_calendars' => [
+                'class' => GoogleCalendarListCalendars::class,
+                'type' => 'read',
+                'name' => 'Google Calendar List Calendars',
+                'description' => 'List all Google Calendars the user has access to.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_list_events' => [
+                'class' => GoogleCalendarListEvents::class,
+                'type' => 'read',
+                'name' => 'Google Calendar List Events',
+                'description' => 'List or search events in a Google Calendar. Supports date range filtering and text search.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_quick_add' => [
+                'class' => GoogleCalendarQuickAdd::class,
+                'type' => 'read',
+                'name' => 'Google Calendar Quick Add',
+                'description' => 'Create a Google Calendar event from natural language text (e.g., "Lunch with Alice tomorrow at noon").',
+                'icon' => 'ph:wrench',
+            ],
+            'google_calendar_update_event' => [
+                'class' => GoogleCalendarUpdateEvent::class,
+                'type' => 'write',
+                'name' => 'Google Calendar Update Event',
+                'description' => 'Update an existing Google Calendar event (partial update). Only specified fields are changed.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

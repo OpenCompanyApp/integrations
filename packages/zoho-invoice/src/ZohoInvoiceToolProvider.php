@@ -103,7 +103,105 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://www.zoho.com/invoice/api/v3/',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'access_token' => 'required|string',
+            'base_url' => 'nullable|string',
+            'organization_id' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'zohoinvoice_list_invoices' => [
+                'class' => ZohoInvoiceListInvoices::class,
+                'type' => 'read',
+                'name' => 'Zohoinvoice List Invoices',
+                'description' => 'List invoices from Zoho Invoice. Supports filtering by status (draft, sent, overdue, paid, void, partially_paid), customer, and date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'zohoinvoice_get_invoice' => [
+                'class' => ZohoInvoiceGetInvoice::class,
+                'type' => 'read',
+                'name' => 'Zohoinvoice Get Invoice',
+                'description' => 'Get full details of a single invoice by its ID, including line items, totals, payments, and notes.',
+                'icon' => 'ph:wrench',
+            ],
+            'zohoinvoice_create_invoice' => [
+                'class' => ZohoInvoiceCreateInvoice::class,
+                'type' => 'write',
+                'name' => 'Zohoinvoice Create Invoice',
+                'description' => 'Create a new invoice in Zoho Invoice. Requires at minimum a customer_id and one line item. Returns the created invoice with its ID and total.',
+                'icon' => 'ph:wrench',
+            ],
+            'zohoinvoice_list_contacts' => [
+                'class' => ZohoInvoiceListContacts::class,
+                'type' => 'read',
+                'name' => 'Zohoinvoice List Contacts',
+                'description' => 'List contacts (customers and vendors) from Zoho Invoice. Supports filtering by type (customer or vendor) and pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'zohoinvoice_list_items' => [
+                'class' => ZohoInvoiceListItems::class,
+                'type' => 'read',
+                'name' => 'Zohoinvoice List Items',
+                'description' => 'List items (products and services) from Zoho Invoice. Use item IDs when creating invoices with line items.',
+                'icon' => 'ph:wrench',
+            ],
+            'zohoinvoice_list_payments' => [
+                'class' => ZohoInvoiceListPayments::class,
+                'type' => 'read',
+                'name' => 'Zohoinvoice List Payments',
+                'description' => 'List payments received in Zoho Invoice. Supports filtering by customer, date range, and payment mode.',
+                'icon' => 'ph:wrench',
+            ],
+            'zohoinvoice_get_current_user' => [
+                'class' => ZohoInvoiceGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Zohoinvoice Get Current User',
+                'description' => 'Get the authenticated user\'s profile from Zoho Invoice, including name, email, and role.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/zoho-invoice.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],

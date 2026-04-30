@@ -101,7 +101,97 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://developer.x.com/en/docs/twitter-api',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'access_token' => 'required|string',
+            'base_url' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'x_create_tweet' => [
+                'class' => XCreateTweet::class,
+                'type' => 'write',
+                'name' => 'X Create Tweet',
+                'description' => 'Post a new tweet. Supports text only, replies, and media attachments. The tweet text must not exceed 280 characters.',
+                'icon' => 'ph:wrench',
+            ],
+            'x_get_current_user' => [
+                'class' => XGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'X Get Current User',
+                'description' => 'Get the authenticated user\'s own profile. Returns your user ID, name, and username, plus any additional requested fields.',
+                'icon' => 'ph:wrench',
+            ],
+            'x_get_tweet' => [
+                'class' => XGetTweet::class,
+                'type' => 'read',
+                'name' => 'X Get Tweet',
+                'description' => 'Get a single tweet by ID. Returns the tweet text, author ID, creation date, and public metrics (likes, retweets, replies).',
+                'icon' => 'ph:wrench',
+            ],
+            'x_get_user' => [
+                'class' => XGetUser::class,
+                'type' => 'read',
+                'name' => 'X Get User',
+                'description' => 'Get a Twitter user by their numeric ID. Returns the user\'s name, username, and optionally their bio, profile image, and public metrics.',
+                'icon' => 'ph:wrench',
+            ],
+            'x_get_user_by_username' => [
+                'class' => XGetUserByUsername::class,
+                'type' => 'read',
+                'name' => 'X Get User By Username',
+                'description' => 'Get a Twitter user by their username (handle). Enter the username without the @ prefix. Returns the user\'s ID, name, username, and any additional requested fields.',
+                'icon' => 'ph:wrench',
+            ],
+            'x_list_tweets' => [
+                'class' => XListTweets::class,
+                'type' => 'read',
+                'name' => 'X List Tweets',
+                'description' => 'Look up multiple tweets by their IDs. Pass up to 100 tweet IDs and receive their text, metrics, and metadata in one call.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/x.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Bearer Token', 'required' => true],

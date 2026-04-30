@@ -99,7 +99,95 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://docs.exa.ai/reference',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'api_key' => 'required|string',
+            'url' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'exa_search' => [
+                'class' => ExaSearch::class,
+                'type' => 'read',
+                'name' => 'Exa Search',
+                'description' => 'Perform a neural search query across the web using Exa AI. Returns a list of relevant pages with titles, URLs, and scores. Supports filtering by category, date range, and autoprompt mode.',
+                'icon' => 'ph:wrench',
+            ],
+            'exa_find_similar' => [
+                'class' => ExaFindSimilar::class,
+                'type' => 'read',
+                'name' => 'Exa Find Similar',
+                'description' => 'Find web pages similar to a given URL. Useful for discovering related content, competitors, or alternative resources. Returns a list of similar pages with titles, URLs, and scores.',
+                'icon' => 'ph:wrench',
+            ],
+            'exa_get_contents' => [
+                'class' => ExaGetContents::class,
+                'type' => 'read',
+                'name' => 'Exa Get Contents',
+                'description' => 'Retrieve the full text contents and optional highlights for a list of Exa document IDs. Use this after a search or findSimilar call to get the actual page content.',
+                'icon' => 'ph:wrench',
+            ],
+            'exa_search_and_contents' => [
+                'class' => ExaSearchAndContents::class,
+                'type' => 'read',
+                'name' => 'Exa Search And Contents',
+                'description' => 'Search the web and retrieve full page contents in one call. Combines search and content retrieval into a single request for efficiency. Returns results with both metadata and full text content.',
+                'icon' => 'ph:wrench',
+            ],
+            'exa_get_current_user' => [
+                'class' => ExaGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Exa Get Current User',
+                'description' => 'Get the currently authenticated Exa user\'s profile information, including email and API usage details. Useful for verifying credentials.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/exa.md';
+    }
+
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],

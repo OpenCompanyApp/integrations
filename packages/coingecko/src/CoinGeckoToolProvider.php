@@ -145,7 +145,88 @@ class CoinGeckoToolProvider implements ConfigurableIntegration, ToolProvider, Ha
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'api_key' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'coingecko_global' => [
+                'class' => CoinGeckoGlobal::class,
+                'type' => 'read',
+                'name' => 'Coingecko Global',
+                'description' => 'Get overall crypto market statistics — total market cap, BTC dominance, active cryptocurrencies, trading volume, and more.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_history' => [
+                'class' => CoinGeckoHistory::class,
+                'type' => 'read',
+                'name' => 'Coingecko History',
+                'description' => 'Get historical price, volume, and market cap chart data for a cryptocurrency over a time period. Returns timestamped data points with summary statistics.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_info' => [
+                'class' => CoinGeckoInfo::class,
+                'type' => 'read',
+                'name' => 'Coingecko Info',
+                'description' => 'Get a full coin profile — description, categories, links (website, whitepaper, social), and current market data snapshot. Use `coingecko_search_coins` first to find the coin ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_markets' => [
+                'class' => CoinGeckoMarkets::class,
+                'type' => 'read',
+                'name' => 'Coingecko Markets',
+                'description' => 'Get top cryptocurrencies ranked by market cap with full market data (price, volume, ATH, supply, price changes). Supports filtering by category or specific coin IDs.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_ohlc' => [
+                'class' => CoinGeckoOhlc::class,
+                'type' => 'read',
+                'name' => 'Coingecko Ohlc',
+                'description' => 'Get OHLC (Open/High/Low/Close) candlestick data for a cryptocurrency for technical analysis.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_price' => [
+                'class' => CoinGeckoPrice::class,
+                'type' => 'read',
+                'name' => 'Coingecko Price',
+                'description' => 'Get current price for one or more cryptocurrencies (by CoinGecko ID). Includes 24h change, volume, and market cap. Use `coingecko_search_coins` first to find coin IDs.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_search_coins' => [
+                'class' => CoinGeckoSearchCoins::class,
+                'type' => 'read',
+                'name' => 'Coingecko Search Coins',
+                'description' => 'Find cryptocurrencies by name or ticker symbol (e.g. "bitcoin", "ETH", "solana"). Returns matching coin IDs which are needed for other CoinGecko tools.',
+                'icon' => 'ph:wrench',
+            ],
+            'coingecko_trending' => [
+                'class' => CoinGeckoTrending::class,
+                'type' => 'read',
+                'name' => 'Coingecko Trending',
+                'description' => 'Get the top trending cryptocurrencies in the last 24 hours based on search activity on CoinGecko.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/coingecko.md';
+    }
+
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => false, 'placeholder' => 'Optional — increases rate limits'],

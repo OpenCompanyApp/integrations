@@ -101,7 +101,97 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://developer.vimeo.com/api/reference',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'access_token' => 'required|string',
+            'base_url' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'vimeo_create_video' => [
+                'class' => VimeoCreateVideo::class,
+                'type' => 'write',
+                'name' => 'Vimeo Create Video',
+                'description' => 'Create a new video upload slot on Vimeo. Choose an upload approach: "pull" (Vimeo downloads from a URL), "post" (you POST to an upload link), or "streaming" (Tus protocol). Returns the video URI and upload target.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_get_current_user' => [
+                'class' => VimeoGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Vimeo Get Current User',
+                'description' => 'Get the authenticated Vimeo user\'s profile information. Returns name, bio, location, account type, upload quota, and profile pictures.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_get_video' => [
+                'class' => VimeoGetVideo::class,
+                'type' => 'read',
+                'name' => 'Vimeo Get Video',
+                'description' => 'Get detailed information about a single Vimeo video by its ID. Returns name, description, duration, thumbnails, privacy, stats, and playback links.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_list_albums' => [
+                'class' => VimeoListAlbums::class,
+                'type' => 'read',
+                'name' => 'Vimeo List Albums',
+                'description' => 'List albums (showcases) for the authenticated Vimeo user. Supports pagination, query search, sorting, and direction. Returns album names, descriptions, thumbnails, and video counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_list_folders' => [
+                'class' => VimeoListFolders::class,
+                'type' => 'read',
+                'name' => 'Vimeo List Folders',
+                'description' => 'List folders (projects) for the authenticated Vimeo user. Supports pagination and query search. Returns folder names, descriptions, and item counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_list_videos' => [
+                'class' => VimeoListVideos::class,
+                'type' => 'read',
+                'name' => 'Vimeo List Videos',
+                'description' => 'List videos for the authenticated Vimeo user. Supports pagination, full-text search via query, and filters (e.g., embeddable, playable, privacy). Returns video URIs, names, durations, thumbnails, and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/vimeo.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],

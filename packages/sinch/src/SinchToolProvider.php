@@ -102,7 +102,104 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://developers.sinch.com/docs/sms/',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'service_plan_id' => 'required|string',
+            'api_token' => 'required|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'sinch_list_messages' => [
+                'class' => SinchListMessages::class,
+                'type' => 'read',
+                'name' => 'Sinch List Messages',
+                'description' => 'List inbound and outbound SMS messages from Sinch. Supports filtering by direction, recipient, sender, and date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_send_sms' => [
+                'class' => SinchSendSms::class,
+                'type' => 'write',
+                'name' => 'Sinch Send SMS',
+                'description' => 'Send an SMS message to one or more recipients via Sinch. Requires sender phone number, recipient(s), and message body.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_phone_numbers' => [
+                'class' => SinchListPhoneNumbers::class,
+                'type' => 'read',
+                'name' => 'Sinch List Phone Numbers',
+                'description' => 'List all rented phone numbers in your Sinch account with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_get_phone_number' => [
+                'class' => SinchGetPhoneNumber::class,
+                'type' => 'read',
+                'name' => 'Sinch Get Phone Number',
+                'description' => 'Get details for a specific phone number in your Sinch account.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_groups' => [
+                'class' => SinchListGroups::class,
+                'type' => 'read',
+                'name' => 'Sinch List Groups',
+                'description' => 'List all groups in your Sinch account with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_get_group' => [
+                'class' => SinchGetGroup::class,
+                'type' => 'read',
+                'name' => 'Sinch Get Group',
+                'description' => 'Get details for a specific group in your Sinch account.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_batches' => [
+                'class' => SinchListBatches::class,
+                'type' => 'read',
+                'name' => 'Sinch List Batches',
+                'description' => 'List all message batches in your Sinch account with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/sinch.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'service_plan_id', 'type' => 'text', 'label' => 'Service Plan ID', 'required' => true],

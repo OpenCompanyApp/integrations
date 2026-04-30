@@ -2,10 +2,10 @@
 
 namespace OpenCompany\Integrations\Vercel;
 
-use OpenCompany\Integrations\Core\Contracts\ConfigurableIntegration;
-use OpenCompany\Integrations\Core\Contracts\Tool;
-use OpenCompany\Integrations\Core\Contracts\ToolProvider;
-use OpenCompany\Integrations\Core\Support\ToolResult;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\Tool;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetCurrentUser;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetDeployment;
 use OpenCompany\Integrations\Vercel\Tools\VercelGetProject;
@@ -216,7 +216,7 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
     private function resolveService(array $context = []): VercelService
     {
         if (! empty($context['account'])) {
-            $creds = app(\OpenCompany\Integrations\Core\Contracts\CredentialResolver::class);
+            $creds = app(CredentialResolver::class);
             return new VercelService(token: $creds->get('vercel', 'token', '', $context['account']));
         }
 

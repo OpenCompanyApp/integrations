@@ -169,7 +169,57 @@ class GoogleAnalyticsToolProvider implements ToolProvider, ConfigurableIntegrati
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_analytics_list_properties' => [
+                'class' => GoogleAnalyticsListProperties::class,
+                'type' => 'read',
+                'name' => 'Google Analytics List Properties',
+                'description' => 'List all accessible GA4 properties with their IDs and names. Use this first to discover the propertyId needed for other Analytics tools.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_analytics_metadata' => [
+                'class' => GoogleAnalyticsMetadata::class,
+                'type' => 'read',
+                'name' => 'Google Analytics Metadata',
+                'description' => 'List all available dimensions and metrics for a GA4 property, including custom ones. Use this to discover what data can be queried in reports.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_analytics_realtime' => [
+                'class' => GoogleAnalyticsRealtime::class,
+                'type' => 'read',
+                'name' => 'Google Analytics Realtime',
+                'description' => 'Run a GA4 realtime report showing activity in the last 30 minutes. Common dimensions: country, city, deviceCategory, unifiedScreenName (page/screen), platform. Common metrics: activeUsers, screenPageViews, eventCount, conversions.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_analytics_report' => [
+                'class' => GoogleAnalyticsReport::class,
+                'type' => 'read',
+                'name' => 'Google Analytics Report',
+                'description' => 'Run a GA4 analytics report. Returns rows of dimension/metric data for the specified date range. Common dimensions: sessionSource, sessionMedium, sessionDefaultChannelGroup (traffic source); pagePath, pageTitle, landingPage (pages); country, city (geo); deviceCategory, browser, operatingSystem (device); date, dateHour, month (time); newVsReturning (user); eventName (events). Common metrics: sessions, totalUsers, newUsers, activeUsers (traffic); screenPageViews, bounceRate, averageSessionDuration, engagementRate, sessionsPerUser (engagement); eventCount, conversions (events); purchaseRevenue, totalRevenue (e-commerce). Dates: YYYY-MM-DD or relative: "today", "yesterday", "7daysAgo", "28daysAgo", "30daysAgo", "90daysAgo", "365daysAgo". Filter operators: exact, contains, begins_with, ends_with, regex, in_list. Metric filter operators: equal, less_than, greater_than, less_than_or_equal, greater_than_or_equal.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

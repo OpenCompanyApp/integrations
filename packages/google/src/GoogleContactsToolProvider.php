@@ -167,7 +167,78 @@ class GoogleContactsToolProvider implements ToolProvider, ConfigurableIntegratio
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_contacts_create' => [
+                'class' => GoogleContactsCreate::class,
+                'type' => 'read',
+                'name' => 'Google Contacts Create',
+                'description' => 'Create a new Google Contact with name, email, phone, company, title, address, and notes.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_contacts_delete' => [
+                'class' => GoogleContactsDelete::class,
+                'type' => 'read',
+                'name' => 'Google Contacts Delete',
+                'description' => 'Permanently delete a Google Contact by resource name.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_contacts_get' => [
+                'class' => GoogleContactsGet::class,
+                'type' => 'read',
+                'name' => 'Google Contacts Get',
+                'description' => 'Get full details of a single Google Contact including notes, websites, and group memberships.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_contacts_list' => [
+                'class' => GoogleContactsList::class,
+                'type' => 'read',
+                'name' => 'Google Contacts List',
+                'description' => 'List all Google Contacts sorted by first name with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_contacts_list_groups' => [
+                'class' => GoogleContactsListGroups::class,
+                'type' => 'read',
+                'name' => 'Google Contacts List Groups',
+                'description' => 'List all Google Contact groups/labels (e.g., Friends, Family, custom groups) with member counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_contacts_search_contacts' => [
+                'class' => GoogleContactsSearchContacts::class,
+                'type' => 'read',
+                'name' => 'Google Contacts Search Contacts',
+                'description' => 'Fuzzy search Google Contacts by name, email, or phone. Matches partial strings (e.g., "john", "acme.com", "555"). Use this to look up contacts before sending emails with gmail_send.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_contacts_update' => [
+                'class' => GoogleContactsUpdate::class,
+                'type' => 'read',
+                'name' => 'Google Contacts Update',
+                'description' => 'Update an existing Google Contact. Unspecified fields are preserved. Email, phone, and address are added alongside existing values; name, company, title, and notes are replaced.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

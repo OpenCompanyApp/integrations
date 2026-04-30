@@ -3,7 +3,8 @@
 namespace OpenCompany\Integrations\Smartsheet;
 
 use OpenCompany\IntegrationCore\Contracts\ToolProvider;
-use OpenCompany\IntegrationCore\Support\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
+use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\Integrations\Smartsheet\Tools\SmartsheetListSheets;
 use OpenCompany\Integrations\Smartsheet\Tools\SmartsheetGetSheet;
 use OpenCompany\Integrations\Smartsheet\Tools\SmartsheetCreateSheet;
@@ -300,9 +301,9 @@ class SmartsheetToolProvider implements ToolProvider, ConfigurableIntegration, H
      *
      * @param string                $class   The fully-qualified tool class name.
      * @param array<string, mixed>  $context Optional context for account-specific credential resolution.
-     * @return object The instantiated tool.
+     * @return Tool The instantiated tool.
      */
-    public function createTool(string $class, array $context = []): object
+    public function createTool(string $class, array $context = []): Tool
     {        $service = $this->resolveService($context);
 
         return new $class($service);

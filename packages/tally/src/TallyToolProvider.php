@@ -101,7 +101,97 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://tally.so/help/api',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'access_token' => 'required|string',
+            'url' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'tally_get_current_user' => [
+                'class' => TallyGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Tally Get Current User',
+                'description' => 'Get the authenticated user\'s profile information, including name, email, and account details.',
+                'icon' => 'ph:wrench',
+            ],
+            'tally_get_form' => [
+                'class' => TallyGetForm::class,
+                'type' => 'read',
+                'name' => 'Tally Get Form',
+                'description' => 'Get full details of a specific Tally form by its ID, including form structure, fields, and settings.',
+                'icon' => 'ph:wrench',
+            ],
+            'tally_get_submission' => [
+                'class' => TallyGetSubmission::class,
+                'type' => 'read',
+                'name' => 'Tally Get Submission',
+                'description' => 'Get full details of a specific form submission by its ID, including all field responses and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'tally_list_forms' => [
+                'class' => TallyListForms::class,
+                'type' => 'read',
+                'name' => 'Tally List Forms',
+                'description' => 'List all Tally forms accessible to the authenticated user. Returns form IDs, titles, status, and submission counts. Supports pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'tally_list_submissions' => [
+                'class' => TallyListSubmissions::class,
+                'type' => 'read',
+                'name' => 'Tally List Submissions',
+                'description' => 'List all submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'tally_list_workspaces' => [
+                'class' => TallyListWorkspaces::class,
+                'type' => 'read',
+                'name' => 'Tally List Workspaces',
+                'description' => 'List all workspaces accessible to the authenticated Tally user. Returns workspace names, IDs, and member info.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/tally.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],

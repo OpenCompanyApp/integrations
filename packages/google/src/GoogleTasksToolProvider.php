@@ -172,7 +172,106 @@ class GoogleTasksToolProvider implements ToolProvider, ConfigurableIntegration, 
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_tasks_clear_completed' => [
+                'class' => GoogleTasksClearCompleted::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Clear Completed',
+                'description' => 'Remove all completed tasks from a Google Tasks list. Warning: permanently deletes completed tasks.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_complete' => [
+                'class' => GoogleTasksComplete::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Complete',
+                'description' => 'Mark a Google Task as completed.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_create' => [
+                'class' => GoogleTasksCreate::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Create',
+                'description' => 'Create a task in Google Tasks. Use "@default" as listId for the primary "My Tasks" list.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_create_list' => [
+                'class' => GoogleTasksCreateList::class,
+                'type' => 'write',
+                'name' => 'Google Tasks Create List',
+                'description' => 'Create a new task list in Google Tasks.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_delete' => [
+                'class' => GoogleTasksDelete::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Delete',
+                'description' => 'Delete a Google Task.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_delete_list' => [
+                'class' => GoogleTasksDeleteList::class,
+                'type' => 'write',
+                'name' => 'Google Tasks Delete List',
+                'description' => 'Delete a task list from Google Tasks.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_move' => [
+                'class' => GoogleTasksMove::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Move',
+                'description' => 'Reorder or reparent a Google Task. Use parent to set a new parent (empty string moves to top level), and previous to position after a sibling.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_get_task' => [
+                'class' => GoogleTasksGetTask::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Get Task',
+                'description' => 'Get full details of a single Google Task by its ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_list_lists' => [
+                'class' => GoogleTasksListLists::class,
+                'type' => 'read',
+                'name' => 'Google Tasks List Lists',
+                'description' => 'List all Google Task lists. Returns IDs and titles. Start here to discover available lists.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_list_tasks' => [
+                'class' => GoogleTasksListTasks::class,
+                'type' => 'read',
+                'name' => 'Google Tasks List Tasks',
+                'description' => 'List tasks in a Google Task list. Use "@default" as listId for the primary "My Tasks" list. Supports filtering by completion status and due date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_tasks_update' => [
+                'class' => GoogleTasksUpdate::class,
+                'type' => 'read',
+                'name' => 'Google Tasks Update',
+                'description' => 'Update task fields in Google Tasks. At least one field to update is required.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

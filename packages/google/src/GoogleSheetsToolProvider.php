@@ -186,7 +186,169 @@ class GoogleSheetsToolProvider implements ToolProvider, ConfigurableIntegration,
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_sheets_add_filter' => [
+                'class' => GoogleSheetsAddFilter::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Add Filter',
+                'description' => 'Apply filter dropdowns to a range in a Google Sheets sheet/tab.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_add_sheet' => [
+                'class' => GoogleSheetsAddSheet::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Add Sheet',
+                'description' => 'Add a new sheet/tab to a Google Spreadsheet.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_append' => [
+                'class' => GoogleSheetsAppend::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Append',
+                'description' => 'Append rows after the last data row in a Google Spreadsheet. Auto-detects the table boundary. Provide the range (e.g., "Sheet1" or "Sheet1!A:D") and a 2D array of rows to append.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_batch_read' => [
+                'class' => GoogleSheetsBatchRead::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Batch Read',
+                'description' => 'Read multiple ranges from a Google Spreadsheet in one call. Provide an array of A1 notation ranges (e.g., ["Sheet1!A1:B5", "Sheet2!C1:D10"]). Returns results keyed by range.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_batch_write' => [
+                'class' => GoogleSheetsBatchWrite::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Batch Write',
+                'description' => 'Write to multiple ranges in a Google Spreadsheet in one call. Provide an array of {range, values} objects to update several areas at once.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_clear' => [
+                'class' => GoogleSheetsClear::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Clear',
+                'description' => 'Clear all values from a Google Sheets range (keeps formatting intact). Specify the range in A1 notation.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_create' => [
+                'class' => GoogleSheetsCreate::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Create',
+                'description' => 'Create a new empty Google Spreadsheet with a given title. Returns the new spreadsheet ID and URL.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_delete_columns' => [
+                'class' => GoogleSheetsDeleteColumns::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Delete Columns',
+                'description' => 'Delete columns from a Google Sheets sheet/tab. Uses 0-based indexing.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_delete_rows' => [
+                'class' => GoogleSheetsDeleteRows::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Delete Rows',
+                'description' => 'Delete rows from a Google Sheets sheet/tab. Uses 0-based indexing.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_delete_sheet' => [
+                'class' => GoogleSheetsDeleteSheet::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Delete Sheet',
+                'description' => 'Delete a sheet/tab from a Google Spreadsheet.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_duplicate_sheet' => [
+                'class' => GoogleSheetsDuplicateSheet::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Duplicate Sheet',
+                'description' => 'Copy a sheet/tab within the same Google Spreadsheet.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_find' => [
+                'class' => GoogleSheetsFind::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Find',
+                'description' => 'Search for text within a Google Spreadsheet. Searches all sheets by default, or specify a sheet name to narrow the search. Returns match count and number of sheets containing matches.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_get_metadata' => [
+                'class' => GoogleSheetsGetMetadata::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Get Metadata',
+                'description' => 'Get spreadsheet title and list of sheets/tabs with their names, IDs, and dimensions. Use this first to discover sheet names and structure before reading or writing data.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_insert_columns' => [
+                'class' => GoogleSheetsInsertColumns::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Insert Columns',
+                'description' => 'Insert blank columns into a Google Sheets sheet/tab. Uses 0-based indexing.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_insert_rows' => [
+                'class' => GoogleSheetsInsertRows::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Insert Rows',
+                'description' => 'Insert blank rows into a Google Sheets sheet/tab. Uses 0-based indexing.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_read_range' => [
+                'class' => GoogleSheetsReadRange::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Read Range',
+                'description' => 'Read cell values from a Google Sheets range using A1 notation. A1 notation examples: `Sheet1!A1:D10` (range), `Sheet1!A:A` (whole column), `Sheet1` (entire sheet). Sheet names with spaces need quotes: `\'My Sheet\'!A1:B2`.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_remove_filter' => [
+                'class' => GoogleSheetsRemoveFilter::class,
+                'type' => 'write',
+                'name' => 'Google Sheets Remove Filter',
+                'description' => 'Remove the filter from a Google Sheets sheet/tab.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_rename_sheet' => [
+                'class' => GoogleSheetsRenameSheet::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Rename Sheet',
+                'description' => 'Rename a sheet/tab in a Google Spreadsheet.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_sort_range' => [
+                'class' => GoogleSheetsSortRange::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Sort Range',
+                'description' => 'Sort data by column(s) in a Google Sheets range.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_sheets_write_range' => [
+                'class' => GoogleSheetsWriteRange::class,
+                'type' => 'read',
+                'name' => 'Google Sheets Write Range',
+                'description' => 'Write values to a Google Sheets range. Values format: `[["Name", "Age"], ["Alice", 30]]` — each inner array is one row. Formulas work with user_entered input mode (default): `[["=SUM(A1:A10)"]]`.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

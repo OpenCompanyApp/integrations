@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-04-30T08:33:39+00:00",
+    "generated_at": "2026-04-30T08:52:11+00:00",
     "total_integrations": 452,
     "total_tools": 3729,
     "integrations": [
@@ -17610,8 +17610,8 @@
                     "function_name": "bitbucket_list_repos",
                     "name": "Bitbucket List Repos",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List repositories in a Bitbucket workspace. Supports sorting and pagination.",
                     "description": "List repositories in a Bitbucket workspace. Supports sorting and pagination.",
                     "parameters": {
                         "workspace": {
@@ -17641,8 +17641,8 @@
                     "function_name": "bitbucket_get_repo",
                     "name": "Bitbucket Get Repo",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get details for a specific Bitbucket repository by workspace and repo slug.",
                     "description": "Get details for a specific Bitbucket repository by workspace and repo slug.",
                     "parameters": {
                         "workspace": {
@@ -17665,8 +17665,8 @@
                     "function_name": "bitbucket_create_repo",
                     "name": "Bitbucket Create Repo",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new repository in a Bitbucket workspace. Optionally set description, visibility, and language.",
                     "description": "Create a new repository in a Bitbucket workspace. Optionally set description, visibility, and language.",
                     "parameters": {
                         "workspace": {
@@ -17701,8 +17701,8 @@
                     "function_name": "bitbucket_list_issues",
                     "name": "Bitbucket List Issues",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List issues in a Bitbucket repository. Supports filtering by state, kind, and priority.",
                     "description": "List issues in a Bitbucket repository. Supports filtering by state, kind, and priority.",
                     "parameters": {
                         "workspace": {
@@ -17741,8 +17741,8 @@
                     "function_name": "bitbucket_get_issue",
                     "name": "Bitbucket Get Issue",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get details for a specific issue in a Bitbucket repository.",
                     "description": "Get details for a specific issue in a Bitbucket repository.",
                     "parameters": {
                         "workspace": {
@@ -17770,8 +17770,8 @@
                     "function_name": "bitbucket_create_issue",
                     "name": "Bitbucket Create Issue",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new issue in a Bitbucket repository. Requires a title; optionally set content, kind, priority, and assignee.",
                     "description": "Create a new issue in a Bitbucket repository. Requires a title; optionally set content, kind, priority, and assignee.",
                     "parameters": {
                         "workspace": {
@@ -17815,8 +17815,8 @@
                     "function_name": "bitbucket_update_issue",
                     "name": "Bitbucket Update Issue",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update an existing issue in a Bitbucket repository. Can change title, content, state, priority, and assignee.",
                     "description": "Update an existing issue in a Bitbucket repository. Can change title, content, state, priority, and assignee.",
                     "parameters": {
                         "workspace": {
@@ -17864,8 +17864,8 @@
                     "function_name": "bitbucket_list_pull_requests",
                     "name": "Bitbucket List Pull Requests",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List pull requests in a Bitbucket repository. Supports filtering by state and pagination.",
                     "description": "List pull requests in a Bitbucket repository. Supports filtering by state and pagination.",
                     "parameters": {
                         "workspace": {
@@ -17896,8 +17896,8 @@
                     "function_name": "bitbucket_get_pull_request",
                     "name": "Bitbucket Get Pull Request",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get details for a specific pull request in a Bitbucket repository.",
                     "description": "Get details for a specific pull request in a Bitbucket repository.",
                     "parameters": {
                         "workspace": {
@@ -17925,8 +17925,8 @@
                     "function_name": "bitbucket_create_pull_request",
                     "name": "Bitbucket Create Pull Request",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new pull request in a Bitbucket repository. Requires a title, source branch, and destination branch.",
                     "description": "Create a new pull request in a Bitbucket repository. Requires a title, source branch, and destination branch.",
                     "parameters": {
                         "workspace": {
@@ -17971,8 +17971,8 @@
                     "function_name": "bitbucket_merge_pull_request",
                     "name": "Bitbucket Merge Pull Request",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Merge a Bitbucket pull request. Optionally provide a merge commit message.",
                     "description": "Merge a Bitbucket pull request. Optionally provide a merge commit message.",
                     "parameters": {
                         "workspace": {
@@ -18004,8 +18004,8 @@
                     "function_name": "bitbucket_list_branches",
                     "name": "Bitbucket List Branches",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List branches in a Bitbucket repository. Supports pagination.",
                     "description": "List branches in a Bitbucket repository. Supports pagination.",
                     "parameters": {
                         "workspace": {
@@ -18032,8 +18032,8 @@
                     "function_name": "bitbucket_create_branch",
                     "name": "Bitbucket Create Branch",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new branch in a Bitbucket repository. Requires a branch name and the target commit hash.",
                     "description": "Create a new branch in a Bitbucket repository. Requires a branch name and the target commit hash.",
                     "parameters": {
                         "workspace": {
@@ -18066,8 +18066,8 @@
                     "function_name": "bitbucket_list_commits",
                     "name": "Bitbucket List Commits",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List commits in a Bitbucket repository. Supports filtering by revision and path.",
                     "description": "List commits in a Bitbucket repository. Supports filtering by revision and path.",
                     "parameters": {
                         "workspace": {
@@ -18102,8 +18102,8 @@
                     "function_name": "bitbucket_get_file",
                     "name": "Bitbucket Get File",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the raw content of a file from a Bitbucket repository at a specific revision.",
                     "description": "Get the raw content of a file from a Bitbucket repository at a specific revision.",
                     "parameters": {
                         "workspace": {
@@ -18189,7 +18189,9 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "api_key": "required|string"
+                },
                 "required_credentials": [
                     "api_key"
                 ],
@@ -31433,8 +31435,8 @@
                     "function_name": "clicksend_get_account_balance",
                     "name": "Clicksend Get Account Balance",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the current ClickSend account balance.",
                     "description": "Get the current ClickSend account balance.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -31446,8 +31448,8 @@
                     "function_name": "clicksend_get_email_history",
                     "name": "Clicksend Get Email History",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get email message history from ClickSend with pagination.",
                     "description": "Get email message history from ClickSend with pagination.",
                     "parameters": {
                         "limit": {
@@ -31468,8 +31470,8 @@
                     "function_name": "clicksend_get_sms_history",
                     "name": "Clicksend Get SMS History",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get SMS message history from ClickSend. Supports date range filtering and pagination.",
                     "description": "Get SMS message history from ClickSend. Supports date range filtering and pagination.",
                     "parameters": {
                         "date_from": {
@@ -31498,8 +31500,8 @@
                     "function_name": "clicksend_get_sms_price",
                     "name": "Clicksend Get SMS Price",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get pricing for SMS messages before sending. Uses the same message format as send SMS but returns cost estimates only.",
                     "description": "Get pricing for SMS messages before sending. Uses the same message format as send SMS but returns cost estimates only.",
                     "parameters": {
                         "messages": {
@@ -31517,8 +31519,8 @@
                     "function_name": "clicksend_get_voice_history",
                     "name": "Clicksend Get Voice History",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get voice message history from ClickSend with pagination.",
                     "description": "Get voice message history from ClickSend with pagination.",
                     "parameters": {
                         "limit": {
@@ -31539,8 +31541,8 @@
                     "function_name": "clicksend_list_contact_lists",
                     "name": "Clicksend List Contact Lists",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all contact lists from ClickSend with pagination.",
                     "description": "List all contact lists from ClickSend with pagination.",
                     "parameters": {
                         "limit": {
@@ -31561,8 +31563,8 @@
                     "function_name": "clicksend_send_email",
                     "name": "Clicksend Send Email",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send an email message via ClickSend. Requires recipient, subject, and body.",
                     "description": "Send an email message via ClickSend. Requires recipient, subject, and body.",
                     "parameters": {
                         "to": {
@@ -31598,8 +31600,8 @@
                     "function_name": "clicksend_send_post_letter",
                     "name": "Clicksend Send Post Letter",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send a post letter via ClickSend. Provide a file URL or template ID with recipient details.",
                     "description": "Send a post letter via ClickSend. Provide a file URL or template ID with recipient details.",
                     "parameters": {
                         "file_url": {
@@ -31629,8 +31631,8 @@
                     "function_name": "clicksend_send_sms",
                     "name": "Clicksend Send SMS",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send one or more SMS messages via ClickSend. Each message requires a \"to\" phone number and \"body\" text.",
                     "description": "Send one or more SMS messages via ClickSend. Each message requires a \"to\" phone number and \"body\" text.",
                     "parameters": {
                         "messages": {
@@ -31648,8 +31650,8 @@
                     "function_name": "clicksend_send_voice",
                     "name": "Clicksend Send Voice",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send one or more voice messages via ClickSend. Each message requires a \"to\" phone number and \"body\" text.",
                     "description": "Send one or more voice messages via ClickSend. Each message requires a \"to\" phone number and \"body\" text.",
                     "parameters": {
                         "messages": {
@@ -31733,7 +31735,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "username": "required|string",
+                    "api_key": "required|string"
+                },
                 "required_credentials": [
                     "username",
                     "api_key"
@@ -37100,8 +37105,8 @@
                     "function_name": "coingecko_global",
                     "name": "Coingecko Global",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get overall crypto market statistics — total market cap, BTC dominance, active cryptocurrencies, trading volume, and more.",
                     "description": "Get overall crypto market statistics — total market cap, BTC dominance, active cryptocurrencies, trading volume, and more.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -37113,8 +37118,8 @@
                     "function_name": "coingecko_history",
                     "name": "Coingecko History",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get historical price, volume, and market cap chart data for a cryptocurrency over a time period. Returns timestamped data points with summary statistics.",
                     "description": "Get historical price, volume, and market cap chart data for a cryptocurrency over a time period. Returns timestamped data points with summary statistics.",
                     "parameters": {
                         "id": {
@@ -37140,8 +37145,8 @@
                     "function_name": "coingecko_info",
                     "name": "Coingecko Info",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a full coin profile — description, categories, links (website, whitepaper, social), and current market data snapshot. Use `coingecko_search_coins` first to find the coin ID.",
                     "description": "Get a full coin profile — description, categories, links (website, whitepaper, social), and current market data snapshot. Use `coingecko_search_coins` first to find the coin ID.",
                     "parameters": {
                         "id": {
@@ -37159,8 +37164,8 @@
                     "function_name": "coingecko_markets",
                     "name": "Coingecko Markets",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get top cryptocurrencies ranked by market cap with full market data (price, volume, ATH, supply, price changes). Supports filtering by category or specific coin IDs.",
                     "description": "Get top cryptocurrencies ranked by market cap with full market data (price, volume, ATH, supply, price changes). Supports filtering by category or specific coin IDs.",
                     "parameters": {
                         "ids": {
@@ -37197,8 +37202,8 @@
                     "function_name": "coingecko_ohlc",
                     "name": "Coingecko Ohlc",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get OHLC (Open/High/Low/Close) candlestick data for a cryptocurrency for technical analysis.",
                     "description": "Get OHLC (Open/High/Low/Close) candlestick data for a cryptocurrency for technical analysis.",
                     "parameters": {
                         "id": {
@@ -37224,8 +37229,8 @@
                     "function_name": "coingecko_price",
                     "name": "Coingecko Price",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get current price for one or more cryptocurrencies (by CoinGecko ID). Includes 24h change, volume, and market cap. Use `coingecko_search_coins` first to find coin IDs.",
                     "description": "Get current price for one or more cryptocurrencies (by CoinGecko ID). Includes 24h change, volume, and market cap. Use `coingecko_search_coins` first to find coin IDs.",
                     "parameters": {
                         "ids": {
@@ -37247,8 +37252,8 @@
                     "function_name": "coingecko_search_coins",
                     "name": "Coingecko Search Coins",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Find cryptocurrencies by name or ticker symbol (e.g. \"bitcoin\", \"ETH\", \"solana\"). Returns matching coin IDs which are needed for other CoinGecko tools.",
                     "description": "Find cryptocurrencies by name or ticker symbol (e.g. \"bitcoin\", \"ETH\", \"solana\"). Returns matching coin IDs which are needed for other CoinGecko tools.",
                     "parameters": {
                         "query": {
@@ -37266,8 +37271,8 @@
                     "function_name": "coingecko_trending",
                     "name": "Coingecko Trending",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the top trending cryptocurrencies in the last 24 hours based on search activity on CoinGecko.",
                     "description": "Get the top trending cryptocurrencies in the last 24 hours based on search activity on CoinGecko.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -37343,7 +37348,9 @@
                         "required": false
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "api_key": "nullable|string"
+                },
                 "required_credentials": [],
                 "env_vars": [
                     "COINGECKO_API_KEY"
@@ -54705,8 +54712,8 @@
                     "function_name": "exa_search",
                     "name": "Exa Search",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Perform a neural search query across the web using Exa AI. Returns a list of relevant pages with titles, URLs, and scores. Supports filtering by category, date range, and autoprompt mode.",
                     "description": "Perform a neural search query across the web using Exa AI. Returns a list of relevant pages with titles, URLs, and scores. Supports filtering by category, date range, and autoprompt mode.",
                     "parameters": {
                         "query": {
@@ -54760,8 +54767,8 @@
                     "function_name": "exa_find_similar",
                     "name": "Exa Find Similar",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Find web pages similar to a given URL. Useful for discovering related content, competitors, or alternative resources. Returns a list of similar pages with titles, URLs, and scores.",
                     "description": "Find web pages similar to a given URL. Useful for discovering related content, competitors, or alternative resources. Returns a list of similar pages with titles, URLs, and scores.",
                     "parameters": {
                         "url": {
@@ -54783,8 +54790,8 @@
                     "function_name": "exa_get_contents",
                     "name": "Exa Get Contents",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Retrieve the full text contents and optional highlights for a list of Exa document IDs. Use this after a search or findSimilar call to get the actual page content.",
                     "description": "Retrieve the full text contents and optional highlights for a list of Exa document IDs. Use this after a search or findSimilar call to get the actual page content.",
                     "parameters": {
                         "ids": {
@@ -54823,8 +54830,8 @@
                     "function_name": "exa_search_and_contents",
                     "name": "Exa Search And Contents",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Search the web and retrieve full page contents in one call. Combines search and content retrieval into a single request for efficiency. Returns results with both metadata and full text content.",
                     "description": "Search the web and retrieve full page contents in one call. Combines search and content retrieval into a single request for efficiency. Returns results with both metadata and full text content.",
                     "parameters": {
                         "query": {
@@ -54896,8 +54903,8 @@
                     "function_name": "exa_get_current_user",
                     "name": "Exa Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the currently authenticated Exa user's profile information, including email and API usage details. Useful for verifying credentials.",
                     "description": "Get the currently authenticated Exa user's profile information, including email and API usage details. Useful for verifying credentials.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -54977,7 +54984,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "api_key": "required|string",
+                    "url": "nullable|string"
+                },
                 "required_credentials": [
                     "api_key"
                 ],
@@ -75228,8 +75238,8 @@
                     "function_name": "gmail_add_labels",
                     "name": "Gmail Add Labels",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add labels to one or more Gmail messages. Provide messageIds (comma-separated) for batch operations.",
                     "description": "Add labels to one or more Gmail messages. Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75255,8 +75265,8 @@
                     "function_name": "gmail_archive",
                     "name": "Gmail Archive",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Archive one or more Gmail messages (remove from inbox). Provide messageIds (comma-separated) for batch operations.",
                     "description": "Archive one or more Gmail messages (remove from inbox). Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75277,8 +75287,8 @@
                     "function_name": "gmail_create_draft",
                     "name": "Gmail Create Draft",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a draft email in Gmail (not sent).",
                     "description": "Create a draft email in Gmail (not sent).",
                     "parameters": {
                         "to": {
@@ -75313,8 +75323,8 @@
                     "function_name": "gmail_mark_read",
                     "name": "Gmail Mark Read",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Mark one or more Gmail messages as read. Provide messageIds (comma-separated) for batch operations.",
                     "description": "Mark one or more Gmail messages as read. Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75335,8 +75345,8 @@
                     "function_name": "gmail_mark_unread",
                     "name": "Gmail Mark Unread",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Mark one or more Gmail messages as unread. Provide messageIds (comma-separated) for batch operations.",
                     "description": "Mark one or more Gmail messages as unread. Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75357,8 +75367,8 @@
                     "function_name": "gmail_read",
                     "name": "Gmail Read",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Read the full content of a Gmail message by its ID. Returns headers (From, To, Subject, Date), the decoded text body, and a list of attachments. Use gmail_search first to find message IDs, then use this tool to read the full content.",
                     "description": "Read the full content of a Gmail message by its ID.\n        Returns headers (From, To, Subject, Date), the decoded text body, and a list of attachments.\n        Use gmail_search first to find message IDs, then use this tool to read the full content.",
                     "parameters": {
                         "message_id": {
@@ -75380,8 +75390,8 @@
                     "function_name": "gmail_remove_labels",
                     "name": "Gmail Remove Labels",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove labels from one or more Gmail messages. Provide messageIds (comma-separated) for batch operations.",
                     "description": "Remove labels from one or more Gmail messages. Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75407,8 +75417,8 @@
                     "function_name": "gmail_reply",
                     "name": "Gmail Reply",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Reply to an existing Gmail message (maintains the thread).",
                     "description": "Reply to an existing Gmail message (maintains the thread).",
                     "parameters": {
                         "message_id": {
@@ -75448,8 +75458,8 @@
                     "function_name": "gmail_count_by_sender",
                     "name": "Gmail Count By Sender",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Count all matching Gmail messages grouped by sender. Automatically paginates through ALL results (handles thousands of messages). Returns top senders sorted by count. Use for questions like \"who sends me the most email?\" or \"count unread by sender\".",
                     "description": "Count all matching Gmail messages grouped by sender. Automatically paginates through ALL results (handles thousands of messages). Returns top senders sorted by count. Use for questions like \"who sends me the most email?\" or \"count unread by sender\".",
                     "parameters": {
                         "query": {
@@ -75470,8 +75480,8 @@
                     "function_name": "gmail_list_labels",
                     "name": "Gmail List Labels",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all labels in the Gmail mailbox (INBOX, SENT, custom labels, etc.).",
                     "description": "List all labels in the Gmail mailbox (INBOX, SENT, custom labels, etc.).",
                     "parameters": [],
                     "parameter_count": 0,
@@ -75483,8 +75493,8 @@
                     "function_name": "gmail_save_attachment",
                     "name": "Gmail Save Attachment",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Download an email attachment and save it to workspace files. Requires a messageId and attachmentId (both returned by gmail_read). The file is saved under the agent's folder and can be browsed in the Files page.",
                     "description": "Download an email attachment and save it to workspace files.\n        Requires a messageId and attachmentId (both returned by gmail_read).\n        The file is saved under the agent's folder and can be browsed in the Files page.",
                     "parameters": {
                         "message_id": {
@@ -75516,8 +75526,8 @@
                     "function_name": "gmail_search_emails",
                     "name": "Gmail Search Emails",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Search Gmail messages using Gmail query syntax (e.g., \"from:alice subject:meeting is:unread has:attachment after:2026-02-01\"). Returns message summaries with headers. Max 100 per page.",
                     "description": "Search Gmail messages using Gmail query syntax (e.g., \"from:alice subject:meeting is:unread has:attachment after:2026-02-01\"). Returns message summaries with headers. Max 100 per page.",
                     "parameters": {
                         "query": {
@@ -75546,8 +75556,8 @@
                     "function_name": "gmail_send_draft",
                     "name": "Gmail Send Draft",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send a previously created Gmail draft by its ID.",
                     "description": "Send a previously created Gmail draft by its ID.",
                     "parameters": {
                         "draft_id": {
@@ -75565,8 +75575,8 @@
                     "function_name": "gmail_send_email",
                     "name": "Gmail Send Email",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send an email directly via Gmail.",
                     "description": "Send an email directly via Gmail.",
                     "parameters": {
                         "to": {
@@ -75602,8 +75612,8 @@
                     "function_name": "gmail_trash",
                     "name": "Gmail Trash",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Move one or more Gmail messages to trash. Provide messageIds (comma-separated) for batch operations.",
                     "description": "Move one or more Gmail messages to trash. Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75624,8 +75634,8 @@
                     "function_name": "gmail_untrash",
                     "name": "Gmail Untrash",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove one or more Gmail messages from trash. Provide messageIds (comma-separated) for batch operations.",
                     "description": "Remove one or more Gmail messages from trash. Provide messageIds (comma-separated) for batch operations.",
                     "parameters": {
                         "message_id": {
@@ -75732,7 +75742,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -75942,8 +75956,8 @@
                     "function_name": "google_analytics_list_properties",
                     "name": "Google Analytics List Properties",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all accessible GA4 properties with their IDs and names. Use this first to discover the propertyId needed for other Analytics tools.",
                     "description": "List all accessible GA4 properties with their IDs and names. Use this first to discover the propertyId needed for other Analytics tools.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -75955,8 +75969,8 @@
                     "function_name": "google_analytics_metadata",
                     "name": "Google Analytics Metadata",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all available dimensions and metrics for a GA4 property, including custom ones. Use this to discover what data can be queried in reports.",
                     "description": "List all available dimensions and metrics for a GA4 property, including custom ones. Use this to discover what data can be queried in reports.",
                     "parameters": {
                         "property_id": {
@@ -75974,8 +75988,8 @@
                     "function_name": "google_analytics_realtime",
                     "name": "Google Analytics Realtime",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Run a GA4 realtime report showing activity in the last 30 minutes. Common dimensions: country, city, deviceCategory, unifiedScreenName (page/screen), platform. Common metrics: activeUsers, screenPageViews, eventCount, conversions.",
                     "description": "Run a GA4 realtime report showing activity in the last 30 minutes.\n\n        Common dimensions: country, city, deviceCategory, unifiedScreenName (page/screen), platform.\n        Common metrics: activeUsers, screenPageViews, eventCount, conversions.",
                     "parameters": {
                         "property_id": {
@@ -76005,8 +76019,8 @@
                     "function_name": "google_analytics_report",
                     "name": "Google Analytics Report",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Run a GA4 analytics report. Returns rows of dimension/metric data for the specified date range. Common dimensions: sessionSource, sessionMedium, sessionDefaultChannelGroup (traffic source); pagePath, pageTitle, landingPage (pages); country, city (geo); deviceCategory, browser, operatingSystem (device); date, dateHour, month (time); newVsReturning (user); eventName (events). Common metrics: sessions, totalUsers, newUsers, activeUsers (traffic); screenPageViews, bounceRate, averageSessionDuration, engagementRate, sessionsPerUser (engagement); eventCount, conversions (events); purchaseRevenue, totalRevenue (e-commerce). Dates: YYYY-MM-DD or relative: \"today\", \"yesterday\", \"7daysAgo\", \"28daysAgo\", \"30daysAgo\", \"90daysAgo\", \"365daysAgo\". Filter operators: exact, contains, begins_with, ends_with, regex, in_list. Metric filter operators: equal, less_than, greater_than, less_than_or_equal, greater_than_or_equal.",
                     "description": "Run a GA4 analytics report. Returns rows of dimension/metric data for the specified date range.\n\n        Common dimensions: sessionSource, sessionMedium, sessionDefaultChannelGroup (traffic source); pagePath, pageTitle, landingPage (pages); country, city (geo); deviceCategory, browser, operatingSystem (device); date, dateHour, month (time); newVsReturning (user); eventName (events).\n\n        Common metrics: sessions, totalUsers, newUsers, activeUsers (traffic); screenPageViews, bounceRate, averageSessionDuration, engagementRate, sessionsPerUser (engagement); eventCount, conversions (events); purchaseRevenue, totalRevenue (e-commerce).\n\n        Dates: YYYY-MM-DD or relative: \"today\", \"yesterday\", \"7daysAgo\", \"28daysAgo\", \"30daysAgo\", \"90daysAgo\", \"365daysAgo\".\n        Filter operators: exact, contains, begins_with, ends_with, regex, in_list.\n        Metric filter operators: equal, less_than, greater_than, less_than_or_equal, greater_than_or_equal.",
                     "parameters": {
                         "property_id": {
@@ -76159,7 +76173,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -76369,8 +76387,8 @@
                     "function_name": "google_calendar_create_event",
                     "name": "Google Calendar Create Event",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a Google Calendar event. Use startDateTime/endDateTime for timed events, or startDate/endDate for all-day events.",
                     "description": "Create a Google Calendar event. Use startDateTime/endDateTime for timed events, or startDate/endDate for all-day events.",
                     "parameters": {
                         "calendar_id": {
@@ -76428,8 +76446,8 @@
                     "function_name": "google_calendar_delete_event",
                     "name": "Google Calendar Delete Event",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete a Google Calendar event by its ID.",
                     "description": "Delete a Google Calendar event by its ID.",
                     "parameters": {
                         "calendar_id": {
@@ -76451,8 +76469,8 @@
                     "function_name": "google_calendar_freebusy",
                     "name": "Google Calendar Freebusy",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Check free/busy availability across one or more Google Calendars. Returns busy time slots within the specified time range. Useful for finding open slots for scheduling meetings.",
                     "description": "Check free/busy availability across one or more Google Calendars.\n        Returns busy time slots within the specified time range.\n        Useful for finding open slots for scheduling meetings.",
                     "parameters": {
                         "time_min": {
@@ -76479,8 +76497,8 @@
                     "function_name": "google_calendar_get_event",
                     "name": "Google Calendar Get Event",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a single Google Calendar event by its ID.",
                     "description": "Get a single Google Calendar event by its ID.",
                     "parameters": {
                         "calendar_id": {
@@ -76502,8 +76520,8 @@
                     "function_name": "google_calendar_list_calendars",
                     "name": "Google Calendar List Calendars",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all Google Calendars the user has access to.",
                     "description": "List all Google Calendars the user has access to.",
                     "parameters": {
                         "max_results": {
@@ -76524,8 +76542,8 @@
                     "function_name": "google_calendar_list_events",
                     "name": "Google Calendar List Events",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List or search events in a Google Calendar. Supports date range filtering and text search.",
                     "description": "List or search events in a Google Calendar. Supports date range filtering and text search.",
                     "parameters": {
                         "calendar_id": {
@@ -76562,8 +76580,8 @@
                     "function_name": "google_calendar_quick_add",
                     "name": "Google Calendar Quick Add",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a Google Calendar event from natural language text (e.g., \"Lunch with Alice tomorrow at noon\").",
                     "description": "Create a Google Calendar event from natural language text (e.g., \"Lunch with Alice tomorrow at noon\").",
                     "parameters": {
                         "calendar_id": {
@@ -76585,8 +76603,8 @@
                     "function_name": "google_calendar_update_event",
                     "name": "Google Calendar Update Event",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update an existing Google Calendar event (partial update). Only specified fields are changed.",
                     "description": "Update an existing Google Calendar event (partial update). Only specified fields are changed.",
                     "parameters": {
                         "calendar_id": {
@@ -76734,7 +76752,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -76944,8 +76966,8 @@
                     "function_name": "google_contacts_create",
                     "name": "Google Contacts Create",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new Google Contact with name, email, phone, company, title, address, and notes.",
                     "description": "Create a new Google Contact with name, email, phone, company, title, address, and notes.",
                     "parameters": {
                         "name": {
@@ -76987,8 +77009,8 @@
                     "function_name": "google_contacts_delete",
                     "name": "Google Contacts Delete",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Permanently delete a Google Contact by resource name.",
                     "description": "Permanently delete a Google Contact by resource name.",
                     "parameters": {
                         "resource_name": {
@@ -77006,8 +77028,8 @@
                     "function_name": "google_contacts_get",
                     "name": "Google Contacts Get",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get full details of a single Google Contact including notes, websites, and group memberships.",
                     "description": "Get full details of a single Google Contact including notes, websites, and group memberships.",
                     "parameters": {
                         "resource_name": {
@@ -77025,8 +77047,8 @@
                     "function_name": "google_contacts_list",
                     "name": "Google Contacts List",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all Google Contacts sorted by first name with pagination.",
                     "description": "List all Google Contacts sorted by first name with pagination.",
                     "parameters": {
                         "max_results": {
@@ -77047,8 +77069,8 @@
                     "function_name": "google_contacts_list_groups",
                     "name": "Google Contacts List Groups",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all Google Contact groups/labels (e.g., Friends, Family, custom groups) with member counts.",
                     "description": "List all Google Contact groups/labels (e.g., Friends, Family, custom groups) with member counts.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -77060,8 +77082,8 @@
                     "function_name": "google_contacts_search_contacts",
                     "name": "Google Contacts Search Contacts",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Fuzzy search Google Contacts by name, email, or phone. Matches partial strings (e.g., \"john\", \"acme.com\", \"555\"). Use this to look up contacts before sending emails with gmail_send.",
                     "description": "Fuzzy search Google Contacts by name, email, or phone. Matches partial strings (e.g., \"john\", \"acme.com\", \"555\"). Use this to look up contacts before sending emails with gmail_send.",
                     "parameters": {
                         "query": {
@@ -77083,8 +77105,8 @@
                     "function_name": "google_contacts_update",
                     "name": "Google Contacts Update",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update an existing Google Contact. Unspecified fields are preserved. Email, phone, and address are added alongside existing values; name, company, title, and notes are replaced.",
                     "description": "Update an existing Google Contact. Unspecified fields are preserved. Email, phone, and address are added alongside existing values; name, company, title, and notes are replaced.",
                     "parameters": {
                         "resource_name": {
@@ -77216,7 +77238,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -77426,8 +77452,8 @@
                     "function_name": "google_docs_add_bullets",
                     "name": "Google Docs Add Bullets",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add bullet or numbered list formatting to a range in a Google Docs document. Default preset is BULLET_DISC_CIRCLE_SQUARE. Use NUMBERED_DECIMAL_ALPHA_ROMAN for numbered lists.",
                     "description": "Add bullet or numbered list formatting to a range in a Google Docs document. Default preset is BULLET_DISC_CIRCLE_SQUARE. Use NUMBERED_DECIMAL_ALPHA_ROMAN for numbered lists.",
                     "parameters": {
                         "document_id": {
@@ -77459,8 +77485,8 @@
                     "function_name": "google_docs_create",
                     "name": "Google Docs Create",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new blank Google Docs document. Returns the document ID and URL.",
                     "description": "Create a new blank Google Docs document. Returns the document ID and URL.",
                     "parameters": {
                         "title": {
@@ -77478,8 +77504,8 @@
                     "function_name": "google_docs_delete_range",
                     "name": "Google Docs Delete Range",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete content in a Google Docs document by index range. Use google_docs_get_structure first to find the correct indexes.",
                     "description": "Delete content in a Google Docs document by index range. Use google_docs_get_structure first to find the correct indexes.",
                     "parameters": {
                         "document_id": {
@@ -77507,8 +77533,8 @@
                     "function_name": "google_docs_format_text",
                     "name": "Google Docs Format Text",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Apply formatting to a text range in a Google Docs document. Supports bold, italic, underline, strikethrough, fontSize (points), fontFamily, foregroundColor (hex like \"#FF0000\"), and link (URL).",
                     "description": "Apply formatting to a text range in a Google Docs document. Supports bold, italic, underline, strikethrough, fontSize (points), fontFamily, foregroundColor (hex like \"#FF0000\"), and link (URL).",
                     "parameters": {
                         "document_id": {
@@ -77568,8 +77594,8 @@
                     "function_name": "google_docs_get",
                     "name": "Google Docs Get",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the content of a Google Docs document. Returns plain text by default, or a structured outline with character indexes when format is \"structured\". The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit",
                     "description": "Get the content of a Google Docs document. Returns plain text by default, or a structured outline with character indexes when format is \"structured\". The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit",
                     "parameters": {
                         "document_id": {
@@ -77591,8 +77617,8 @@
                     "function_name": "google_docs_get_structure",
                     "name": "Google Docs Get Structure",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a simplified structure of a Google Docs document showing heading hierarchy, paragraph indexes, and table positions. Essential before performing index-based editing operations. The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit",
                     "description": "Get a simplified structure of a Google Docs document showing heading hierarchy, paragraph indexes, and table positions. Essential before performing index-based editing operations. The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit",
                     "parameters": {
                         "document_id": {
@@ -77610,8 +77636,8 @@
                     "function_name": "google_docs_insert_image",
                     "name": "Google Docs Insert Image",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Insert an image from a URL into a Google Docs document. Supports PNG, JPEG, and GIF. Optionally specify width and height in points.",
                     "description": "Insert an image from a URL into a Google Docs document. Supports PNG, JPEG, and GIF. Optionally specify width and height in points.",
                     "parameters": {
                         "document_id": {
@@ -77646,8 +77672,8 @@
                     "function_name": "google_docs_insert_page_break",
                     "name": "Google Docs Insert Page Break",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Insert a page break into a Google Docs document. Omit index or set to -1 to insert at end.",
                     "description": "Insert a page break into a Google Docs document. Omit index or set to -1 to insert at end.",
                     "parameters": {
                         "document_id": {
@@ -77669,8 +77695,8 @@
                     "function_name": "google_docs_insert_table",
                     "name": "Google Docs Insert Table",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Insert a table into a Google Docs document. Specify rows and columns. Omit index or set to -1 to insert at end.",
                     "description": "Insert a table into a Google Docs document. Specify rows and columns. Omit index or set to -1 to insert at end.",
                     "parameters": {
                         "document_id": {
@@ -77702,8 +77728,8 @@
                     "function_name": "google_docs_insert_text",
                     "name": "Google Docs Insert Text",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Insert text into a Google Docs document at a specific position or at the end. Omit index or set to -1 to append at end.",
                     "description": "Insert text into a Google Docs document at a specific position or at the end. Omit index or set to -1 to append at end.",
                     "parameters": {
                         "document_id": {
@@ -77730,8 +77756,8 @@
                     "function_name": "google_docs_remove_bullets",
                     "name": "Google Docs Remove Bullets",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove bullet or numbered list formatting from a range in a Google Docs document.",
                     "description": "Remove bullet or numbered list formatting from a range in a Google Docs document.",
                     "parameters": {
                         "document_id": {
@@ -77759,8 +77785,8 @@
                     "function_name": "google_docs_replace_all",
                     "name": "Google Docs Replace All",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Find and replace all occurrences of text in a Google Docs document. No indexes needed — this is the simplest way to edit text.",
                     "description": "Find and replace all occurrences of text in a Google Docs document. No indexes needed — this is the simplest way to edit text.",
                     "parameters": {
                         "document_id": {
@@ -77792,8 +77818,8 @@
                     "function_name": "google_docs_search_text",
                     "name": "Google Docs Search Text",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Find all occurrences of text in a Google Docs document with their start/end indexes. Useful before format_text or delete_range operations. The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit",
                     "description": "Find all occurrences of text in a Google Docs document with their start/end indexes. Useful before format_text or delete_range operations. The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit",
                     "parameters": {
                         "document_id": {
@@ -77820,8 +77846,8 @@
                     "function_name": "google_docs_set_heading",
                     "name": "Google Docs Set Heading",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Set paragraph style (heading level) for a range in a Google Docs document. Valid styles: HEADING_1 through HEADING_6, TITLE, SUBTITLE, NORMAL_TEXT.",
                     "description": "Set paragraph style (heading level) for a range in a Google Docs document. Valid styles: HEADING_1 through HEADING_6, TITLE, SUBTITLE, NORMAL_TEXT.",
                     "parameters": {
                         "document_id": {
@@ -77940,7 +77966,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -78150,8 +78180,8 @@
                     "function_name": "google_drive_copy",
                     "name": "Google Drive Copy",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Duplicate a file in Google Drive.",
                     "description": "Duplicate a file in Google Drive.",
                     "parameters": {
                         "file_id": {
@@ -78177,8 +78207,8 @@
                     "function_name": "google_drive_create_file",
                     "name": "Google Drive Create File",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create an empty Google Doc, Sheet, or Presentation in Google Drive.",
                     "description": "Create an empty Google Doc, Sheet, or Presentation in Google Drive.",
                     "parameters": {
                         "name": {
@@ -78205,8 +78235,8 @@
                     "function_name": "google_drive_create_folder",
                     "name": "Google Drive Create Folder",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a folder in Google Drive.",
                     "description": "Create a folder in Google Drive.",
                     "parameters": {
                         "name": {
@@ -78228,8 +78258,8 @@
                     "function_name": "google_drive_delete",
                     "name": "Google Drive Delete",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Permanently delete a file from Google Drive (irreversible).",
                     "description": "Permanently delete a file from Google Drive (irreversible).",
                     "parameters": {
                         "file_id": {
@@ -78247,8 +78277,8 @@
                     "function_name": "google_drive_move",
                     "name": "Google Drive Move",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Move a file to a different folder in Google Drive.",
                     "description": "Move a file to a different folder in Google Drive.",
                     "parameters": {
                         "file_id": {
@@ -78271,8 +78301,8 @@
                     "function_name": "google_drive_rename",
                     "name": "Google Drive Rename",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Rename a file or folder in Google Drive.",
                     "description": "Rename a file or folder in Google Drive.",
                     "parameters": {
                         "file_id": {
@@ -78295,8 +78325,8 @@
                     "function_name": "google_drive_get_file",
                     "name": "Google Drive Get File",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get file metadata by ID from Google Drive. For Google Docs/Sheets/Slides, use `export_as` to get content as text, csv, or markdown.",
                     "description": "Get file metadata by ID from Google Drive. For Google Docs/Sheets/Slides, use `export_as` to get content as text, csv, or markdown.",
                     "parameters": {
                         "file_id": {
@@ -78318,8 +78348,8 @@
                     "function_name": "google_drive_list_permissions",
                     "name": "Google Drive List Permissions",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all permissions (sharing settings) on a Google Drive file or folder.",
                     "description": "List all permissions (sharing settings) on a Google Drive file or folder.",
                     "parameters": {
                         "file_id": {
@@ -78337,8 +78367,8 @@
                     "function_name": "google_drive_search_files",
                     "name": "Google Drive Search Files",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Search for files in Google Drive using Drive query syntax (default: 20 results, max: 100). Trashed files are excluded by default. Drive query syntax examples: - By name: `name contains 'budget'` or `name = 'Q1 Report'` - By type: `mimeType = 'application/vnd.google-apps.spreadsheet'` (also: document, presentation, folder) - In folder: `'FOLDER_ID' in parents` - Recent: `modifiedTime > '2026-01-01'` - Shared with me: `sharedWithMe = true` - Starred: `starred = true` - By owner: `'user@example.com' in owners` - Combine: `name contains 'report' and mimeType = 'application/vnd.google-apps.spreadsheet'`",
                     "description": "Search for files in Google Drive using Drive query syntax (default: 20 results, max: 100). Trashed files are excluded by default.\n\n        Drive query syntax examples:\n        - By name: `name contains 'budget'` or `name = 'Q1 Report'`\n        - By type: `mimeType = 'application/vnd.google-apps.spreadsheet'` (also: document, presentation, folder)\n        - In folder: `'FOLDER_ID' in parents`\n        - Recent: `modifiedTime > '2026-01-01'`\n        - Shared with me: `sharedWithMe = true`\n        - Starred: `starred = true`\n        - By owner: `'user@example.com' in owners`\n        - Combine: `name contains 'report' and mimeType = 'application/vnd.google-apps.spreadsheet'`",
                     "parameters": {
                         "query": {
@@ -78367,8 +78397,8 @@
                     "function_name": "google_drive_share_file",
                     "name": "Google Drive Share File",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Share a Google Drive file or folder. Provide `fileId`, `role` (\"reader\", \"writer\", \"commenter\"), and one of: - `email`: share with a specific user (e.g., \"alice@example.com\") - `domain`: share with an entire domain (e.g., \"example.com\") - `type` set to `\"anyone\"`: make accessible to anyone with the link (no email/domain needed) - `notify` (optional, default true): send email notification (only for email shares)",
                     "description": "Share a Google Drive file or folder. Provide `fileId`, `role` (\"reader\", \"writer\", \"commenter\"), and one of:\n        - `email`: share with a specific user (e.g., \"alice@example.com\")\n        - `domain`: share with an entire domain (e.g., \"example.com\")\n        - `type` set to `\"anyone\"`: make accessible to anyone with the link (no email/domain needed)\n        - `notify` (optional, default true): send email notification (only for email shares)",
                     "parameters": {
                         "file_id": {
@@ -78407,8 +78437,8 @@
                     "function_name": "google_drive_unshare_file",
                     "name": "Google Drive Unshare File",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove a permission from a Google Drive file or folder. Use google_drive_list_permissions first to find the permission ID.",
                     "description": "Remove a permission from a Google Drive file or folder. Use google_drive_list_permissions first to find the permission ID.",
                     "parameters": {
                         "file_id": {
@@ -78431,8 +78461,8 @@
                     "function_name": "google_drive_star",
                     "name": "Google Drive Star",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Mark a file as starred/favorite in Google Drive.",
                     "description": "Mark a file as starred/favorite in Google Drive.",
                     "parameters": {
                         "file_id": {
@@ -78450,8 +78480,8 @@
                     "function_name": "google_drive_trash",
                     "name": "Google Drive Trash",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Move a file to trash in Google Drive (reversible).",
                     "description": "Move a file to trash in Google Drive (reversible).",
                     "parameters": {
                         "file_id": {
@@ -78469,8 +78499,8 @@
                     "function_name": "google_drive_unstar",
                     "name": "Google Drive Unstar",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove star from a file in Google Drive.",
                     "description": "Remove star from a file in Google Drive.",
                     "parameters": {
                         "file_id": {
@@ -78488,8 +78518,8 @@
                     "function_name": "google_drive_untrash",
                     "name": "Google Drive Untrash",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Restore a file from trash in Google Drive.",
                     "description": "Restore a file from trash in Google Drive.",
                     "parameters": {
                         "file_id": {
@@ -78593,7 +78623,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -78803,8 +78837,8 @@
                     "function_name": "google_forms_add_question",
                     "name": "Google Forms Add Question",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add a question to a Google Form. Supports types: text, paragraph, multiple_choice, checkbox, dropdown, scale, date, time, rating. Use options for choice types. Use low/high/lowLabel/highLabel for scale. Use ratingScale/ratingIcon for rating. Use includeTime/includeYear for date. Use duration for time. Omit index to add at end. Use google_forms_get to see current form structure before editing.",
                     "description": "Add a question to a Google Form. Supports types: text, paragraph, multiple_choice, checkbox, dropdown, scale, date, time, rating. Use options for choice types. Use low/high/lowLabel/highLabel for scale. Use ratingScale/ratingIcon for rating. Use includeTime/includeYear for date. Use duration for time. Omit index to add at end. Use google_forms_get to see current form structure before editing.",
                     "parameters": {
                         "form_id": {
@@ -78884,8 +78918,8 @@
                     "function_name": "google_forms_add_section",
                     "name": "Google Forms Add Section",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add a page break / section to a Google Form. Omit index to add at end. Use google_forms_get to see current form structure.",
                     "description": "Add a page break / section to a Google Form. Omit index to add at end. Use google_forms_get to see current form structure.",
                     "parameters": {
                         "form_id": {
@@ -78916,8 +78950,8 @@
                     "function_name": "google_forms_add_text_item",
                     "name": "Google Forms Add Text Item",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add a static text block to a Google Form. Omit index to add at end. Use google_forms_get to see current form structure.",
                     "description": "Add a static text block to a Google Form. Omit index to add at end. Use google_forms_get to see current form structure.",
                     "parameters": {
                         "form_id": {
@@ -78948,8 +78982,8 @@
                     "function_name": "google_forms_create",
                     "name": "Google Forms Create",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new Google Form with a title, optional description, and optional quiz mode. Auto-publishes. Returns form ID, edit URL, and responder URL.",
                     "description": "Create a new Google Form with a title, optional description, and optional quiz mode. Auto-publishes. Returns form ID, edit URL, and responder URL.",
                     "parameters": {
                         "title": {
@@ -78975,8 +79009,8 @@
                     "function_name": "google_forms_delete_item",
                     "name": "Google Forms Delete Item",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete an item from a Google Form by its 0-based index. Use google_forms_get to see current form structure.",
                     "description": "Delete an item from a Google Form by its 0-based index. Use google_forms_get to see current form structure.",
                     "parameters": {
                         "form_id": {
@@ -78999,8 +79033,8 @@
                     "function_name": "google_forms_get",
                     "name": "Google Forms Get",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a Google Form's structure: title, description, settings, all questions with types/options/IDs, and responder URL. The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit To list all forms, use google_drive_search with file type \"application/vnd.google-apps.form\".",
                     "description": "Get a Google Form's structure: title, description, settings, all questions with types/options/IDs, and responder URL.\n        The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit\n        To list all forms, use google_drive_search with file type \"application/vnd.google-apps.form\".",
                     "parameters": {
                         "form_id": {
@@ -79018,8 +79052,8 @@
                     "function_name": "google_forms_get_response",
                     "name": "Google Forms Get Response",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a single response to a Google Form by response ID, with question labels. The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit",
                     "description": "Get a single response to a Google Form by response ID, with question labels.\n        The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit",
                     "parameters": {
                         "form_id": {
@@ -79042,8 +79076,8 @@
                     "function_name": "google_forms_list_responses",
                     "name": "Google Forms List Responses",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List responses to a Google Form with question labels. The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit",
                     "description": "List responses to a Google Form with question labels.\n        The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit",
                     "parameters": {
                         "form_id": {
@@ -79073,8 +79107,8 @@
                     "function_name": "google_forms_move_item",
                     "name": "Google Forms Move Item",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Move an item in a Google Form from one 0-based index to another. Use google_forms_get to see current form structure.",
                     "description": "Move an item in a Google Form from one 0-based index to another. Use google_forms_get to see current form structure.",
                     "parameters": {
                         "form_id": {
@@ -79102,8 +79136,8 @@
                     "function_name": "google_forms_publish",
                     "name": "Google Forms Publish",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Set publish settings for a Google Form: publish/unpublish and accept/stop accepting responses. At least one of published or acceptingResponses must be provided.",
                     "description": "Set publish settings for a Google Form: publish/unpublish and accept/stop accepting responses. At least one of published or acceptingResponses must be provided.",
                     "parameters": {
                         "form_id": {
@@ -79129,8 +79163,8 @@
                     "function_name": "google_forms_update_info",
                     "name": "Google Forms Update Info",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update a Google Form title and/or description. At least one of title or description must be provided.",
                     "description": "Update a Google Form title and/or description. At least one of title or description must be provided.",
                     "parameters": {
                         "form_id": {
@@ -79156,8 +79190,8 @@
                     "function_name": "google_forms_update_question",
                     "name": "Google Forms Update Question",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update a question in a Google Form by its 0-based index. Can update title, description, required status, and options (for choice questions). Use google_forms_get to see current form structure.",
                     "description": "Update a question in a Google Form by its 0-based index. Can update title, description, required status, and options (for choice questions). Use google_forms_get to see current form structure.",
                     "parameters": {
                         "form_id": {
@@ -79196,8 +79230,8 @@
                     "function_name": "google_forms_update_settings",
                     "name": "Google Forms Update Settings",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update Google Form settings such as quiz mode and email collection. At least one setting must be provided.",
                     "description": "Update Google Form settings such as quiz mode and email collection. At least one setting must be provided.",
                     "parameters": {
                         "form_id": {
@@ -79309,7 +79343,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -79519,8 +79557,8 @@
                     "function_name": "google_search_console_add_site",
                     "name": "Google Search Console Add Site",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add a new site property to Google Search Console.",
                     "description": "Add a new site property to Google Search Console.",
                     "parameters": {
                         "site_url": {
@@ -79538,8 +79576,8 @@
                     "function_name": "google_search_console_delete_site",
                     "name": "Google Search Console Delete Site",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove a site property from Google Search Console.",
                     "description": "Remove a site property from Google Search Console.",
                     "parameters": {
                         "site_url": {
@@ -79557,8 +79595,8 @@
                     "function_name": "google_search_console_delete_sitemap",
                     "name": "Google Search Console Delete Sitemap",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove a sitemap from Google Search Console.",
                     "description": "Remove a sitemap from Google Search Console.",
                     "parameters": {
                         "site_url": {
@@ -79581,8 +79619,8 @@
                     "function_name": "google_search_console_get_sitemap",
                     "name": "Google Search Console Get Sitemap",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get details of a specific sitemap in Google Search Console. Returns the sitemap's path, last submitted/downloaded dates, whether it's a sitemap index, and content type breakdown with submitted vs indexed URL counts.",
                     "description": "Get details of a specific sitemap in Google Search Console. Returns the sitemap's path, last submitted/downloaded dates, whether it's a sitemap index, and content type breakdown with submitted vs indexed URL counts.",
                     "parameters": {
                         "site_url": {
@@ -79605,8 +79643,8 @@
                     "function_name": "google_search_console_inspect_url",
                     "name": "Google Search Console Inspect URL",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Check a URL's indexing status in Google Search Console. Returns: index verdict, coverage state, last crawl time, robots.txt state, indexing state, rich results, mobile usability, and AMP status.",
                     "description": "Check a URL's indexing status in Google Search Console. Returns: index verdict, coverage state, last crawl time, robots.txt state, indexing state, rich results, mobile usability, and AMP status.",
                     "parameters": {
                         "site_url": {
@@ -79629,8 +79667,8 @@
                     "function_name": "google_search_console_list_sitemaps",
                     "name": "Google Search Console List Sitemaps",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all submitted sitemaps for a Google Search Console property. Returns each sitemap's path, last submitted/downloaded dates, whether it's a sitemap index, and content type counts (submitted vs indexed URLs).",
                     "description": "List all submitted sitemaps for a Google Search Console property. Returns each sitemap's path, last submitted/downloaded dates, whether it's a sitemap index, and content type counts (submitted vs indexed URLs).",
                     "parameters": {
                         "site_url": {
@@ -79648,8 +79686,8 @@
                     "function_name": "google_search_console_list_sites",
                     "name": "Google Search Console List Sites",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all verified Google Search Console sites/properties with their permission levels. Use this first to discover available properties before querying performance data or inspecting URLs. Returns each site's URL (e.g., \"sc-domain:example.com\" or \"https://www.example.com/\") and your permission level.",
                     "description": "List all verified Google Search Console sites/properties with their permission levels. Use this first to discover available properties before querying performance data or inspecting URLs. Returns each site's URL (e.g., \"sc-domain:example.com\" or \"https://www.example.com/\") and your permission level.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -79661,8 +79699,8 @@
                     "function_name": "google_search_console_performance",
                     "name": "Google Search Console Performance",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Query Google Search Console search performance data (clicks, impressions, CTR, position). Common queries: \"top pages by clicks\" → dimensions=[\"page\"]. \"Top search queries\" → dimensions=[\"query\"]. \"Traffic trend\" → dimensions=[\"date\"]. \"Mobile vs desktop\" → dimensions=[\"device\"]. \"Blog section\" → dimensions=[\"page\"], filters=[{dimension:\"page\", operator:\"contains\", value:\"/blog/\"}]. Combine dimensions: dimensions=[\"query\",\"device\"] for queries by device.",
                     "description": "Query Google Search Console search performance data (clicks, impressions, CTR, position). Common queries: \"top pages by clicks\" → dimensions=[\"page\"]. \"Top search queries\" → dimensions=[\"query\"]. \"Traffic trend\" → dimensions=[\"date\"]. \"Mobile vs desktop\" → dimensions=[\"device\"]. \"Blog section\" → dimensions=[\"page\"], filters=[{dimension:\"page\", operator:\"contains\", value:\"/blog/\"}]. Combine dimensions: dimensions=[\"query\",\"device\"] for queries by device.",
                     "parameters": {
                         "site_url": {
@@ -79716,8 +79754,8 @@
                     "function_name": "google_search_console_submit_sitemap",
                     "name": "Google Search Console Submit Sitemap",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Submit a new sitemap to Google Search Console.",
                     "description": "Submit a new sitemap to Google Search Console.",
                     "parameters": {
                         "site_url": {
@@ -79826,7 +79864,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -80036,8 +80078,8 @@
                     "function_name": "google_sheets_add_filter",
                     "name": "Google Sheets Add Filter",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Apply filter dropdowns to a range in a Google Sheets sheet/tab.",
                     "description": "Apply filter dropdowns to a range in a Google Sheets sheet/tab.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80060,8 +80102,8 @@
                     "function_name": "google_sheets_add_sheet",
                     "name": "Google Sheets Add Sheet",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Add a new sheet/tab to a Google Spreadsheet.",
                     "description": "Add a new sheet/tab to a Google Spreadsheet.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80084,8 +80126,8 @@
                     "function_name": "google_sheets_append",
                     "name": "Google Sheets Append",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Append rows after the last data row in a Google Spreadsheet. Auto-detects the table boundary. Provide the range (e.g., \"Sheet1\" or \"Sheet1!A:D\") and a 2D array of rows to append.",
                     "description": "Append rows after the last data row in a Google Spreadsheet. Auto-detects the table boundary. Provide the range (e.g., \"Sheet1\" or \"Sheet1!A:D\") and a 2D array of rows to append.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80117,8 +80159,8 @@
                     "function_name": "google_sheets_batch_read",
                     "name": "Google Sheets Batch Read",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Read multiple ranges from a Google Spreadsheet in one call. Provide an array of A1 notation ranges (e.g., [\"Sheet1!A1:B5\", \"Sheet2!C1:D10\"]). Returns results keyed by range.",
                     "description": "Read multiple ranges from a Google Spreadsheet in one call. Provide an array of A1 notation ranges (e.g., [\"Sheet1!A1:B5\", \"Sheet2!C1:D10\"]). Returns results keyed by range.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80145,8 +80187,8 @@
                     "function_name": "google_sheets_batch_write",
                     "name": "Google Sheets Batch Write",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Write to multiple ranges in a Google Spreadsheet in one call. Provide an array of {range, values} objects to update several areas at once.",
                     "description": "Write to multiple ranges in a Google Spreadsheet in one call. Provide an array of {range, values} objects to update several areas at once.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80173,8 +80215,8 @@
                     "function_name": "google_sheets_clear",
                     "name": "Google Sheets Clear",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Clear all values from a Google Sheets range (keeps formatting intact). Specify the range in A1 notation.",
                     "description": "Clear all values from a Google Sheets range (keeps formatting intact). Specify the range in A1 notation.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80197,8 +80239,8 @@
                     "function_name": "google_sheets_create",
                     "name": "Google Sheets Create",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new empty Google Spreadsheet with a given title. Returns the new spreadsheet ID and URL.",
                     "description": "Create a new empty Google Spreadsheet with a given title. Returns the new spreadsheet ID and URL.",
                     "parameters": {
                         "title": {
@@ -80216,8 +80258,8 @@
                     "function_name": "google_sheets_delete_columns",
                     "name": "Google Sheets Delete Columns",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete columns from a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "description": "Delete columns from a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80249,8 +80291,8 @@
                     "function_name": "google_sheets_delete_rows",
                     "name": "Google Sheets Delete Rows",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete rows from a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "description": "Delete rows from a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80282,8 +80324,8 @@
                     "function_name": "google_sheets_delete_sheet",
                     "name": "Google Sheets Delete Sheet",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete a sheet/tab from a Google Spreadsheet.",
                     "description": "Delete a sheet/tab from a Google Spreadsheet.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80306,8 +80348,8 @@
                     "function_name": "google_sheets_duplicate_sheet",
                     "name": "Google Sheets Duplicate Sheet",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Copy a sheet/tab within the same Google Spreadsheet.",
                     "description": "Copy a sheet/tab within the same Google Spreadsheet.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80334,8 +80376,8 @@
                     "function_name": "google_sheets_find",
                     "name": "Google Sheets Find",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Search for text within a Google Spreadsheet. Searches all sheets by default, or specify a sheet name to narrow the search. Returns match count and number of sheets containing matches.",
                     "description": "Search for text within a Google Spreadsheet. Searches all sheets by default, or specify a sheet name to narrow the search. Returns match count and number of sheets containing matches.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80370,8 +80412,8 @@
                     "function_name": "google_sheets_get_metadata",
                     "name": "Google Sheets Get Metadata",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get spreadsheet title and list of sheets/tabs with their names, IDs, and dimensions. Use this first to discover sheet names and structure before reading or writing data.",
                     "description": "Get spreadsheet title and list of sheets/tabs with their names, IDs, and dimensions. Use this first to discover sheet names and structure before reading or writing data.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80389,8 +80431,8 @@
                     "function_name": "google_sheets_insert_columns",
                     "name": "Google Sheets Insert Columns",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Insert blank columns into a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "description": "Insert blank columns into a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80422,8 +80464,8 @@
                     "function_name": "google_sheets_insert_rows",
                     "name": "Google Sheets Insert Rows",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Insert blank rows into a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "description": "Insert blank rows into a Google Sheets sheet/tab. Uses 0-based indexing.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80455,8 +80497,8 @@
                     "function_name": "google_sheets_read_range",
                     "name": "Google Sheets Read Range",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Read cell values from a Google Sheets range using A1 notation. A1 notation examples: `Sheet1!A1:D10` (range), `Sheet1!A:A` (whole column), `Sheet1` (entire sheet). Sheet names with spaces need quotes: `'My Sheet'!A1:B2`.",
                     "description": "Read cell values from a Google Sheets range using A1 notation.\n        A1 notation examples: `Sheet1!A1:D10` (range), `Sheet1!A:A` (whole column), `Sheet1` (entire sheet). Sheet names with spaces need quotes: `'My Sheet'!A1:B2`.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80483,8 +80525,8 @@
                     "function_name": "google_sheets_remove_filter",
                     "name": "Google Sheets Remove Filter",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove the filter from a Google Sheets sheet/tab.",
                     "description": "Remove the filter from a Google Sheets sheet/tab.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80507,8 +80549,8 @@
                     "function_name": "google_sheets_rename_sheet",
                     "name": "Google Sheets Rename Sheet",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Rename a sheet/tab in a Google Spreadsheet.",
                     "description": "Rename a sheet/tab in a Google Spreadsheet.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80536,8 +80578,8 @@
                     "function_name": "google_sheets_sort_range",
                     "name": "Google Sheets Sort Range",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Sort data by column(s) in a Google Sheets range.",
                     "description": "Sort data by column(s) in a Google Sheets range.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80569,8 +80611,8 @@
                     "function_name": "google_sheets_write_range",
                     "name": "Google Sheets Write Range",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Write values to a Google Sheets range. Values format: `[[\"Name\", \"Age\"], [\"Alice\", 30]]` — each inner array is one row. Formulas work with user_entered input mode (default): `[[\"=SUM(A1:A10)\"]]`.",
                     "description": "Write values to a Google Sheets range. Values format: `[[\"Name\", \"Age\"], [\"Alice\", 30]]` — each inner array is one row.\n        Formulas work with user_entered input mode (default): `[[\"=SUM(A1:A10)\"]]`.",
                     "parameters": {
                         "spreadsheet_id": {
@@ -80688,7 +80730,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -80898,8 +80944,8 @@
                     "function_name": "google_tasks_clear_completed",
                     "name": "Google Tasks Clear Completed",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Remove all completed tasks from a Google Tasks list. Warning: permanently deletes completed tasks.",
                     "description": "Remove all completed tasks from a Google Tasks list. Warning: permanently deletes completed tasks.",
                     "parameters": {
                         "list_id": {
@@ -80916,8 +80962,8 @@
                     "function_name": "google_tasks_complete",
                     "name": "Google Tasks Complete",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Mark a Google Task as completed.",
                     "description": "Mark a Google Task as completed.",
                     "parameters": {
                         "task_id": {
@@ -80939,8 +80985,8 @@
                     "function_name": "google_tasks_create",
                     "name": "Google Tasks Create",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a task in Google Tasks. Use \"@default\" as listId for the primary \"My Tasks\" list.",
                     "description": "Create a task in Google Tasks. Use \"@default\" as listId for the primary \"My Tasks\" list.",
                     "parameters": {
                         "title": {
@@ -80974,8 +81020,8 @@
                     "function_name": "google_tasks_create_list",
                     "name": "Google Tasks Create List",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new task list in Google Tasks.",
                     "description": "Create a new task list in Google Tasks.",
                     "parameters": {
                         "title": {
@@ -80993,8 +81039,8 @@
                     "function_name": "google_tasks_delete",
                     "name": "Google Tasks Delete",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete a Google Task.",
                     "description": "Delete a Google Task.",
                     "parameters": {
                         "task_id": {
@@ -81016,8 +81062,8 @@
                     "function_name": "google_tasks_delete_list",
                     "name": "Google Tasks Delete List",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Delete a task list from Google Tasks.",
                     "description": "Delete a task list from Google Tasks.",
                     "parameters": {
                         "list_id": {
@@ -81035,8 +81081,8 @@
                     "function_name": "google_tasks_move",
                     "name": "Google Tasks Move",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Reorder or reparent a Google Task. Use parent to set a new parent (empty string moves to top level), and previous to position after a sibling.",
                     "description": "Reorder or reparent a Google Task. Use parent to set a new parent (empty string moves to top level), and previous to position after a sibling.",
                     "parameters": {
                         "task_id": {
@@ -81066,8 +81112,8 @@
                     "function_name": "google_tasks_get_task",
                     "name": "Google Tasks Get Task",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get full details of a single Google Task by its ID.",
                     "description": "Get full details of a single Google Task by its ID.",
                     "parameters": {
                         "list_id": {
@@ -81089,8 +81135,8 @@
                     "function_name": "google_tasks_list_lists",
                     "name": "Google Tasks List Lists",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all Google Task lists. Returns IDs and titles. Start here to discover available lists.",
                     "description": "List all Google Task lists. Returns IDs and titles. Start here to discover available lists.",
                     "parameters": {
                         "max_results": {
@@ -81111,8 +81157,8 @@
                     "function_name": "google_tasks_list_tasks",
                     "name": "Google Tasks List Tasks",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List tasks in a Google Task list. Use \"@default\" as listId for the primary \"My Tasks\" list. Supports filtering by completion status and due date range.",
                     "description": "List tasks in a Google Task list. Use \"@default\" as listId for the primary \"My Tasks\" list. Supports filtering by completion status and due date range.",
                     "parameters": {
                         "list_id": {
@@ -81153,8 +81199,8 @@
                     "function_name": "google_tasks_update",
                     "name": "Google Tasks Update",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update task fields in Google Tasks. At least one field to update is required.",
                     "description": "Update task fields in Google Tasks. At least one field to update is required.",
                     "parameters": {
                         "task_id": {
@@ -81278,7 +81324,11 @@
                         "redirect_uri": "/api/integrations/google/oauth/callback"
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "client_id": "required|string",
+                    "client_secret": "required|string",
+                    "access_token": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -133145,8 +133195,8 @@
                     "function_name": "nasa_get_apod",
                     "name": "NASA Get APOD",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the NASA Astronomy Picture of the Day (APOD). Returns the daily astronomical image or photo along with an explanation written by a professional astronomer. You can request a specific date or a range of dates.",
                     "description": "Get the NASA Astronomy Picture of the Day (APOD). Returns the daily astronomical image or photo along with an explanation written by a professional astronomer. You can request a specific date or a range of dates.",
                     "parameters": {
                         "date": {
@@ -133171,8 +133221,8 @@
                     "function_name": "nasa_get_asteroid",
                     "name": "NASA Get Asteroid",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get detailed information about a specific Near Earth Object (asteroid) by its NASA ID. Returns orbital data, estimated diameter, close approach history, and hazard assessment.",
                     "description": "Get detailed information about a specific Near Earth Object (asteroid) by its NASA ID. Returns orbital data, estimated diameter, close approach history, and hazard assessment.",
                     "parameters": {
                         "id": {
@@ -133190,8 +133240,8 @@
                     "function_name": "nasa_get_asteroids",
                     "name": "NASA Get Asteroids",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get Near Earth Objects (asteroids) for a date range from NASA. Returns a list of asteroids with their estimated diameter, velocity, distance from Earth, and whether they are potentially hazardous.",
                     "description": "Get Near Earth Objects (asteroids) for a date range from NASA. Returns a list of asteroids with their estimated diameter, velocity, distance from Earth, and whether they are potentially hazardous.",
                     "parameters": {
                         "start_date": {
@@ -133212,8 +133262,8 @@
                     "function_name": "nasa_get_current_user",
                     "name": "NASA Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get information about the current NASA API configuration. The NASA API is public and does not require user authentication — this tool returns the API key status and available endpoints.",
                     "description": "Get information about the current NASA API configuration. The NASA API is public and does not require user authentication — this tool returns the API key status and available endpoints.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -133225,8 +133275,8 @@
                     "function_name": "nasa_get_mars_rover_photos",
                     "name": "NASA Get Mars Rover Photos",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get photos from NASA Mars rovers (Curiosity, Opportunity, Spirit, Perseverance). Query by sol (Martian day) or Earth date, and optionally filter by camera. Returns photo URLs and metadata.",
                     "description": "Get photos from NASA Mars rovers (Curiosity, Opportunity, Spirit, Perseverance). Query by sol (Martian day) or Earth date, and optionally filter by camera. Returns photo URLs and metadata.",
                     "parameters": {
                         "rover": {
@@ -133260,8 +133310,8 @@
                     "function_name": "nasa_search_images",
                     "name": "NASA Search Images",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Search the NASA Image and Video Library for space, astronomy, and mission imagery. Returns image URLs, titles, descriptions, and metadata from NASA's vast collection.",
                     "description": "Search the NASA Image and Video Library for space, astronomy, and mission imagery. Returns image URLs, titles, descriptions, and metadata from NASA's vast collection.",
                     "parameters": {
                         "q": {
@@ -173805,8 +173855,8 @@
                     "function_name": "sinch_list_messages",
                     "name": "Sinch List Messages",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List inbound and outbound SMS messages from Sinch. Supports filtering by direction, recipient, sender, and date range.",
                     "description": "List inbound and outbound SMS messages from Sinch. Supports filtering by direction, recipient, sender, and date range.",
                     "parameters": {
                         "direction": {
@@ -173847,8 +173897,8 @@
                     "function_name": "sinch_send_sms",
                     "name": "Sinch Send SMS",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Send an SMS message to one or more recipients via Sinch. Requires sender phone number, recipient(s), and message body.",
                     "description": "Send an SMS message to one or more recipients via Sinch. Requires sender phone number, recipient(s), and message body.",
                     "parameters": {
                         "from": {
@@ -173888,8 +173938,8 @@
                     "function_name": "sinch_list_phone_numbers",
                     "name": "Sinch List Phone Numbers",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all rented phone numbers in your Sinch account with pagination.",
                     "description": "List all rented phone numbers in your Sinch account with pagination.",
                     "parameters": {
                         "page": {
@@ -173910,8 +173960,8 @@
                     "function_name": "sinch_get_phone_number",
                     "name": "Sinch Get Phone Number",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get details for a specific phone number in your Sinch account.",
                     "description": "Get details for a specific phone number in your Sinch account.",
                     "parameters": {
                         "phone_number": {
@@ -173929,8 +173979,8 @@
                     "function_name": "sinch_list_groups",
                     "name": "Sinch List Groups",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all groups in your Sinch account with pagination.",
                     "description": "List all groups in your Sinch account with pagination.",
                     "parameters": {
                         "page": {
@@ -173951,8 +174001,8 @@
                     "function_name": "sinch_get_group",
                     "name": "Sinch Get Group",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get details for a specific group in your Sinch account.",
                     "description": "Get details for a specific group in your Sinch account.",
                     "parameters": {
                         "group_id": {
@@ -173970,8 +174020,8 @@
                     "function_name": "sinch_list_batches",
                     "name": "Sinch List Batches",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all message batches in your Sinch account with pagination.",
                     "description": "List all message batches in your Sinch account with pagination.",
                     "parameters": {
                         "page": {
@@ -174058,7 +174108,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "service_plan_id": "required|string",
+                    "api_token": "required|string"
+                },
                 "required_credentials": [
                     "service_plan_id",
                     "api_token"
@@ -185084,8 +185137,8 @@
                     "function_name": "tally_get_current_user",
                     "name": "Tally Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the authenticated user's profile information, including name, email, and account details.",
                     "description": "Get the authenticated user's profile information, including name, email, and account details.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -185097,8 +185150,8 @@
                     "function_name": "tally_get_form",
                     "name": "Tally Get Form",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get full details of a specific Tally form by its ID, including form structure, fields, and settings.",
                     "description": "Get full details of a specific Tally form by its ID, including form structure, fields, and settings.",
                     "parameters": {
                         "form_id": {
@@ -185116,8 +185169,8 @@
                     "function_name": "tally_get_submission",
                     "name": "Tally Get Submission",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get full details of a specific form submission by its ID, including all field responses and metadata.",
                     "description": "Get full details of a specific form submission by its ID, including all field responses and metadata.",
                     "parameters": {
                         "submission_id": {
@@ -185135,8 +185188,8 @@
                     "function_name": "tally_list_forms",
                     "name": "Tally List Forms",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all Tally forms accessible to the authenticated user. Returns form IDs, titles, status, and submission counts. Supports pagination.",
                     "description": "List all Tally forms accessible to the authenticated user. Returns form IDs, titles, status, and submission counts. Supports pagination.",
                     "parameters": {
                         "page": {
@@ -185157,8 +185210,8 @@
                     "function_name": "tally_list_submissions",
                     "name": "Tally List Submissions",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports pagination.",
                     "description": "List all submissions for a specific Tally form. Returns respondent answers, submission dates, and metadata. Supports pagination.",
                     "parameters": {
                         "form_id": {
@@ -185184,8 +185237,8 @@
                     "function_name": "tally_list_workspaces",
                     "name": "Tally List Workspaces",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List all workspaces accessible to the authenticated Tally user. Returns workspace names, IDs, and member info.",
                     "description": "List all workspaces accessible to the authenticated Tally user. Returns workspace names, IDs, and member info.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -185267,7 +185320,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "access_token": "required|string",
+                    "url": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -192930,8 +192986,8 @@
                     "function_name": "trustmrr_get_startup",
                     "name": "Trustmrr Get Startup",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get full details for a single startup on TrustMRR by its slug. Returns revenue data, tech stack, cofounders, social metrics, asking price, and more. Use the slug from the list startups tool.",
                     "description": "Get full details for a single startup on TrustMRR by its slug. Returns revenue data, tech stack, cofounders, social metrics, asking price, and more. Use the slug from the list startups tool.",
                     "parameters": {
                         "slug": {
@@ -192949,8 +193005,8 @@
                     "function_name": "trustmrr_list_startups",
                     "name": "Trustmrr List Startups",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Browse and filter startups with verified revenue on TrustMRR. Filter by sale status, category, revenue range, MRR, growth, or asking price. All monetary values are in USD cents (e.g. 100000 = $1,000).",
                     "description": "Browse and filter startups with verified revenue on TrustMRR. Filter by sale status, category, revenue range, MRR, growth, or asking price. All monetary values are in USD cents (e.g. 100000 = $1,000).",
                     "parameters": {
                         "sort": {
@@ -193081,7 +193137,9 @@
                         "required": true
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "api_key": "required|string"
+                },
                 "required_credentials": [
                     "api_key"
                 ],
@@ -199599,8 +199657,8 @@
                     "function_name": "vero_get_current_user",
                     "name": "Vero Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the profile of the currently authenticated Vero user. Useful for verifying API connectivity and checking account details.",
                     "description": "Get the profile of the currently authenticated Vero user. Useful for verifying API connectivity and checking account details.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -199612,8 +199670,8 @@
                     "function_name": "vero_identify_user",
                     "name": "Vero Identify User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Identify (create or update) a user in Vero. Pass a unique user ID, email, optional name, and any custom attributes in the data object. This creates the user if they don't exist, or updates their profile if they do.",
                     "description": "Identify (create or update) a user in Vero. Pass a unique user ID, email, optional name, and any custom attributes in the data object. This creates the user if they don't exist, or updates their profile if they do.",
                     "parameters": {
                         "id": {
@@ -199644,8 +199702,8 @@
                     "function_name": "vero_resubscribe",
                     "name": "Vero Resubscribe",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Resubscribe a previously unsubscribed user to Vero email campaigns. The user will start receiving emails again.",
                     "description": "Resubscribe a previously unsubscribed user to Vero email campaigns. The user will start receiving emails again.",
                     "parameters": {
                         "id": {
@@ -199663,8 +199721,8 @@
                     "function_name": "vero_track_event",
                     "name": "Vero Track Event",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Track a behavioral event for a user in Vero. Events can trigger automated email campaigns. Pass a user identity (ID or email), event name, and optional event data.",
                     "description": "Track a behavioral event for a user in Vero. Events can trigger automated email campaigns. Pass a user identity (ID or email), event name, and optional event data.",
                     "parameters": {
                         "identity": {
@@ -199691,8 +199749,8 @@
                     "function_name": "vero_unsubscribe",
                     "name": "Vero Unsubscribe",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Unsubscribe a user from all Vero email campaigns. The user will no longer receive any email communication.",
                     "description": "Unsubscribe a user from all Vero email campaigns. The user will no longer receive any email communication.",
                     "parameters": {
                         "id": {
@@ -199710,8 +199768,8 @@
                     "function_name": "vero_update_user",
                     "name": "Vero Update User",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Update a user's profile in Vero. Pass the user ID, an optional new email, and a data object with attributes to update.",
                     "description": "Update a user's profile in Vero. Pass the user ID, an optional new email, and a data object with attributes to update.",
                     "parameters": {
                         "id": {
@@ -199805,7 +199863,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "auth_token": "required|string",
+                    "url": "nullable|string"
+                },
                 "required_credentials": [
                     "auth_token"
                 ],
@@ -199999,8 +200060,8 @@
                     "function_name": "vimeo_create_video",
                     "name": "Vimeo Create Video",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new video upload slot on Vimeo. Choose an upload approach: \"pull\" (Vimeo downloads from a URL), \"post\" (you POST to an upload link), or \"streaming\" (Tus protocol). Returns the video URI and upload target.",
                     "description": "Create a new video upload slot on Vimeo. Choose an upload approach: \"pull\" (Vimeo downloads from a URL), \"post\" (you POST to an upload link), or \"streaming\" (Tus protocol). Returns the video URI and upload target.",
                     "parameters": {
                         "upload_approach": {
@@ -200054,8 +200115,8 @@
                     "function_name": "vimeo_get_current_user",
                     "name": "Vimeo Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the authenticated Vimeo user's profile information. Returns name, bio, location, account type, upload quota, and profile pictures.",
                     "description": "Get the authenticated Vimeo user's profile information. Returns name, bio, location, account type, upload quota, and profile pictures.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -200067,8 +200128,8 @@
                     "function_name": "vimeo_get_video",
                     "name": "Vimeo Get Video",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get detailed information about a single Vimeo video by its ID. Returns name, description, duration, thumbnails, privacy, stats, and playback links.",
                     "description": "Get detailed information about a single Vimeo video by its ID. Returns name, description, duration, thumbnails, privacy, stats, and playback links.",
                     "parameters": {
                         "video_id": {
@@ -200086,8 +200147,8 @@
                     "function_name": "vimeo_list_albums",
                     "name": "Vimeo List Albums",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List albums (showcases) for the authenticated Vimeo user. Supports pagination, query search, sorting, and direction. Returns album names, descriptions, thumbnails, and video counts.",
                     "description": "List albums (showcases) for the authenticated Vimeo user. Supports pagination, query search, sorting, and direction. Returns album names, descriptions, thumbnails, and video counts.",
                     "parameters": {
                         "per_page": {
@@ -200120,8 +200181,8 @@
                     "function_name": "vimeo_list_folders",
                     "name": "Vimeo List Folders",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List folders (projects) for the authenticated Vimeo user. Supports pagination and query search. Returns folder names, descriptions, and item counts.",
                     "description": "List folders (projects) for the authenticated Vimeo user. Supports pagination and query search. Returns folder names, descriptions, and item counts.",
                     "parameters": {
                         "per_page": {
@@ -200146,8 +200207,8 @@
                     "function_name": "vimeo_list_videos",
                     "name": "Vimeo List Videos",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List videos for the authenticated Vimeo user. Supports pagination, full-text search via query, and filters (e.g., embeddable, playable, privacy). Returns video URIs, names, durations, thumbnails, and metadata.",
                     "description": "List videos for the authenticated Vimeo user. Supports pagination, full-text search via query, and filters (e.g., embeddable, playable, privacy). Returns video URIs, names, durations, thumbnails, and metadata.",
                     "parameters": {
                         "per_page": {
@@ -200262,7 +200323,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "access_token": "required|string",
+                    "base_url": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -208558,8 +208622,8 @@
                     "function_name": "x_create_tweet",
                     "name": "X Create Tweet",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Post a new tweet. Supports text only, replies, and media attachments. The tweet text must not exceed 280 characters.",
                     "description": "Post a new tweet. Supports text only, replies, and media attachments. The tweet text must not exceed 280 characters.",
                     "parameters": {
                         "text": {
@@ -208597,8 +208661,8 @@
                     "function_name": "x_get_current_user",
                     "name": "X Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the authenticated user's own profile. Returns your user ID, name, and username, plus any additional requested fields.",
                     "description": "Get the authenticated user's own profile. Returns your user ID, name, and username, plus any additional requested fields.",
                     "parameters": {
                         "user_fields": {
@@ -208618,8 +208682,8 @@
                     "function_name": "x_get_tweet",
                     "name": "X Get Tweet",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a single tweet by ID. Returns the tweet text, author ID, creation date, and public metrics (likes, retweets, replies).",
                     "description": "Get a single tweet by ID. Returns the tweet text, author ID, creation date, and public metrics (likes, retweets, replies).",
                     "parameters": {
                         "id": {
@@ -208658,8 +208722,8 @@
                     "function_name": "x_get_user",
                     "name": "X Get User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a Twitter user by their numeric ID. Returns the user's name, username, and optionally their bio, profile image, and public metrics.",
                     "description": "Get a Twitter user by their numeric ID. Returns the user's name, username, and optionally their bio, profile image, and public metrics.",
                     "parameters": {
                         "id": {
@@ -208684,8 +208748,8 @@
                     "function_name": "x_get_user_by_username",
                     "name": "X Get User By Username",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get a Twitter user by their username (handle). Enter the username without the @ prefix. Returns the user's ID, name, username, and any additional requested fields.",
                     "description": "Get a Twitter user by their username (handle). Enter the username without the @ prefix. Returns the user's ID, name, username, and any additional requested fields.",
                     "parameters": {
                         "username": {
@@ -208710,8 +208774,8 @@
                     "function_name": "x_list_tweets",
                     "name": "X List Tweets",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Look up multiple tweets by their IDs. Pass up to 100 tweet IDs and receive their text, metrics, and metadata in one call.",
                     "description": "Look up multiple tweets by their IDs. Pass up to 100 tweet IDs and receive their text, metrics, and metadata in one call.",
                     "parameters": {
                         "ids": {
@@ -208823,7 +208887,10 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "access_token": "required|string",
+                    "base_url": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],
@@ -214593,8 +214660,8 @@
                     "function_name": "zohoinvoice_list_invoices",
                     "name": "Zohoinvoice List Invoices",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List invoices from Zoho Invoice. Supports filtering by status (draft, sent, overdue, paid, void, partially_paid), customer, and date range.",
                     "description": "List invoices from Zoho Invoice. Supports filtering by status (draft, sent, overdue, paid, void, partially_paid), customer, and date range.",
                     "parameters": {
                         "status": {
@@ -214651,8 +214718,8 @@
                     "function_name": "zohoinvoice_get_invoice",
                     "name": "Zohoinvoice Get Invoice",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get full details of a single invoice by its ID, including line items, totals, payments, and notes.",
                     "description": "Get full details of a single invoice by its ID, including line items, totals, payments, and notes.",
                     "parameters": {
                         "invoice_id": {
@@ -214670,8 +214737,8 @@
                     "function_name": "zohoinvoice_create_invoice",
                     "name": "Zohoinvoice Create Invoice",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Create a new invoice in Zoho Invoice. Requires at minimum a customer_id and one line item. Returns the created invoice with its ID and total.",
                     "description": "Create a new invoice in Zoho Invoice. Requires at minimum a customer_id and one line item. Returns the created invoice with its ID and total.",
                     "parameters": {
                         "customer_id": {
@@ -214721,8 +214788,8 @@
                     "function_name": "zohoinvoice_list_contacts",
                     "name": "Zohoinvoice List Contacts",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List contacts (customers and vendors) from Zoho Invoice. Supports filtering by type (customer or vendor) and pagination.",
                     "description": "List contacts (customers and vendors) from Zoho Invoice. Supports filtering by type (customer or vendor) and pagination.",
                     "parameters": {
                         "type": {
@@ -214765,8 +214832,8 @@
                     "function_name": "zohoinvoice_list_items",
                     "name": "Zohoinvoice List Items",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List items (products and services) from Zoho Invoice. Use item IDs when creating invoices with line items.",
                     "description": "List items (products and services) from Zoho Invoice. Use item IDs when creating invoices with line items.",
                     "parameters": {
                         "type": {
@@ -214807,8 +214874,8 @@
                     "function_name": "zohoinvoice_list_payments",
                     "name": "Zohoinvoice List Payments",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "List payments received in Zoho Invoice. Supports filtering by customer, date range, and payment mode.",
                     "description": "List payments received in Zoho Invoice. Supports filtering by customer, date range, and payment mode.",
                     "parameters": {
                         "customer_id": {
@@ -214845,8 +214912,8 @@
                     "function_name": "zohoinvoice_get_current_user",
                     "name": "Zohoinvoice Get Current User",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:wrench",
+                    "short_description": "Get the authenticated user's profile from Zoho Invoice, including name, email, and role.",
                     "description": "Get the authenticated user's profile from Zoho Invoice, including name, email, and role.",
                     "parameters": [],
                     "parameter_count": 0,
@@ -214943,7 +215010,11 @@
                     }
                 ],
                 "config_schema": [],
-                "validation_rules": [],
+                "validation_rules": {
+                    "access_token": "required|string",
+                    "base_url": "nullable|string",
+                    "organization_id": "nullable|string"
+                },
                 "required_credentials": [
                     "access_token"
                 ],

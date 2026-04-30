@@ -168,7 +168,92 @@ class GoogleSearchConsoleToolProvider implements ToolProvider, ConfigurableInteg
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_search_console_add_site' => [
+                'class' => GoogleSearchConsoleAddSite::class,
+                'type' => 'write',
+                'name' => 'Google Search Console Add Site',
+                'description' => 'Add a new site property to Google Search Console.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_delete_site' => [
+                'class' => GoogleSearchConsoleDeleteSite::class,
+                'type' => 'write',
+                'name' => 'Google Search Console Delete Site',
+                'description' => 'Remove a site property from Google Search Console.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_delete_sitemap' => [
+                'class' => GoogleSearchConsoleDeleteSitemap::class,
+                'type' => 'write',
+                'name' => 'Google Search Console Delete Sitemap',
+                'description' => 'Remove a sitemap from Google Search Console.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_get_sitemap' => [
+                'class' => GoogleSearchConsoleGetSitemap::class,
+                'type' => 'read',
+                'name' => 'Google Search Console Get Sitemap',
+                'description' => 'Get details of a specific sitemap in Google Search Console. Returns the sitemap\'s path, last submitted/downloaded dates, whether it\'s a sitemap index, and content type breakdown with submitted vs indexed URL counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_inspect_url' => [
+                'class' => GoogleSearchConsoleInspectUrl::class,
+                'type' => 'read',
+                'name' => 'Google Search Console Inspect URL',
+                'description' => 'Check a URL\'s indexing status in Google Search Console. Returns: index verdict, coverage state, last crawl time, robots.txt state, indexing state, rich results, mobile usability, and AMP status.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_list_sitemaps' => [
+                'class' => GoogleSearchConsoleListSitemaps::class,
+                'type' => 'read',
+                'name' => 'Google Search Console List Sitemaps',
+                'description' => 'List all submitted sitemaps for a Google Search Console property. Returns each sitemap\'s path, last submitted/downloaded dates, whether it\'s a sitemap index, and content type counts (submitted vs indexed URLs).',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_list_sites' => [
+                'class' => GoogleSearchConsoleListSites::class,
+                'type' => 'read',
+                'name' => 'Google Search Console List Sites',
+                'description' => 'List all verified Google Search Console sites/properties with their permission levels. Use this first to discover available properties before querying performance data or inspecting URLs. Returns each site\'s URL (e.g., "sc-domain:example.com" or "https://www.example.com/") and your permission level.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_performance' => [
+                'class' => GoogleSearchConsolePerformance::class,
+                'type' => 'read',
+                'name' => 'Google Search Console Performance',
+                'description' => 'Query Google Search Console search performance data (clicks, impressions, CTR, position). Common queries: "top pages by clicks" → dimensions=["page"]. "Top search queries" → dimensions=["query"]. "Traffic trend" → dimensions=["date"]. "Mobile vs desktop" → dimensions=["device"]. "Blog section" → dimensions=["page"], filters=[{dimension:"page", operator:"contains", value:"/blog/"}]. Combine dimensions: dimensions=["query","device"] for queries by device.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_search_console_submit_sitemap' => [
+                'class' => GoogleSearchConsoleSubmitSitemap::class,
+                'type' => 'write',
+                'name' => 'Google Search Console Submit Sitemap',
+                'description' => 'Submit a new sitemap to Google Search Console.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

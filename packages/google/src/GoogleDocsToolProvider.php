@@ -173,7 +173,127 @@ class GoogleDocsToolProvider implements ToolProvider, ConfigurableIntegration, H
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_docs_add_bullets' => [
+                'class' => GoogleDocsAddBullets::class,
+                'type' => 'write',
+                'name' => 'Google Docs Add Bullets',
+                'description' => 'Add bullet or numbered list formatting to a range in a Google Docs document. Default preset is BULLET_DISC_CIRCLE_SQUARE. Use NUMBERED_DECIMAL_ALPHA_ROMAN for numbered lists.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_create' => [
+                'class' => GoogleDocsCreate::class,
+                'type' => 'read',
+                'name' => 'Google Docs Create',
+                'description' => 'Create a new blank Google Docs document. Returns the document ID and URL.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_delete_range' => [
+                'class' => GoogleDocsDeleteRange::class,
+                'type' => 'write',
+                'name' => 'Google Docs Delete Range',
+                'description' => 'Delete content in a Google Docs document by index range. Use google_docs_get_structure first to find the correct indexes.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_format_text' => [
+                'class' => GoogleDocsFormatText::class,
+                'type' => 'read',
+                'name' => 'Google Docs Format Text',
+                'description' => 'Apply formatting to a text range in a Google Docs document. Supports bold, italic, underline, strikethrough, fontSize (points), fontFamily, foregroundColor (hex like "#FF0000"), and link (URL).',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_get' => [
+                'class' => GoogleDocsGet::class,
+                'type' => 'read',
+                'name' => 'Google Docs Get',
+                'description' => 'Get the content of a Google Docs document. Returns plain text by default, or a structured outline with character indexes when format is "structured". The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_get_structure' => [
+                'class' => GoogleDocsGetStructure::class,
+                'type' => 'read',
+                'name' => 'Google Docs Get Structure',
+                'description' => 'Get a simplified structure of a Google Docs document showing heading hierarchy, paragraph indexes, and table positions. Essential before performing index-based editing operations. The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_insert_image' => [
+                'class' => GoogleDocsInsertImage::class,
+                'type' => 'read',
+                'name' => 'Google Docs Insert Image',
+                'description' => 'Insert an image from a URL into a Google Docs document. Supports PNG, JPEG, and GIF. Optionally specify width and height in points.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_insert_page_break' => [
+                'class' => GoogleDocsInsertPageBreak::class,
+                'type' => 'read',
+                'name' => 'Google Docs Insert Page Break',
+                'description' => 'Insert a page break into a Google Docs document. Omit index or set to -1 to insert at end.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_insert_table' => [
+                'class' => GoogleDocsInsertTable::class,
+                'type' => 'read',
+                'name' => 'Google Docs Insert Table',
+                'description' => 'Insert a table into a Google Docs document. Specify rows and columns. Omit index or set to -1 to insert at end.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_insert_text' => [
+                'class' => GoogleDocsInsertText::class,
+                'type' => 'read',
+                'name' => 'Google Docs Insert Text',
+                'description' => 'Insert text into a Google Docs document at a specific position or at the end. Omit index or set to -1 to append at end.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_remove_bullets' => [
+                'class' => GoogleDocsRemoveBullets::class,
+                'type' => 'write',
+                'name' => 'Google Docs Remove Bullets',
+                'description' => 'Remove bullet or numbered list formatting from a range in a Google Docs document.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_replace_all' => [
+                'class' => GoogleDocsReplaceAll::class,
+                'type' => 'read',
+                'name' => 'Google Docs Replace All',
+                'description' => 'Find and replace all occurrences of text in a Google Docs document. No indexes needed — this is the simplest way to edit text.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_search_text' => [
+                'class' => GoogleDocsSearchText::class,
+                'type' => 'read',
+                'name' => 'Google Docs Search Text',
+                'description' => 'Find all occurrences of text in a Google Docs document with their start/end indexes. Useful before format_text or delete_range operations. The document ID is the long string in the URL: docs.google.com/document/d/{documentId}/edit',
+                'icon' => 'ph:wrench',
+            ],
+            'google_docs_set_heading' => [
+                'class' => GoogleDocsSetHeading::class,
+                'type' => 'read',
+                'name' => 'Google Docs Set Heading',
+                'description' => 'Set paragraph style (heading level) for a range in a Google Docs document. Valid styles: HEADING_1 through HEADING_6, TITLE, SUBTITLE, NORMAL_TEXT.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

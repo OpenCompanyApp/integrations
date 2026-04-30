@@ -171,7 +171,120 @@ class GoogleFormsToolProvider implements ToolProvider, ConfigurableIntegration, 
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'client_id' => 'required|string',
+            'client_secret' => 'required|string',
+            'access_token' => 'nullable|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'google_forms_add_question' => [
+                'class' => GoogleFormsAddQuestion::class,
+                'type' => 'write',
+                'name' => 'Google Forms Add Question',
+                'description' => 'Add a question to a Google Form. Supports types: text, paragraph, multiple_choice, checkbox, dropdown, scale, date, time, rating. Use options for choice types. Use low/high/lowLabel/highLabel for scale. Use ratingScale/ratingIcon for rating. Use includeTime/includeYear for date. Use duration for time. Omit index to add at end. Use google_forms_get to see current form structure before editing.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_add_section' => [
+                'class' => GoogleFormsAddSection::class,
+                'type' => 'write',
+                'name' => 'Google Forms Add Section',
+                'description' => 'Add a page break / section to a Google Form. Omit index to add at end. Use google_forms_get to see current form structure.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_add_text_item' => [
+                'class' => GoogleFormsAddTextItem::class,
+                'type' => 'write',
+                'name' => 'Google Forms Add Text Item',
+                'description' => 'Add a static text block to a Google Form. Omit index to add at end. Use google_forms_get to see current form structure.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_create' => [
+                'class' => GoogleFormsCreate::class,
+                'type' => 'read',
+                'name' => 'Google Forms Create',
+                'description' => 'Create a new Google Form with a title, optional description, and optional quiz mode. Auto-publishes. Returns form ID, edit URL, and responder URL.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_delete_item' => [
+                'class' => GoogleFormsDeleteItem::class,
+                'type' => 'write',
+                'name' => 'Google Forms Delete Item',
+                'description' => 'Delete an item from a Google Form by its 0-based index. Use google_forms_get to see current form structure.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_get' => [
+                'class' => GoogleFormsGet::class,
+                'type' => 'read',
+                'name' => 'Google Forms Get',
+                'description' => 'Get a Google Form\'s structure: title, description, settings, all questions with types/options/IDs, and responder URL. The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit To list all forms, use google_drive_search with file type "application/vnd.google-apps.form".',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_get_response' => [
+                'class' => GoogleFormsGetResponse::class,
+                'type' => 'read',
+                'name' => 'Google Forms Get Response',
+                'description' => 'Get a single response to a Google Form by response ID, with question labels. The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_list_responses' => [
+                'class' => GoogleFormsListResponses::class,
+                'type' => 'read',
+                'name' => 'Google Forms List Responses',
+                'description' => 'List responses to a Google Form with question labels. The form ID is the long string in the Google Forms URL: docs.google.com/forms/d/{formId}/edit',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_move_item' => [
+                'class' => GoogleFormsMoveItem::class,
+                'type' => 'write',
+                'name' => 'Google Forms Move Item',
+                'description' => 'Move an item in a Google Form from one 0-based index to another. Use google_forms_get to see current form structure.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_publish' => [
+                'class' => GoogleFormsPublish::class,
+                'type' => 'read',
+                'name' => 'Google Forms Publish',
+                'description' => 'Set publish settings for a Google Form: publish/unpublish and accept/stop accepting responses. At least one of published or acceptingResponses must be provided.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_update_info' => [
+                'class' => GoogleFormsUpdateInfo::class,
+                'type' => 'write',
+                'name' => 'Google Forms Update Info',
+                'description' => 'Update a Google Form title and/or description. At least one of title or description must be provided.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_update_question' => [
+                'class' => GoogleFormsUpdateQuestion::class,
+                'type' => 'write',
+                'name' => 'Google Forms Update Question',
+                'description' => 'Update a question in a Google Form by its 0-based index. Can update title, description, required status, and options (for choice questions). Use google_forms_get to see current form structure.',
+                'icon' => 'ph:wrench',
+            ],
+            'google_forms_update_settings' => [
+                'class' => GoogleFormsUpdateSettings::class,
+                'type' => 'write',
+                'name' => 'Google Forms Update Settings',
+                'description' => 'Update Google Form settings such as quiz mode and email collection. At least one setting must be provided.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/google.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'access_token', 'type' => 'oauth', 'label' => 'Google Account', 'required' => true],

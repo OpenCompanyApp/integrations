@@ -109,6 +109,66 @@ class NasaToolProvider implements ToolProvider, HasIntegrationCapabilities
             'docs_url' => 'https://api.nasa.gov/',
         ];
     }
+
+    public function tools(): array
+    {
+        return [
+            'nasa_get_apod' => [
+                'class' => NasaGetApod::class,
+                'type' => 'read',
+                'name' => 'NASA Get APOD',
+                'description' => 'Get the NASA Astronomy Picture of the Day (APOD). Returns the daily astronomical image or photo along with an explanation written by a professional astronomer. You can request a specific date or a range of dates.',
+                'icon' => 'ph:wrench',
+            ],
+            'nasa_get_asteroid' => [
+                'class' => NasaGetAsteroid::class,
+                'type' => 'read',
+                'name' => 'NASA Get Asteroid',
+                'description' => 'Get detailed information about a specific Near Earth Object (asteroid) by its NASA ID. Returns orbital data, estimated diameter, close approach history, and hazard assessment.',
+                'icon' => 'ph:wrench',
+            ],
+            'nasa_get_asteroids' => [
+                'class' => NasaGetAsteroids::class,
+                'type' => 'read',
+                'name' => 'NASA Get Asteroids',
+                'description' => 'Get Near Earth Objects (asteroids) for a date range from NASA. Returns a list of asteroids with their estimated diameter, velocity, distance from Earth, and whether they are potentially hazardous.',
+                'icon' => 'ph:wrench',
+            ],
+            'nasa_get_current_user' => [
+                'class' => NasaGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'NASA Get Current User',
+                'description' => 'Get information about the current NASA API configuration. The NASA API is public and does not require user authentication — this tool returns the API key status and available endpoints.',
+                'icon' => 'ph:wrench',
+            ],
+            'nasa_get_mars_rover_photos' => [
+                'class' => NasaGetMarsRoverPhotos::class,
+                'type' => 'read',
+                'name' => 'NASA Get Mars Rover Photos',
+                'description' => 'Get photos from NASA Mars rovers (Curiosity, Opportunity, Spirit, Perseverance). Query by sol (Martian day) or Earth date, and optionally filter by camera. Returns photo URLs and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'nasa_search_images' => [
+                'class' => NasaSearchImages::class,
+                'type' => 'read',
+                'name' => 'NASA Search Images',
+                'description' => 'Search the NASA Image and Video Library for space, astronomy, and mission imagery. Returns image URLs, titles, descriptions, and metadata from NASA\'s vast collection.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/nasa.md';
+    }
+
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
     public function credentialFields(): array
     {
         return [

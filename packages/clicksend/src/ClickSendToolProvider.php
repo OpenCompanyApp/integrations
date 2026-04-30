@@ -105,7 +105,125 @@ public function integrationMeta(): array
             'badge' => 'verified',
             'docs_url' => 'https://developers.clicksend.com/docs/rest/',
         ];
-    }public function credentialFields(): array
+    }
+        public function configSchema(): array
+    {
+        return $this->credentialFields();
+    }
+
+    /**
+     * Validate that required credentials were supplied for this integration.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(array $config): array
+    {
+        foreach ($this->credentialFields() as $field) {
+            if (($field['required'] ?? true) && empty($config[$field['key']])) {
+                return [
+                    'success' => false,
+                    'error' => ($field['label'] ?? $field['key']) . ' is required.',
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Required credentials are configured. API access will be verified when tools run.',
+        ];
+    }
+public function validationRules(): array
+    {
+        return [
+            'username' => 'required|string',
+            'api_key' => 'required|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'clicksend_get_account_balance' => [
+                'class' => ClickSendGetAccountBalance::class,
+                'type' => 'read',
+                'name' => 'Clicksend Get Account Balance',
+                'description' => 'Get the current ClickSend account balance.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_get_email_history' => [
+                'class' => ClickSendGetEmailHistory::class,
+                'type' => 'read',
+                'name' => 'Clicksend Get Email History',
+                'description' => 'Get email message history from ClickSend with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_get_sms_history' => [
+                'class' => ClickSendGetSmsHistory::class,
+                'type' => 'read',
+                'name' => 'Clicksend Get SMS History',
+                'description' => 'Get SMS message history from ClickSend. Supports date range filtering and pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_get_sms_price' => [
+                'class' => ClickSendGetSmsPrice::class,
+                'type' => 'read',
+                'name' => 'Clicksend Get SMS Price',
+                'description' => 'Get pricing for SMS messages before sending. Uses the same message format as send SMS but returns cost estimates only.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_get_voice_history' => [
+                'class' => ClickSendGetVoiceHistory::class,
+                'type' => 'read',
+                'name' => 'Clicksend Get Voice History',
+                'description' => 'Get voice message history from ClickSend with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_list_contact_lists' => [
+                'class' => ClickSendListContactLists::class,
+                'type' => 'read',
+                'name' => 'Clicksend List Contact Lists',
+                'description' => 'List all contact lists from ClickSend with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_send_email' => [
+                'class' => ClickSendSendEmail::class,
+                'type' => 'write',
+                'name' => 'Clicksend Send Email',
+                'description' => 'Send an email message via ClickSend. Requires recipient, subject, and body.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_send_post_letter' => [
+                'class' => ClickSendSendPostLetter::class,
+                'type' => 'write',
+                'name' => 'Clicksend Send Post Letter',
+                'description' => 'Send a post letter via ClickSend. Provide a file URL or template ID with recipient details.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_send_sms' => [
+                'class' => ClickSendSendSms::class,
+                'type' => 'write',
+                'name' => 'Clicksend Send SMS',
+                'description' => 'Send one or more SMS messages via ClickSend. Each message requires a "to" phone number and "body" text.',
+                'icon' => 'ph:wrench',
+            ],
+            'clicksend_send_voice' => [
+                'class' => ClickSendSendVoice::class,
+                'type' => 'write',
+                'name' => 'Clicksend Send Voice',
+                'description' => 'Send one or more voice messages via ClickSend. Each message requires a "to" phone number and "body" text.',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/clicksend.md';
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'username', 'type' => 'text', 'label' => 'Username', 'required' => true],

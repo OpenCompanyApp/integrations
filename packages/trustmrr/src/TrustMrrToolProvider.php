@@ -136,7 +136,46 @@ class TrustMrrToolProvider implements ToolProvider, ConfigurableIntegration, Has
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
-    }    public function credentialFields(): array
+    }
+    public function validationRules(): array
+    {
+        return [
+            'api_key' => 'required|string',
+        ];
+    }
+
+    public function tools(): array
+    {
+        return [
+            'trustmrr_get_startup' => [
+                'class' => TrustMrrGetStartup::class,
+                'type' => 'read',
+                'name' => 'Trustmrr Get Startup',
+                'description' => 'Get full details for a single startup on TrustMRR by its slug. Returns revenue data, tech stack, cofounders, social metrics, asking price, and more. Use the slug from the list startups tool.',
+                'icon' => 'ph:wrench',
+            ],
+            'trustmrr_list_startups' => [
+                'class' => TrustMrrListStartups::class,
+                'type' => 'read',
+                'name' => 'Trustmrr List Startups',
+                'description' => 'Browse and filter startups with verified revenue on TrustMRR. Filter by sale status, category, revenue range, MRR, growth, or asking price. All monetary values are in USD cents (e.g. 100000 = $1,000).',
+                'icon' => 'ph:wrench',
+            ],
+        ];
+    }
+
+
+    public function luaDocsPath(): ?string
+    {
+        return dirname(__DIR__) . '/lua-docs/trustmrr.md';
+    }
+
+    public function isIntegration(): bool
+    {
+        return true;
+    }
+
+    public function credentialFields(): array
     {
         return [
             ['key' => 'api_key', 'type' => 'secret', 'label' => 'API Key', 'required' => true],

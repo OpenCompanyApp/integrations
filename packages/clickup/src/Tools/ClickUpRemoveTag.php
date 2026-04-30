@@ -47,14 +47,9 @@ class ClickUpRemoveTag implements Tool
                 return ToolResult::error('tag_name is required.');
             }
 
-            // Handle custom task IDs
-            $effectiveId = $taskId;
             $queryParams = $this->service->withCustomIdParams($taskId);
-            if (! empty($queryParams)) {
-                $effectiveId .= '?' . http_build_query($queryParams);
-            }
 
-            $this->service->removeTagFromTask($effectiveId, $tagName);
+            $this->service->removeTagFromTask($taskId, $tagName, $queryParams);
 
             return ToolResult::success("Tag '{$tagName}' removed from task successfully.");
         } catch (\Throwable $e) {

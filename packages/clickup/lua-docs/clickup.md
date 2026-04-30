@@ -195,6 +195,19 @@ app.integrations.clickup.create_task({
 })
 ```
 
+### Attach a file
+
+ClickUp task attachments require multipart upload. Use a readable local path;
+public URL passthrough is not supported by ClickUp's v2 task attachment endpoint.
+
+```lua
+app.integrations.clickup.attach_file({
+  task_id = "abc123",
+  file_path = "/tmp/report.pdf",
+  filename = "Q1-report.pdf"
+})
+```
+
 ## Tips
 
 - **Time durations are in milliseconds**: 1 min = 60000, 1 hour = 3600000, 1 day = 86400000
@@ -205,6 +218,7 @@ app.integrations.clickup.create_task({
 - **Assignees** use comma-separated numeric user IDs, not names -- always resolve first
 - **Statuses** are list-specific strings (e.g., `"open"`, `"in progress"`, `"closed"`) -- check the list for valid values
 - **time_estimate** on `update_task` is in **minutes** (converted to ms internally)
+- The service layer tracks additional official ClickUp v2/v3 endpoints such as custom fields, checklists, comments, spaces, webhooks, docs, and chat. Only the tools listed in the generated namespace are first-class Lua tools.
 
 ---
 

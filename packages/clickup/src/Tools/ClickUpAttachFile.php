@@ -20,8 +20,9 @@ class ClickUpAttachFile implements Tool
     public function description(): string
     {
         return <<<'MD'
-        Attach a file to a ClickUp task via URL.
-        The file URL must be publicly accessible (http/https).
+        Upload a local file attachment to a ClickUp task.
+        ClickUp's official task attachment endpoint requires multipart file upload;
+        cloud URL passthrough is not supported by this v2 endpoint.
         MD;
     }
 
@@ -29,7 +30,9 @@ class ClickUpAttachFile implements Tool
     {
         return [
             'task_id' => ['type' => 'string', 'required' => true, 'description' => 'Task ID to attach the file to. Supports custom IDs like "DEV-42".'],
-            'file_url' => ['type' => 'string', 'required' => true, 'description' => 'Public URL of the file to attach (http/https).'],
+            'file_path' => ['type' => 'string', 'required' => true, 'description' => 'Readable local file path to upload.'],
+            'filename' => ['type' => 'string', 'description' => 'Optional filename override for the uploaded attachment.'],
+            'file_url' => ['type' => 'string', 'description' => 'Deprecated. Public URL uploads are not supported by ClickUp v2 task attachments.'],
         ];
     }
 
@@ -41,25 +44,24 @@ class ClickUpAttachFile implements Tool
             }
 
             $taskId = $args['task_id'] ?? '';
-            $fileUrl = $args['file_url'] ?? '';
+            $filePath = $args['file_path'] ?? '';
 
             if (empty($taskId)) {
                 return ToolResult::error('task_id is required.');
             }
-            if (empty($fileUrl)) {
-                return ToolResult::error('file_url is required.');
+            if (! empty($args['file_url']) && empty($args['file_path'])) {
+                return ToolResult::error('file_url is not supported by ClickUp task attachments. Provide file_path for multipart upload.');
+            }
+            if (empty($filePath)) {
+                return ToolResult::error('file_path is required.');
             }
 
-            // Handle custom task IDs
-            $effectiveId = $taskId;
-            $queryParams = $this->service->withCustomIdParams($taskId);
-            if (! empty($queryParams)) {
-                $effectiveId .= '?' . http_build_query($queryParams);
-            }
-
-            $result = $this->service->attachFileToTask($effectiveId, [
-                'url' => $fileUrl,
-            ]);
+            $result = $this->service->attachFileToTask(
+                $taskId,
+                $filePath,
+                $args['filename'] ?? null,
+                $this->service->withCustomIdParams($taskId),
+            );
 
             return ToolResult::success($result);
         } catch (\Throwable $e) {

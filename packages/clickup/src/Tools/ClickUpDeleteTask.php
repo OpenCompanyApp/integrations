@@ -45,13 +45,7 @@ class ClickUpDeleteTask implements Tool
                 return ToolResult::error('task_id is required.');
             }
 
-            $queryParams = $this->service->withCustomIdParams($taskId);
-            $deleteId = $taskId;
-            if (! empty($queryParams)) {
-                $deleteId .= '?' . http_build_query($queryParams);
-            }
-
-            $this->service->deleteTask($deleteId);
+            $this->service->deleteTask($taskId, $this->service->withCustomIdParams($taskId));
 
             return ToolResult::success("Task '{$taskId}' deleted successfully.");
         } catch (\Throwable $e) {

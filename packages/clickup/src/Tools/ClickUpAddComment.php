@@ -49,12 +49,7 @@ class ClickUpAddComment implements Tool
                 return ToolResult::error('comment_text is required.');
             }
 
-            // Handle custom task IDs
-            $effectiveId = $taskId;
             $queryParams = $this->service->withCustomIdParams($taskId);
-            if (! empty($queryParams)) {
-                $effectiveId .= '?' . http_build_query($queryParams);
-            }
 
             $data = [
                 'comment_text' => $text,
@@ -68,7 +63,7 @@ class ClickUpAddComment implements Tool
                 $data['notify_all'] = true;
             }
 
-            $result = $this->service->createTaskComment($effectiveId, $data);
+            $result = $this->service->createTaskComment($taskId, $data, $queryParams);
 
             return ToolResult::success(['id' => $result['id'] ?? '']);
         } catch (\Throwable $e) {

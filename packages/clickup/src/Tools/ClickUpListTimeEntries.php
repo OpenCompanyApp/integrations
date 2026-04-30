@@ -41,14 +41,9 @@ class ClickUpListTimeEntries implements Tool
                 return ToolResult::error('task_id is required.');
             }
 
-            // Handle custom task IDs
-            $effectiveId = $taskId;
             $queryParams = $this->service->withCustomIdParams($taskId);
-            if (! empty($queryParams)) {
-                $effectiveId .= '?' . http_build_query($queryParams);
-            }
 
-            $result = $this->service->getTaskTimeEntries($effectiveId);
+            $result = $this->service->getTaskTimeEntries($taskId, $queryParams);
             $entries = $result['data'] ?? [];
 
             if (empty($entries)) {

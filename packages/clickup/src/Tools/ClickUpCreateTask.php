@@ -35,7 +35,7 @@ class ClickUpCreateTask implements Tool
             'description' => ['type' => 'string', 'description' => 'Task description text.'],
             'status' => ['type' => 'string', 'description' => 'Task status (must be valid for the list).'],
             'priority' => ['type' => 'integer', 'description' => 'Priority: 1=urgent, 2=high, 3=normal, 4=low.'],
-            'assignees' => ['type' => 'string', 'description' => 'Comma-separated user IDs to assign. Use clickup_members to resolve names to IDs.'],
+            'assignees' => ['type' => 'string', 'description' => 'Comma-separated user IDs to assign. Use clickup_resolve_members to resolve names to IDs.'],
             'due_date' => ['type' => 'string', 'description' => 'Due date in ISO 8601 format (e.g., "2026-03-15" or "2026-03-15T14:30:00").'],
             'start_date' => ['type' => 'string', 'description' => 'Start date in ISO 8601 format.'],
             'tags' => ['type' => 'string', 'description' => 'Comma-separated tag names. Tags must exist in the space.'],

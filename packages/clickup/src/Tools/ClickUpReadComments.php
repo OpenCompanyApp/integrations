@@ -43,12 +43,7 @@ class ClickUpReadComments implements Tool
                 return ToolResult::error('task_id is required.');
             }
 
-            // Handle custom task IDs
-            $effectiveId = $taskId;
             $queryParams = $this->service->withCustomIdParams($taskId);
-            if (! empty($queryParams)) {
-                $effectiveId .= '?' . http_build_query($queryParams);
-            }
 
             $params = [];
             if (isset($args['start'])) {
@@ -58,7 +53,7 @@ class ClickUpReadComments implements Tool
                 $params['start_id'] = $args['start_id'];
             }
 
-            $result = $this->service->getTaskComments($effectiveId, $params);
+            $result = $this->service->getTaskComments($taskId, array_merge($queryParams, $params));
             $comments = $result['comments'] ?? [];
 
             if (empty($comments)) {

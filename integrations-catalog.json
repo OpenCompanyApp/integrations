@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-04-29T21:26:51+00:00",
+    "generated_at": "2026-04-30T08:33:39+00:00",
     "total_integrations": 452,
     "total_tools": 3729,
     "integrations": [
@@ -31800,14 +31800,14 @@
             "package": "clickup",
             "route_slug": "clickup",
             "name": "ClickUp",
-            "description": "Project management, tasks, docs, and time tracking",
+            "description": "Project management, tasks, docs, chat, and time tracking.",
             "short_description": "Project management",
             "label": "ClickUp",
             "category": "productivity",
             "badge": "verified",
             "icon": "ph:kanban",
             "logo": "simple-icons:clickup",
-            "docs_url": "https://clickup.com/api",
+            "docs_url": "https://developer.clickup.com",
             "auth_type": "api_token",
             "auth_strategy": "api_token",
             "auth": {
@@ -31890,10 +31890,10 @@
                 "canonical_slug": "clickup",
                 "canonical_url": "/integrations/clickup",
                 "page_title": "ClickUp Integration for AI Agents",
-                "meta_description": "Connect ClickUp to AI agents to project management, tasks, docs, and time tracking.",
+                "meta_description": "Connect ClickUp to AI agents to project management, tasks, docs, chat, and time tracking.",
                 "h1": "ClickUp Integration",
                 "og_title": "ClickUp Integration for AI Agents",
-                "og_description": "Connect ClickUp to AI agents to project management, tasks, docs, and time tracking.",
+                "og_description": "Connect ClickUp to AI agents to project management, tasks, docs, chat, and time tracking.",
                 "og_image": null,
                 "auth_summary": "Credentials can be configured manually in web or CLI hosts.",
                 "auth_strategy": "api_token",
@@ -31916,397 +31916,22 @@
             "readme": {
                 "exists": true,
                 "title": "ClickUp Integration",
-                "excerpt": "ClickUp project management integration for the Laravel AI SDK. Part of the OpenCompany integration ecosystem — an open platform where AI agents collaborate with humans to run organizations."
+                "excerpt": "ClickUp project management integration for OpenCompany. Supports task workflows, workspace hierarchy, members, comments, tags, attachments, time tracking, lists, folders, chat, docs, and webhook triggers."
             },
             "tool_count": 34,
-            "read_tool_count": 20,
-            "write_tool_count": 14,
+            "read_tool_count": 15,
+            "write_tool_count": 19,
             "action_tool_count": 0,
             "trigger_count": 4,
             "has_triggers": true,
             "tools": [
                 {
-                    "slug": "clickup_add_comment",
-                    "function_name": "clickup_add_comment",
-                    "name": "Clickup Add Comment",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Add a new comment to a ClickUp task.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
-                        },
-                        "comment_text": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Comment text."
-                        },
-                        "assignee": {
-                            "type": "string",
-                            "description": "User ID to assign the comment to."
-                        },
-                        "notify_all": {
-                            "type": "boolean",
-                            "description": "Notify all assignees. Default: false."
-                        }
-                    },
-                    "parameter_count": 4,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpAddComment.php"
-                },
-                {
-                    "slug": "clickup_add_tag",
-                    "function_name": "clickup_add_tag",
-                    "name": "Clickup Add Tag",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Add an existing tag to a ClickUp task. The tag must already exist in the space.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
-                        },
-                        "tag_name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Tag name to add."
-                        }
-                    },
-                    "parameter_count": 2,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpAddTag.php"
-                },
-                {
-                    "slug": "clickup_attach_file",
-                    "function_name": "clickup_attach_file",
-                    "name": "Clickup Attach File",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Attach a file to a ClickUp task via URL.\n        The file URL must be publicly accessible (http/https).",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID to attach the file to. Supports custom IDs like \"DEV-42\"."
-                        },
-                        "file_url": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Public URL of the file to attach (http/https)."
-                        }
-                    },
-                    "parameter_count": 2,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpAttachFile.php"
-                },
-                {
-                    "slug": "clickup_create_doc_page",
-                    "function_name": "clickup_create_doc_page",
-                    "name": "Clickup Create Doc Page",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Create a new page in a ClickUp document.",
-                    "parameters": {
-                        "document_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Document ID."
-                        },
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Page name/title."
-                        },
-                        "content": {
-                            "type": "string",
-                            "description": "Page content."
-                        },
-                        "content_format": {
-                            "type": "string",
-                            "description": "Content format: \"text/md\" (default) or \"text/html\"."
-                        },
-                        "sub_title": {
-                            "type": "string",
-                            "description": "Page subtitle."
-                        },
-                        "parent_page_id": {
-                            "type": "string",
-                            "description": "Parent page ID for creating sub-pages."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 7,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpCreateDocPage.php"
-                },
-                {
-                    "slug": "clickup_create_folder",
-                    "function_name": "clickup_create_folder",
-                    "name": "Clickup Create Folder",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Create a new folder in a ClickUp space.",
-                    "parameters": {
-                        "space_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Space ID to create the folder in."
-                        },
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Folder name."
-                        }
-                    },
-                    "parameter_count": 2,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpCreateFolder.php"
-                },
-                {
-                    "slug": "clickup_create_list",
-                    "function_name": "clickup_create_list",
-                    "name": "Clickup Create List",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Create a new list in a ClickUp space.",
-                    "parameters": {
-                        "space_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Space ID to create the list in."
-                        },
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "List name."
-                        },
-                        "content": {
-                            "type": "string",
-                            "description": "List description/content."
-                        },
-                        "status": {
-                            "type": "string",
-                            "description": "List status."
-                        }
-                    },
-                    "parameter_count": 4,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpCreateList.php"
-                },
-                {
-                    "slug": "clickup_create_list_in_folder",
-                    "function_name": "clickup_create_list_in_folder",
-                    "name": "Clickup Create List In Folder",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Create a new list in a ClickUp folder.",
-                    "parameters": {
-                        "folder_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Folder ID to create the list in."
-                        },
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "List name."
-                        },
-                        "content": {
-                            "type": "string",
-                            "description": "List description/content."
-                        },
-                        "status": {
-                            "type": "string",
-                            "description": "List status."
-                        }
-                    },
-                    "parameter_count": 4,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpCreateListInFolder.php"
-                },
-                {
-                    "slug": "clickup_create_task",
-                    "function_name": "clickup_create_task",
-                    "name": "Clickup Create Task",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Create a new task in a ClickUp list.\n        Requires a list ID and task name. Supports description, status,\n        priority, assignees, dates, tags, and creating subtasks via parentTaskId.\n        Use clickup_get_hierarchy to find list IDs.",
-                    "parameters": {
-                        "list_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "List ID to create the task in."
-                        },
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task name."
-                        },
-                        "description": {
-                            "type": "string",
-                            "description": "Task description text."
-                        },
-                        "status": {
-                            "type": "string",
-                            "description": "Task status (must be valid for the list)."
-                        },
-                        "priority": {
-                            "type": "integer",
-                            "description": "Priority: 1=urgent, 2=high, 3=normal, 4=low."
-                        },
-                        "assignees": {
-                            "type": "string",
-                            "description": "Comma-separated user IDs to assign. Use clickup_members to resolve names to IDs."
-                        },
-                        "due_date": {
-                            "type": "string",
-                            "description": "Due date in ISO 8601 format (e.g., \"2026-03-15\" or \"2026-03-15T14:30:00\")."
-                        },
-                        "start_date": {
-                            "type": "string",
-                            "description": "Start date in ISO 8601 format."
-                        },
-                        "tags": {
-                            "type": "string",
-                            "description": "Comma-separated tag names. Tags must exist in the space."
-                        },
-                        "parent_task_id": {
-                            "type": "string",
-                            "description": "Parent task ID to create this as a subtask."
-                        }
-                    },
-                    "parameter_count": 10,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpCreateTask.php"
-                },
-                {
-                    "slug": "clickup_current_time_entry",
-                    "function_name": "clickup_current_time_entry",
-                    "name": "Clickup Current Time Entry",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get the currently running time tracking entry, if any.",
-                    "parameters": {
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpCurrentTimeEntry.php"
-                },
-                {
-                    "slug": "clickup_delete_task",
-                    "function_name": "clickup_delete_task",
-                    "name": "Clickup Delete Task",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Delete a ClickUp task permanently.\n        Supports custom task IDs like \"DEV-42\".\n        This action cannot be undone.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID to delete. Supports custom IDs like \"DEV-42\"."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpDeleteTask.php"
-                },
-                {
-                    "slug": "clickup_find_member",
-                    "function_name": "clickup_find_member",
-                    "name": "Clickup Find Member",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Find a workspace member by name or email.",
-                    "parameters": {
-                        "query": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Name or email to search for."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpFindMember.php"
-                },
-                {
-                    "slug": "clickup_get_doc_pages",
-                    "function_name": "clickup_get_doc_pages",
-                    "name": "Clickup Get Doc Pages",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get the content of specific pages from a ClickUp document.",
-                    "parameters": {
-                        "document_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Document ID."
-                        },
-                        "page_ids": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Comma-separated page IDs to retrieve."
-                        },
-                        "content_format": {
-                            "type": "string",
-                            "description": "Content format: \"text/md\" (default) or \"text/html\"."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 4,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpGetDocPages.php"
-                },
-                {
-                    "slug": "clickup_get_folder",
-                    "function_name": "clickup_get_folder",
-                    "name": "Clickup Get Folder",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get details of a ClickUp folder by ID, including its lists.",
-                    "parameters": {
-                        "folder_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Folder ID."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpGetFolder.php"
-                },
-                {
                     "slug": "clickup_get_hierarchy",
                     "function_name": "clickup_get_hierarchy",
-                    "name": "Clickup Get Hierarchy",
+                    "name": "Get Hierarchy",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:tree-structure",
+                    "short_description": "List ClickUp workspaces, spaces, folders, and lists.",
                     "description": "Get the ClickUp workspace hierarchy — spaces, folders, and lists.\n        Returns a tree structure with IDs and names for navigation.\n        Optionally filter to specific space IDs.",
                     "parameters": {
                         "workspace_id": {
@@ -32323,54 +31948,105 @@
                     "source_file": "packages/clickup/src/Tools/ClickUpGetHierarchy.php"
                 },
                 {
-                    "slug": "clickup_get_list",
-                    "function_name": "clickup_get_list",
-                    "name": "Clickup Get List",
+                    "slug": "clickup_search",
+                    "function_name": "clickup_search",
+                    "name": "Search Tasks",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get details of a ClickUp list by ID.",
+                    "icon": "ph:magnifying-glass",
+                    "short_description": "Search tasks across the configured workspace.",
+                    "description": "Search tasks across the ClickUp workspace.\n        Supports filtering by query, statuses, assignees, and more.\n        Returns matching tasks with their details.",
                     "parameters": {
-                        "list_id": {
+                        "query": {
+                            "type": "string",
+                            "description": "Search query to match task names."
+                        },
+                        "statuses": {
+                            "type": "string",
+                            "description": "Comma-separated statuses to filter by (e.g., \"open,in progress\")."
+                        },
+                        "assignees": {
+                            "type": "string",
+                            "description": "Comma-separated assignee user IDs."
+                        },
+                        "include_closed": {
+                            "type": "boolean",
+                            "description": "Include closed tasks in results. Default: false."
+                        },
+                        "include_subtasks": {
+                            "type": "boolean",
+                            "description": "Include subtasks in results. Default: false."
+                        },
+                        "page": {
+                            "type": "integer",
+                            "description": "Page number for pagination (starts at 0)."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 7,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpSearch.php"
+                },
+                {
+                    "slug": "clickup_list_members",
+                    "function_name": "clickup_list_members",
+                    "name": "List Members",
+                    "type": "read",
+                    "icon": "ph:users",
+                    "short_description": "List ClickUp workspace members.",
+                    "description": "Get all workspace members with their IDs, names, emails, and roles.",
+                    "parameters": [],
+                    "parameter_count": 0,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpListMembers.php"
+                },
+                {
+                    "slug": "clickup_find_member",
+                    "function_name": "clickup_find_member",
+                    "name": "Find Member",
+                    "type": "read",
+                    "icon": "ph:user-focus",
+                    "short_description": "Find ClickUp members by name or email.",
+                    "description": "Find a workspace member by name or email.",
+                    "parameters": {
+                        "query": {
                             "type": "string",
                             "required": true,
-                            "description": "List ID."
+                            "description": "Name or email to search for."
                         }
                     },
                     "parameter_count": 1,
                     "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpGetList.php"
+                    "source_file": "packages/clickup/src/Tools/ClickUpFindMember.php"
                 },
                 {
-                    "slug": "clickup_get_task",
-                    "function_name": "clickup_get_task",
-                    "name": "Clickup Get Task",
+                    "slug": "clickup_resolve_members",
+                    "function_name": "clickup_resolve_members",
+                    "name": "Resolve Members",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get a single ClickUp task by ID with full details.\n        Supports both regular IDs and custom IDs (e.g., \"DEV-42\").\n        Optionally include subtask details.",
+                    "icon": "ph:identification-card",
+                    "short_description": "Resolve names or emails to ClickUp user IDs.",
+                    "description": "Convert member names or emails to ClickUp user IDs for assigning tasks.",
                     "parameters": {
-                        "task_id": {
+                        "query": {
                             "type": "string",
                             "required": true,
-                            "description": "Task ID. Supports regular IDs or custom IDs like \"DEV-42\"."
-                        },
-                        "include_subtasks": {
-                            "type": "boolean",
-                            "description": "Include subtask details. Default: false."
+                            "description": "Comma-separated names or emails to resolve to user IDs."
                         }
                     },
-                    "parameter_count": 2,
+                    "parameter_count": 1,
                     "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpGetTask.php"
+                    "source_file": "packages/clickup/src/Tools/ClickUpResolveMembers.php"
                 },
                 {
                     "slug": "clickup_get_tasks",
                     "function_name": "clickup_get_tasks",
-                    "name": "Clickup Get Tasks",
+                    "name": "Get Tasks",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:check-square",
+                    "short_description": "List tasks in a ClickUp list with filters.",
                     "description": "Get all tasks in a ClickUp list.\n        Supports filtering by statuses, assignees, and due dates.\n        Use clickup_get_hierarchy first to find the list ID.",
                     "parameters": {
                         "list_id": {
@@ -32408,487 +32084,91 @@
                     "source_file": "packages/clickup/src/Tools/ClickUpGetTasks.php"
                 },
                 {
-                    "slug": "clickup_list_channels",
-                    "function_name": "clickup_list_channels",
-                    "name": "Clickup List Channels",
+                    "slug": "clickup_get_task",
+                    "function_name": "clickup_get_task",
+                    "name": "Get Task",
                     "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "List all chat channels in the ClickUp workspace.",
-                    "parameters": {
-                        "cursor": {
-                            "type": "string",
-                            "description": "Pagination cursor."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 2,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpListChannels.php"
-                },
-                {
-                    "slug": "clickup_list_doc_pages",
-                    "function_name": "clickup_list_doc_pages",
-                    "name": "Clickup List Doc Pages",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "List all pages in a ClickUp document.",
-                    "parameters": {
-                        "document_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Document ID."
-                        },
-                        "max_depth": {
-                            "type": "integer",
-                            "description": "Max page depth (-1 for unlimited)."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 3,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpListDocPages.php"
-                },
-                {
-                    "slug": "clickup_list_members",
-                    "function_name": "clickup_list_members",
-                    "name": "Clickup List Members",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get all workspace members with their IDs, names, emails, and roles.",
-                    "parameters": [],
-                    "parameter_count": 0,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpListMembers.php"
-                },
-                {
-                    "slug": "clickup_list_time_entries",
-                    "function_name": "clickup_list_time_entries",
-                    "name": "Clickup List Time Entries",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get all time entries for a ClickUp task.",
+                    "icon": "ph:check-circle",
+                    "short_description": "Get one ClickUp task by regular ID or custom task ID.",
+                    "description": "Get a single ClickUp task by ID with full details.\n        Supports both regular IDs and custom IDs (e.g., \"DEV-42\").\n        Optionally include subtask details.",
                     "parameters": {
                         "task_id": {
                             "type": "string",
                             "required": true,
-                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpListTimeEntries.php"
-                },
-                {
-                    "slug": "clickup_log_time",
-                    "function_name": "clickup_log_time",
-                    "name": "Clickup Log Time",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Add a manual time entry to a ClickUp task.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID."
-                        },
-                        "start": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Start time in ISO 8601 format."
-                        },
-                        "duration": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Duration in milliseconds."
-                        },
-                        "description": {
-                            "type": "string",
-                            "description": "Description for the time entry."
-                        },
-                        "billable": {
-                            "type": "boolean",
-                            "description": "Whether the time is billable."
-                        },
-                        "tags": {
-                            "type": "string",
-                            "description": "Comma-separated tag names for the time entry."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 7,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpLogTime.php"
-                },
-                {
-                    "slug": "clickup_manage_document",
-                    "function_name": "clickup_manage_document",
-                    "name": "Clickup Manage Document",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Create a ClickUp document in a space, folder, or list.\n        Specify the parent container and visibility (PUBLIC or PRIVATE).",
-                    "parameters": {
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Document name/title."
-                        },
-                        "parent_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "ID of the parent container (space, folder, or list)."
-                        },
-                        "parent_type": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Type of parent: \"space\", \"folder\", \"list\", \"everything\", or \"workspace\"."
-                        },
-                        "visibility": {
-                            "type": "string",
-                            "description": "Document visibility: \"PUBLIC\" or \"PRIVATE\". Default: PUBLIC."
-                        },
-                        "create_page": {
-                            "type": "boolean",
-                            "description": "Create an initial blank page. Default: true."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 6,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpManageDocument.php"
-                },
-                {
-                    "slug": "clickup_read_comments",
-                    "function_name": "clickup_read_comments",
-                    "name": "Clickup Read Comments",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Get all comments on a ClickUp task. Supports pagination.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
-                        },
-                        "start": {
-                            "type": "string",
-                            "description": "Timestamp (ms) for pagination."
-                        },
-                        "start_id": {
-                            "type": "string",
-                            "description": "Comment ID for pagination."
-                        }
-                    },
-                    "parameter_count": 3,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpReadComments.php"
-                },
-                {
-                    "slug": "clickup_remove_tag",
-                    "function_name": "clickup_remove_tag",
-                    "name": "Clickup Remove Tag",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Remove a tag from a ClickUp task.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
-                        },
-                        "tag_name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Tag name to remove."
-                        }
-                    },
-                    "parameter_count": 2,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpRemoveTag.php"
-                },
-                {
-                    "slug": "clickup_resolve_members",
-                    "function_name": "clickup_resolve_members",
-                    "name": "Clickup Resolve Members",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Convert member names or emails to ClickUp user IDs for assigning tasks.",
-                    "parameters": {
-                        "query": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Comma-separated names or emails to resolve to user IDs."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpResolveMembers.php"
-                },
-                {
-                    "slug": "clickup_search",
-                    "function_name": "clickup_search",
-                    "name": "Clickup Search",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Search tasks across the ClickUp workspace.\n        Supports filtering by query, statuses, assignees, and more.\n        Returns matching tasks with their details.",
-                    "parameters": {
-                        "query": {
-                            "type": "string",
-                            "description": "Search query to match task names."
-                        },
-                        "statuses": {
-                            "type": "string",
-                            "description": "Comma-separated statuses to filter by (e.g., \"open,in progress\")."
-                        },
-                        "assignees": {
-                            "type": "string",
-                            "description": "Comma-separated assignee user IDs."
-                        },
-                        "include_closed": {
-                            "type": "boolean",
-                            "description": "Include closed tasks in results. Default: false."
+                            "description": "Task ID. Supports regular IDs or custom IDs like \"DEV-42\"."
                         },
                         "include_subtasks": {
                             "type": "boolean",
-                            "description": "Include subtasks in results. Default: false."
-                        },
-                        "page": {
-                            "type": "integer",
-                            "description": "Page number for pagination (starts at 0)."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 7,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpSearch.php"
-                },
-                {
-                    "slug": "clickup_send_message",
-                    "function_name": "clickup_send_message",
-                    "name": "Clickup Send Message",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Send a message to a ClickUp chat channel.",
-                    "parameters": {
-                        "channel_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Channel ID."
-                        },
-                        "content": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Message content, supports markdown."
-                        },
-                        "content_format": {
-                            "type": "string",
-                            "description": "Content format: \"text/md\" (default) or \"text/plain\"."
-                        },
-                        "type": {
-                            "type": "string",
-                            "description": "Message type: \"message\" (default) or \"post\"."
-                        },
-                        "post_title": {
-                            "type": "string",
-                            "description": "Post title (required if type is \"post\")."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 6,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpSendMessage.php"
-                },
-                {
-                    "slug": "clickup_start_timer",
-                    "function_name": "clickup_start_timer",
-                    "name": "Clickup Start Timer",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Start a time tracking timer on a ClickUp task.",
-                    "parameters": {
-                        "task_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Task ID to start the timer on."
-                        },
-                        "description": {
-                            "type": "string",
-                            "description": "Description for the time entry."
-                        },
-                        "billable": {
-                            "type": "boolean",
-                            "description": "Whether the time is billable."
-                        },
-                        "tags": {
-                            "type": "string",
-                            "description": "Comma-separated tag names for the time entry."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 5,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpStartTimer.php"
-                },
-                {
-                    "slug": "clickup_stop_timer",
-                    "function_name": "clickup_stop_timer",
-                    "name": "Clickup Stop Timer",
-                    "type": "read",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Stop the currently running time tracking timer.",
-                    "parameters": {
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 1,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpStopTimer.php"
-                },
-                {
-                    "slug": "clickup_update_doc_page",
-                    "function_name": "clickup_update_doc_page",
-                    "name": "Clickup Update Doc Page",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Update an existing page in a ClickUp document. Supports replace, append, or prepend content.",
-                    "parameters": {
-                        "document_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Document ID."
-                        },
-                        "page_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Page ID."
-                        },
-                        "name": {
-                            "type": "string",
-                            "description": "New page name/title."
-                        },
-                        "content": {
-                            "type": "string",
-                            "description": "New page content."
-                        },
-                        "content_format": {
-                            "type": "string",
-                            "description": "Content format: \"text/md\" (default) or \"text/html\"."
-                        },
-                        "edit_mode": {
-                            "type": "string",
-                            "description": "Edit mode: \"replace\" (default), \"append\", or \"prepend\"."
-                        },
-                        "sub_title": {
-                            "type": "string",
-                            "description": "New page subtitle."
-                        },
-                        "workspace_id": {
-                            "type": "string",
-                            "description": "Workspace ID. Uses configured default if omitted."
-                        }
-                    },
-                    "parameter_count": 8,
-                    "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpUpdateDocPage.php"
-                },
-                {
-                    "slug": "clickup_update_folder",
-                    "function_name": "clickup_update_folder",
-                    "name": "Clickup Update Folder",
-                    "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Update a ClickUp folder's name.",
-                    "parameters": {
-                        "folder_id": {
-                            "type": "string",
-                            "required": true,
-                            "description": "Folder ID."
-                        },
-                        "name": {
-                            "type": "string",
-                            "required": true,
-                            "description": "New folder name."
+                            "description": "Include subtask details. Default: false."
                         }
                     },
                     "parameter_count": 2,
                     "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpUpdateFolder.php"
+                    "source_file": "packages/clickup/src/Tools/ClickUpGetTask.php"
                 },
                 {
-                    "slug": "clickup_update_list",
-                    "function_name": "clickup_update_list",
-                    "name": "Clickup Update List",
+                    "slug": "clickup_create_task",
+                    "function_name": "clickup_create_task",
+                    "name": "Create Task",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
-                    "description": "Update a ClickUp list's name, content, or status.",
+                    "icon": "ph:plus-circle",
+                    "short_description": "Create a task in a ClickUp list.",
+                    "description": "Create a new task in a ClickUp list.\n        Requires a list ID and task name. Supports description, status,\n        priority, assignees, dates, tags, and creating subtasks via parentTaskId.\n        Use clickup_get_hierarchy to find list IDs.",
                     "parameters": {
                         "list_id": {
                             "type": "string",
                             "required": true,
-                            "description": "List ID."
+                            "description": "List ID to create the task in."
                         },
                         "name": {
                             "type": "string",
-                            "description": "New list name."
+                            "required": true,
+                            "description": "Task name."
                         },
-                        "content": {
+                        "description": {
                             "type": "string",
-                            "description": "New list description/content."
+                            "description": "Task description text."
                         },
                         "status": {
                             "type": "string",
-                            "description": "New list status."
+                            "description": "Task status (must be valid for the list)."
+                        },
+                        "priority": {
+                            "type": "integer",
+                            "description": "Priority: 1=urgent, 2=high, 3=normal, 4=low."
+                        },
+                        "assignees": {
+                            "type": "string",
+                            "description": "Comma-separated user IDs to assign. Use clickup_resolve_members to resolve names to IDs."
+                        },
+                        "due_date": {
+                            "type": "string",
+                            "description": "Due date in ISO 8601 format (e.g., \"2026-03-15\" or \"2026-03-15T14:30:00\")."
+                        },
+                        "start_date": {
+                            "type": "string",
+                            "description": "Start date in ISO 8601 format."
+                        },
+                        "tags": {
+                            "type": "string",
+                            "description": "Comma-separated tag names. Tags must exist in the space."
+                        },
+                        "parent_task_id": {
+                            "type": "string",
+                            "description": "Parent task ID to create this as a subtask."
                         }
                     },
-                    "parameter_count": 4,
+                    "parameter_count": 10,
                     "source_available": true,
-                    "source_file": "packages/clickup/src/Tools/ClickUpUpdateList.php"
+                    "source_file": "packages/clickup/src/Tools/ClickUpCreateTask.php"
                 },
                 {
                     "slug": "clickup_update_task",
                     "function_name": "clickup_update_task",
-                    "name": "Clickup Update Task",
+                    "name": "Update Task",
                     "type": "write",
-                    "icon": "",
-                    "short_description": "",
+                    "icon": "ph:pencil-simple",
+                    "short_description": "Update task fields, dates, assignees, priority, or status.",
                     "description": "Update an existing ClickUp task.\n        Supports changing name, description, status, priority, assignees, and dates.\n        Set status to \"closed\" to complete a task.\n        Supports custom task IDs like \"DEV-42\".",
                     "parameters": {
                         "task_id": {
@@ -32936,6 +32216,734 @@
                     "parameter_count": 10,
                     "source_available": true,
                     "source_file": "packages/clickup/src/Tools/ClickUpUpdateTask.php"
+                },
+                {
+                    "slug": "clickup_delete_task",
+                    "function_name": "clickup_delete_task",
+                    "name": "Delete Task",
+                    "type": "write",
+                    "icon": "ph:trash",
+                    "short_description": "Delete a ClickUp task.",
+                    "description": "Delete a ClickUp task permanently.\n        Supports custom task IDs like \"DEV-42\".\n        This action cannot be undone.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID to delete. Supports custom IDs like \"DEV-42\"."
+                        }
+                    },
+                    "parameter_count": 1,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpDeleteTask.php"
+                },
+                {
+                    "slug": "clickup_add_tag",
+                    "function_name": "clickup_add_tag",
+                    "name": "Add Tag",
+                    "type": "write",
+                    "icon": "ph:tag",
+                    "short_description": "Add an existing space tag to a task.",
+                    "description": "Add an existing tag to a ClickUp task. The tag must already exist in the space.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
+                        },
+                        "tag_name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Tag name to add."
+                        }
+                    },
+                    "parameter_count": 2,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpAddTag.php"
+                },
+                {
+                    "slug": "clickup_remove_tag",
+                    "function_name": "clickup_remove_tag",
+                    "name": "Remove Tag",
+                    "type": "write",
+                    "icon": "ph:tag-chevron",
+                    "short_description": "Remove a tag from a task.",
+                    "description": "Remove a tag from a ClickUp task.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
+                        },
+                        "tag_name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Tag name to remove."
+                        }
+                    },
+                    "parameter_count": 2,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpRemoveTag.php"
+                },
+                {
+                    "slug": "clickup_attach_file",
+                    "function_name": "clickup_attach_file",
+                    "name": "Attach File",
+                    "type": "write",
+                    "icon": "ph:paperclip",
+                    "short_description": "Upload a local file attachment to a task.",
+                    "description": "Upload a local file attachment to a ClickUp task.\n        ClickUp's official task attachment endpoint requires multipart file upload;\n        cloud URL passthrough is not supported by this v2 endpoint.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID to attach the file to. Supports custom IDs like \"DEV-42\"."
+                        },
+                        "file_path": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Readable local file path to upload."
+                        },
+                        "filename": {
+                            "type": "string",
+                            "description": "Optional filename override for the uploaded attachment."
+                        },
+                        "file_url": {
+                            "type": "string",
+                            "description": "Deprecated. Public URL uploads are not supported by ClickUp v2 task attachments."
+                        }
+                    },
+                    "parameter_count": 4,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpAttachFile.php"
+                },
+                {
+                    "slug": "clickup_read_comments",
+                    "function_name": "clickup_read_comments",
+                    "name": "Read Comments",
+                    "type": "read",
+                    "icon": "ph:chat-circle-text",
+                    "short_description": "Read comments on a ClickUp task.",
+                    "description": "Get all comments on a ClickUp task. Supports pagination.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
+                        },
+                        "start": {
+                            "type": "string",
+                            "description": "Timestamp (ms) for pagination."
+                        },
+                        "start_id": {
+                            "type": "string",
+                            "description": "Comment ID for pagination."
+                        }
+                    },
+                    "parameter_count": 3,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpReadComments.php"
+                },
+                {
+                    "slug": "clickup_add_comment",
+                    "function_name": "clickup_add_comment",
+                    "name": "Add Comment",
+                    "type": "write",
+                    "icon": "ph:chat-circle-plus",
+                    "short_description": "Add a comment to a ClickUp task.",
+                    "description": "Add a new comment to a ClickUp task.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
+                        },
+                        "comment_text": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Comment text."
+                        },
+                        "assignee": {
+                            "type": "string",
+                            "description": "User ID to assign the comment to."
+                        },
+                        "notify_all": {
+                            "type": "boolean",
+                            "description": "Notify all assignees. Default: false."
+                        }
+                    },
+                    "parameter_count": 4,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpAddComment.php"
+                },
+                {
+                    "slug": "clickup_current_time_entry",
+                    "function_name": "clickup_current_time_entry",
+                    "name": "Current Time Entry",
+                    "type": "read",
+                    "icon": "ph:timer",
+                    "short_description": "Get the currently running ClickUp timer.",
+                    "description": "Get the currently running time tracking entry, if any.",
+                    "parameters": {
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 1,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpCurrentTimeEntry.php"
+                },
+                {
+                    "slug": "clickup_list_time_entries",
+                    "function_name": "clickup_list_time_entries",
+                    "name": "List Time Entries",
+                    "type": "read",
+                    "icon": "ph:clock-counter-clockwise",
+                    "short_description": "List tracked time entries for a task.",
+                    "description": "Get all time entries for a ClickUp task.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID. Supports custom IDs like \"DEV-42\"."
+                        }
+                    },
+                    "parameter_count": 1,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpListTimeEntries.php"
+                },
+                {
+                    "slug": "clickup_start_timer",
+                    "function_name": "clickup_start_timer",
+                    "name": "Start Timer",
+                    "type": "write",
+                    "icon": "ph:play-circle",
+                    "short_description": "Start a ClickUp time entry on a task.",
+                    "description": "Start a time tracking timer on a ClickUp task.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID to start the timer on."
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description for the time entry."
+                        },
+                        "billable": {
+                            "type": "boolean",
+                            "description": "Whether the time is billable."
+                        },
+                        "tags": {
+                            "type": "string",
+                            "description": "Comma-separated tag names for the time entry."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 5,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpStartTimer.php"
+                },
+                {
+                    "slug": "clickup_stop_timer",
+                    "function_name": "clickup_stop_timer",
+                    "name": "Stop Timer",
+                    "type": "write",
+                    "icon": "ph:stop-circle",
+                    "short_description": "Stop the currently running ClickUp timer.",
+                    "description": "Stop the currently running time tracking timer.",
+                    "parameters": {
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 1,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpStopTimer.php"
+                },
+                {
+                    "slug": "clickup_log_time",
+                    "function_name": "clickup_log_time",
+                    "name": "Log Time",
+                    "type": "write",
+                    "icon": "ph:clock",
+                    "short_description": "Create a manual ClickUp time entry.",
+                    "description": "Add a manual time entry to a ClickUp task.",
+                    "parameters": {
+                        "task_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Task ID."
+                        },
+                        "start": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Start time in ISO 8601 format."
+                        },
+                        "duration": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Duration in milliseconds."
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "Description for the time entry."
+                        },
+                        "billable": {
+                            "type": "boolean",
+                            "description": "Whether the time is billable."
+                        },
+                        "tags": {
+                            "type": "string",
+                            "description": "Comma-separated tag names for the time entry."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 7,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpLogTime.php"
+                },
+                {
+                    "slug": "clickup_get_list",
+                    "function_name": "clickup_get_list",
+                    "name": "Get List",
+                    "type": "read",
+                    "icon": "ph:list-bullets",
+                    "short_description": "Get ClickUp list details.",
+                    "description": "Get details of a ClickUp list by ID.",
+                    "parameters": {
+                        "list_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "List ID."
+                        }
+                    },
+                    "parameter_count": 1,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpGetList.php"
+                },
+                {
+                    "slug": "clickup_create_list",
+                    "function_name": "clickup_create_list",
+                    "name": "Create Folderless List",
+                    "type": "write",
+                    "icon": "ph:list-plus",
+                    "short_description": "Create a folderless list in a ClickUp space.",
+                    "description": "Create a new list in a ClickUp space.",
+                    "parameters": {
+                        "space_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Space ID to create the list in."
+                        },
+                        "name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "List name."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "List description/content."
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "List status."
+                        }
+                    },
+                    "parameter_count": 4,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpCreateList.php"
+                },
+                {
+                    "slug": "clickup_create_list_in_folder",
+                    "function_name": "clickup_create_list_in_folder",
+                    "name": "Create List In Folder",
+                    "type": "write",
+                    "icon": "ph:list-plus",
+                    "short_description": "Create a list inside a ClickUp folder.",
+                    "description": "Create a new list in a ClickUp folder.",
+                    "parameters": {
+                        "folder_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Folder ID to create the list in."
+                        },
+                        "name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "List name."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "List description/content."
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "List status."
+                        }
+                    },
+                    "parameter_count": 4,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpCreateListInFolder.php"
+                },
+                {
+                    "slug": "clickup_update_list",
+                    "function_name": "clickup_update_list",
+                    "name": "Update List",
+                    "type": "write",
+                    "icon": "ph:pencil-simple",
+                    "short_description": "Update ClickUp list metadata.",
+                    "description": "Update a ClickUp list's name, content, or status.",
+                    "parameters": {
+                        "list_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "List ID."
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "New list name."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "New list description/content."
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "New list status."
+                        }
+                    },
+                    "parameter_count": 4,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpUpdateList.php"
+                },
+                {
+                    "slug": "clickup_get_folder",
+                    "function_name": "clickup_get_folder",
+                    "name": "Get Folder",
+                    "type": "read",
+                    "icon": "ph:folder",
+                    "short_description": "Get ClickUp folder details and lists.",
+                    "description": "Get details of a ClickUp folder by ID, including its lists.",
+                    "parameters": {
+                        "folder_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Folder ID."
+                        }
+                    },
+                    "parameter_count": 1,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpGetFolder.php"
+                },
+                {
+                    "slug": "clickup_create_folder",
+                    "function_name": "clickup_create_folder",
+                    "name": "Create Folder",
+                    "type": "write",
+                    "icon": "ph:folder-plus",
+                    "short_description": "Create a ClickUp folder in a space.",
+                    "description": "Create a new folder in a ClickUp space.",
+                    "parameters": {
+                        "space_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Space ID to create the folder in."
+                        },
+                        "name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Folder name."
+                        }
+                    },
+                    "parameter_count": 2,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpCreateFolder.php"
+                },
+                {
+                    "slug": "clickup_update_folder",
+                    "function_name": "clickup_update_folder",
+                    "name": "Update Folder",
+                    "type": "write",
+                    "icon": "ph:pencil-simple",
+                    "short_description": "Update ClickUp folder metadata.",
+                    "description": "Update a ClickUp folder's name.",
+                    "parameters": {
+                        "folder_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Folder ID."
+                        },
+                        "name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "New folder name."
+                        }
+                    },
+                    "parameter_count": 2,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpUpdateFolder.php"
+                },
+                {
+                    "slug": "clickup_list_channels",
+                    "function_name": "clickup_list_channels",
+                    "name": "List Chat Channels",
+                    "type": "read",
+                    "icon": "ph:chats",
+                    "short_description": "List ClickUp Chat channels.",
+                    "description": "List all chat channels in the ClickUp workspace.",
+                    "parameters": {
+                        "cursor": {
+                            "type": "string",
+                            "description": "Pagination cursor."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 2,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpListChannels.php"
+                },
+                {
+                    "slug": "clickup_send_message",
+                    "function_name": "clickup_send_message",
+                    "name": "Send Chat Message",
+                    "type": "write",
+                    "icon": "ph:paper-plane-tilt",
+                    "short_description": "Send a ClickUp Chat message to a channel.",
+                    "description": "Send a message to a ClickUp chat channel.",
+                    "parameters": {
+                        "channel_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Channel ID."
+                        },
+                        "content": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Message content, supports markdown."
+                        },
+                        "content_format": {
+                            "type": "string",
+                            "description": "Content format: \"text/md\" (default) or \"text/plain\"."
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "Message type: \"message\" (default) or \"post\"."
+                        },
+                        "post_title": {
+                            "type": "string",
+                            "description": "Post title (required if type is \"post\")."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 6,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpSendMessage.php"
+                },
+                {
+                    "slug": "clickup_manage_document",
+                    "function_name": "clickup_manage_document",
+                    "name": "Create Document",
+                    "type": "write",
+                    "icon": "ph:file-doc",
+                    "short_description": "Create a ClickUp Doc.",
+                    "description": "Create a ClickUp document in a space, folder, or list.\n        Specify the parent container and visibility (PUBLIC or PRIVATE).",
+                    "parameters": {
+                        "name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Document name/title."
+                        },
+                        "parent_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "ID of the parent container (space, folder, or list)."
+                        },
+                        "parent_type": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Type of parent: \"space\", \"folder\", \"list\", \"everything\", or \"workspace\"."
+                        },
+                        "visibility": {
+                            "type": "string",
+                            "description": "Document visibility: \"PUBLIC\" or \"PRIVATE\". Default: PUBLIC."
+                        },
+                        "create_page": {
+                            "type": "boolean",
+                            "description": "Create an initial blank page. Default: true."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 6,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpManageDocument.php"
+                },
+                {
+                    "slug": "clickup_list_doc_pages",
+                    "function_name": "clickup_list_doc_pages",
+                    "name": "List Doc Pages",
+                    "type": "read",
+                    "icon": "ph:files",
+                    "short_description": "List pages in a ClickUp Doc.",
+                    "description": "List all pages in a ClickUp document.",
+                    "parameters": {
+                        "document_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Document ID."
+                        },
+                        "max_depth": {
+                            "type": "integer",
+                            "description": "Max page depth (-1 for unlimited)."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 3,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpListDocPages.php"
+                },
+                {
+                    "slug": "clickup_get_doc_pages",
+                    "function_name": "clickup_get_doc_pages",
+                    "name": "Get Doc Pages",
+                    "type": "read",
+                    "icon": "ph:file-text",
+                    "short_description": "Fetch ClickUp Doc pages and content.",
+                    "description": "Get the content of specific pages from a ClickUp document.",
+                    "parameters": {
+                        "document_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Document ID."
+                        },
+                        "page_ids": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Comma-separated page IDs to retrieve."
+                        },
+                        "content_format": {
+                            "type": "string",
+                            "description": "Content format: \"text/md\" (default) or \"text/html\"."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 4,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpGetDocPages.php"
+                },
+                {
+                    "slug": "clickup_create_doc_page",
+                    "function_name": "clickup_create_doc_page",
+                    "name": "Create Doc Page",
+                    "type": "write",
+                    "icon": "ph:file-plus",
+                    "short_description": "Create a page in a ClickUp Doc.",
+                    "description": "Create a new page in a ClickUp document.",
+                    "parameters": {
+                        "document_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Document ID."
+                        },
+                        "name": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Page name/title."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Page content."
+                        },
+                        "content_format": {
+                            "type": "string",
+                            "description": "Content format: \"text/md\" (default) or \"text/html\"."
+                        },
+                        "sub_title": {
+                            "type": "string",
+                            "description": "Page subtitle."
+                        },
+                        "parent_page_id": {
+                            "type": "string",
+                            "description": "Parent page ID for creating sub-pages."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 7,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpCreateDocPage.php"
+                },
+                {
+                    "slug": "clickup_update_doc_page",
+                    "function_name": "clickup_update_doc_page",
+                    "name": "Update Doc Page",
+                    "type": "write",
+                    "icon": "ph:file-pencil",
+                    "short_description": "Update a ClickUp Doc page.",
+                    "description": "Update an existing page in a ClickUp document. Supports replace, append, or prepend content.",
+                    "parameters": {
+                        "document_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Document ID."
+                        },
+                        "page_id": {
+                            "type": "string",
+                            "required": true,
+                            "description": "Page ID."
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "New page name/title."
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "New page content."
+                        },
+                        "content_format": {
+                            "type": "string",
+                            "description": "Content format: \"text/md\" (default) or \"text/html\"."
+                        },
+                        "edit_mode": {
+                            "type": "string",
+                            "description": "Edit mode: \"replace\" (default), \"append\", or \"prepend\"."
+                        },
+                        "sub_title": {
+                            "type": "string",
+                            "description": "New page subtitle."
+                        },
+                        "workspace_id": {
+                            "type": "string",
+                            "description": "Workspace ID. Uses configured default if omitted."
+                        }
+                    },
+                    "parameter_count": 8,
+                    "source_available": true,
+                    "source_file": "packages/clickup/src/Tools/ClickUpUpdateDocPage.php"
                 }
             ],
             "triggers": [
@@ -32975,7 +32983,7 @@
                     "key": "workspace_id",
                     "type": "string",
                     "label": "Workspace ID",
-                    "required": true
+                    "required": false
                 }
             ],
             "credential_keys": [
@@ -33031,7 +33039,7 @@
                         "key": "workspace_id",
                         "type": "string",
                         "label": "Workspace ID",
-                        "required": true
+                        "required": false
                     }
                 ],
                 "config_schema": [
@@ -33040,7 +33048,7 @@
                         "type": "secret",
                         "label": "Personal API Token",
                         "placeholder": "pk_...",
-                        "hint": "Generate at ClickUp → Settings → Apps. Starts with <code>pk_</code>.",
+                        "hint": "Generate at ClickUp -> Settings -> Apps. Starts with <code>pk_</code>.",
                         "required": true
                     },
                     {
@@ -33048,19 +33056,22 @@
                         "type": "text",
                         "label": "Workspace ID",
                         "placeholder": "12345678",
-                        "hint": "From your ClickUp URL: <code>app.clickup.com/{workspace_id}/...</code>. Required for search, time tracking, and members."
+                        "hint": "From your ClickUp URL: <code>app.clickup.com/{workspace_id}/...</code>. Required for search, time tracking, chat, docs, and members.",
+                        "required": false
                     }
                 ],
-                "validation_rules": [],
+                "validation_rules": {
+                    "api_token": "required|string",
+                    "workspace_id": "nullable|string"
+                },
                 "required_credentials": [
-                    "api_token",
-                    "workspace_id"
+                    "api_token"
                 ],
                 "env_vars": [
                     "CLICKUP_API_TOKEN",
                     "CLICKUP_WORKSPACE_ID"
                 ],
-                "cli_configure_command": "kosmokrator integrations:configure clickup --set api_token=\"$CLICKUP_API_TOKEN\" --set workspace_id=\"$CLICKUP_WORKSPACE_ID\" --enable --read allow --write ask --json",
+                "cli_configure_command": "kosmokrator integrations:configure clickup --set api_token=\"$CLICKUP_API_TOKEN\" --enable --read allow --write ask --json",
                 "doctor_command": "kosmokrator integrations:doctor clickup --json",
                 "status_command": "kosmokrator integrations:status --json",
                 "mcp_gateway_install_command": "kosmokrator mcp:gateway:install --integration=clickup --write=deny --json",
@@ -33111,7 +33122,7 @@
                     "route_slug": "auth-zero"
                 }
             ],
-            "lua_docs": "# ClickUp — Lua API Reference\n\n## Priority Mapping\n\n| Value | Level   |\n|-------|---------|\n| 1     | Urgent  |\n| 2     | High    |\n| 3     | Normal  |\n| 4     | Low     |\n\n```lua\n-- Use numeric values for priority\napp.integrations.clickup.create_task({ list_id = \"901234\", name = \"Fix bug\", priority = 1 })   -- urgent\napp.integrations.clickup.update_task({ task_id = \"abc123\", priority = 3 })                      -- normal\n```\n\n## Date Handling\n\nAll dates use ISO 8601 format. The API converts them to Unix milliseconds internally.\n\n```lua\n-- Date only\napp.integrations.clickup.create_task({ list_id = \"901234\", name = \"Sprint review\", due_date = \"2026-04-01\" })\n\n-- Date with time\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Standup\",\n  start_date = \"2026-04-01T09:00:00\",\n  due_date = \"2026-04-01T09:30:00\"\n})\n\n-- Clear a date by passing empty string\napp.integrations.clickup.update_task({ task_id = \"abc123\", due_date = \"\" })\n\n-- Filter tasks by due date range\napp.integrations.clickup.get_tasks({\n  list_id = \"901234\",\n  due_date_gt = \"2026-03-01\",\n  due_date_lt = \"2026-03-31\"\n})\n```\n\n## Member Resolution\n\nAlways resolve names to numeric user IDs before assigning tasks.\n\n```lua\n-- Find a single member by name or email\nlocal result = app.integrations.clickup.find_member({ query = \"Sarah\" })\n-- Returns: { matches = { { id = \"12345\", username = \"sarah\", email = \"sarah@co.com\" } } }\n\n-- Resolve multiple names at once\nlocal result = app.integrations.clickup.resolve_members({ query = \"Sarah, John, alex@co.com\" })\n-- Returns: { results = { { query = \"Sarah\", id = \"12345\", resolved = true }, ... } }\n\n-- Use the IDs for assignment (comma-separated string)\napp.integrations.clickup.create_task({ list_id = \"901234\", name = \"Review PR\", assignees = \"12345,67890\" })\n```\n\n## Common Workflows\n\n### Create a task with assignees and tags\n\n```lua\n-- Step 1: Find the list ID\nlocal hierarchy = app.integrations.clickup.get_hierarchy({})\n-- Traverse: hierarchy.spaces[].folders[].lists[] or hierarchy.spaces[].lists[]\n\n-- Step 2: Resolve member IDs\nlocal members = app.integrations.clickup.resolve_members({ query = \"Sarah, John\" })\nlocal ids = {}\nfor _, m in ipairs(members.results) do\n  if m.resolved then table.insert(ids, m.id) end\nend\n\n-- Step 3: Create the task\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Implement auth flow\",\n  description = \"Add OAuth2 login support\",\n  status = \"open\",\n  priority = 2,\n  assignees = table.concat(ids, \",\"),\n  tags = \"backend,auth\",\n  due_date = \"2026-04-15\"\n})\n```\n\n### Search for tasks, then update them\n\n```lua\n-- Search across workspace\nlocal results = app.integrations.clickup.search_tasks({\n  query = \"auth\",\n  statuses = \"open,in progress\",\n  include_subtasks = true\n})\n\n-- Update each matching task\nfor _, task in ipairs(results.tasks) do\n  app.integrations.clickup.update_task({\n    task_id = task.id,\n    priority = 1,\n    status = \"in progress\"\n  })\nend\n\n-- Custom task IDs (e.g., \"DEV-42\") work too\napp.integrations.clickup.update_task({ task_id = \"DEV-42\", status = \"closed\" })\n```\n\n### Time tracking (start, stop, log)\n\n```lua\n-- Start a timer on a task\napp.integrations.clickup.start_timer({\n  task_id = \"abc123\",\n  description = \"Working on auth flow\",\n  billable = true\n})\n\n-- Check what's currently running\nlocal current = app.integrations.clickup.current_time_entry({})\n-- Returns task name, start time, description\n\n-- Stop the running timer\napp.integrations.clickup.stop_timer({})\n\n-- Or log time manually (duration in milliseconds)\napp.integrations.clickup.log_time({\n  task_id = \"abc123\",\n  start = \"2026-03-29T09:00:00\",\n  duration = \"3600000\",           -- 1 hour = 3,600,000 ms\n  description = \"Code review\",\n  billable = true\n})\n\n-- View all time entries for a task\nlocal entries = app.integrations.clickup.list_time_entries({ task_id = \"abc123\" })\n-- entries.entries[].duration is already formatted (\"60.0 min\")\n```\n\n### Navigate hierarchy (find list and folder IDs)\n\n```lua\n-- Get full workspace tree\nlocal tree = app.integrations.clickup.get_hierarchy({})\n\n-- Filter to specific space(s)\nlocal tree = app.integrations.clickup.get_hierarchy({ space_ids = \"12345,67890\" })\n\n-- Get folder details including its lists\nlocal folder = app.integrations.clickup.get_folder({ folder_id = \"456\" })\n-- folder.lists = { { id = \"789\", name = \"Backlog\" }, ... }\n\n-- Get list details\nlocal list = app.integrations.clickup.get_list({ list_id = \"789\" })\n-- list.task_count, list.space, list.folder\n\n-- Get all tasks in a specific list\nlocal tasks = app.integrations.clickup.get_tasks({\n  list_id = \"789\",\n  statuses = \"open,in progress\",\n  include_closed = false\n})\n```\n\n### Create a subtask\n\n```lua\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Write unit tests\",\n  parent_task_id = \"abc123\",\n  priority = 3\n})\n```\n\n### Tags\n\n```lua\n-- Add a tag (must already exist in the space)\napp.integrations.clickup.add_tag({ task_id = \"abc123\", tag_name = \"urgent\" })\n\n-- Remove a tag\napp.integrations.clickup.remove_tag({ task_id = \"abc123\", tag_name = \"urgent\" })\n\n-- Set tags during task creation\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Deploy\",\n  tags = \"devops,release\"\n})\n```\n\n## Tips\n\n- **Time durations are in milliseconds**: 1 min = 60000, 1 hour = 3600000, 1 day = 86400000\n- **Tags must pre-exist** in the ClickUp space before you can add them to tasks\n- **workspace_id** is pulled from config automatically for search, time tracking, and member operations -- you rarely need to pass it explicitly\n- **Custom task IDs** like `\"DEV-42\"` work anywhere a `task_id` is accepted\n- **Pagination**: `search_tasks` and `get_tasks` support a `page` parameter (starts at 0)\n- **Assignees** use comma-separated numeric user IDs, not names -- always resolve first\n- **Statuses** are list-specific strings (e.g., `\"open\"`, `\"in progress\"`, `\"closed\"`) -- check the list for valid values\n- **time_estimate** on `update_task` is in **minutes** (converted to ms internally)\n\n---\n\n## Multi-Account Usage\n\nIf you have multiple clickup accounts configured, use account-specific namespaces:\n\n```lua\n-- Default account (always works)\napp.integrations.clickup.function_name({...})\n\n-- Explicit default (portable across setups)\napp.integrations.clickup.default.function_name({...})\n\n-- Named accounts\napp.integrations.clickup.work.function_name({...})\napp.integrations.clickup.personal.function_name({...})\n```\n\nAll functions are identical across accounts — only the credentials differ."
+            "lua_docs": "# ClickUp — Lua API Reference\n\n## Priority Mapping\n\n| Value | Level   |\n|-------|---------|\n| 1     | Urgent  |\n| 2     | High    |\n| 3     | Normal  |\n| 4     | Low     |\n\n```lua\n-- Use numeric values for priority\napp.integrations.clickup.create_task({ list_id = \"901234\", name = \"Fix bug\", priority = 1 })   -- urgent\napp.integrations.clickup.update_task({ task_id = \"abc123\", priority = 3 })                      -- normal\n```\n\n## Date Handling\n\nAll dates use ISO 8601 format. The API converts them to Unix milliseconds internally.\n\n```lua\n-- Date only\napp.integrations.clickup.create_task({ list_id = \"901234\", name = \"Sprint review\", due_date = \"2026-04-01\" })\n\n-- Date with time\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Standup\",\n  start_date = \"2026-04-01T09:00:00\",\n  due_date = \"2026-04-01T09:30:00\"\n})\n\n-- Clear a date by passing empty string\napp.integrations.clickup.update_task({ task_id = \"abc123\", due_date = \"\" })\n\n-- Filter tasks by due date range\napp.integrations.clickup.get_tasks({\n  list_id = \"901234\",\n  due_date_gt = \"2026-03-01\",\n  due_date_lt = \"2026-03-31\"\n})\n```\n\n## Member Resolution\n\nAlways resolve names to numeric user IDs before assigning tasks.\n\n```lua\n-- Find a single member by name or email\nlocal result = app.integrations.clickup.find_member({ query = \"Sarah\" })\n-- Returns: { matches = { { id = \"12345\", username = \"sarah\", email = \"sarah@co.com\" } } }\n\n-- Resolve multiple names at once\nlocal result = app.integrations.clickup.resolve_members({ query = \"Sarah, John, alex@co.com\" })\n-- Returns: { results = { { query = \"Sarah\", id = \"12345\", resolved = true }, ... } }\n\n-- Use the IDs for assignment (comma-separated string)\napp.integrations.clickup.create_task({ list_id = \"901234\", name = \"Review PR\", assignees = \"12345,67890\" })\n```\n\n## Common Workflows\n\n### Create a task with assignees and tags\n\n```lua\n-- Step 1: Find the list ID\nlocal hierarchy = app.integrations.clickup.get_hierarchy({})\n-- Traverse: hierarchy.spaces[].folders[].lists[] or hierarchy.spaces[].lists[]\n\n-- Step 2: Resolve member IDs\nlocal members = app.integrations.clickup.resolve_members({ query = \"Sarah, John\" })\nlocal ids = {}\nfor _, m in ipairs(members.results) do\n  if m.resolved then table.insert(ids, m.id) end\nend\n\n-- Step 3: Create the task\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Implement auth flow\",\n  description = \"Add OAuth2 login support\",\n  status = \"open\",\n  priority = 2,\n  assignees = table.concat(ids, \",\"),\n  tags = \"backend,auth\",\n  due_date = \"2026-04-15\"\n})\n```\n\n### Search for tasks, then update them\n\n```lua\n-- Search across workspace\nlocal results = app.integrations.clickup.search_tasks({\n  query = \"auth\",\n  statuses = \"open,in progress\",\n  include_subtasks = true\n})\n\n-- Update each matching task\nfor _, task in ipairs(results.tasks) do\n  app.integrations.clickup.update_task({\n    task_id = task.id,\n    priority = 1,\n    status = \"in progress\"\n  })\nend\n\n-- Custom task IDs (e.g., \"DEV-42\") work too\napp.integrations.clickup.update_task({ task_id = \"DEV-42\", status = \"closed\" })\n```\n\n### Time tracking (start, stop, log)\n\n```lua\n-- Start a timer on a task\napp.integrations.clickup.start_timer({\n  task_id = \"abc123\",\n  description = \"Working on auth flow\",\n  billable = true\n})\n\n-- Check what's currently running\nlocal current = app.integrations.clickup.current_time_entry({})\n-- Returns task name, start time, description\n\n-- Stop the running timer\napp.integrations.clickup.stop_timer({})\n\n-- Or log time manually (duration in milliseconds)\napp.integrations.clickup.log_time({\n  task_id = \"abc123\",\n  start = \"2026-03-29T09:00:00\",\n  duration = \"3600000\",           -- 1 hour = 3,600,000 ms\n  description = \"Code review\",\n  billable = true\n})\n\n-- View all time entries for a task\nlocal entries = app.integrations.clickup.list_time_entries({ task_id = \"abc123\" })\n-- entries.entries[].duration is already formatted (\"60.0 min\")\n```\n\n### Navigate hierarchy (find list and folder IDs)\n\n```lua\n-- Get full workspace tree\nlocal tree = app.integrations.clickup.get_hierarchy({})\n\n-- Filter to specific space(s)\nlocal tree = app.integrations.clickup.get_hierarchy({ space_ids = \"12345,67890\" })\n\n-- Get folder details including its lists\nlocal folder = app.integrations.clickup.get_folder({ folder_id = \"456\" })\n-- folder.lists = { { id = \"789\", name = \"Backlog\" }, ... }\n\n-- Get list details\nlocal list = app.integrations.clickup.get_list({ list_id = \"789\" })\n-- list.task_count, list.space, list.folder\n\n-- Get all tasks in a specific list\nlocal tasks = app.integrations.clickup.get_tasks({\n  list_id = \"789\",\n  statuses = \"open,in progress\",\n  include_closed = false\n})\n```\n\n### Create a subtask\n\n```lua\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Write unit tests\",\n  parent_task_id = \"abc123\",\n  priority = 3\n})\n```\n\n### Tags\n\n```lua\n-- Add a tag (must already exist in the space)\napp.integrations.clickup.add_tag({ task_id = \"abc123\", tag_name = \"urgent\" })\n\n-- Remove a tag\napp.integrations.clickup.remove_tag({ task_id = \"abc123\", tag_name = \"urgent\" })\n\n-- Set tags during task creation\napp.integrations.clickup.create_task({\n  list_id = \"901234\",\n  name = \"Deploy\",\n  tags = \"devops,release\"\n})\n```\n\n### Attach a file\n\nClickUp task attachments require multipart upload. Use a readable local path;\npublic URL passthrough is not supported by ClickUp's v2 task attachment endpoint.\n\n```lua\napp.integrations.clickup.attach_file({\n  task_id = \"abc123\",\n  file_path = \"/tmp/report.pdf\",\n  filename = \"Q1-report.pdf\"\n})\n```\n\n## Tips\n\n- **Time durations are in milliseconds**: 1 min = 60000, 1 hour = 3600000, 1 day = 86400000\n- **Tags must pre-exist** in the ClickUp space before you can add them to tasks\n- **workspace_id** is pulled from config automatically for search, time tracking, and member operations -- you rarely need to pass it explicitly\n- **Custom task IDs** like `\"DEV-42\"` work anywhere a `task_id` is accepted\n- **Pagination**: `search_tasks` and `get_tasks` support a `page` parameter (starts at 0)\n- **Assignees** use comma-separated numeric user IDs, not names -- always resolve first\n- **Statuses** are list-specific strings (e.g., `\"open\"`, `\"in progress\"`, `\"closed\"`) -- check the list for valid values\n- **time_estimate** on `update_task` is in **minutes** (converted to ms internally)\n- The service layer tracks additional official ClickUp v2/v3 endpoints such as custom fields, checklists, comments, spaces, webhooks, docs, and chat. Only the tools listed in the generated namespace are first-class Lua tools.\n\n---\n\n## Multi-Account Usage\n\nIf you have multiple clickup accounts configured, use account-specific namespaces:\n\n```lua\n-- Default account (always works)\napp.integrations.clickup.function_name({...})\n\n-- Explicit default (portable across setups)\napp.integrations.clickup.default.function_name({...})\n\n-- Named accounts\napp.integrations.clickup.work.function_name({...})\napp.integrations.clickup.personal.function_name({...})\n```\n\nAll functions are identical across accounts — only the credentials differ."
         },
         {
             "slug": "clockify",

@@ -6,6 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers the ClickUp integration with Laravel's service container.
+ *
+ * Binds the ClickUp API client and registers the tool provider when the host
+ * exposes a ToolProviderRegistry.
+ */
 class ClickUpServiceProvider extends ServiceProvider
 {
     public function register(): void

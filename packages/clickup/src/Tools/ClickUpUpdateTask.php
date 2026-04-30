@@ -103,14 +103,7 @@ class ClickUpUpdateTask implements Tool
                 return ToolResult::error('At least one field to update is required.');
             }
 
-            // Handle custom task IDs
-            $queryParams = $this->service->withCustomIdParams($taskId);
-            if (! empty($queryParams)) {
-                // Append query params to the task ID URL
-                $taskId .= '?' . http_build_query($queryParams);
-            }
-
-            $result = $this->service->updateTask($taskId, $data);
+            $result = $this->service->updateTask($taskId, $data, $this->service->withCustomIdParams($taskId));
 
             return ToolResult::success([
                 'id' => $result['id'] ?? '',

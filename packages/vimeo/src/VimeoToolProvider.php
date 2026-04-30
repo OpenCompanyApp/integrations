@@ -151,20 +151,6 @@ public function validationRules(): array
                 'description' => 'Create a new video upload slot on Vimeo. Choose an upload approach: "pull" (Vimeo downloads from a URL), "post" (you POST to an upload link), or "streaming" (Tus protocol). Returns the video URI and upload target.',
                 'icon' => 'ph:wrench',
             ],
-            'vimeo_delete_video' => [
-                'class' => VimeoDeleteVideo::class,
-                'type' => 'write',
-                'name' => 'Delete Video',
-                'description' => 'Delete a video from Vimeo permanently. This action cannot be undone.',
-                'icon' => 'ph:wrench',
-            ],
-            'vimeo_get_album' => [
-                'class' => VimeoGetAlbum::class,
-                'type' => 'read',
-                'name' => 'Get Album',
-                'description' => 'Get detailed information about a single Vimeo album (showcase) by its ID.',
-                'icon' => 'ph:wrench',
-            ],
             'vimeo_get_current_user' => [
                 'class' => VimeoGetCurrentUser::class,
                 'type' => 'read',
@@ -186,13 +172,6 @@ public function validationRules(): array
                 'description' => 'List albums (showcases) for the authenticated Vimeo user. Supports pagination, query search, sorting, and direction. Returns album names, descriptions, thumbnails, and video counts.',
                 'icon' => 'ph:wrench',
             ],
-            'vimeo_list_channels' => [
-                'class' => VimeoListChannels::class,
-                'type' => 'read',
-                'name' => 'List Channels',
-                'description' => 'List public Vimeo channels. Returns paginated results with channel metadata.',
-                'icon' => 'ph:wrench',
-            ],
             'vimeo_list_folders' => [
                 'class' => VimeoListFolders::class,
                 'type' => 'read',
@@ -205,13 +184,6 @@ public function validationRules(): array
                 'type' => 'read',
                 'name' => 'List Videos',
                 'description' => 'List videos for the authenticated Vimeo user. Supports pagination, full-text search via query, and filters (e.g., embeddable, playable, privacy). Returns video URIs, names, durations, thumbnails, and metadata.',
-                'icon' => 'ph:wrench',
-            ],
-            'vimeo_upload_video' => [
-                'class' => VimeoUploadVideo::class,
-                'type' => 'write',
-                'name' => 'Upload Video',
-                'description' => 'Create an upload ticket for a new video on Vimeo. Returns the upload URL and video object. Use the upload link to POST the video file binary.',
                 'icon' => 'ph:wrench',
             ],
         ];

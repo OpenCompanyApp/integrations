@@ -233,13 +233,6 @@ class WordPressToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'description' => 'Create a new post on the WordPress site. Requires a title. Content, status, categories, and tags can be specified. Defaults to draft status for safety.',
                 'icon' => 'ph:wrench',
             ],
-            'wordpress_delete_post' => [
-                'class' => WordPressDeletePost::class,
-                'type' => 'write',
-                'name' => 'Delete Post',
-                'description' => 'Delete a WordPress blog post by its ID. This action is irreversible.',
-                'icon' => 'ph:wrench',
-            ],
             'wordpress_get_current_user' => [
                 'class' => WordPressGetCurrentUser::class,
                 'type' => 'read',
@@ -254,25 +247,11 @@ class WordPressToolProvider implements ToolProvider, ConfigurableIntegration, Ha
                 'description' => 'Get a single WordPress post by its ID. Returns the full post object including title, content, excerpt, author, categories, tags, and metadata.',
                 'icon' => 'ph:wrench',
             ],
-            'wordpress_list_categories' => [
-                'class' => WordPressListCategories::class,
-                'type' => 'read',
-                'name' => 'List Categories',
-                'description' => 'List post categories from WordPress. Returns category names, slugs, and IDs for use in post management.',
-                'icon' => 'ph:wrench',
-            ],
             'wordpress_list_comments' => [
                 'class' => WordPressListComments::class,
                 'type' => 'read',
                 'name' => 'List Comments',
                 'description' => 'List comments from the WordPress site. Supports filtering by post, status, author, and search. Returns comment IDs, content, author info, and dates.',
-                'icon' => 'ph:wrench',
-            ],
-            'wordpress_list_media' => [
-                'class' => WordPressListMedia::class,
-                'type' => 'read',
-                'name' => 'List Media',
-                'description' => 'List media items from the WordPress media library. Returns file details including URL, type, and metadata.',
                 'icon' => 'ph:wrench',
             ],
             'wordpress_list_pages' => [

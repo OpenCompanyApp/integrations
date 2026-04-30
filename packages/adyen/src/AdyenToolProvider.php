@@ -237,25 +237,11 @@ class AdyenToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'Verify Adyen API connectivity and retrieve current merchant account information. Useful as a health check to confirm the integration is properly configured.',
                 'icon' => 'ph:wrench',
             ],
-            'adyen_get_shopper' => [
-                'class' => AdyenGetShopper::class,
-                'type' => 'read',
-                'name' => 'Get Shopper',
-                'description' => 'Get details of a specific Adyen shopper by their ID. Returns shopper information including stored payment methods.',
-                'icon' => 'ph:wrench',
-            ],
             'adyen_get_transaction' => [
                 'class' => AdyenGetTransaction::class,
                 'type' => 'read',
                 'name' => 'Get Transaction',
                 'description' => 'Get details of a specific Adyen transaction by its PSP reference. Returns the full transaction object including amount, status, and payment details.',
-                'icon' => 'ph:wrench',
-            ],
-            'adyen_list_shoppers' => [
-                'class' => AdyenListShoppers::class,
-                'type' => 'read',
-                'name' => 'List Shoppers',
-                'description' => 'List shoppers with stored payment methods in Adyen. Returns shopper details for the configured merchant account.',
                 'icon' => 'ph:wrench',
             ],
             'adyen_list_stores' => [

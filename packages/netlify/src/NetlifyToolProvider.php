@@ -176,27 +176,6 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         public function tools(): array
     {
         return [
-            'netlify_create_deploy' => [
-                'class' => NetlifyCreateDeploy::class,
-                'type' => 'write',
-                'name' => 'Create Deploy',
-                'description' => 'Trigger a new deploy for a Netlify site. Optionally specify a title, branch, or framework override.',
-                'icon' => 'ph:wrench',
-            ],
-            'netlify_create_site' => [
-                'class' => NetlifyCreateSite::class,
-                'type' => 'write',
-                'name' => 'Create Site',
-                'description' => 'Create a new Netlify site. Provide a name and optional configuration like custom domain, build settings, or repository.',
-                'icon' => 'ph:wrench',
-            ],
-            'netlify_delete_site' => [
-                'class' => NetlifyDeleteSite::class,
-                'type' => 'write',
-                'name' => 'Delete Site',
-                'description' => 'Delete a Netlify site permanently. This removes all deploys, forms, and associated data. This action cannot be undone.',
-                'icon' => 'ph:wrench',
-            ],
             'netlify_get_current_user' => [
                 'class' => NetlifyGetCurrentUser::class,
                 'type' => 'read',
@@ -209,13 +188,6 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'type' => 'read',
                 'name' => 'Get Deploy',
                 'description' => 'Get detailed information about a specific Netlify deploy, including its state, build log, and commit details.',
-                'icon' => 'ph:wrench',
-            ],
-            'netlify_get_form' => [
-                'class' => NetlifyGetForm::class,
-                'type' => 'read',
-                'name' => 'Get Form',
-                'description' => 'Get detailed information about a specific Netlify form, including fields, submission count, and timestamps.',
                 'icon' => 'ph:wrench',
             ],
             'netlify_get_site' => [

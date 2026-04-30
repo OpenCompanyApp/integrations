@@ -171,20 +171,6 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         public function tools(): array
     {
         return [
-            'square_create_customer' => [
-                'class' => SquareCreateCustomer::class,
-                'type' => 'write',
-                'name' => 'Create Customer',
-                'description' => 'Create a new customer profile in Square with name, email, and phone details.',
-                'icon' => 'ph:wrench',
-            ],
-            'square_create_payment' => [
-                'class' => SquareCreatePayment::class,
-                'type' => 'write',
-                'name' => 'Create Payment',
-                'description' => 'Create a new payment in Square. Requires a payment source ID (e.g., a card nonce or card-on-file ID), an idempotency key, and the amount with currency.',
-                'icon' => 'ph:wrench',
-            ],
             'square_get_current_user' => [
                 'class' => SquareGetCurrentUser::class,
                 'type' => 'read',
@@ -218,13 +204,6 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'read',
                 'name' => 'List Customers',
                 'description' => 'List Square customers with optional filtering. Supports pagination with cursor.',
-                'icon' => 'ph:wrench',
-            ],
-            'square_list_locations' => [
-                'class' => SquareListLocations::class,
-                'type' => 'read',
-                'name' => 'List Locations',
-                'description' => 'List all business locations configured in Square, including name, address, and status.',
                 'icon' => 'ph:wrench',
             ],
             'square_list_orders' => [

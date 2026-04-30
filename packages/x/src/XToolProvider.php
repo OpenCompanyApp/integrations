@@ -149,13 +149,6 @@ public function validationRules(): array
                 'description' => 'Post a new tweet. Supports text only, replies, and media attachments. The tweet text must not exceed 280 characters.',
                 'icon' => 'ph:wrench',
             ],
-            'x_delete_tweet' => [
-                'class' => XDeleteTweet::class,
-                'type' => 'write',
-                'name' => 'Delete Tweet',
-                'description' => 'Delete a tweet by its ID. The tweet must belong to the authenticated user. This action is irreversible.',
-                'icon' => 'ph:wrench',
-            ],
             'x_get_current_user' => [
                 'class' => XGetCurrentUser::class,
                 'type' => 'read',
@@ -189,13 +182,6 @@ public function validationRules(): array
                 'type' => 'read',
                 'name' => 'List Tweets',
                 'description' => 'Look up multiple tweets by their IDs. Pass up to 100 tweet IDs and receive their text, metrics, and metadata in one call.',
-                'icon' => 'ph:wrench',
-            ],
-            'x_search_tweets' => [
-                'class' => XSearchTweets::class,
-                'type' => 'read',
-                'name' => 'Search Tweets',
-                'description' => 'Search recent tweets from the last 7 days using a query string. Supports Twitter search operators (e.g., from:user, #hashtag, "exact phrase").',
                 'icon' => 'ph:wrench',
             ],
         ];

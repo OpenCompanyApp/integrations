@@ -187,32 +187,11 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         public function tools(): array
     {
         return [
-            'xero_create_bank_transaction' => [
-                'class' => XeroCreateBankTransaction::class,
-                'type' => 'write',
-                'name' => 'Create Bank Transaction',
-                'description' => 'Create a Xero bank transaction (spend or receive money). Requires type, contact ID, line items, and bank account ID.',
-                'icon' => 'ph:wrench',
-            ],
-            'xero_create_contact' => [
-                'class' => XeroCreateContact::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create a Xero contact. Requires a name. Supports email, phone, first name, and last name.',
-                'icon' => 'ph:wrench',
-            ],
             'xero_create_invoice' => [
                 'class' => XeroCreateInvoice::class,
                 'type' => 'write',
                 'name' => 'Create Invoice',
                 'description' => 'Create a new invoice in Xero. Requires a contact_id and at least one line item with description and unit_amount. Returns the created invoice with its ID and number.',
-                'icon' => 'ph:wrench',
-            ],
-            'xero_create_payment' => [
-                'class' => XeroCreatePayment::class,
-                'type' => 'write',
-                'name' => 'Create Payment',
-                'description' => 'Create a payment in Xero against an invoice. Requires invoice ID, bank account ID, and amount.',
                 'icon' => 'ph:wrench',
             ],
             'xero_get_contact' => [
@@ -243,13 +222,6 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'description' => 'List Xero chart of accounts. Returns account codes, names, types, tax types, and statuses.',
                 'icon' => 'ph:wrench',
             ],
-            'xero_list_bank_transactions' => [
-                'class' => XeroListBankTransactions::class,
-                'type' => 'read',
-                'name' => 'List Bank Transactions',
-                'description' => 'List Xero bank transactions with optional pagination. Returns spend and receive money transactions.',
-                'icon' => 'ph:wrench',
-            ],
             'xero_list_contacts' => [
                 'class' => XeroListContacts::class,
                 'type' => 'read',
@@ -262,34 +234,6 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 'type' => 'read',
                 'name' => 'List Invoices',
                 'description' => 'List Xero invoices with pagination and filtering. Returns invoice IDs, numbers, amounts, status, and dates. Use page and pageSize for pagination.',
-                'icon' => 'ph:wrench',
-            ],
-            'xero_list_organisations' => [
-                'class' => XeroListOrganisations::class,
-                'type' => 'read',
-                'name' => 'List Organisations',
-                'description' => 'List connected Xero organisations. Returns organisation details including name, legal name, currency, and country.',
-                'icon' => 'ph:wrench',
-            ],
-            'xero_list_payments' => [
-                'class' => XeroListPayments::class,
-                'type' => 'read',
-                'name' => 'List Payments',
-                'description' => 'List Xero payments with optional filtering and pagination. Filter by status (AUTHORISED, DELETED) and date range.',
-                'icon' => 'ph:wrench',
-            ],
-            'xero_update_contact' => [
-                'class' => XeroUpdateContact::class,
-                'type' => 'write',
-                'name' => 'Update Contact',
-                'description' => 'Update an existing Xero contact. Supports updating name, email, and phone number.',
-                'icon' => 'ph:wrench',
-            ],
-            'xero_update_invoice' => [
-                'class' => XeroUpdateInvoice::class,
-                'type' => 'write',
-                'name' => 'Update Invoice',
-                'description' => 'Update an existing Xero invoice. Supports changing the status (e.g. to AUTHORISED) and updating line items.',
                 'icon' => 'ph:wrench',
             ],
         ];

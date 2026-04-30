@@ -165,34 +165,6 @@ class MailgunToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         public function tools(): array
     {
         return [
-            'mailgun_add_member' => [
-                'class' => MailgunAddMember::class,
-                'type' => 'write',
-                'name' => 'Add Member',
-                'description' => 'Add a member to a Mailgun mailing list. Requires list_address and member address.',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_add_member_bulk' => [
-                'class' => MailgunAddMemberBulk::class,
-                'type' => 'write',
-                'name' => 'Add Member Bulk',
-                'description' => 'Add multiple members to a Mailgun mailing list in a single request. Uses upsert mode — existing members are updated. Each member object must contain at least an "address" key, and may include "name" and "vars".',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_create_mailing_list' => [
-                'class' => MailgunCreateMailingList::class,
-                'type' => 'write',
-                'name' => 'Create Mailing List',
-                'description' => 'Create a new mailing list in Mailgun. Requires an address. Optionally include a name and description.',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_create_suppression' => [
-                'class' => MailgunCreateSuppression::class,
-                'type' => 'write',
-                'name' => 'Create Suppression',
-                'description' => 'Create a bounce (suppression) for an address on a Mailgun domain. Prevents future email delivery to that address.',
-                'icon' => 'ph:wrench',
-            ],
             'mailgun_get_current_user' => [
                 'class' => MailgunGetCurrentUser::class,
                 'type' => 'read',
@@ -207,46 +179,11 @@ class MailgunToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'Get details and DNS records for a specific Mailgun domain.',
                 'icon' => 'ph:wrench',
             ],
-            'mailgun_get_events' => [
-                'class' => MailgunGetEvents::class,
-                'type' => 'read',
-                'name' => 'Get Events',
-                'description' => 'Get events for the Mailgun domain. Filter by event type, date range, limit, and recipient.',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_get_stats' => [
-                'class' => MailgunGetStats::class,
-                'type' => 'read',
-                'name' => 'Get Stats',
-                'description' => 'Get total stats for the Mailgun domain. Filter by event type, date range, and resolution (hour, day, month).',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_get_suppressions' => [
-                'class' => MailgunGetSuppressions::class,
-                'type' => 'read',
-                'name' => 'Get Suppressions',
-                'description' => 'Get bounces (suppressions) for a Mailgun domain. Returns bounced addresses with codes and error messages.',
-                'icon' => 'ph:wrench',
-            ],
             'mailgun_list_domains' => [
                 'class' => MailgunListDomains::class,
                 'type' => 'read',
                 'name' => 'List Domains',
                 'description' => 'List all domains in your Mailgun account with optional pagination.',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_list_mailing_lists' => [
-                'class' => MailgunListMailingLists::class,
-                'type' => 'read',
-                'name' => 'List Mailing Lists',
-                'description' => 'List all mailing lists in the Mailgun account. Supports pagination.',
-                'icon' => 'ph:wrench',
-            ],
-            'mailgun_list_members' => [
-                'class' => MailgunListMembers::class,
-                'type' => 'read',
-                'name' => 'List Members',
-                'description' => 'List members of a Mailgun mailing list. Requires the list address.',
                 'icon' => 'ph:wrench',
             ],
             'mailgun_list_messages' => [

@@ -178,27 +178,6 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         public function tools(): array
     {
         return [
-            'baserow_batch_create' => [
-                'class' => BaserowBatchCreate::class,
-                'type' => 'write',
-                'name' => 'Batch Create',
-                'description' => 'Create multiple rows in a Baserow table in a single request.',
-                'icon' => 'ph:wrench',
-            ],
-            'baserow_batch_delete' => [
-                'class' => BaserowBatchDelete::class,
-                'type' => 'write',
-                'name' => 'Batch Delete',
-                'description' => 'Delete multiple rows from a Baserow table in a single request.',
-                'icon' => 'ph:wrench',
-            ],
-            'baserow_batch_update' => [
-                'class' => BaserowBatchUpdate::class,
-                'type' => 'write',
-                'name' => 'Batch Update',
-                'description' => 'Update multiple rows in a Baserow table in a single request. Each row must include its "id".',
-                'icon' => 'ph:wrench',
-            ],
             'baserow_create_row' => [
                 'class' => BaserowCreateRow::class,
                 'type' => 'write',
@@ -227,32 +206,11 @@ class BaserowToolProvider implements ToolProvider, ConfigurableIntegration, HasI
                 'description' => 'Get a single row from a Baserow database table by its row ID. Returns all field values for the row.',
                 'icon' => 'ph:wrench',
             ],
-            'baserow_get_table' => [
-                'class' => BaserowGetTable::class,
-                'type' => 'read',
-                'name' => 'Get Table',
-                'description' => 'Get details for a single Baserow table by its ID.',
-                'icon' => 'ph:wrench',
-            ],
             'baserow_list_databases' => [
                 'class' => BaserowListDatabases::class,
                 'type' => 'read',
                 'name' => 'List Databases',
                 'description' => 'List all databases (applications) in the Baserow workspace. Returns database names, IDs, and types for navigation.',
-                'icon' => 'ph:wrench',
-            ],
-            'baserow_list_fields' => [
-                'class' => BaserowListFields::class,
-                'type' => 'read',
-                'name' => 'List Fields',
-                'description' => 'List all fields (columns) and their types in a Baserow table.',
-                'icon' => 'ph:wrench',
-            ],
-            'baserow_list_rows' => [
-                'class' => BaserowListRows::class,
-                'type' => 'read',
-                'name' => 'List Rows',
-                'description' => 'List rows in a Baserow table with optional filtering, searching, sorting, and pagination.',
                 'icon' => 'ph:wrench',
             ],
             'baserow_list_tables' => [

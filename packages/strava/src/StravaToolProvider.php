@@ -221,13 +221,6 @@ class StravaToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'Get the authenticated athlete\'s Strava profile â name, location, follower/following counts, and stats.',
                 'icon' => 'ph:wrench',
             ],
-            'strava_get_club' => [
-                'class' => StravaGetClub::class,
-                'type' => 'read',
-                'name' => 'Get Club',
-                'description' => 'Get details about a specific Strava club, including name, description, member count, and sport types.',
-                'icon' => 'ph:wrench',
-            ],
             'strava_get_current_user' => [
                 'class' => StravaGetCurrentUser::class,
                 'type' => 'read',
@@ -247,13 +240,6 @@ class StravaToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'type' => 'read',
                 'name' => 'List Clubs',
                 'description' => 'List clubs the authenticated Strava athlete belongs to. Returns club names, member counts, and sport types.',
-                'icon' => 'ph:wrench',
-            ],
-            'strava_list_routes' => [
-                'class' => StravaListRoutes::class,
-                'type' => 'read',
-                'name' => 'List Routes',
-                'description' => 'List routes created by a specific Strava athlete. Requires the athlete ID.',
                 'icon' => 'ph:wrench',
             ],
         ];

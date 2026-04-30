@@ -228,13 +228,6 @@ class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
                 'description' => 'List phone numbers purchased on your Vonage account. Optionally filter by pattern.',
                 'icon' => 'ph:wrench',
             ],
-            'vonage_list_sms' => [
-                'class' => VonageListSms::class,
-                'type' => 'read',
-                'name' => 'List Sms',
-                'description' => 'Search and list SMS messages from your Vonage account. Requires a date in ISO format.',
-                'icon' => 'ph:wrench',
-            ],
             'vonage_send_sms' => [
                 'class' => VonageSendSms::class,
                 'type' => 'write',

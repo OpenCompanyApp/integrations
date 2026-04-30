@@ -183,13 +183,6 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration, Has
         public function tools(): array
     {
         return [
-            'mixpanel_funnel' => [
-                'class' => MixpanelFunnel::class,
-                'type' => 'read',
-                'name' => 'Funnel',
-                'description' => 'Get conversion funnel results for a specific funnel.',
-                'icon' => 'ph:wrench',
-            ],
             'mixpanel_get_cohort' => [
                 'class' => MixpanelGetCohort::class,
                 'type' => 'read',
@@ -209,13 +202,6 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'type' => 'read',
                 'name' => 'Get Event',
                 'description' => 'Retrieve analytics data for a specific Mixpanel event by name. Returns event counts and breakdowns over time.',
-                'icon' => 'ph:wrench',
-            ],
-            'mixpanel_get_export' => [
-                'class' => MixpanelGetExport::class,
-                'type' => 'read',
-                'name' => 'Get Export',
-                'description' => 'Export raw event data from Mixpanel for a date range.',
                 'icon' => 'ph:wrench',
             ],
             'mixpanel_get_funnel' => [
@@ -244,41 +230,6 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'type' => 'read',
                 'name' => 'List Funnels',
                 'description' => 'List all funnels configured in the Mixpanel project. Returns funnel names, IDs, and basic configuration.',
-                'icon' => 'ph:wrench',
-            ],
-            'mixpanel_profile' => [
-                'class' => MixpanelProfile::class,
-                'type' => 'read',
-                'name' => 'Profile',
-                'description' => 'Set or update a Mixpanel user profile with properties.',
-                'icon' => 'ph:wrench',
-            ],
-            'mixpanel_query' => [
-                'class' => MixpanelQuery::class,
-                'type' => 'read',
-                'name' => 'Query',
-                'description' => 'Query Mixpanel event data with date range, type, and time unit.',
-                'icon' => 'ph:wrench',
-            ],
-            'mixpanel_query_jql' => [
-                'class' => MixpanelQueryJql::class,
-                'type' => 'read',
-                'name' => 'Query Jql',
-                'description' => 'Execute a JQL (JavaScript Query Language) script against Mixpanel data.',
-                'icon' => 'ph:wrench',
-            ],
-            'mixpanel_retention' => [
-                'class' => MixpanelRetention::class,
-                'type' => 'read',
-                'name' => 'Retention',
-                'description' => 'Get retention data for a cohort of users over time.',
-                'icon' => 'ph:wrench',
-            ],
-            'mixpanel_track_event' => [
-                'class' => MixpanelTrackEvent::class,
-                'type' => 'write',
-                'name' => 'Track Event',
-                'description' => 'Track an event in Mixpanel with optional properties and user identity.',
                 'icon' => 'ph:wrench',
             ],
         ];

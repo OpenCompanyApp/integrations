@@ -208,20 +208,6 @@ class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
         public function tools(): array
     {
         return [
-            'supabase_count_rows' => [
-                'class' => SupabaseCountRows::class,
-                'type' => 'read',
-                'name' => 'Count Rows',
-                'description' => 'Count rows in a Supabase table, optionally filtered. Uses PostgREST count=exact with a select=count query. Filters use PostgREST syntax, e.g. {"status": "eq.active"}.',
-                'icon' => 'ph:wrench',
-            ],
-            'supabase_delete_row' => [
-                'class' => SupabaseDeleteRow::class,
-                'type' => 'write',
-                'name' => 'Delete Row',
-                'description' => 'Delete a row from a Supabase table by its primary key id. Optionally return the deleted row data.',
-                'icon' => 'ph:wrench',
-            ],
             'supabase_get_current_user' => [
                 'class' => SupabaseGetCurrentUser::class,
                 'type' => 'read',
@@ -257,20 +243,6 @@ class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'Get details of a specific table in a Supabase project by its ID.',
                 'icon' => 'ph:wrench',
             ],
-            'supabase_insert_batch' => [
-                'class' => SupabaseInsertBatch::class,
-                'type' => 'read',
-                'name' => 'Insert Batch',
-                'description' => 'Insert multiple rows into a Supabase table in a single batch request. Provide an array of row objects. Optionally enable upsert mode to merge duplicates.',
-                'icon' => 'ph:wrench',
-            ],
-            'supabase_insert_row' => [
-                'class' => SupabaseInsertRow::class,
-                'type' => 'read',
-                'name' => 'Insert Row',
-                'description' => 'Insert a single row into a Supabase table. Provide column values as a JSON object. Optionally enable upsert mode to merge duplicates on conflict.',
-                'icon' => 'ph:wrench',
-            ],
             'supabase_list_projects' => [
                 'class' => SupabaseListProjects::class,
                 'type' => 'read',
@@ -292,39 +264,11 @@ class SupabaseToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'List all tables in a Supabase project. Returns table IDs, names, and schemas.',
                 'icon' => 'ph:wrench',
             ],
-            'supabase_query_sql' => [
-                'class' => SupabaseQuerySql::class,
-                'type' => 'read',
-                'name' => 'Query Sql',
-                'description' => 'Execute a raw SQL query on the Supabase database via the exec_sql RPC function. Note: This requires the exec_sql function to be defined in the Supabase database. Use for advanced queries that cannot be expressed through standard PostgREST filters.',
-                'icon' => 'ph:wrench',
-            ],
             'supabase_query_with_filters' => [
                 'class' => SupabaseQueryWithFilters::class,
                 'type' => 'read',
                 'name' => 'Query With Filters',
                 'description' => 'Query a Supabase table using advanced PostgREST filter operators. Provide filters as a JSON array of objects, each with "column", "operator", and "value" keys. Supported operators: eq, neq, gt, gte, lt, lte, like, ilike, in, is, cs, cd, ov, sl, sr, nxr, nxl, adj, not, or, and. Example filters_json: [ {"column": "status", "operator": "eq", "value": "active"}, {"column": "age", "operator": "gte", "value": 18} ]',
-                'icon' => 'ph:wrench',
-            ],
-            'supabase_rpc' => [
-                'class' => SupabaseRpc::class,
-                'type' => 'read',
-                'name' => 'Rpc',
-                'description' => 'Call a remote procedure (RPC function) defined in the Supabase database. Provide the function name and a JSON object of parameters.',
-                'icon' => 'ph:wrench',
-            ],
-            'supabase_update_row' => [
-                'class' => SupabaseUpdateRow::class,
-                'type' => 'write',
-                'name' => 'Update Row',
-                'description' => 'Update an existing row in a Supabase table by its primary key id. Provide the columns to update as a JSON object.',
-                'icon' => 'ph:wrench',
-            ],
-            'supabase_upsert_row' => [
-                'class' => SupabaseUpsertRow::class,
-                'type' => 'read',
-                'name' => 'Upsert Row',
-                'description' => 'Upsert a row into a Supabase table. If a row with the same unique key exists, it will be merged (updated); otherwise a new row is inserted. Specify the on_conflict columns to define the unique constraint.',
                 'icon' => 'ph:wrench',
             ],
         ];

@@ -144,13 +144,6 @@ public function validationRules(): array
         public function tools(): array
     {
         return [
-            'sinch_get_call' => [
-                'class' => SinchGetCall::class,
-                'type' => 'read',
-                'name' => 'Get Call',
-                'description' => 'Retrieve details of a specific Sinch call record by its ID, including duration, direction, and participants.',
-                'icon' => 'ph:wrench',
-            ],
             'sinch_get_group' => [
                 'class' => SinchGetGroup::class,
                 'type' => 'read',
@@ -165,25 +158,11 @@ public function validationRules(): array
                 'description' => 'Get details for a specific phone number in your Sinch account.',
                 'icon' => 'ph:wrench',
             ],
-            'sinch_list_applications' => [
-                'class' => SinchListApplications::class,
-                'type' => 'read',
-                'name' => 'List Applications',
-                'description' => 'List Sinch voice and SMS applications configured in your account. Applications define how calls and messages are routed.',
-                'icon' => 'ph:wrench',
-            ],
             'sinch_list_batches' => [
                 'class' => SinchListBatches::class,
                 'type' => 'read',
                 'name' => 'List Batches',
                 'description' => 'List all message batches in your Sinch account with pagination.',
-                'icon' => 'ph:wrench',
-            ],
-            'sinch_list_calls' => [
-                'class' => SinchListCalls::class,
-                'type' => 'read',
-                'name' => 'List Calls',
-                'description' => 'List call history records from Sinch. Supports filtering by caller and callee phone numbers with pagination.',
                 'icon' => 'ph:wrench',
             ],
             'sinch_list_groups' => [

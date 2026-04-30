@@ -140,13 +140,6 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         public function tools(): array
     {
         return [
-            'vercel_create_deployment' => [
-                'class' => VercelCreateDeployment::class,
-                'type' => 'write',
-                'name' => 'Create Deployment',
-                'description' => 'Create a new deployment on Vercel. Provide a project name and either file contents or a Git source reference. Returns the new deployment ID and URL.',
-                'icon' => 'ph:wrench',
-            ],
             'vercel_get_current_user' => [
                 'class' => VercelGetCurrentUser::class,
                 'type' => 'read',

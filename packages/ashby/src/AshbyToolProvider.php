@@ -172,13 +172,6 @@ class AshbyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         public function tools(): array
     {
         return [
-            'ashby_create_note' => [
-                'class' => AshbyCreateNote::class,
-                'type' => 'write',
-                'name' => 'Create Note',
-                'description' => 'Create a note in Ashby attached to a candidate, application, or job. Notes are visible to the hiring team and appear in activity feeds.',
-                'icon' => 'ph:wrench',
-            ],
             'ashby_get_application' => [
                 'class' => AshbyGetApplication::class,
                 'type' => 'read',
@@ -212,13 +205,6 @@ class AshbyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'type' => 'read',
                 'name' => 'List Applications',
                 'description' => 'List job applications in Ashby. Returns applications with candidate info, status, and associated job. Use filters to narrow by job or status.',
-                'icon' => 'ph:wrench',
-            ],
-            'ashby_list_candidates' => [
-                'class' => AshbyListCandidates::class,
-                'type' => 'read',
-                'name' => 'List Candidates',
-                'description' => 'List candidates from Ashby. Returns candidate profiles with contact info, tags, and source. Supports filtering by name, email, tags, and pagination.',
                 'icon' => 'ph:wrench',
             ],
             'ashby_list_interviews' => [

@@ -169,13 +169,6 @@ class FrontToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         public function tools(): array
     {
         return [
-            'front_create_message' => [
-                'class' => FrontCreateMessage::class,
-                'type' => 'write',
-                'name' => 'Create Message',
-                'description' => 'Create and send a new message through Front. Supports sending emails, tweets, and other channel messages. The message is sent on behalf of the authenticated user or a specified sender.',
-                'icon' => 'ph:wrench',
-            ],
             'front_get_contact' => [
                 'class' => FrontGetContact::class,
                 'type' => 'read',
@@ -197,20 +190,6 @@ class FrontToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'Get the profile of the currently authenticated Front user. Returns name, email, and account details.',
                 'icon' => 'ph:wrench',
             ],
-            'front_get_inbox' => [
-                'class' => FrontGetInbox::class,
-                'type' => 'read',
-                'name' => 'Get Inbox',
-                'description' => 'Get details for a specific Front inbox by ID, including name, type, teammates, and default sender.',
-                'icon' => 'ph:wrench',
-            ],
-            'front_get_message' => [
-                'class' => FrontGetMessage::class,
-                'type' => 'read',
-                'name' => 'Get Message',
-                'description' => 'Get details for a specific Front message by ID, including sender, recipients, subject, body, and attachments.',
-                'icon' => 'ph:wrench',
-            ],
             'front_list_contacts' => [
                 'class' => FrontListContacts::class,
                 'type' => 'read',
@@ -223,13 +202,6 @@ class FrontToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'type' => 'read',
                 'name' => 'List Conversations',
                 'description' => 'List and search conversations in Front. Filter by status or search by keyword. Returns paginated results with conversation IDs, subjects, and metadata.',
-                'icon' => 'ph:wrench',
-            ],
-            'front_list_inboxes' => [
-                'class' => FrontListInboxes::class,
-                'type' => 'read',
-                'name' => 'List Inboxes',
-                'description' => 'List all inboxes in the Front workspace. Returns inbox IDs, names, and types you can use to filter messages or get inbox details.',
                 'icon' => 'ph:wrench',
             ],
             'front_list_messages' => [

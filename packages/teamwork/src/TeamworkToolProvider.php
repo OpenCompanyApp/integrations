@@ -175,32 +175,11 @@ class TeamworkToolProvider implements ToolProvider, ConfigurableIntegration, Has
         public function tools(): array
     {
         return [
-            'teamwork_complete_task' => [
-                'class' => TeamworkCompleteTask::class,
-                'type' => 'write',
-                'name' => 'Complete Task',
-                'description' => 'Mark a Teamwork task as complete. Provide the task ID.',
-                'icon' => 'ph:wrench',
-            ],
-            'teamwork_create_project' => [
-                'class' => TeamworkCreateProject::class,
-                'type' => 'write',
-                'name' => 'Create Project',
-                'description' => 'Create a new project in Teamwork. Provide a name and optional description.',
-                'icon' => 'ph:wrench',
-            ],
             'teamwork_create_task' => [
                 'class' => TeamworkCreateTask::class,
                 'type' => 'write',
                 'name' => 'Create Task',
                 'description' => 'Create a new task in Teamwork.',
-                'icon' => 'ph:wrench',
-            ],
-            'teamwork_create_time_entry' => [
-                'class' => TeamworkCreateTimeEntry::class,
-                'type' => 'write',
-                'name' => 'Create Time Entry',
-                'description' => 'Log a time entry against a Teamwork project. Provide the project ID and time details (hours, minutes, date, description).',
                 'icon' => 'ph:wrench',
             ],
             'teamwork_get_current_user' => [
@@ -224,13 +203,6 @@ class TeamworkToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'Get detailed information about a Teamwork task.',
                 'icon' => 'ph:wrench',
             ],
-            'teamwork_get_team' => [
-                'class' => TeamworkGetTeam::class,
-                'type' => 'read',
-                'name' => 'Get Team',
-                'description' => 'Get detailed information about a single Teamwork team, including members and settings.',
-                'icon' => 'ph:wrench',
-            ],
             'teamwork_list_projects' => [
                 'class' => TeamworkListProjects::class,
                 'type' => 'read',
@@ -245,32 +217,11 @@ class TeamworkToolProvider implements ToolProvider, ConfigurableIntegration, Has
                 'description' => 'List tasks in Teamwork with optional filters.',
                 'icon' => 'ph:wrench',
             ],
-            'teamwork_list_teams' => [
-                'class' => TeamworkListTeams::class,
-                'type' => 'read',
-                'name' => 'List Teams',
-                'description' => 'List teams in Teamwork. Returns team names, IDs, and member counts.',
-                'icon' => 'ph:wrench',
-            ],
-            'teamwork_list_time_entries' => [
-                'class' => TeamworkListTimeEntries::class,
-                'type' => 'read',
-                'name' => 'List Time Entries',
-                'description' => 'List time entries logged against a Teamwork project. Returns hours, descriptions, dates, and who logged them.',
-                'icon' => 'ph:wrench',
-            ],
             'teamwork_list_timers' => [
                 'class' => TeamworkListTimers::class,
                 'type' => 'read',
                 'name' => 'List Timers',
                 'description' => 'List time timers for the authenticated user in Teamwork.',
-                'icon' => 'ph:wrench',
-            ],
-            'teamwork_update_task' => [
-                'class' => TeamworkUpdateTask::class,
-                'type' => 'write',
-                'name' => 'Update Task',
-                'description' => 'Update an existing task in Teamwork. Provide the task ID and the fields to change (name, description, dueDate, priority, assigneeIds, etc.).',
                 'icon' => 'ph:wrench',
             ],
         ];

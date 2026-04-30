@@ -231,13 +231,6 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'description' => 'List entries submitted to a Wufoo form. Supports pagination and optional filters to narrow results. Use the page and pageSize parameters to paginate through large result sets.',
                 'icon' => 'ph:wrench',
             ],
-            'wufoo_list_fields' => [
-                'class' => WufooListFields::class,
-                'type' => 'read',
-                'name' => 'List Fields',
-                'description' => 'List all fields for a specific Wufoo form. Returns field types, labels, API IDs, and validation rules. Use this to discover field IDs before submitting entries.',
-                'icon' => 'ph:wrench',
-            ],
             'wufoo_list_forms' => [
                 'class' => WufooListForms::class,
                 'type' => 'read',
@@ -250,13 +243,6 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'type' => 'read',
                 'name' => 'List Reports',
                 'description' => 'List all reports in your Wufoo account. Returns report identifiers, names, descriptions, and the forms they are associated with.',
-                'icon' => 'ph:wrench',
-            ],
-            'wufoo_submit_entry' => [
-                'class' => WufooSubmitEntry::class,
-                'type' => 'read',
-                'name' => 'Submit Entry',
-                'description' => 'Submit a new entry to a Wufoo form. Provide field values keyed by their API field IDs (e.g., Field1, Field2). Use list_fields to discover the field IDs for a form.',
                 'icon' => 'ph:wrench',
             ],
         ];

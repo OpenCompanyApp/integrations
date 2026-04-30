@@ -175,25 +175,11 @@ class PinterestToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         public function tools(): array
     {
         return [
-            'pinterest_create_board' => [
-                'class' => PinterestCreateBoard::class,
-                'type' => 'write',
-                'name' => 'Create Board',
-                'description' => 'Create a new board on Pinterest. Boards are collections of pins organized around a theme.',
-                'icon' => 'ph:wrench',
-            ],
             'pinterest_create_pin' => [
                 'class' => PinterestCreatePin::class,
                 'type' => 'write',
                 'name' => 'Create Pin',
                 'description' => 'Create a new pin on a Pinterest board. Provide the board ID, title, description, and image URL. Optionally include a destination link.',
-                'icon' => 'ph:wrench',
-            ],
-            'pinterest_delete_pin' => [
-                'class' => PinterestDeletePin::class,
-                'type' => 'write',
-                'name' => 'Delete Pin',
-                'description' => 'Delete a pin from Pinterest. This action is permanent and cannot be undone.',
                 'icon' => 'ph:wrench',
             ],
             'pinterest_get_board' => [

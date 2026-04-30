@@ -177,20 +177,6 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, H
                 'description' => 'Create a new contact in Freshsales CRM with name, email, and phone details.',
                 'icon' => 'ph:wrench',
             ],
-            'freshsales_create_deal' => [
-                'class' => FreshsalesCreateDeal::class,
-                'type' => 'write',
-                'name' => 'Create Deal',
-                'description' => 'Create a new deal in Freshsales CRM. Requires a name. Optionally set amount, stage, and close date.',
-                'icon' => 'ph:wrench',
-            ],
-            'freshsales_delete_contact' => [
-                'class' => FreshsalesDeleteContact::class,
-                'type' => 'write',
-                'name' => 'Delete Contact',
-                'description' => 'Delete a contact from Freshsales CRM by ID. This action is permanent.',
-                'icon' => 'ph:wrench',
-            ],
             'freshsales_get_contact' => [
                 'class' => FreshsalesGetContact::class,
                 'type' => 'read',
@@ -231,13 +217,6 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, H
                 'type' => 'read',
                 'name' => 'List Deals',
                 'description' => 'List deals from Freshsales CRM. Returns paginated results showing deal pipeline information.',
-                'icon' => 'ph:wrench',
-            ],
-            'freshsales_update_contact' => [
-                'class' => FreshsalesUpdateContact::class,
-                'type' => 'write',
-                'name' => 'Update Contact',
-                'description' => 'Update an existing contact in Freshsales CRM. Provide the contact ID and the fields to update.',
                 'icon' => 'ph:wrench',
             ],
         ];

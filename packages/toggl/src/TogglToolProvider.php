@@ -162,25 +162,11 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         public function tools(): array
     {
         return [
-            'toggl_create_project' => [
-                'class' => TogglCreateProject::class,
-                'type' => 'write',
-                'name' => 'Create Project',
-                'description' => 'Create a new project in a Toggl Track workspace.',
-                'icon' => 'ph:wrench',
-            ],
             'toggl_create_time_entry' => [
                 'class' => TogglCreateTimeEntry::class,
                 'type' => 'write',
                 'name' => 'Create Time Entry',
                 'description' => 'Create a new time entry in a Toggl workspace. Provide a description, start time, and optionally a project and stop time.',
-                'icon' => 'ph:wrench',
-            ],
-            'toggl_delete_time_entry' => [
-                'class' => TogglDeleteTimeEntry::class,
-                'type' => 'write',
-                'name' => 'Delete Time Entry',
-                'description' => 'Delete a time entry from Toggl Track. This action is permanent and cannot be undone.',
                 'icon' => 'ph:wrench',
             ],
             'toggl_get_current_user' => [
@@ -223,13 +209,6 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
                 'type' => 'read',
                 'name' => 'List Workspaces',
                 'description' => 'List all Toggl workspaces the authenticated user belongs to. Returns workspace IDs and names needed for other Toggl tools.',
-                'icon' => 'ph:wrench',
-            ],
-            'toggl_update_time_entry' => [
-                'class' => TogglUpdateTimeEntry::class,
-                'type' => 'write',
-                'name' => 'Update Time Entry',
-                'description' => 'Update an existing time entry in Toggl Track. Use this to edit description, times, project, tags, or billable status.',
                 'icon' => 'ph:wrench',
             ],
         ];

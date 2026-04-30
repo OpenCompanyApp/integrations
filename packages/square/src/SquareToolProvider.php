@@ -15,6 +15,9 @@ use OpenCompany\Integrations\Square\Tools\SquareGetOrder;
 use OpenCompany\Integrations\Square\Tools\SquareGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Square\Tools\SquareCreateCustomer;
+use OpenCompany\Integrations\Square\Tools\SquareCreatePayment;
+use OpenCompany\Integrations\Square\Tools\SquareListLocations;
 /**
  * Registers all Square tools and provides integration metadata.
  */
@@ -165,64 +168,82 @@ class SquareToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            // Payments
-            'square_list_payments' => [
-                'class' => SquareListPayments::class,
-                'type' => 'read',
-                'name' => 'List Payments',
-                'description' => 'List Square payments with optional filtering.',
-                'icon' => 'ph:credit-card',
+            'square_create_customer' => [
+                'class' => SquareCreateCustomer::class,
+                'type' => 'write',
+                'name' => 'Create Customer',
+                'description' => 'Create a new customer profile in Square with name, email, and phone details.',
+                'icon' => 'ph:wrench',
             ],
-            'square_get_payment' => [
-                'class' => SquareGetPayment::class,
-                'type' => 'read',
-                'name' => 'Get Payment',
-                'description' => 'Retrieve a Square payment by ID.',
-                'icon' => 'ph:credit-card',
+            'square_create_payment' => [
+                'class' => SquareCreatePayment::class,
+                'type' => 'write',
+                'name' => 'Create Payment',
+                'description' => 'Create a new payment in Square. Requires a payment source ID (e.g., a card nonce or card-on-file ID), an idempotency key, and the amount with currency.',
+                'icon' => 'ph:wrench',
             ],
-            // Customers
-            'square_list_customers' => [
-                'class' => SquareListCustomers::class,
+            'square_get_current_user' => [
+                'class' => SquareGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'List Customers',
-                'description' => 'List Square customers.',
-                'icon' => 'ph:users',
+                'name' => 'Get Current User',
+                'description' => 'Get the current authenticated Square merchant account. Returns merchant details including business name, country, currency, and status.',
+                'icon' => 'ph:wrench',
             ],
             'square_get_customer' => [
                 'class' => SquareGetCustomer::class,
                 'type' => 'read',
                 'name' => 'Get Customer',
-                'description' => 'Retrieve a Square customer by ID.',
-                'icon' => 'ph:user',
-            ],
-            // Orders
-            'square_list_orders' => [
-                'class' => SquareListOrders::class,
-                'type' => 'read',
-                'name' => 'List Orders',
-                'description' => 'List Square orders for a location.',
-                'icon' => 'ph:receipt',
+                'description' => 'Retrieve a Square customer by ID. Returns full customer details including email, phone, address, and cards on file.',
+                'icon' => 'ph:wrench',
             ],
             'square_get_order' => [
                 'class' => SquareGetOrder::class,
                 'type' => 'read',
                 'name' => 'Get Order',
-                'description' => 'Retrieve a Square order by ID.',
-                'icon' => 'ph:receipt',
+                'description' => 'Retrieve a Square order by ID. Returns full order details including line items, totals, taxes, and discounts.',
+                'icon' => 'ph:wrench',
             ],
-            // Current User
-            'square_get_current_user' => [
-                'class' => SquareGetCurrentUser::class,
+            'square_get_payment' => [
+                'class' => SquareGetPayment::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the current authenticated Square merchant.',
-                'icon' => 'ph:storefront',
+                'name' => 'Get Payment',
+                'description' => 'Retrieve a Square payment by ID. Returns full payment details including amount, status, card details, and processing fees.',
+                'icon' => 'ph:wrench',
+            ],
+            'square_list_customers' => [
+                'class' => SquareListCustomers::class,
+                'type' => 'read',
+                'name' => 'List Customers',
+                'description' => 'List Square customers with optional filtering. Supports pagination with cursor.',
+                'icon' => 'ph:wrench',
+            ],
+            'square_list_locations' => [
+                'class' => SquareListLocations::class,
+                'type' => 'read',
+                'name' => 'List Locations',
+                'description' => 'List all business locations configured in Square, including name, address, and status.',
+                'icon' => 'ph:wrench',
+            ],
+            'square_list_orders' => [
+                'class' => SquareListOrders::class,
+                'type' => 'read',
+                'name' => 'List Orders',
+                'description' => 'List Square orders for a specific location. Requires a location_id. Supports filtering by order states and pagination with cursor.',
+                'icon' => 'ph:wrench',
+            ],
+            'square_list_payments' => [
+                'class' => SquareListPayments::class,
+                'type' => 'read',
+                'name' => 'List Payments',
+                'description' => 'List Square payments with optional filtering. Supports filtering by location ID, begin_time / end_time (ISO 8601), and pagination with cursor.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

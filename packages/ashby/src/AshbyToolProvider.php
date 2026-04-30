@@ -15,6 +15,8 @@ use OpenCompany\Integrations\Ashby\Tools\AshbyGetInterview;
 use OpenCompany\Integrations\Ashby\Tools\AshbyGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Ashby\Tools\AshbyCreateNote;
+use OpenCompany\Integrations\Ashby\Tools\AshbyListCandidates;
 /**
  * Tool provider for the Ashby ATS integration.
  *
@@ -167,60 +169,75 @@ class AshbyToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'ashby_list_applications' => [
-                'class' => AshbyListApplications::class,
-                'type' => 'read',
-                'name' => 'List Applications',
-                'description' => 'List job applications with optional filters.',
-                'icon' => 'ph:clipboard-text',
+            'ashby_create_note' => [
+                'class' => AshbyCreateNote::class,
+                'type' => 'write',
+                'name' => 'Create Note',
+                'description' => 'Create a note in Ashby attached to a candidate, application, or job. Notes are visible to the hiring team and appear in activity feeds.',
+                'icon' => 'ph:wrench',
             ],
             'ashby_get_application' => [
                 'class' => AshbyGetApplication::class,
                 'type' => 'read',
                 'name' => 'Get Application',
-                'description' => 'Get details for a specific application.',
-                'icon' => 'ph:clipboard-text',
-            ],
-            'ashby_list_jobs' => [
-                'class' => AshbyListJobs::class,
-                'type' => 'read',
-                'name' => 'List Jobs',
-                'description' => 'List open and closed job postings.',
-                'icon' => 'ph:briefcase',
-            ],
-            'ashby_get_job' => [
-                'class' => AshbyGetJob::class,
-                'type' => 'read',
-                'name' => 'Get Job',
-                'description' => 'Get details for a specific job.',
-                'icon' => 'ph:briefcase',
-            ],
-            'ashby_list_interviews' => [
-                'class' => AshbyListInterviews::class,
-                'type' => 'read',
-                'name' => 'List Interviews',
-                'description' => 'List scheduled interviews.',
-                'icon' => 'ph:calendar',
-            ],
-            'ashby_get_interview' => [
-                'class' => AshbyGetInterview::class,
-                'type' => 'read',
-                'name' => 'Get Interview',
-                'description' => 'Get details for a specific interview.',
-                'icon' => 'ph:calendar',
+                'description' => 'Get detailed information about a specific job application in Ashby, including candidate details, status, and evaluation data.',
+                'icon' => 'ph:wrench',
             ],
             'ashby_get_current_user' => [
                 'class' => AshbyGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Ashby user profile.',
-                'icon' => 'ph:user',
+                'description' => 'Get the profile of the currently authenticated Ashby user. Use this to verify API access and see user details.',
+                'icon' => 'ph:wrench',
+            ],
+            'ashby_get_interview' => [
+                'class' => AshbyGetInterview::class,
+                'type' => 'read',
+                'name' => 'Get Interview',
+                'description' => 'Get detailed information about a specific interview in Ashby, including scheduled time, interviewers, feedback, and scorecards.',
+                'icon' => 'ph:wrench',
+            ],
+            'ashby_get_job' => [
+                'class' => AshbyGetJob::class,
+                'type' => 'read',
+                'name' => 'Get Job',
+                'description' => 'Get detailed information about a specific job in Ashby, including full description, requirements, compensation, and hiring team.',
+                'icon' => 'ph:wrench',
+            ],
+            'ashby_list_applications' => [
+                'class' => AshbyListApplications::class,
+                'type' => 'read',
+                'name' => 'List Applications',
+                'description' => 'List job applications in Ashby. Returns applications with candidate info, status, and associated job. Use filters to narrow by job or status.',
+                'icon' => 'ph:wrench',
+            ],
+            'ashby_list_candidates' => [
+                'class' => AshbyListCandidates::class,
+                'type' => 'read',
+                'name' => 'List Candidates',
+                'description' => 'List candidates from Ashby. Returns candidate profiles with contact info, tags, and source. Supports filtering by name, email, tags, and pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'ashby_list_interviews' => [
+                'class' => AshbyListInterviews::class,
+                'type' => 'read',
+                'name' => 'List Interviews',
+                'description' => 'List scheduled interviews in Ashby. Returns interview details with date, time, interviewers, and associated application. Filter by application to see interviews for a specific candidate.',
+                'icon' => 'ph:wrench',
+            ],
+            'ashby_list_jobs' => [
+                'class' => AshbyListJobs::class,
+                'type' => 'read',
+                'name' => 'List Jobs',
+                'description' => 'List job postings in Ashby. Returns open and closed positions with department, location, and application count. Filter by status to find active openings.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

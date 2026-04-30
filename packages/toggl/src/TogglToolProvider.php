@@ -15,6 +15,9 @@ use OpenCompany\Integrations\Toggl\Tools\TogglListTimeEntries;
 use OpenCompany\Integrations\Toggl\Tools\TogglListWorkspaces;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Toggl\Tools\TogglCreateProject;
+use OpenCompany\Integrations\Toggl\Tools\TogglDeleteTimeEntry;
+use OpenCompany\Integrations\Toggl\Tools\TogglUpdateTimeEntry;
 /**
  * Tool provider for the Toggl integration.
  *
@@ -156,60 +159,82 @@ class TogglToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'toggl_list_workspaces' => [
-                'class' => TogglListWorkspaces::class,
-                'type' => 'read',
-                'name' => 'List Workspaces',
-                'description' => 'List all Toggl workspaces the authenticated user belongs to.',
-                'icon' => 'ph:buildings',
-            ],
-            'toggl_list_projects' => [
-                'class' => TogglListProjects::class,
-                'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List projects in a Toggl workspace.',
-                'icon' => 'ph:folder',
-            ],
-            'toggl_get_project' => [
-                'class' => TogglGetProject::class,
-                'type' => 'read',
-                'name' => 'Get Project',
-                'description' => 'Get details for a single Toggl project.',
-                'icon' => 'ph:folder',
-            ],
-            'toggl_list_time_entries' => [
-                'class' => TogglListTimeEntries::class,
-                'type' => 'read',
-                'name' => 'List Time Entries',
-                'description' => 'List recent Toggl time entries, optionally filtered by date range.',
-                'icon' => 'ph:timer',
-            ],
-            'toggl_get_time_entry' => [
-                'class' => TogglGetTimeEntry::class,
-                'type' => 'read',
-                'name' => 'Get Time Entry',
-                'description' => 'Get details for a single Toggl time entry.',
-                'icon' => 'ph:timer',
+            'toggl_create_project' => [
+                'class' => TogglCreateProject::class,
+                'type' => 'write',
+                'name' => 'Create Project',
+                'description' => 'Create a new project in a Toggl Track workspace.',
+                'icon' => 'ph:wrench',
             ],
             'toggl_create_time_entry' => [
                 'class' => TogglCreateTimeEntry::class,
                 'type' => 'write',
                 'name' => 'Create Time Entry',
-                'description' => 'Create a new time entry in a Toggl workspace.',
-                'icon' => 'ph:timer',
+                'description' => 'Create a new time entry in a Toggl workspace. Provide a description, start time, and optionally a project and stop time.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_delete_time_entry' => [
+                'class' => TogglDeleteTimeEntry::class,
+                'type' => 'write',
+                'name' => 'Delete Time Entry',
+                'description' => 'Delete a time entry from Toggl Track. This action is permanent and cannot be undone.',
+                'icon' => 'ph:wrench',
             ],
             'toggl_get_current_user' => [
                 'class' => TogglGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the authenticated Toggl user profile.',
-                'icon' => 'ph:user',
+                'description' => 'Get the authenticated Toggl user profile. Use this to verify your API token is working.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_get_project' => [
+                'class' => TogglGetProject::class,
+                'type' => 'read',
+                'name' => 'Get Project',
+                'description' => 'Get details for a single Toggl project by ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_get_time_entry' => [
+                'class' => TogglGetTimeEntry::class,
+                'type' => 'read',
+                'name' => 'Get Time Entry',
+                'description' => 'Get details for a single Toggl time entry by ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_list_projects' => [
+                'class' => TogglListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List projects in a Toggl workspace. Optionally filter for active projects only.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_list_time_entries' => [
+                'class' => TogglListTimeEntries::class,
+                'type' => 'read',
+                'name' => 'List Time Entries',
+                'description' => 'List recent Toggl time entries. Optionally filter by date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_list_workspaces' => [
+                'class' => TogglListWorkspaces::class,
+                'type' => 'read',
+                'name' => 'List Workspaces',
+                'description' => 'List all Toggl workspaces the authenticated user belongs to. Returns workspace IDs and names needed for other Toggl tools.',
+                'icon' => 'ph:wrench',
+            ],
+            'toggl_update_time_entry' => [
+                'class' => TogglUpdateTimeEntry::class,
+                'type' => 'write',
+                'name' => 'Update Time Entry',
+                'description' => 'Update an existing time entry in Toggl Track. Use this to edit description, times, project, tags, or billable status.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

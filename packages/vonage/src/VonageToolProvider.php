@@ -15,6 +15,7 @@ use OpenCompany\Integrations\Vonage\Tools\VonageVerifyRequest;
 use OpenCompany\Integrations\Vonage\Tools\VonageVerifyCheck;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Vonage\Tools\VonageListSms;
 class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -196,60 +197,68 @@ class VonageToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      *
      * @return array<string, array<string, mixed>>
      */
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'vonage_send_sms' => [
-                'class' => VonageSendSms::class,
-                'type' => 'write',
-                'name' => 'Send SMS',
-                'description' => 'Send an SMS message via Vonage.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'vonage_list_messages' => [
-                'class' => VonageListMessages::class,
-                'type' => 'read',
-                'name' => 'List Messages',
-                'description' => 'Search and list SMS messages.',
-                'icon' => 'ph:envelope',
-            ],
             'vonage_get_account_balance' => [
                 'class' => VonageGetAccountBalance::class,
                 'type' => 'read',
                 'name' => 'Get Account Balance',
-                'description' => 'Get the current Vonage account balance.',
-                'icon' => 'ph:wallet',
-            ],
-            'vonage_list_numbers' => [
-                'class' => VonageListNumbers::class,
-                'type' => 'read',
-                'name' => 'List Numbers',
-                'description' => 'List purchased phone numbers on the account.',
-                'icon' => 'ph:phone',
+                'description' => 'Get the current balance of your Vonage account.',
+                'icon' => 'ph:wrench',
             ],
             'vonage_list_applications' => [
                 'class' => VonageListApplications::class,
                 'type' => 'read',
                 'name' => 'List Applications',
-                'description' => 'List Vonage applications.',
-                'icon' => 'ph:app-window',
+                'description' => 'List Vonage applications configured on your account. Applications define how Vonage handles calls and messages.',
+                'icon' => 'ph:wrench',
             ],
-            'vonage_verify_request' => [
-                'class' => VonageVerifyRequest::class,
+            'vonage_list_messages' => [
+                'class' => VonageListMessages::class,
+                'type' => 'read',
+                'name' => 'List Messages',
+                'description' => 'Search and list SMS messages from your Vonage account. Requires a date in YYYY-MM-DD format. Optionally filter by recipient number.',
+                'icon' => 'ph:wrench',
+            ],
+            'vonage_list_numbers' => [
+                'class' => VonageListNumbers::class,
+                'type' => 'read',
+                'name' => 'List Numbers',
+                'description' => 'List phone numbers purchased on your Vonage account. Optionally filter by pattern.',
+                'icon' => 'ph:wrench',
+            ],
+            'vonage_list_sms' => [
+                'class' => VonageListSms::class,
+                'type' => 'read',
+                'name' => 'List Sms',
+                'description' => 'Search and list SMS messages from your Vonage account. Requires a date in ISO format.',
+                'icon' => 'ph:wrench',
+            ],
+            'vonage_send_sms' => [
+                'class' => VonageSendSms::class,
                 'type' => 'write',
-                'name' => 'Verify Request',
-                'description' => 'Send a verification code to a phone number.',
-                'icon' => 'ph:shield-check',
+                'name' => 'Send Sms',
+                'description' => 'Send an SMS message via Vonage. Provide sender, recipient, and message text. The recipient number must be in E.164 format (e.g., 14155552671).',
+                'icon' => 'ph:wrench',
             ],
             'vonage_verify_check' => [
                 'class' => VonageVerifyCheck::class,
-                'type' => 'write',
+                'type' => 'read',
                 'name' => 'Verify Check',
-                'description' => 'Verify a code against a verification request.',
-                'icon' => 'ph:check-circle',
+                'description' => 'Check a verification code against a Vonage Verify request. Provide the request_id from the verification and the code entered by the user.',
+                'icon' => 'ph:wrench',
+            ],
+            'vonage_verify_request' => [
+                'class' => VonageVerifyRequest::class,
+                'type' => 'read',
+                'name' => 'Verify Request',
+                'description' => 'Send a verification code to a phone number via Vonage Verify. Returns a request_id used to check the code later.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     /**
      * Get the path to the Lua documentation file, if any.

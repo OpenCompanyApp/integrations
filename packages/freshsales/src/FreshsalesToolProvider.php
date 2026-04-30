@@ -15,6 +15,9 @@ use OpenCompany\Integrations\Freshsales\Tools\FreshsalesListAccounts;
 use OpenCompany\Integrations\Freshsales\Tools\FreshsalesGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesCreateDeal;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesDeleteContact;
+use OpenCompany\Integrations\Freshsales\Tools\FreshsalesUpdateContact;
 class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -164,60 +167,82 @@ class FreshsalesToolProvider implements ToolProvider, ConfigurableIntegration, H
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'freshsales_list_contacts' => [
-                'class' => FreshsalesListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List contacts from Freshsales CRM with pagination and sorting.',
-                'icon' => 'ph:users',
+            'freshsales_create_contact' => [
+                'class' => FreshsalesCreateContact::class,
+                'type' => 'write',
+                'name' => 'Create Contact',
+                'description' => 'Create a new contact in Freshsales CRM with name, email, and phone details.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_create_deal' => [
+                'class' => FreshsalesCreateDeal::class,
+                'type' => 'write',
+                'name' => 'Create Deal',
+                'description' => 'Create a new deal in Freshsales CRM. Requires a name. Optionally set amount, stage, and close date.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_delete_contact' => [
+                'class' => FreshsalesDeleteContact::class,
+                'type' => 'write',
+                'name' => 'Delete Contact',
+                'description' => 'Delete a contact from Freshsales CRM by ID. This action is permanent.',
+                'icon' => 'ph:wrench',
             ],
             'freshsales_get_contact' => [
                 'class' => FreshsalesGetContact::class,
                 'type' => 'read',
                 'name' => 'Get Contact',
-                'description' => 'Get details for a specific Freshsales contact.',
-                'icon' => 'ph:user',
-            ],
-            'freshsales_create_contact' => [
-                'class' => FreshsalesCreateContact::class,
-                'type' => 'write',
-                'name' => 'Create Contact',
-                'description' => 'Create a new contact in Freshsales CRM.',
-                'icon' => 'ph:user-plus',
-            ],
-            'freshsales_list_deals' => [
-                'class' => FreshsalesListDeals::class,
-                'type' => 'read',
-                'name' => 'List Deals',
-                'description' => 'List deals from Freshsales CRM with pagination.',
-                'icon' => 'ph:currency-dollar',
-            ],
-            'freshsales_get_deal' => [
-                'class' => FreshsalesGetDeal::class,
-                'type' => 'read',
-                'name' => 'Get Deal',
-                'description' => 'Get details for a specific Freshsales deal.',
-                'icon' => 'ph:currency-dollar',
-            ],
-            'freshsales_list_accounts' => [
-                'class' => FreshsalesListAccounts::class,
-                'type' => 'read',
-                'name' => 'List Accounts',
-                'description' => 'List sales accounts from Freshsales CRM with pagination.',
-                'icon' => 'ph:buildings',
+                'description' => 'Get full details for a specific Freshsales contact by ID.',
+                'icon' => 'ph:wrench',
             ],
             'freshsales_get_current_user' => [
                 'class' => FreshsalesGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Freshsales user profile.',
-                'icon' => 'ph:identification-badge',
+                'description' => 'Get the profile of the currently authenticated Freshsales user. Useful for verifying the API connection.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_get_deal' => [
+                'class' => FreshsalesGetDeal::class,
+                'type' => 'read',
+                'name' => 'Get Deal',
+                'description' => 'Get full details for a specific Freshsales deal by ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_list_accounts' => [
+                'class' => FreshsalesListAccounts::class,
+                'type' => 'read',
+                'name' => 'List Accounts',
+                'description' => 'List sales accounts (companies) from Freshsales CRM. Returns paginated results.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_list_contacts' => [
+                'class' => FreshsalesListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List contacts from Freshsales CRM. Returns paginated results with optional sorting by field and direction.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_list_deals' => [
+                'class' => FreshsalesListDeals::class,
+                'type' => 'read',
+                'name' => 'List Deals',
+                'description' => 'List deals from Freshsales CRM. Returns paginated results showing deal pipeline information.',
+                'icon' => 'ph:wrench',
+            ],
+            'freshsales_update_contact' => [
+                'class' => FreshsalesUpdateContact::class,
+                'type' => 'write',
+                'name' => 'Update Contact',
+                'description' => 'Update an existing contact in Freshsales CRM. Provide the contact ID and the fields to update.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

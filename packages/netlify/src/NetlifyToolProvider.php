@@ -15,6 +15,10 @@ use OpenCompany\Integrations\Netlify\Tools\NetlifyListDnsZones;
 use OpenCompany\Integrations\Netlify\Tools\NetlifyGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateDeploy;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyCreateSite;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyDeleteSite;
+use OpenCompany\Integrations\Netlify\Tools\NetlifyGetForm;
 class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -169,60 +173,89 @@ class NetlifyToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'netlify_list_sites' => [
-                'class' => NetlifyListSites::class,
-                'type' => 'read',
-                'name' => 'List Sites',
-                'description' => 'List all Netlify sites.',
-                'icon' => 'ph:globe',
+            'netlify_create_deploy' => [
+                'class' => NetlifyCreateDeploy::class,
+                'type' => 'write',
+                'name' => 'Create Deploy',
+                'description' => 'Trigger a new deploy for a Netlify site. Optionally specify a title, branch, or framework override.',
+                'icon' => 'ph:wrench',
             ],
-            'netlify_get_site' => [
-                'class' => NetlifyGetSite::class,
-                'type' => 'read',
-                'name' => 'Get Site',
-                'description' => 'Get details for a specific Netlify site.',
-                'icon' => 'ph:globe',
+            'netlify_create_site' => [
+                'class' => NetlifyCreateSite::class,
+                'type' => 'write',
+                'name' => 'Create Site',
+                'description' => 'Create a new Netlify site. Provide a name and optional configuration like custom domain, build settings, or repository.',
+                'icon' => 'ph:wrench',
             ],
-            'netlify_list_deploys' => [
-                'class' => NetlifyListDeploys::class,
-                'type' => 'read',
-                'name' => 'List Deploys',
-                'description' => 'List deploys for a Netlify site.',
-                'icon' => 'ph:list-dashes',
-            ],
-            'netlify_get_deploy' => [
-                'class' => NetlifyGetDeploy::class,
-                'type' => 'read',
-                'name' => 'Get Deploy',
-                'description' => 'Get details for a specific deploy.',
-                'icon' => 'ph:rocket-launch',
-            ],
-            'netlify_list_forms' => [
-                'class' => NetlifyListForms::class,
-                'type' => 'read',
-                'name' => 'List Forms',
-                'description' => 'List forms for a Netlify site.',
-                'icon' => 'ph:notebook',
-            ],
-            'netlify_list_dns_zones' => [
-                'class' => NetlifyListDnsZones::class,
-                'type' => 'read',
-                'name' => 'List DNS Zones',
-                'description' => 'List all DNS zones in Netlify.',
-                'icon' => 'ph:dns',
+            'netlify_delete_site' => [
+                'class' => NetlifyDeleteSite::class,
+                'type' => 'write',
+                'name' => 'Delete Site',
+                'description' => 'Delete a Netlify site permanently. This removes all deploys, forms, and associated data. This action cannot be undone.',
+                'icon' => 'ph:wrench',
             ],
             'netlify_get_current_user' => [
                 'class' => NetlifyGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated user.',
-                'icon' => 'ph:user',
+                'description' => 'Get details of the currently authenticated Netlify user. Returns user ID, email, name, and account info.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_get_deploy' => [
+                'class' => NetlifyGetDeploy::class,
+                'type' => 'read',
+                'name' => 'Get Deploy',
+                'description' => 'Get detailed information about a specific Netlify deploy, including its state, build log, and commit details.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_get_form' => [
+                'class' => NetlifyGetForm::class,
+                'type' => 'read',
+                'name' => 'Get Form',
+                'description' => 'Get detailed information about a specific Netlify form, including fields, submission count, and timestamps.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_get_site' => [
+                'class' => NetlifyGetSite::class,
+                'type' => 'read',
+                'name' => 'Get Site',
+                'description' => 'Get detailed information about a specific Netlify site, including its ID, name, URL, build settings, and deploy status.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_list_deploys' => [
+                'class' => NetlifyListDeploys::class,
+                'type' => 'read',
+                'name' => 'List Deploys',
+                'description' => 'List deploys for a Netlify site. Returns deploy IDs, states, branches, and commit references.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_list_dns_zones' => [
+                'class' => NetlifyListDnsZones::class,
+                'type' => 'read',
+                'name' => 'List Dns Zones',
+                'description' => 'List all DNS zones configured in Netlify. Returns zone IDs, domain names, and nameservers.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_list_forms' => [
+                'class' => NetlifyListForms::class,
+                'type' => 'read',
+                'name' => 'List Forms',
+                'description' => 'List all forms for a Netlify site. Returns form IDs, names, paths, and submission counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'netlify_list_sites' => [
+                'class' => NetlifyListSites::class,
+                'type' => 'read',
+                'name' => 'List Sites',
+                'description' => 'List all Netlify sites. Returns site IDs, names, URLs, and build status. Use this to discover site identifiers needed for deploy and form operations.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

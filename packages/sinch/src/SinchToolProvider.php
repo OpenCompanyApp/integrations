@@ -16,6 +16,9 @@ use OpenCompany\Integrations\Sinch\Tools\SinchGetGroup;
 use OpenCompany\Integrations\Sinch\Tools\SinchListBatches;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Sinch\Tools\SinchGetCall;
+use OpenCompany\Integrations\Sinch\Tools\SinchListApplications;
+use OpenCompany\Integrations\Sinch\Tools\SinchListCalls;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -138,60 +141,82 @@ public function validationRules(): array
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'sinch_list_messages' => [
-                'class' => SinchListMessages::class,
+            'sinch_get_call' => [
+                'class' => SinchGetCall::class,
                 'type' => 'read',
-                'name' => 'Sinch List Messages',
-                'description' => 'List inbound and outbound SMS messages from Sinch. Supports filtering by direction, recipient, sender, and date range.',
-                'icon' => 'ph:wrench',
-            ],
-            'sinch_send_sms' => [
-                'class' => SinchSendSms::class,
-                'type' => 'write',
-                'name' => 'Sinch Send SMS',
-                'description' => 'Send an SMS message to one or more recipients via Sinch. Requires sender phone number, recipient(s), and message body.',
-                'icon' => 'ph:wrench',
-            ],
-            'sinch_list_phone_numbers' => [
-                'class' => SinchListPhoneNumbers::class,
-                'type' => 'read',
-                'name' => 'Sinch List Phone Numbers',
-                'description' => 'List all rented phone numbers in your Sinch account with pagination.',
-                'icon' => 'ph:wrench',
-            ],
-            'sinch_get_phone_number' => [
-                'class' => SinchGetPhoneNumber::class,
-                'type' => 'read',
-                'name' => 'Sinch Get Phone Number',
-                'description' => 'Get details for a specific phone number in your Sinch account.',
-                'icon' => 'ph:wrench',
-            ],
-            'sinch_list_groups' => [
-                'class' => SinchListGroups::class,
-                'type' => 'read',
-                'name' => 'Sinch List Groups',
-                'description' => 'List all groups in your Sinch account with pagination.',
+                'name' => 'Get Call',
+                'description' => 'Retrieve details of a specific Sinch call record by its ID, including duration, direction, and participants.',
                 'icon' => 'ph:wrench',
             ],
             'sinch_get_group' => [
                 'class' => SinchGetGroup::class,
                 'type' => 'read',
-                'name' => 'Sinch Get Group',
+                'name' => 'Get Group',
                 'description' => 'Get details for a specific group in your Sinch account.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_get_phone_number' => [
+                'class' => SinchGetPhoneNumber::class,
+                'type' => 'read',
+                'name' => 'Get Phone Number',
+                'description' => 'Get details for a specific phone number in your Sinch account.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_applications' => [
+                'class' => SinchListApplications::class,
+                'type' => 'read',
+                'name' => 'List Applications',
+                'description' => 'List Sinch voice and SMS applications configured in your account. Applications define how calls and messages are routed.',
                 'icon' => 'ph:wrench',
             ],
             'sinch_list_batches' => [
                 'class' => SinchListBatches::class,
                 'type' => 'read',
-                'name' => 'Sinch List Batches',
+                'name' => 'List Batches',
                 'description' => 'List all message batches in your Sinch account with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_calls' => [
+                'class' => SinchListCalls::class,
+                'type' => 'read',
+                'name' => 'List Calls',
+                'description' => 'List call history records from Sinch. Supports filtering by caller and callee phone numbers with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_groups' => [
+                'class' => SinchListGroups::class,
+                'type' => 'read',
+                'name' => 'List Groups',
+                'description' => 'List all groups in your Sinch account with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_messages' => [
+                'class' => SinchListMessages::class,
+                'type' => 'read',
+                'name' => 'List Messages',
+                'description' => 'List inbound and outbound SMS messages from Sinch. Supports filtering by direction, recipient, sender, and date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_list_phone_numbers' => [
+                'class' => SinchListPhoneNumbers::class,
+                'type' => 'read',
+                'name' => 'List Phone Numbers',
+                'description' => 'List all rented phone numbers in your Sinch account with pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'sinch_send_sms' => [
+                'class' => SinchSendSms::class,
+                'type' => 'write',
+                'name' => 'Send Sms',
+                'description' => 'Send an SMS message to one or more recipients via Sinch. Requires sender phone number, recipient(s), and message body.',
                 'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
 
     public function luaDocsPath(): ?string

@@ -27,6 +27,7 @@ use OpenCompany\Integrations\Figma\Tools\FigmaListTeamComponents;
 use OpenCompany\Integrations\Figma\Tools\FigmaPostComment;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Figma\Tools\FigmaGetComponents;
 /**
  * Registers all Figma tools and provides integration metadata.
  *
@@ -191,157 +192,152 @@ class FigmaToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            // Files
-            'figma_list_files' => [
-                'class' => FigmaListFiles::class,
-                'type' => 'read',
-                'name' => 'List Files',
-                'description' => 'List Figma files accessible to the authenticated user.',
-                'icon' => 'ph:files',
-            ],
-            'figma_get_file' => [
-                'class' => FigmaGetFile::class,
-                'type' => 'read',
-                'name' => 'Get File',
-                'description' => 'Get a Figma file by key.',
-                'icon' => 'ph:file',
-            ],
-            'figma_get_file_nodes' => [
-                'class' => FigmaGetFileNodes::class,
-                'type' => 'read',
-                'name' => 'Get File Nodes',
-                'description' => 'Get specific nodes from a Figma file.',
-                'icon' => 'ph:tree-structure',
-            ],
-            // Images
-            'figma_get_file_images' => [
-                'class' => FigmaGetFileImages::class,
-                'type' => 'read',
-                'name' => 'Get File Images',
-                'description' => 'Export images from a Figma file.',
-                'icon' => 'ph:image',
-            ],
-            'figma_get_image_fills' => [
-                'class' => FigmaGetImageFills::class,
-                'type' => 'read',
-                'name' => 'Get Image Fills',
-                'description' => 'Get image fill metadata for a Figma file.',
-                'icon' => 'ph:paint-bucket',
-            ],
-            // Comments
-            'figma_list_comments' => [
-                'class' => FigmaListComments::class,
-                'type' => 'read',
-                'name' => 'List Comments',
-                'description' => 'List comments on a Figma file.',
-                'icon' => 'ph:chat-circle-dots',
-            ],
-            'figma_get_comments' => [
-                'class' => FigmaGetComments::class,
-                'type' => 'read',
-                'name' => 'Get Comments',
-                'description' => 'List comments on a Figma file (legacy alias).',
-                'icon' => 'ph:chat-circle-dots',
-            ],
-            'figma_post_comment' => [
-                'class' => FigmaPostComment::class,
-                'type' => 'write',
-                'name' => 'Post Comment',
-                'description' => 'Post a comment on a Figma file.',
-                'icon' => 'ph:chat-circle-plus',
-            ],
             'figma_delete_comment' => [
                 'class' => FigmaDeleteComment::class,
                 'type' => 'write',
                 'name' => 'Delete Comment',
                 'description' => 'Delete a comment from a Figma file.',
-                'icon' => 'ph:trash',
+                'icon' => 'ph:wrench',
             ],
-            // Teams & Projects
-            'figma_list_projects' => [
-                'class' => FigmaListProjects::class,
+            'figma_get_comments' => [
+                'class' => FigmaGetComments::class,
                 'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List projects in a Figma team.',
-                'icon' => 'ph:folder',
-            ],
-            'figma_get_team_projects' => [
-                'class' => FigmaGetTeamProjects::class,
-                'type' => 'read',
-                'name' => 'Get Team Projects',
-                'description' => 'List projects in a Figma team (legacy alias).',
-                'icon' => 'ph:folder',
-            ],
-            'figma_get_project_files' => [
-                'class' => FigmaGetProjectFiles::class,
-                'type' => 'read',
-                'name' => 'Get Project Files',
-                'description' => 'List files in a Figma project.',
-                'icon' => 'ph:folders',
-            ],
-            // Styles & Components
-            'figma_get_styles' => [
-                'class' => FigmaGetStyles::class,
-                'type' => 'read',
-                'name' => 'Get Styles',
-                'description' => 'List styles in a Figma file.',
-                'icon' => 'ph:palette',
-            ],
-            'figma_list_components' => [
-                'class' => FigmaListComponents::class,
-                'type' => 'read',
-                'name' => 'List Components',
-                'description' => 'List components in a Figma file.',
-                'icon' => 'ph:puzzle-piece',
-            ],
-            'figma_get_components' => [
-                'class' => FigmaGetComponents::class,
-                'type' => 'read',
-                'name' => 'Get Components',
-                'description' => 'List components in a Figma file (legacy alias).',
-                'icon' => 'ph:puzzle-piece',
+                'name' => 'Get Comments',
+                'description' => 'List all comments on a Figma file.',
+                'icon' => 'ph:wrench',
             ],
             'figma_get_component' => [
                 'class' => FigmaGetComponent::class,
                 'type' => 'read',
                 'name' => 'Get Component',
-                'description' => 'Get a Figma component by key.',
-                'icon' => 'ph:puzzle-piece',
+                'description' => 'Get a Figma component by its key.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_components' => [
+                'class' => FigmaGetComponents::class,
+                'type' => 'read',
+                'name' => 'Get Components',
+                'description' => 'List all components in a Figma file.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_current_user' => [
+                'class' => FigmaGetCurrentUser::class,
+                'type' => 'read',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated Figma user profile. Returns name, email, and account details.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_file' => [
+                'class' => FigmaGetFile::class,
+                'type' => 'read',
+                'name' => 'Get File',
+                'description' => 'Get a Figma file by key. Returns the document tree with pages and nodes.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_file_images' => [
+                'class' => FigmaGetFileImages::class,
+                'type' => 'read',
+                'name' => 'Get File Images',
+                'description' => 'Export images from Figma nodes in a file. Returns image download URLs.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_file_nodes' => [
+                'class' => FigmaGetFileNodes::class,
+                'type' => 'read',
+                'name' => 'Get File Nodes',
+                'description' => 'Get specific nodes from a Figma file by node IDs.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_image_fills' => [
+                'class' => FigmaGetImageFills::class,
+                'type' => 'read',
+                'name' => 'Get Image Fills',
+                'description' => 'Get image fill metadata for a Figma file. Returns image URLs for all image fills.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_me' => [
+                'class' => FigmaGetMe::class,
+                'type' => 'read',
+                'name' => 'Get Me',
+                'description' => 'Get the authenticated Figma user profile.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_project_files' => [
+                'class' => FigmaGetProjectFiles::class,
+                'type' => 'read',
+                'name' => 'Get Project Files',
+                'description' => 'List all files in a Figma project.',
+                'icon' => 'ph:wrench',
             ],
             'figma_get_style' => [
                 'class' => FigmaGetStyle::class,
                 'type' => 'read',
                 'name' => 'Get Style',
-                'description' => 'Get a Figma style by key.',
-                'icon' => 'ph:paint-brush',
+                'description' => 'Get a Figma style by its key.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_styles' => [
+                'class' => FigmaGetStyles::class,
+                'type' => 'read',
+                'name' => 'Get Styles',
+                'description' => 'List all styles in a Figma file.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_get_team_projects' => [
+                'class' => FigmaGetTeamProjects::class,
+                'type' => 'read',
+                'name' => 'Get Team Projects',
+                'description' => 'List all projects in a Figma team.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_list_comments' => [
+                'class' => FigmaListComments::class,
+                'type' => 'read',
+                'name' => 'List Comments',
+                'description' => 'List all comments on a Figma file. Includes authors, positions, and reply threads.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_list_components' => [
+                'class' => FigmaListComponents::class,
+                'type' => 'read',
+                'name' => 'List Components',
+                'description' => 'List all components in a Figma file. Returns component names, keys, and descriptions.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_list_files' => [
+                'class' => FigmaListFiles::class,
+                'type' => 'read',
+                'name' => 'List Files',
+                'description' => 'List Figma files accessible to the authenticated user. Returns file names, keys, and thumbnails with pagination support.',
+                'icon' => 'ph:wrench',
+            ],
+            'figma_list_projects' => [
+                'class' => FigmaListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List all projects in a Figma team. Returns project names and IDs.',
+                'icon' => 'ph:wrench',
             ],
             'figma_list_team_components' => [
                 'class' => FigmaListTeamComponents::class,
                 'type' => 'read',
                 'name' => 'List Team Components',
                 'description' => 'List published components in a Figma team.',
-                'icon' => 'ph:stack',
+                'icon' => 'ph:wrench',
             ],
-            // Auth
-            'figma_get_current_user' => [
-                'class' => FigmaGetCurrentUser::class,
+            'figma_post_comment' => [
+                'class' => FigmaPostComment::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated Figma user profile.',
-                'icon' => 'ph:user',
-            ],
-            'figma_get_me' => [
-                'class' => FigmaGetMe::class,
-                'type' => 'read',
-                'name' => 'Get Me',
-                'description' => 'Get the authenticated Figma user profile (legacy alias).',
-                'icon' => 'ph:user',
+                'name' => 'Post Comment',
+                'description' => 'Post a comment on a Figma file. Can be a top-level comment or a reply.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

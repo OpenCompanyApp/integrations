@@ -14,6 +14,8 @@ use OpenCompany\Integrations\Wufoo\Tools\WufooListReports;
 use OpenCompany\Integrations\Wufoo\Tools\WufooGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Wufoo\Tools\WufooListFields;
+use OpenCompany\Integrations\Wufoo\Tools\WufooSubmitEntry;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -198,53 +200,68 @@ class WufooToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
      *
      * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}>
      */
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'wufoo_list_forms' => [
-                'class' => WufooListForms::class,
+            'wufoo_get_current_user' => [
+                'class' => WufooGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'List Forms',
-                'description' => 'List all forms in your Wufoo account.',
-                'icon' => 'ph:list',
-            ],
-            'wufoo_get_form' => [
-                'class' => WufooGetForm::class,
-                'type' => 'read',
-                'name' => 'Get Form',
-                'description' => 'Get details for a specific form.',
-                'icon' => 'ph:clipboard-text',
-            ],
-            'wufoo_list_entries' => [
-                'class' => WufooListEntries::class,
-                'type' => 'read',
-                'name' => 'List Entries',
-                'description' => 'List entries for a form with pagination and filters.',
-                'icon' => 'ph:table',
+                'name' => 'Get Current User',
+                'description' => 'Get the authenticated Wufoo user\'s profile. Returns account details such as name, email, and organization.',
+                'icon' => 'ph:wrench',
             ],
             'wufoo_get_entry' => [
                 'class' => WufooGetEntry::class,
                 'type' => 'read',
                 'name' => 'Get Entry',
-                'description' => 'Get a single entry by its ID.',
-                'icon' => 'ph:file-text',
+                'description' => 'Get a single Wufoo form entry by its identifier. Returns all field values and submission metadata for the entry.',
+                'icon' => 'ph:wrench',
+            ],
+            'wufoo_get_form' => [
+                'class' => WufooGetForm::class,
+                'type' => 'read',
+                'name' => 'Get Form',
+                'description' => 'Get details for a specific Wufoo form by its identifier. Returns the full form definition including fields, settings, and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'wufoo_list_entries' => [
+                'class' => WufooListEntries::class,
+                'type' => 'read',
+                'name' => 'List Entries',
+                'description' => 'List entries submitted to a Wufoo form. Supports pagination and optional filters to narrow results. Use the page and pageSize parameters to paginate through large result sets.',
+                'icon' => 'ph:wrench',
+            ],
+            'wufoo_list_fields' => [
+                'class' => WufooListFields::class,
+                'type' => 'read',
+                'name' => 'List Fields',
+                'description' => 'List all fields for a specific Wufoo form. Returns field types, labels, API IDs, and validation rules. Use this to discover field IDs before submitting entries.',
+                'icon' => 'ph:wrench',
+            ],
+            'wufoo_list_forms' => [
+                'class' => WufooListForms::class,
+                'type' => 'read',
+                'name' => 'List Forms',
+                'description' => 'List all forms in your Wufoo account. Returns form identifiers, names, descriptions, and metadata that can be used with other Wufoo tools.',
+                'icon' => 'ph:wrench',
             ],
             'wufoo_list_reports' => [
                 'class' => WufooListReports::class,
                 'type' => 'read',
                 'name' => 'List Reports',
-                'description' => 'List all reports in your Wufoo account.',
-                'icon' => 'ph:chart-bar',
+                'description' => 'List all reports in your Wufoo account. Returns report identifiers, names, descriptions, and the forms they are associated with.',
+                'icon' => 'ph:wrench',
             ],
-            'wufoo_get_current_user' => [
-                'class' => WufooGetCurrentUser::class,
+            'wufoo_submit_entry' => [
+                'class' => WufooSubmitEntry::class,
                 'type' => 'read',
-                'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:user',
+                'name' => 'Submit Entry',
+                'description' => 'Submit a new entry to a Wufoo form. Provide field values keyed by their API field IDs (e.g., Field1, Field2). Use list_fields to discover the field IDs for a form.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     /**
      * Get the path to the Lua documentation file for Wufoo tools.

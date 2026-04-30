@@ -15,6 +15,9 @@ use OpenCompany\Integrations\Adyen\Tools\AdyenListStores;
 use OpenCompany\Integrations\Adyen\Tools\AdyenGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Adyen\Tools\AdyenGetCurrentMerchant;
+use OpenCompany\Integrations\Adyen\Tools\AdyenGetShopper;
+use OpenCompany\Integrations\Adyen\Tools\AdyenListShoppers;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -210,60 +213,82 @@ class AdyenToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
     /**
      * {@inheritDoc}
      */
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'adyen_list_transactions' => [
-                'class' => AdyenListTransactions::class,
-                'type' => 'read',
-                'name' => 'List Transactions',
-                'description' => 'List transactions from the Adyen transaction feed.',
-                'icon' => 'ph:list',
-            ],
-            'adyen_get_transaction' => [
-                'class' => AdyenGetTransaction::class,
-                'type' => 'read',
-                'name' => 'Get Transaction',
-                'description' => 'Get details of a specific transaction by PSP reference.',
-                'icon' => 'ph:magnifying-glass',
-            ],
-            'adyen_make_payment' => [
-                'class' => AdyenMakePayment::class,
-                'type' => 'write',
-                'name' => 'Make Payment',
-                'description' => 'Initiate a payment through Adyen.',
-                'icon' => 'ph:credit-card',
-            ],
             'adyen_capture_payment' => [
                 'class' => AdyenCapturePayment::class,
                 'type' => 'write',
                 'name' => 'Capture Payment',
-                'description' => 'Capture a previously authorized payment.',
-                'icon' => 'ph:check-circle',
+                'description' => 'Capture a previously authorized Adyen payment. Requires the PSP reference of the original payment and the amount to capture (value in minor units + currency). The merchant account is automatically injected.',
+                'icon' => 'ph:wrench',
             ],
-            'adyen_refund_payment' => [
-                'class' => AdyenRefundPayment::class,
-                'type' => 'write',
-                'name' => 'Refund Payment',
-                'description' => 'Refund a captured or settled payment.',
-                'icon' => 'ph:arrow-counter-clockwise',
-            ],
-            'adyen_list_stores' => [
-                'class' => AdyenListStores::class,
+            'adyen_get_current_merchant' => [
+                'class' => AdyenGetCurrentMerchant::class,
                 'type' => 'read',
-                'name' => 'List Stores',
-                'description' => 'List stores for the merchant account.',
-                'icon' => 'ph:storefront',
+                'name' => 'Get Current Merchant',
+                'description' => 'Get current merchant account information from Adyen. Verifies API connectivity and returns available payment methods for the merchant account.',
+                'icon' => 'ph:wrench',
             ],
             'adyen_get_current_user' => [
                 'class' => AdyenGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Verify Adyen API connectivity and get merchant account info.',
-                'icon' => 'ph:buildings',
+                'description' => 'Verify Adyen API connectivity and retrieve current merchant account information. Useful as a health check to confirm the integration is properly configured.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_get_shopper' => [
+                'class' => AdyenGetShopper::class,
+                'type' => 'read',
+                'name' => 'Get Shopper',
+                'description' => 'Get details of a specific Adyen shopper by their ID. Returns shopper information including stored payment methods.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_get_transaction' => [
+                'class' => AdyenGetTransaction::class,
+                'type' => 'read',
+                'name' => 'Get Transaction',
+                'description' => 'Get details of a specific Adyen transaction by its PSP reference. Returns the full transaction object including amount, status, and payment details.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_list_shoppers' => [
+                'class' => AdyenListShoppers::class,
+                'type' => 'read',
+                'name' => 'List Shoppers',
+                'description' => 'List shoppers with stored payment methods in Adyen. Returns shopper details for the configured merchant account.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_list_stores' => [
+                'class' => AdyenListStores::class,
+                'type' => 'read',
+                'name' => 'List Stores',
+                'description' => 'List stores for the configured Adyen merchant account. Returns store details including store codes, names, and addresses. The merchant account is automatically injected.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_list_transactions' => [
+                'class' => AdyenListTransactions::class,
+                'type' => 'read',
+                'name' => 'List Transactions',
+                'description' => 'List transactions from the Adyen transaction feed. Returns a paginated list of transactions for the merchant account. Use page and size parameters to control pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_make_payment' => [
+                'class' => AdyenMakePayment::class,
+                'type' => 'write',
+                'name' => 'Make Payment',
+                'description' => 'Initiate a payment through Adyen. Requires amount (value in minor units + currency) and payment method. The merchant account is automatically injected from the integration configuration. Returns the payment result including PSP reference.',
+                'icon' => 'ph:wrench',
+            ],
+            'adyen_refund_payment' => [
+                'class' => AdyenRefundPayment::class,
+                'type' => 'write',
+                'name' => 'Refund Payment',
+                'description' => 'Refund an Adyen payment (full or partial). Requires the PSP reference of the original payment and the amount to refund (value in minor units + currency). The merchant account is automatically injected.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     /**
      * {@inheritDoc}

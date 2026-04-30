@@ -15,6 +15,14 @@ use OpenCompany\Integrations\Xero\Tools\XeroListAccounts;
 use OpenCompany\Integrations\Xero\Tools\XeroGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Xero\Tools\XeroCreateBankTransaction;
+use OpenCompany\Integrations\Xero\Tools\XeroCreateContact;
+use OpenCompany\Integrations\Xero\Tools\XeroCreatePayment;
+use OpenCompany\Integrations\Xero\Tools\XeroListBankTransactions;
+use OpenCompany\Integrations\Xero\Tools\XeroListOrganisations;
+use OpenCompany\Integrations\Xero\Tools\XeroListPayments;
+use OpenCompany\Integrations\Xero\Tools\XeroUpdateContact;
+use OpenCompany\Integrations\Xero\Tools\XeroUpdateInvoice;
 /**
  * Registers all Xero tools and provides integration metadata, configuration schema, and connection testing.
  */
@@ -176,63 +184,117 @@ class XeroToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            // Invoices
-            'xero_list_invoices' => [
-                'class' => XeroListInvoices::class,
-                'type' => 'read',
-                'name' => 'List Invoices',
-                'description' => 'List Xero invoices with pagination and filtering.',
-                'icon' => 'ph:list',
+            'xero_create_bank_transaction' => [
+                'class' => XeroCreateBankTransaction::class,
+                'type' => 'write',
+                'name' => 'Create Bank Transaction',
+                'description' => 'Create a Xero bank transaction (spend or receive money). Requires type, contact ID, line items, and bank account ID.',
+                'icon' => 'ph:wrench',
             ],
-            'xero_get_invoice' => [
-                'class' => XeroGetInvoice::class,
-                'type' => 'read',
-                'name' => 'Get Invoice',
-                'description' => 'Retrieve a Xero invoice by ID.',
-                'icon' => 'ph:file-text',
+            'xero_create_contact' => [
+                'class' => XeroCreateContact::class,
+                'type' => 'write',
+                'name' => 'Create Contact',
+                'description' => 'Create a Xero contact. Requires a name. Supports email, phone, first name, and last name.',
+                'icon' => 'ph:wrench',
             ],
             'xero_create_invoice' => [
                 'class' => XeroCreateInvoice::class,
                 'type' => 'write',
                 'name' => 'Create Invoice',
-                'description' => 'Create a new Xero invoice.',
-                'icon' => 'ph:file-plus',
+                'description' => 'Create a new invoice in Xero. Requires a contact_id and at least one line item with description and unit_amount. Returns the created invoice with its ID and number.',
+                'icon' => 'ph:wrench',
             ],
-            // Contacts
-            'xero_list_contacts' => [
-                'class' => XeroListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List Xero contacts with pagination.',
-                'icon' => 'ph:users',
+            'xero_create_payment' => [
+                'class' => XeroCreatePayment::class,
+                'type' => 'write',
+                'name' => 'Create Payment',
+                'description' => 'Create a payment in Xero against an invoice. Requires invoice ID, bank account ID, and amount.',
+                'icon' => 'ph:wrench',
             ],
             'xero_get_contact' => [
                 'class' => XeroGetContact::class,
                 'type' => 'read',
                 'name' => 'Get Contact',
-                'description' => 'Retrieve a Xero contact by ID.',
-                'icon' => 'ph:user',
-            ],
-            // Accounts
-            'xero_list_accounts' => [
-                'class' => XeroListAccounts::class,
-                'type' => 'read',
-                'name' => 'List Accounts',
-                'description' => 'List Xero chart of accounts.',
-                'icon' => 'ph:buildings',
+                'description' => 'Retrieve a Xero contact by its ID. Returns the contact\'s ID, name, email, phone, addresses, and status.',
+                'icon' => 'ph:wrench',
             ],
             'xero_get_current_user' => [
                 'class' => XeroGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Xero user.',
-                'icon' => 'ph:user-circle',
+                'description' => 'Retrieve the currently authenticated Xero user. Returns the user\'s ID, name, and email. Useful for identifying which Xero organisation or token is in use.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_get_invoice' => [
+                'class' => XeroGetInvoice::class,
+                'type' => 'read',
+                'name' => 'Get Invoice',
+                'description' => 'Retrieve a Xero invoice by its ID. Returns the full invoice including line items, contact details, and totals.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_list_accounts' => [
+                'class' => XeroListAccounts::class,
+                'type' => 'read',
+                'name' => 'List Accounts',
+                'description' => 'List Xero chart of accounts. Returns account codes, names, types, tax types, and statuses.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_list_bank_transactions' => [
+                'class' => XeroListBankTransactions::class,
+                'type' => 'read',
+                'name' => 'List Bank Transactions',
+                'description' => 'List Xero bank transactions with optional pagination. Returns spend and receive money transactions.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_list_contacts' => [
+                'class' => XeroListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List Xero contacts with pagination. Returns contact IDs, names, emails, and types. Use page for pagination (1-indexed).',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_list_invoices' => [
+                'class' => XeroListInvoices::class,
+                'type' => 'read',
+                'name' => 'List Invoices',
+                'description' => 'List Xero invoices with pagination and filtering. Returns invoice IDs, numbers, amounts, status, and dates. Use page and pageSize for pagination.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_list_organisations' => [
+                'class' => XeroListOrganisations::class,
+                'type' => 'read',
+                'name' => 'List Organisations',
+                'description' => 'List connected Xero organisations. Returns organisation details including name, legal name, currency, and country.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_list_payments' => [
+                'class' => XeroListPayments::class,
+                'type' => 'read',
+                'name' => 'List Payments',
+                'description' => 'List Xero payments with optional filtering and pagination. Filter by status (AUTHORISED, DELETED) and date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_update_contact' => [
+                'class' => XeroUpdateContact::class,
+                'type' => 'write',
+                'name' => 'Update Contact',
+                'description' => 'Update an existing Xero contact. Supports updating name, email, and phone number.',
+                'icon' => 'ph:wrench',
+            ],
+            'xero_update_invoice' => [
+                'class' => XeroUpdateInvoice::class,
+                'type' => 'write',
+                'name' => 'Update Invoice',
+                'description' => 'Update an existing Xero invoice. Supports changing the status (e.g. to AUTHORISED) and updating line items.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

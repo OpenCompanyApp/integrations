@@ -14,6 +14,8 @@ use OpenCompany\Integrations\Strava\Tools\StravaListActivities;
 use OpenCompany\Integrations\Strava\Tools\StravaListClubs;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Strava\Tools\StravaGetClub;
+use OpenCompany\Integrations\Strava\Tools\StravaListRoutes;
 class StravaToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -195,53 +197,68 @@ class StravaToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
      *
      * @return array<string, array{class: class-string<Tool>, type: string, name: string, description: string, icon: string}>
      */
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'strava_list_activities' => [
-                'class' => StravaListActivities::class,
-                'type' => 'read',
-                'name' => 'List Activities',
-                'description' => 'List recent activities for the authenticated athlete.',
-                'icon' => 'ph:list',
+            'strava_create_activity' => [
+                'class' => StravaCreateActivity::class,
+                'type' => 'write',
+                'name' => 'Create Activity',
+                'description' => 'Create a manual activity on Strava. Requires a name, activity type, start date, and elapsed time in seconds.',
+                'icon' => 'ph:wrench',
             ],
             'strava_get_activity' => [
                 'class' => StravaGetActivity::class,
                 'type' => 'read',
                 'name' => 'Get Activity',
-                'description' => 'Get detailed information about a specific activity.',
-                'icon' => 'ph:clipboard-text',
-            ],
-            'strava_create_activity' => [
-                'class' => StravaCreateActivity::class,
-                'type' => 'write',
-                'name' => 'Create Activity',
-                'description' => 'Create a manual activity on Strava.',
-                'icon' => 'ph:plus-circle',
+                'description' => 'Get detailed information about a specific Strava activity, including distance, pace, elevation, and splits.',
+                'icon' => 'ph:wrench',
             ],
             'strava_get_athlete' => [
                 'class' => StravaGetAthlete::class,
                 'type' => 'read',
                 'name' => 'Get Athlete',
-                'description' => 'Get the authenticated athlete\'s profile.',
-                'icon' => 'ph:user',
+                'description' => 'Get the authenticated athlete\'s Strava profile â name, location, follower/following counts, and stats.',
+                'icon' => 'ph:wrench',
             ],
-            'strava_list_clubs' => [
-                'class' => StravaListClubs::class,
+            'strava_get_club' => [
+                'class' => StravaGetClub::class,
                 'type' => 'read',
-                'name' => 'List Clubs',
-                'description' => 'List clubs the authenticated athlete belongs to.',
-                'icon' => 'ph:users-three',
+                'name' => 'Get Club',
+                'description' => 'Get details about a specific Strava club, including name, description, member count, and sport types.',
+                'icon' => 'ph:wrench',
             ],
             'strava_get_current_user' => [
                 'class' => StravaGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the current authenticated user\'s Strava profile (alias for Get Athlete).',
-                'icon' => 'ph:user-circle',
+                'description' => 'Get the current authenticated user\'s Strava profile. This is an alias for strava_get_athlete â returns name, location, follower/following counts, and stats.',
+                'icon' => 'ph:wrench',
+            ],
+            'strava_list_activities' => [
+                'class' => StravaListActivities::class,
+                'type' => 'read',
+                'name' => 'List Activities',
+                'description' => 'List recent activities for the authenticated Strava athlete. Supports pagination and date filtering with before/after Unix timestamps.',
+                'icon' => 'ph:wrench',
+            ],
+            'strava_list_clubs' => [
+                'class' => StravaListClubs::class,
+                'type' => 'read',
+                'name' => 'List Clubs',
+                'description' => 'List clubs the authenticated Strava athlete belongs to. Returns club names, member counts, and sport types.',
+                'icon' => 'ph:wrench',
+            ],
+            'strava_list_routes' => [
+                'class' => StravaListRoutes::class,
+                'type' => 'read',
+                'name' => 'List Routes',
+                'description' => 'List routes created by a specific Strava athlete. Requires the athlete ID.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     /**
      * Path to the Lua API reference documentation.

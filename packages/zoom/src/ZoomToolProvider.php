@@ -15,6 +15,15 @@ use OpenCompany\Integrations\Zoom\Tools\ZoomListRecordings;
 use OpenCompany\Integrations\Zoom\Tools\ZoomGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Zoom\Tools\ZoomCreateUser;
+use OpenCompany\Integrations\Zoom\Tools\ZoomCreateWebinar;
+use OpenCompany\Integrations\Zoom\Tools\ZoomDeleteMeeting;
+use OpenCompany\Integrations\Zoom\Tools\ZoomGetAccount;
+use OpenCompany\Integrations\Zoom\Tools\ZoomGetUserSettings;
+use OpenCompany\Integrations\Zoom\Tools\ZoomGetWebinar;
+use OpenCompany\Integrations\Zoom\Tools\ZoomListPastMeetings;
+use OpenCompany\Integrations\Zoom\Tools\ZoomListWebinars;
+use OpenCompany\Integrations\Zoom\Tools\ZoomUpdateMeeting;
 class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -165,60 +174,124 @@ class ZoomToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'zoom_list_meetings' => [
-                'class' => ZoomListMeetings::class,
-                'type' => 'read',
-                'name' => 'List Meetings',
-                'description' => 'List meetings for a user.',
-                'icon' => 'ph:video-camera',
-            ],
-            'zoom_get_meeting' => [
-                'class' => ZoomGetMeeting::class,
-                'type' => 'read',
-                'name' => 'Get Meeting',
-                'description' => 'Get details of a specific meeting.',
-                'icon' => 'ph:video-camera',
-            ],
             'zoom_create_meeting' => [
                 'class' => ZoomCreateMeeting::class,
                 'type' => 'write',
                 'name' => 'Create Meeting',
-                'description' => 'Create a new meeting.',
-                'icon' => 'ph:plus-circle',
+                'description' => 'Create a new Zoom meeting. Provide a topic, start time (ISO 8601), duration, and optional timezone. Returns the meeting with join URL and password.',
+                'icon' => 'ph:wrench',
             ],
-            'zoom_list_users' => [
-                'class' => ZoomListUsers::class,
-                'type' => 'read',
-                'name' => 'List Users',
-                'description' => 'List users in the Zoom account.',
-                'icon' => 'ph:users',
+            'zoom_create_user' => [
+                'class' => ZoomCreateUser::class,
+                'type' => 'write',
+                'name' => 'Create User',
+                'description' => 'Create a new user in the Zoom account.',
+                'icon' => 'ph:wrench',
             ],
-            'zoom_get_user' => [
-                'class' => ZoomGetUser::class,
-                'type' => 'read',
-                'name' => 'Get User',
-                'description' => 'Get details of a specific user.',
-                'icon' => 'ph:user',
+            'zoom_create_webinar' => [
+                'class' => ZoomCreateWebinar::class,
+                'type' => 'write',
+                'name' => 'Create Webinar',
+                'description' => 'Create a Zoom webinar for a user. Supports scheduling with topic, start time, duration, and timezone.',
+                'icon' => 'ph:wrench',
             ],
-            'zoom_list_recordings' => [
-                'class' => ZoomListRecordings::class,
+            'zoom_delete_meeting' => [
+                'class' => ZoomDeleteMeeting::class,
+                'type' => 'write',
+                'name' => 'Delete Meeting',
+                'description' => 'Delete a Zoom meeting by ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_get_account' => [
+                'class' => ZoomGetAccount::class,
                 'type' => 'read',
-                'name' => 'List Recordings',
-                'description' => 'List cloud recordings for a user.',
-                'icon' => 'ph:record',
+                'name' => 'Get Account',
+                'description' => 'Get the current Zoom account information.',
+                'icon' => 'ph:wrench',
             ],
             'zoom_get_current_user' => [
                 'class' => ZoomGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated user profile.',
-                'icon' => 'ph:user-circle',
+                'description' => 'Get the profile of the currently authenticated Zoom user. Returns email, name, account type, status, and timezone.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_get_meeting' => [
+                'class' => ZoomGetMeeting::class,
+                'type' => 'read',
+                'name' => 'Get Meeting',
+                'description' => 'Get details of a specific Zoom meeting by ID. Returns the meeting topic, agenda, start time, duration, join URL, and settings.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_get_user' => [
+                'class' => ZoomGetUser::class,
+                'type' => 'read',
+                'name' => 'Get User',
+                'description' => 'Get details of a specific Zoom user by ID or "me" for the authenticated user. Returns email, name, type, status, and timezone.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_get_user_settings' => [
+                'class' => ZoomGetUserSettings::class,
+                'type' => 'read',
+                'name' => 'Get User Settings',
+                'description' => 'Get settings for a Zoom user.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_get_webinar' => [
+                'class' => ZoomGetWebinar::class,
+                'type' => 'read',
+                'name' => 'Get Webinar',
+                'description' => 'Get details of a Zoom webinar by ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_list_meetings' => [
+                'class' => ZoomListMeetings::class,
+                'type' => 'read',
+                'name' => 'List Meetings',
+                'description' => 'List meetings for a Zoom user. Returns meeting IDs, topics, start times, durations, and join URLs. Use type "live" for in-progress, "scheduled" for upcoming, or "upcoming" for all upcoming meetings.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_list_past_meetings' => [
+                'class' => ZoomListPastMeetings::class,
+                'type' => 'read',
+                'name' => 'List Past Meetings',
+                'description' => 'List past instances of a Zoom meeting.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_list_recordings' => [
+                'class' => ZoomListRecordings::class,
+                'type' => 'read',
+                'name' => 'List Recordings',
+                'description' => 'List cloud recordings for a Zoom user. Returns recording IDs, topics, start times, durations, and download URLs for recording files.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_list_users' => [
+                'class' => ZoomListUsers::class,
+                'type' => 'read',
+                'name' => 'List Users',
+                'description' => 'List users in the Zoom account. Returns user IDs, emails, names, types (1=basic, 2=licensed), and status. Use this to find user IDs for other operations.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_list_webinars' => [
+                'class' => ZoomListWebinars::class,
+                'type' => 'read',
+                'name' => 'List Webinars',
+                'description' => 'List webinars for a Zoom user.',
+                'icon' => 'ph:wrench',
+            ],
+            'zoom_update_meeting' => [
+                'class' => ZoomUpdateMeeting::class,
+                'type' => 'write',
+                'name' => 'Update Meeting',
+                'description' => 'Update an existing Zoom meeting. Supports changing topic, start time, duration, and agenda.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

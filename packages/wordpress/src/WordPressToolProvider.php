@@ -16,6 +16,9 @@ use OpenCompany\Integrations\WordPress\Tools\WordPressListComments;
 use OpenCompany\Integrations\WordPress\Tools\WordPressGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\WordPress\Tools\WordPressDeletePost;
+use OpenCompany\Integrations\WordPress\Tools\WordPressListCategories;
+use OpenCompany\Integrations\WordPress\Tools\WordPressListMedia;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -220,67 +223,89 @@ class WordPressToolProvider implements ToolProvider, ConfigurableIntegration, Ha
      *
      * @return array<string, array{class: string, type: string, name: string, description: string, icon: string}> Tool definitions keyed by tool name.
      */
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'wordpress_list_posts' => [
-                'class' => WordPressListPosts::class,
-                'type' => 'read',
-                'name' => 'List Posts',
-                'description' => 'List posts from the WordPress site.',
-                'icon' => 'ph:article',
-            ],
-            'wordpress_get_post' => [
-                'class' => WordPressGetPost::class,
-                'type' => 'read',
-                'name' => 'Get Post',
-                'description' => 'Get a single post by ID.',
-                'icon' => 'ph:file-text',
-            ],
             'wordpress_create_post' => [
                 'class' => WordPressCreatePost::class,
                 'type' => 'write',
                 'name' => 'Create Post',
-                'description' => 'Create a new post on the WordPress site.',
-                'icon' => 'ph:plus-circle',
+                'description' => 'Create a new post on the WordPress site. Requires a title. Content, status, categories, and tags can be specified. Defaults to draft status for safety.',
+                'icon' => 'ph:wrench',
             ],
-            'wordpress_update_post' => [
-                'class' => WordPressUpdatePost::class,
+            'wordpress_delete_post' => [
+                'class' => WordPressDeletePost::class,
                 'type' => 'write',
-                'name' => 'Update Post',
-                'description' => 'Update an existing post.',
-                'icon' => 'ph:pencil-simple',
-            ],
-            'wordpress_list_pages' => [
-                'class' => WordPressListPages::class,
-                'type' => 'read',
-                'name' => 'List Pages',
-                'description' => 'List pages from the WordPress site.',
-                'icon' => 'ph:files',
-            ],
-            'wordpress_list_users' => [
-                'class' => WordPressListUsers::class,
-                'type' => 'read',
-                'name' => 'List Users',
-                'description' => 'List users registered on the WordPress site.',
-                'icon' => 'ph:users',
-            ],
-            'wordpress_list_comments' => [
-                'class' => WordPressListComments::class,
-                'type' => 'read',
-                'name' => 'List Comments',
-                'description' => 'List comments from the WordPress site.',
-                'icon' => 'ph:chat-circle',
+                'name' => 'Delete Post',
+                'description' => 'Delete a WordPress blog post by its ID. This action is irreversible.',
+                'icon' => 'ph:wrench',
             ],
             'wordpress_get_current_user' => [
                 'class' => WordPressGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated WordPress user.',
-                'icon' => 'ph:user-circle',
+                'description' => 'Get the currently authenticated WordPress user profile. Returns user ID, name, email, roles, and capabilities.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_get_post' => [
+                'class' => WordPressGetPost::class,
+                'type' => 'read',
+                'name' => 'Get Post',
+                'description' => 'Get a single WordPress post by its ID. Returns the full post object including title, content, excerpt, author, categories, tags, and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_list_categories' => [
+                'class' => WordPressListCategories::class,
+                'type' => 'read',
+                'name' => 'List Categories',
+                'description' => 'List post categories from WordPress. Returns category names, slugs, and IDs for use in post management.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_list_comments' => [
+                'class' => WordPressListComments::class,
+                'type' => 'read',
+                'name' => 'List Comments',
+                'description' => 'List comments from the WordPress site. Supports filtering by post, status, author, and search. Returns comment IDs, content, author info, and dates.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_list_media' => [
+                'class' => WordPressListMedia::class,
+                'type' => 'read',
+                'name' => 'List Media',
+                'description' => 'List media items from the WordPress media library. Returns file details including URL, type, and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_list_pages' => [
+                'class' => WordPressListPages::class,
+                'type' => 'read',
+                'name' => 'List Pages',
+                'description' => 'List pages from the WordPress site. Supports filtering by status, author, search, and parent. Returns page IDs, titles, dates, and statuses.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_list_posts' => [
+                'class' => WordPressListPosts::class,
+                'type' => 'read',
+                'name' => 'List Posts',
+                'description' => 'List posts from the WordPress site. Supports filtering by status, author, category, tag, and search. Returns post IDs, titles, dates, and statuses.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_list_users' => [
+                'class' => WordPressListUsers::class,
+                'type' => 'read',
+                'name' => 'List Users',
+                'description' => 'List users registered on the WordPress site. Supports filtering by role and search. Returns user IDs, names, and email addresses.',
+                'icon' => 'ph:wrench',
+            ],
+            'wordpress_update_post' => [
+                'class' => WordPressUpdatePost::class,
+                'type' => 'write',
+                'name' => 'Update Post',
+                'description' => 'Update an existing WordPress post. Provide the post ID and any fields to change: title, content, status, categories, tags, etc.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     /**
      * Get the path to the Lua documentation file for this integration.

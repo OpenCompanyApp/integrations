@@ -15,6 +15,20 @@ use OpenCompany\Integrations\Todoist\Tools\TodoistListProjects;
 use OpenCompany\Integrations\Todoist\Tools\TodoistListTasks;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Todoist\Tools\TodoistCloseTask;
+use OpenCompany\Integrations\Todoist\Tools\TodoistCreateComment;
+use OpenCompany\Integrations\Todoist\Tools\TodoistCreateProject;
+use OpenCompany\Integrations\Todoist\Tools\TodoistCreateSection;
+use OpenCompany\Integrations\Todoist\Tools\TodoistDeleteProject;
+use OpenCompany\Integrations\Todoist\Tools\TodoistDeleteSection;
+use OpenCompany\Integrations\Todoist\Tools\TodoistDeleteTask;
+use OpenCompany\Integrations\Todoist\Tools\TodoistGetSection;
+use OpenCompany\Integrations\Todoist\Tools\TodoistListComments;
+use OpenCompany\Integrations\Todoist\Tools\TodoistListSections;
+use OpenCompany\Integrations\Todoist\Tools\TodoistQuickAdd;
+use OpenCompany\Integrations\Todoist\Tools\TodoistReopenTask;
+use OpenCompany\Integrations\Todoist\Tools\TodoistUpdateProject;
+use OpenCompany\Integrations\Todoist\Tools\TodoistUpdateTask;
 class TodoistToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -136,60 +150,159 @@ class TodoistToolProvider implements ToolProvider, ConfigurableIntegration, HasI
         return ['access_token' => 'nullable|string'];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'todoist_list_tasks' => [
-                'class' => TodoistListTasks::class,
-                'type' => 'read',
-                'name' => 'List Tasks',
-                'description' => 'List tasks in Todoist with optional filters.',
-                'icon' => 'ph:list-checks',
+            'todoist_close_task' => [
+                'class' => TodoistCloseTask::class,
+                'type' => 'write',
+                'name' => 'Close Task',
+                'description' => 'Mark a task as completed (close it). The task will move to the completed view.',
+                'icon' => 'ph:wrench',
             ],
-            'todoist_get_task' => [
-                'class' => TodoistGetTask::class,
-                'type' => 'read',
-                'name' => 'Get Task',
-                'description' => 'Get detailed information about a Todoist task.',
-                'icon' => 'ph:note',
+            'todoist_create_comment' => [
+                'class' => TodoistCreateComment::class,
+                'type' => 'write',
+                'name' => 'Create Comment',
+                'description' => 'Add a comment to a Todoist task or project. Provide either task_id or project_id along with the content.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_create_project' => [
+                'class' => TodoistCreateProject::class,
+                'type' => 'write',
+                'name' => 'Create Project',
+                'description' => 'Create a new project in Todoist. Projects can be nested using parent_id.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_create_section' => [
+                'class' => TodoistCreateSection::class,
+                'type' => 'write',
+                'name' => 'Create Section',
+                'description' => 'Create a new section within a Todoist project to organize tasks into groups.',
+                'icon' => 'ph:wrench',
             ],
             'todoist_create_task' => [
                 'class' => TodoistCreateTask::class,
                 'type' => 'write',
                 'name' => 'Create Task',
                 'description' => 'Create a new task in Todoist.',
-                'icon' => 'ph:plus-circle',
+                'icon' => 'ph:wrench',
             ],
-            'todoist_list_projects' => [
-                'class' => TodoistListProjects::class,
-                'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List all projects in Todoist.',
-                'icon' => 'ph:folders',
+            'todoist_delete_project' => [
+                'class' => TodoistDeleteProject::class,
+                'type' => 'write',
+                'name' => 'Delete Project',
+                'description' => 'Permanently delete a project and all its tasks from Todoist. This action cannot be undone.',
+                'icon' => 'ph:wrench',
             ],
-            'todoist_get_project' => [
-                'class' => TodoistGetProject::class,
-                'type' => 'read',
-                'name' => 'Get Project',
-                'description' => 'Get detailed information about a Todoist project.',
-                'icon' => 'ph:folder-open',
+            'todoist_delete_section' => [
+                'class' => TodoistDeleteSection::class,
+                'type' => 'write',
+                'name' => 'Delete Section',
+                'description' => 'Permanently delete a section from Todoist. This action cannot be undone.',
+                'icon' => 'ph:wrench',
             ],
-            'todoist_list_labels' => [
-                'class' => TodoistListLabels::class,
-                'type' => 'read',
-                'name' => 'List Labels',
-                'description' => 'List all personal labels in Todoist.',
-                'icon' => 'ph:tag',
+            'todoist_delete_task' => [
+                'class' => TodoistDeleteTask::class,
+                'type' => 'write',
+                'name' => 'Delete Task',
+                'description' => 'Permanently delete a task from Todoist. This action cannot be undone.',
+                'icon' => 'ph:wrench',
             ],
             'todoist_get_current_user' => [
                 'class' => TodoistGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
                 'description' => 'Get the currently authenticated Todoist user.',
-                'icon' => 'ph:user-circle',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_get_project' => [
+                'class' => TodoistGetProject::class,
+                'type' => 'read',
+                'name' => 'Get Project',
+                'description' => 'Get detailed information about a Todoist project.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_get_section' => [
+                'class' => TodoistGetSection::class,
+                'type' => 'read',
+                'name' => 'Get Section',
+                'description' => 'Retrieve a single Todoist section by its ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_get_task' => [
+                'class' => TodoistGetTask::class,
+                'type' => 'read',
+                'name' => 'Get Task',
+                'description' => 'Get detailed information about a Todoist task.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_list_comments' => [
+                'class' => TodoistListComments::class,
+                'type' => 'read',
+                'name' => 'List Comments',
+                'description' => 'List comments for a Todoist task or project. Provide either task_id or project_id.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_list_labels' => [
+                'class' => TodoistListLabels::class,
+                'type' => 'read',
+                'name' => 'List Labels',
+                'description' => 'List all personal labels in Todoist.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_list_projects' => [
+                'class' => TodoistListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List all projects in Todoist.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_list_sections' => [
+                'class' => TodoistListSections::class,
+                'type' => 'read',
+                'name' => 'List Sections',
+                'description' => 'List all sections, optionally filtered by a specific project ID.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_list_tasks' => [
+                'class' => TodoistListTasks::class,
+                'type' => 'read',
+                'name' => 'List Tasks',
+                'description' => 'List tasks in Todoist with optional filters.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_quick_add' => [
+                'class' => TodoistQuickAdd::class,
+                'type' => 'write',
+                'name' => 'Quick Add',
+                'description' => 'Add a task using Todoist\'s natural language quick-add. Examples: "Buy milk tomorrow", "Meeting with team every Monday @Work p1".',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_reopen_task' => [
+                'class' => TodoistReopenTask::class,
+                'type' => 'write',
+                'name' => 'Reopen Task',
+                'description' => 'Reopen a completed task, returning it to the active task list.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_update_project' => [
+                'class' => TodoistUpdateProject::class,
+                'type' => 'write',
+                'name' => 'Update Project',
+                'description' => 'Update an existing project in Todoist. Only the fields provided will be changed.',
+                'icon' => 'ph:wrench',
+            ],
+            'todoist_update_task' => [
+                'class' => TodoistUpdateTask::class,
+                'type' => 'write',
+                'name' => 'Update Task',
+                'description' => 'Update an existing task in Todoist. Only the fields provided will be changed.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

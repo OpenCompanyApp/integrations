@@ -15,6 +15,7 @@ use OpenCompany\Integrations\Vercel\Tools\VercelListProjects;
 use OpenCompany\Integrations\Vercel\Tools\VercelListTeams;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Vercel\Tools\VercelCreateDeployment;
 class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -136,60 +137,68 @@ class VercelToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
 
     /* ---------- ToolProvider ---------- */
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'vercel_list_projects' => [
-                'class' => VercelListProjects::class,
-                'type' => 'read',
-                'name' => 'List Projects',
-                'description' => 'List all Vercel projects.',
-                'icon' => 'ph:folder-bold',
-            ],
-            'vercel_get_project' => [
-                'class' => VercelGetProject::class,
-                'type' => 'read',
-                'name' => 'Get Project',
-                'description' => 'Get details for a specific Vercel project.',
-                'icon' => 'ph:folder-open-bold',
-            ],
-            'vercel_list_deployments' => [
-                'class' => VercelListDeployments::class,
-                'type' => 'read',
-                'name' => 'List Deployments',
-                'description' => 'List deployments across your Vercel projects.',
-                'icon' => 'ph:rocket-launch-bold',
-            ],
-            'vercel_get_deployment' => [
-                'class' => VercelGetDeployment::class,
-                'type' => 'read',
-                'name' => 'Get Deployment',
-                'description' => 'Get details for a specific Vercel deployment.',
-                'icon' => 'ph:rocket-bold',
-            ],
-            'vercel_list_domains' => [
-                'class' => VercelListDomains::class,
-                'type' => 'read',
-                'name' => 'List Domains',
-                'description' => 'List all domains configured in Vercel.',
-                'icon' => 'ph:globe-bold',
-            ],
-            'vercel_list_teams' => [
-                'class' => VercelListTeams::class,
-                'type' => 'read',
-                'name' => 'List Teams',
-                'description' => 'List all Vercel teams you belong to.',
-                'icon' => 'ph:users-three-bold',
+            'vercel_create_deployment' => [
+                'class' => VercelCreateDeployment::class,
+                'type' => 'write',
+                'name' => 'Create Deployment',
+                'description' => 'Create a new deployment on Vercel. Provide a project name and either file contents or a Git source reference. Returns the new deployment ID and URL.',
+                'icon' => 'ph:wrench',
             ],
             'vercel_get_current_user' => [
                 'class' => VercelGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Vercel user profile.',
-                'icon' => 'ph:user-bold',
+                'description' => 'Get the currently authenticated Vercel user profile, including username, email, and plan.',
+                'icon' => 'ph:wrench',
+            ],
+            'vercel_get_deployment' => [
+                'class' => VercelGetDeployment::class,
+                'type' => 'read',
+                'name' => 'Get Deployment',
+                'description' => 'Get details for a specific Vercel deployment by ID, including status, URL, and build logs.',
+                'icon' => 'ph:wrench',
+            ],
+            'vercel_get_project' => [
+                'class' => VercelGetProject::class,
+                'type' => 'read',
+                'name' => 'Get Project',
+                'description' => 'Get details for a specific Vercel project by ID, including framework, domains, and settings.',
+                'icon' => 'ph:wrench',
+            ],
+            'vercel_list_deployments' => [
+                'class' => VercelListDeployments::class,
+                'type' => 'read',
+                'name' => 'List Deployments',
+                'description' => 'List deployments across your Vercel projects. Filter by project, state, or target.',
+                'icon' => 'ph:wrench',
+            ],
+            'vercel_list_domains' => [
+                'class' => VercelListDomains::class,
+                'type' => 'read',
+                'name' => 'List Domains',
+                'description' => 'List all domains configured in Vercel, including verification and DNS status.',
+                'icon' => 'ph:wrench',
+            ],
+            'vercel_list_projects' => [
+                'class' => VercelListProjects::class,
+                'type' => 'read',
+                'name' => 'List Projects',
+                'description' => 'List all Vercel projects. Returns project names, IDs, framework, and deployment status.',
+                'icon' => 'ph:wrench',
+            ],
+            'vercel_list_teams' => [
+                'class' => VercelListTeams::class,
+                'type' => 'read',
+                'name' => 'List Teams',
+                'description' => 'List all Vercel teams you belong to, including membership roles and member counts.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function isIntegration(): bool
     {

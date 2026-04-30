@@ -15,6 +15,10 @@ use OpenCompany\Integrations\Front\Tools\FrontGetContact;
 use OpenCompany\Integrations\Front\Tools\FrontGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Front\Tools\FrontCreateMessage;
+use OpenCompany\Integrations\Front\Tools\FrontGetInbox;
+use OpenCompany\Integrations\Front\Tools\FrontGetMessage;
+use OpenCompany\Integrations\Front\Tools\FrontListInboxes;
 class FrontToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -162,60 +166,89 @@ class FrontToolProvider implements ToolProvider, ConfigurableIntegration, HasInt
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'front_list_conversations' => [
-                'class' => FrontListConversations::class,
-                'type' => 'read',
-                'name' => 'List Conversations',
-                'description' => 'List and search conversations in Front.',
-                'icon' => 'ph:list-dashes',
-            ],
-            'front_get_conversation' => [
-                'class' => FrontGetConversation::class,
-                'type' => 'read',
-                'name' => 'Get Conversation',
-                'description' => 'Get details of a specific conversation.',
-                'icon' => 'ph:chat-circle-dots',
-            ],
-            'front_list_messages' => [
-                'class' => FrontListMessages::class,
-                'type' => 'read',
-                'name' => 'List Messages',
-                'description' => 'List messages in a conversation.',
-                'icon' => 'ph:envelope',
-            ],
-            'front_send_message' => [
-                'class' => FrontSendMessage::class,
+            'front_create_message' => [
+                'class' => FrontCreateMessage::class,
                 'type' => 'write',
-                'name' => 'Send Message',
-                'description' => 'Send a reply to a conversation.',
-                'icon' => 'ph:paper-plane-tilt',
-            ],
-            'front_list_contacts' => [
-                'class' => FrontListContacts::class,
-                'type' => 'read',
-                'name' => 'List Contacts',
-                'description' => 'List and search contacts in Front.',
-                'icon' => 'ph:address-book',
+                'name' => 'Create Message',
+                'description' => 'Create and send a new message through Front. Supports sending emails, tweets, and other channel messages. The message is sent on behalf of the authenticated user or a specified sender.',
+                'icon' => 'ph:wrench',
             ],
             'front_get_contact' => [
                 'class' => FrontGetContact::class,
                 'type' => 'read',
                 'name' => 'Get Contact',
-                'description' => 'Get details of a specific contact.',
-                'icon' => 'ph:user',
+                'description' => 'Get details of a specific Front contact by ID, including name, emails, phone numbers, and custom fields.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_get_conversation' => [
+                'class' => FrontGetConversation::class,
+                'type' => 'read',
+                'name' => 'Get Conversation',
+                'description' => 'Get details of a specific Front conversation by ID, including subject, participants, status, tags, and metadata.',
+                'icon' => 'ph:wrench',
             ],
             'front_get_current_user' => [
                 'class' => FrontGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the authenticated user\'s profile.',
-                'icon' => 'ph:identification-badge',
+                'description' => 'Get the profile of the currently authenticated Front user. Returns name, email, and account details.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_get_inbox' => [
+                'class' => FrontGetInbox::class,
+                'type' => 'read',
+                'name' => 'Get Inbox',
+                'description' => 'Get details for a specific Front inbox by ID, including name, type, teammates, and default sender.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_get_message' => [
+                'class' => FrontGetMessage::class,
+                'type' => 'read',
+                'name' => 'Get Message',
+                'description' => 'Get details for a specific Front message by ID, including sender, recipients, subject, body, and attachments.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_list_contacts' => [
+                'class' => FrontListContacts::class,
+                'type' => 'read',
+                'name' => 'List Contacts',
+                'description' => 'List and search contacts in Front. Search by name, email, or other identifiers. Returns paginated contact details.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_list_conversations' => [
+                'class' => FrontListConversations::class,
+                'type' => 'read',
+                'name' => 'List Conversations',
+                'description' => 'List and search conversations in Front. Filter by status or search by keyword. Returns paginated results with conversation IDs, subjects, and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_list_inboxes' => [
+                'class' => FrontListInboxes::class,
+                'type' => 'read',
+                'name' => 'List Inboxes',
+                'description' => 'List all inboxes in the Front workspace. Returns inbox IDs, names, and types you can use to filter messages or get inbox details.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_list_messages' => [
+                'class' => FrontListMessages::class,
+                'type' => 'read',
+                'name' => 'List Messages',
+                'description' => 'List all messages in a Front conversation. Returns paginated message details including sender, body, and timestamps.',
+                'icon' => 'ph:wrench',
+            ],
+            'front_send_message' => [
+                'class' => FrontSendMessage::class,
+                'type' => 'write',
+                'name' => 'Send Message',
+                'description' => 'Send a reply message to an existing Front conversation. Supports HTML and plain-text bodies, and explicit TO/CC recipients.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

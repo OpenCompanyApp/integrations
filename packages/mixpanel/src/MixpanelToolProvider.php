@@ -15,6 +15,13 @@ use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetCohort;
 use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelFunnel;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelGetExport;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelProfile;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelQuery;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelQueryJql;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelRetention;
+use OpenCompany\Integrations\Mixpanel\Tools\MixpanelTrackEvent;
 /**
  * MixpanelToolProvider — registers Mixpanel analytics tools with the integration core.
  *
@@ -173,60 +180,110 @@ class MixpanelToolProvider implements ToolProvider, ConfigurableIntegration, Has
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'mixpanel_list_events' => [
-                'class' => MixpanelListEvents::class,
+            'mixpanel_funnel' => [
+                'class' => MixpanelFunnel::class,
                 'type' => 'read',
-                'name' => 'List Events',
-                'description' => 'List events from Mixpanel, optionally filtered by type, unit, or date range.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'mixpanel_get_event' => [
-                'class' => MixpanelGetEvent::class,
-                'type' => 'read',
-                'name' => 'Get Event',
-                'description' => 'Retrieve a single event by its name with analytics data.',
-                'icon' => 'ph:eye',
-            ],
-            'mixpanel_list_funnels' => [
-                'class' => MixpanelListFunnels::class,
-                'type' => 'read',
-                'name' => 'List Funnels',
-                'description' => 'List all funnels configured in the Mixpanel project.',
-                'icon' => 'ph:funnel',
-            ],
-            'mixpanel_get_funnel' => [
-                'class' => MixpanelGetFunnel::class,
-                'type' => 'read',
-                'name' => 'Get Funnel',
-                'description' => 'Retrieve funnel conversion data by funnel ID.',
-                'icon' => 'ph:funnel-simple',
-            ],
-            'mixpanel_list_cohorts' => [
-                'class' => MixpanelListCohorts::class,
-                'type' => 'read',
-                'name' => 'List Cohorts',
-                'description' => 'List all behavioral cohorts in the Mixpanel project.',
-                'icon' => 'ph:users',
+                'name' => 'Funnel',
+                'description' => 'Get conversion funnel results for a specific funnel.',
+                'icon' => 'ph:wrench',
             ],
             'mixpanel_get_cohort' => [
                 'class' => MixpanelGetCohort::class,
                 'type' => 'read',
                 'name' => 'Get Cohort',
-                'description' => 'Retrieve cohort details by cohort ID.',
-                'icon' => 'ph:user-circle',
+                'description' => 'Retrieve detailed information for a Mixpanel cohort by its ID. Returns cohort membership data and behavioral criteria.',
+                'icon' => 'ph:wrench',
             ],
             'mixpanel_get_current_user' => [
                 'class' => MixpanelGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Mixpanel user.',
-                'icon' => 'ph:identification-badge',
+                'description' => 'Get the currently authenticated Mixpanel user. Returns account details for the API key owner â useful for verifying credentials and checking permissions.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_get_event' => [
+                'class' => MixpanelGetEvent::class,
+                'type' => 'read',
+                'name' => 'Get Event',
+                'description' => 'Retrieve analytics data for a specific Mixpanel event by name. Returns event counts and breakdowns over time.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_get_export' => [
+                'class' => MixpanelGetExport::class,
+                'type' => 'read',
+                'name' => 'Get Export',
+                'description' => 'Export raw event data from Mixpanel for a date range.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_get_funnel' => [
+                'class' => MixpanelGetFunnel::class,
+                'type' => 'read',
+                'name' => 'Get Funnel',
+                'description' => 'Retrieve detailed conversion data for a Mixpanel funnel by its ID. Returns step-by-step conversion rates and drop-off analytics.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_list_cohorts' => [
+                'class' => MixpanelListCohorts::class,
+                'type' => 'read',
+                'name' => 'List Cohorts',
+                'description' => 'List all behavioral cohorts in the Mixpanel project. Returns cohort names, IDs, and sizes.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_list_events' => [
+                'class' => MixpanelListEvents::class,
+                'type' => 'read',
+                'name' => 'List Events',
+                'description' => 'List events from Mixpanel Analytics. Optionally filter by event type, time unit, or date range. Returns the most recent events matching the criteria.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_list_funnels' => [
+                'class' => MixpanelListFunnels::class,
+                'type' => 'read',
+                'name' => 'List Funnels',
+                'description' => 'List all funnels configured in the Mixpanel project. Returns funnel names, IDs, and basic configuration.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_profile' => [
+                'class' => MixpanelProfile::class,
+                'type' => 'read',
+                'name' => 'Profile',
+                'description' => 'Set or update a Mixpanel user profile with properties.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_query' => [
+                'class' => MixpanelQuery::class,
+                'type' => 'read',
+                'name' => 'Query',
+                'description' => 'Query Mixpanel event data with date range, type, and time unit.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_query_jql' => [
+                'class' => MixpanelQueryJql::class,
+                'type' => 'read',
+                'name' => 'Query Jql',
+                'description' => 'Execute a JQL (JavaScript Query Language) script against Mixpanel data.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_retention' => [
+                'class' => MixpanelRetention::class,
+                'type' => 'read',
+                'name' => 'Retention',
+                'description' => 'Get retention data for a cohort of users over time.',
+                'icon' => 'ph:wrench',
+            ],
+            'mixpanel_track_event' => [
+                'class' => MixpanelTrackEvent::class,
+                'type' => 'write',
+                'name' => 'Track Event',
+                'description' => 'Track an event in Mixpanel with optional properties and user identity.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

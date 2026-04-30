@@ -14,6 +14,10 @@ use OpenCompany\Integrations\Vimeo\Tools\VimeoListFolders;
 use OpenCompany\Integrations\Vimeo\Tools\VimeoListVideos;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoDeleteVideo;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoGetAlbum;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoListChannels;
+use OpenCompany\Integrations\Vimeo\Tools\VimeoUploadVideo;
 
 /**
  * Registers the integration provider and exposes its tools.
@@ -137,53 +141,82 @@ public function validationRules(): array
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
             'vimeo_create_video' => [
                 'class' => VimeoCreateVideo::class,
                 'type' => 'write',
-                'name' => 'Vimeo Create Video',
+                'name' => 'Create Video',
                 'description' => 'Create a new video upload slot on Vimeo. Choose an upload approach: "pull" (Vimeo downloads from a URL), "post" (you POST to an upload link), or "streaming" (Tus protocol). Returns the video URI and upload target.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_delete_video' => [
+                'class' => VimeoDeleteVideo::class,
+                'type' => 'write',
+                'name' => 'Delete Video',
+                'description' => 'Delete a video from Vimeo permanently. This action cannot be undone.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_get_album' => [
+                'class' => VimeoGetAlbum::class,
+                'type' => 'read',
+                'name' => 'Get Album',
+                'description' => 'Get detailed information about a single Vimeo album (showcase) by its ID.',
                 'icon' => 'ph:wrench',
             ],
             'vimeo_get_current_user' => [
                 'class' => VimeoGetCurrentUser::class,
                 'type' => 'read',
-                'name' => 'Vimeo Get Current User',
+                'name' => 'Get Current User',
                 'description' => 'Get the authenticated Vimeo user\'s profile information. Returns name, bio, location, account type, upload quota, and profile pictures.',
                 'icon' => 'ph:wrench',
             ],
             'vimeo_get_video' => [
                 'class' => VimeoGetVideo::class,
                 'type' => 'read',
-                'name' => 'Vimeo Get Video',
+                'name' => 'Get Video',
                 'description' => 'Get detailed information about a single Vimeo video by its ID. Returns name, description, duration, thumbnails, privacy, stats, and playback links.',
                 'icon' => 'ph:wrench',
             ],
             'vimeo_list_albums' => [
                 'class' => VimeoListAlbums::class,
                 'type' => 'read',
-                'name' => 'Vimeo List Albums',
+                'name' => 'List Albums',
                 'description' => 'List albums (showcases) for the authenticated Vimeo user. Supports pagination, query search, sorting, and direction. Returns album names, descriptions, thumbnails, and video counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_list_channels' => [
+                'class' => VimeoListChannels::class,
+                'type' => 'read',
+                'name' => 'List Channels',
+                'description' => 'List public Vimeo channels. Returns paginated results with channel metadata.',
                 'icon' => 'ph:wrench',
             ],
             'vimeo_list_folders' => [
                 'class' => VimeoListFolders::class,
                 'type' => 'read',
-                'name' => 'Vimeo List Folders',
+                'name' => 'List Folders',
                 'description' => 'List folders (projects) for the authenticated Vimeo user. Supports pagination and query search. Returns folder names, descriptions, and item counts.',
                 'icon' => 'ph:wrench',
             ],
             'vimeo_list_videos' => [
                 'class' => VimeoListVideos::class,
                 'type' => 'read',
-                'name' => 'Vimeo List Videos',
+                'name' => 'List Videos',
                 'description' => 'List videos for the authenticated Vimeo user. Supports pagination, full-text search via query, and filters (e.g., embeddable, playable, privacy). Returns video URIs, names, durations, thumbnails, and metadata.',
+                'icon' => 'ph:wrench',
+            ],
+            'vimeo_upload_video' => [
+                'class' => VimeoUploadVideo::class,
+                'type' => 'write',
+                'name' => 'Upload Video',
+                'description' => 'Create an upload ticket for a new video on Vimeo. Returns the upload URL and video object. Use the upload link to POST the video file binary.',
                 'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
 
     public function luaDocsPath(): ?string

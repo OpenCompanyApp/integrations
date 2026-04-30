@@ -14,6 +14,7 @@ spl_autoload_register(static function (string $class): void {
         'OpenCompany\\Integrations\\Instantly\\' => __DIR__.'/../packages/instantly/src/',
         'OpenCompany\\Integrations\\Mailgun\\' => __DIR__.'/../packages/mailgun/src/',
         'OpenCompany\\Integrations\\Plane\\' => __DIR__.'/../packages/plane/src/',
+        'OpenCompany\\Integrations\\Todoist\\' => __DIR__.'/../packages/todoist/src/',
     ];
 
     foreach ($prefixes as $prefix => $baseDir) {

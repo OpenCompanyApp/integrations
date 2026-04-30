@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class TodoistService
 {
-    private const BASE_URL = 'https://api.todoist.com/rest/v2';
+    private const BASE_URL = 'https://api.todoist.com/api/v1';
 
     public function __construct(
         private string $accessToken = '',
@@ -30,6 +30,43 @@ class TodoistService
         return $this->request('POST', '/tasks', $data);
     }
 
+    public function updateTask(string $id, array $data): array
+    {
+        return $this->request('POST', "/tasks/{$id}", $data);
+    }
+
+    public function deleteTask(string $id): array
+    {
+        return $this->request('DELETE', "/tasks/{$id}");
+    }
+
+    public function closeTask(string $id): array
+    {
+        return $this->request('POST', "/tasks/{$id}/close");
+    }
+
+    public function reopenTask(string $id): array
+    {
+        return $this->request('POST', "/tasks/{$id}/reopen");
+    }
+
+    public function quickAdd(string $text, string $note = '', string $reminder = '', bool $autoReminder = false): array
+    {
+        $data = ['text' => $text];
+
+        if ($note !== '') {
+            $data['note'] = $note;
+        }
+        if ($reminder !== '') {
+            $data['reminder'] = $reminder;
+        }
+        if ($autoReminder) {
+            $data['auto_reminder'] = true;
+        }
+
+        return $this->request('POST', '/tasks/quick', $data);
+    }
+
     public function getTask(string $id): array
     {
         return $this->request('GET', "/tasks/{$id}");
@@ -47,9 +84,71 @@ class TodoistService
         return $this->request('GET', "/projects/{$id}");
     }
 
+    public function createProject(array $data): array
+    {
+        return $this->request('POST', '/projects', $data);
+    }
+
+    public function updateProject(string $id, array $data): array
+    {
+        return $this->request('POST', "/projects/{$id}", $data);
+    }
+
+    public function deleteProject(string $id): array
+    {
+        return $this->request('DELETE', "/projects/{$id}");
+    }
+
     public function listProjects(array $params = []): array
     {
         return $this->request('GET', '/projects', $params);
+    }
+
+    // ── Sections ────────────────────────────────────────────
+
+    public function listSections(?string $projectId = null): array
+    {
+        $params = [];
+        if ($projectId !== null && $projectId !== '') {
+            $params['project_id'] = $projectId;
+        }
+
+        return $this->request('GET', '/sections', $params);
+    }
+
+    public function getSection(string $id): array
+    {
+        return $this->request('GET', "/sections/{$id}");
+    }
+
+    public function createSection(array $data): array
+    {
+        return $this->request('POST', '/sections', $data);
+    }
+
+    public function deleteSection(string $id): array
+    {
+        return $this->request('DELETE', "/sections/{$id}");
+    }
+
+    // ── Comments ────────────────────────────────────────────
+
+    public function listComments(?string $taskId = null, ?string $projectId = null): array
+    {
+        $params = [];
+        if ($taskId !== null && $taskId !== '') {
+            $params['task_id'] = $taskId;
+        }
+        if ($projectId !== null && $projectId !== '') {
+            $params['project_id'] = $projectId;
+        }
+
+        return $this->request('GET', '/comments', $params);
+    }
+
+    public function createComment(array $data): array
+    {
+        return $this->request('POST', '/comments', $data);
     }
 
     // ── Labels ──────────────────────────────────────────────

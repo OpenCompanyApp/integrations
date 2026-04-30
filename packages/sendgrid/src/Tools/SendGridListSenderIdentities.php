@@ -1,19 +1,19 @@
 <?php
 
-namespace OpenCompany\Integrations\SendGrid\Tools;
+namespace OpenCompany\Integrations\Sendgrid\Tools;
 
 use OpenCompany\IntegrationCore\Contracts\Tool;
 use OpenCompany\IntegrationCore\Support\ToolResult;
-use OpenCompany\Integrations\SendGrid\SendGridService;
+use OpenCompany\Integrations\Sendgrid\SendgridService;
 
 /**
  * List all verified sender identities in SendGrid.
  */
 class SendGridListSenderIdentities implements Tool
 {
-    /** @param SendGridService $service The SendGrid API client */
+    /** @param SendgridService $service The SendGrid API client */
     public function __construct(
-        private SendGridService $service,
+        private SendgridService $service,
     ) {}
 
     public function name(): string

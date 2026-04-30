@@ -15,6 +15,8 @@ use OpenCompany\Integrations\Pinterest\Tools\PinterestListCampaigns;
 use OpenCompany\Integrations\Pinterest\Tools\PinterestGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Pinterest\Tools\PinterestCreateBoard;
+use OpenCompany\Integrations\Pinterest\Tools\PinterestDeletePin;
 class PinterestToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -170,60 +172,75 @@ class PinterestToolProvider implements ToolProvider, ConfigurableIntegration, Ha
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'pinterest_list_pins' => [
-                'class' => PinterestListPins::class,
-                'type' => 'read',
-                'name' => 'List Pins',
-                'description' => 'List pins for the authenticated user.',
-                'icon' => 'ph:push-pin',
-            ],
-            'pinterest_get_pin' => [
-                'class' => PinterestGetPin::class,
-                'type' => 'read',
-                'name' => 'Get Pin',
-                'description' => 'Get details of a specific pin.',
-                'icon' => 'ph:push-pin',
+            'pinterest_create_board' => [
+                'class' => PinterestCreateBoard::class,
+                'type' => 'write',
+                'name' => 'Create Board',
+                'description' => 'Create a new board on Pinterest. Boards are collections of pins organized around a theme.',
+                'icon' => 'ph:wrench',
             ],
             'pinterest_create_pin' => [
                 'class' => PinterestCreatePin::class,
                 'type' => 'write',
                 'name' => 'Create Pin',
-                'description' => 'Create a new pin on a board.',
-                'icon' => 'ph:plus-circle',
+                'description' => 'Create a new pin on a Pinterest board. Provide the board ID, title, description, and image URL. Optionally include a destination link.',
+                'icon' => 'ph:wrench',
             ],
-            'pinterest_list_boards' => [
-                'class' => PinterestListBoards::class,
-                'type' => 'read',
-                'name' => 'List Boards',
-                'description' => 'List boards for the authenticated user.',
-                'icon' => 'ph:squares-four',
+            'pinterest_delete_pin' => [
+                'class' => PinterestDeletePin::class,
+                'type' => 'write',
+                'name' => 'Delete Pin',
+                'description' => 'Delete a pin from Pinterest. This action is permanent and cannot be undone.',
+                'icon' => 'ph:wrench',
             ],
             'pinterest_get_board' => [
                 'class' => PinterestGetBoard::class,
                 'type' => 'read',
                 'name' => 'Get Board',
-                'description' => 'Get details of a specific board.',
-                'icon' => 'ph:squares-four',
-            ],
-            'pinterest_list_campaigns' => [
-                'class' => PinterestListCampaigns::class,
-                'type' => 'read',
-                'name' => 'List Campaigns',
-                'description' => 'List ad campaigns for an ad account.',
-                'icon' => 'ph:megaphone',
+                'description' => 'Get details of a specific Pinterest board by its ID. Returns the board name, description, pin count, and privacy settings.',
+                'icon' => 'ph:wrench',
             ],
             'pinterest_get_current_user' => [
                 'class' => PinterestGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated user profile.',
-                'icon' => 'ph:identification-card',
+                'description' => 'Get the currently authenticated Pinterest user profile. Returns the username, account type, and profile image.',
+                'icon' => 'ph:wrench',
+            ],
+            'pinterest_get_pin' => [
+                'class' => PinterestGetPin::class,
+                'type' => 'read',
+                'name' => 'Get Pin',
+                'description' => 'Get details of a specific Pinterest pin by its ID. Returns the pin title, description, image, board, and link.',
+                'icon' => 'ph:wrench',
+            ],
+            'pinterest_list_boards' => [
+                'class' => PinterestListBoards::class,
+                'type' => 'read',
+                'name' => 'List Boards',
+                'description' => 'List boards for the authenticated Pinterest user. Supports pagination with bookmark cursor and page size. Returns board IDs, names, descriptions, and pin counts.',
+                'icon' => 'ph:wrench',
+            ],
+            'pinterest_list_campaigns' => [
+                'class' => PinterestListCampaigns::class,
+                'type' => 'read',
+                'name' => 'List Campaigns',
+                'description' => 'List ad campaigns for a Pinterest ad account. Requires an ad account ID. Supports pagination with bookmark cursor and page size.',
+                'icon' => 'ph:wrench',
+            ],
+            'pinterest_list_pins' => [
+                'class' => PinterestListPins::class,
+                'type' => 'read',
+                'name' => 'List Pins',
+                'description' => 'List pins for the authenticated Pinterest user. Supports pagination with bookmark cursor and page size. Returns pin IDs, titles, descriptions, and media.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

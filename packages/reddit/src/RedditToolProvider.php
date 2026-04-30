@@ -15,6 +15,8 @@ use OpenCompany\Integrations\Reddit\Tools\RedditListComments;
 use OpenCompany\Integrations\Reddit\Tools\RedditGetCurrentUser;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+use OpenCompany\Integrations\Reddit\Tools\RedditCreateComment;
+use OpenCompany\Integrations\Reddit\Tools\RedditSearch;
 class RedditToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -161,60 +163,75 @@ class RedditToolProvider implements ToolProvider, ConfigurableIntegration, HasIn
         ];
     }
 
-    public function tools(): array
+        public function tools(): array
     {
         return [
-            'reddit_list_posts' => [
-                'class' => RedditListPosts::class,
-                'type' => 'read',
-                'name' => 'List Posts',
-                'description' => 'List posts from a subreddit or the front page.',
-                'icon' => 'ph:list-bullets',
-            ],
-            'reddit_get_post' => [
-                'class' => RedditGetPost::class,
-                'type' => 'read',
-                'name' => 'Get Post',
-                'description' => 'Get details for a specific Reddit post.',
-                'icon' => 'ph:article',
+            'reddit_create_comment' => [
+                'class' => RedditCreateComment::class,
+                'type' => 'write',
+                'name' => 'Create Comment',
+                'description' => 'Post a comment on a Reddit post or reply to an existing comment. The comment body supports Markdown formatting. Use "t3_" prefix for post IDs or "t1_" prefix for comment IDs as the parent.',
+                'icon' => 'ph:wrench',
             ],
             'reddit_create_post' => [
                 'class' => RedditCreatePost::class,
                 'type' => 'write',
                 'name' => 'Create Post',
-                'description' => 'Submit a new post to a subreddit.',
-                'icon' => 'ph:plus-circle',
-            ],
-            'reddit_list_subreddits' => [
-                'class' => RedditListSubreddits::class,
-                'type' => 'read',
-                'name' => 'List Subreddits',
-                'description' => 'List popular or new subreddits.',
-                'icon' => 'ph:folders',
-            ],
-            'reddit_get_subreddit' => [
-                'class' => RedditGetSubreddit::class,
-                'type' => 'read',
-                'name' => 'Get Subreddit',
-                'description' => 'Get information about a specific subreddit.',
-                'icon' => 'ph:folder',
-            ],
-            'reddit_list_comments' => [
-                'class' => RedditListComments::class,
-                'type' => 'read',
-                'name' => 'List Comments',
-                'description' => 'List comments for a specific Reddit post.',
-                'icon' => 'ph:chat-text',
+                'description' => 'Submit a new post to a subreddit. Supports text (self), link, image, and video post types.',
+                'icon' => 'ph:wrench',
             ],
             'reddit_get_current_user' => [
                 'class' => RedditGetCurrentUser::class,
                 'type' => 'read',
                 'name' => 'Get Current User',
-                'description' => 'Get the currently authenticated Reddit user profile.',
-                'icon' => 'ph:user',
+                'description' => 'Get the profile of the currently authenticated Reddit user. Useful for verifying credentials and displaying account information.',
+                'icon' => 'ph:wrench',
+            ],
+            'reddit_get_post' => [
+                'class' => RedditGetPost::class,
+                'type' => 'read',
+                'name' => 'Get Post',
+                'description' => 'Get details for a specific Reddit post by subreddit and post ID. Returns the post listing and its top-level comments.',
+                'icon' => 'ph:wrench',
+            ],
+            'reddit_get_subreddit' => [
+                'class' => RedditGetSubreddit::class,
+                'type' => 'read',
+                'name' => 'Get Subreddit',
+                'description' => 'Get information about a specific subreddit including subscriber count, description, and settings.',
+                'icon' => 'ph:wrench',
+            ],
+            'reddit_list_comments' => [
+                'class' => RedditListComments::class,
+                'type' => 'read',
+                'name' => 'List Comments',
+                'description' => 'List comments for a specific Reddit post. Supports sorting (best, top, new, controversial, old, q&a) and depth limiting.',
+                'icon' => 'ph:wrench',
+            ],
+            'reddit_list_posts' => [
+                'class' => RedditListPosts::class,
+                'type' => 'read',
+                'name' => 'List Posts',
+                'description' => 'List posts from a subreddit or the Reddit front page. Supports hot, new, top, rising, and controversial sorting with pagination via after/before cursors.',
+                'icon' => 'ph:wrench',
+            ],
+            'reddit_list_subreddits' => [
+                'class' => RedditListSubreddits::class,
+                'type' => 'read',
+                'name' => 'List Subreddits',
+                'description' => 'List popular or new subreddits. Supports pagination with after/before cursors.',
+                'icon' => 'ph:wrench',
+            ],
+            'reddit_search' => [
+                'class' => RedditSearch::class,
+                'type' => 'read',
+                'name' => 'Search',
+                'description' => 'Search Reddit for posts, subreddits, or users. Supports filtering by type, sorting, and time range. Use this to find relevant content across Reddit.',
+                'icon' => 'ph:wrench',
             ],
         ];
     }
+
 
     public function luaDocsPath(): ?string
     {

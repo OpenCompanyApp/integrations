@@ -1,6 +1,6 @@
 {
     "name": "opencompanyapp/integration-x",
-    "description": "Twitter/X integration for Laravel — retrieve tweets, post tweets, and look up user profiles via the Twitter API v2.",
+    "description": "Twitter / X integration for Laravel — generated coverage of the official X API.",
     "license": "MIT",
     "authors": [
         {
@@ -8,10 +8,14 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["tools", "x", "x", "social", "opencompany"],
+    "keywords": ["tools", "x", "twitter", "social", "posts", "opencompany"],
     "require": {
         "php": "^8.2",
         "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "replace": {
+        "opencompanyapp/integration-twitter": "self.version",
+        "opencompanyapp/ai-tool-twitter": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -21,7 +25,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\Integrations\\X\\TwitterServiceProvider"
+                "OpenCompany\\Integrations\\X\\XServiceProvider"
             ]
         }
     },

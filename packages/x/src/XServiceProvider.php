@@ -7,11 +7,10 @@ use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 /**
- * Laravel service provider for the Twitter/X integration.
+ * Registers the canonical Twitter / X integration.
  *
- * Registers the {@see XService} as a singleton using credentials
- * from the {@see CredentialResolver}, and boots the {@see XToolProvider}
- * into the {@see ToolProviderRegistry} when available.
+ * Binds the generated X API service and registers all OpenAPI-backed tools
+ * with the integration registry when the host exposes one.
  */
 class XServiceProvider extends ServiceProvider
 {
@@ -21,8 +20,12 @@ class XServiceProvider extends ServiceProvider
             $creds = $app->make(CredentialResolver::class);
 
             return new XService(
+                bearerToken: $creds->get('x', 'bearer_token', ''),
                 accessToken: $creds->get('x', 'access_token', ''),
-                baseUrl: $creds->get('x', 'base_url', 'https://api.twitter.com/2'),
+                apiKey: $creds->get('x', 'api_key', ''),
+                apiSecret: $creds->get('x', 'api_secret', ''),
+                accessTokenSecret: $creds->get('x', 'access_token_secret', ''),
+                baseUrl: $creds->get('x', 'base_url', 'https://api.x.com/2'),
             );
         });
     }

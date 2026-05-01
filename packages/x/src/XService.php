@@ -4,182 +4,238 @@ namespace OpenCompany\Integrations\X;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use OpenCompany\IntegrationCore\Support\OAuth1Signer;
 
 /**
- * HTTP client for the Twitter/X API v2.
+ * HTTP client for the official X API.
  *
- * Wraps all API communication. Tools call service methods — they never
- * make HTTP requests directly. Supports a configurable base URL so tests
- * or enterprise gateways can override the default {@see https://api.twitter.com/2}.
+ * Executes generated operation metadata from the X OpenAPI spec and selects
+ * the strongest configured authentication mode supported by each operation.
  */
 class XService
 {
     public function __construct(
+        private string $bearerToken = '',
         private string $accessToken = '',
-        private string $baseUrl = 'https://api.twitter.com/2',
+        private string $apiKey = '',
+        private string $apiSecret = '',
+        private string $accessTokenSecret = '',
+        private string $baseUrl = 'https://api.x.com/2',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
     }
 
     /**
-     * Check whether the service has been configured with an access token.
+     * Check whether any supported credential mode is configured.
      */
     public function isConfigured(): bool
     {
-        return !empty($this->accessToken);
-    }
-
-    // ── Tweets ────────────────────────────────────────────
-
-    /**
-     * Get a single tweet by ID.
-     *
-     * @param string $id Tweet ID
-     * @param array<string, mixed> $params Optional query parameters (e.g. expansions, tweet.fields)
-     * @return array<string, mixed>
-     */
-    public function getTweet(string $id, array $params = []): array
-    {
-        return $this->request('GET', '/tweets/' . urlencode($id), $params);
+        return $this->bearerToken !== ''
+            || $this->accessToken !== ''
+            || ($this->apiKey !== '' && $this->apiSecret !== '' && $this->accessToken !== '' && $this->accessTokenSecret !== '');
     }
 
     /**
-     * Look up multiple tweets by their IDs.
+     * Execute one generated X API operation.
      *
-     * @param array<int, string> $ids List of tweet IDs (max 100)
-     * @param array<string, mixed> $params Optional query parameters
-     * @return array<string, mixed>
+     * @param  array<string, mixed>  $operation  Generated operation metadata
+     * @param  array<string, mixed>  $args  Tool arguments
+     * @return array<string, mixed>|string
      */
-    public function listTweets(array $ids, array $params = []): array
+    public function executeOperation(array $operation, array $args): array|string
     {
-        $params['ids'] = implode(',', $ids);
-
-        return $this->request('GET', '/tweets', $params);
-    }
-
-    /**
-     * Create (post) a new tweet.
-     *
-     * @param array<string, mixed> $data Tweet payload (text, reply_settings, media, etc.)
-     * @return array<string, mixed>
-     */
-    public function createTweet(array $data): array
-    {
-        return $this->request('POST', '/tweets', $data);
-    }
-
-    // ── Users ─────────────────────────────────────────────
-
-    /**
-     * Get a user by their numeric ID.
-     *
-     * @param string $id Twitter user ID
-     * @param array<string, mixed> $params Optional query parameters (e.g. user.fields)
-     * @return array<string, mixed>
-     */
-    public function getUser(string $id, array $params = []): array
-    {
-        return $this->request('GET', '/users/' . urlencode($id), $params);
-    }
-
-    /**
-     * Get a user by their username (handle).
-     *
-     * @param string $username Twitter username without the @ prefix
-     * @param array<string, mixed> $params Optional query parameters
-     * @return array<string, mixed>
-     */
-    public function getUserByUsername(string $username, array $params = []): array
-    {
-        return $this->request('GET', '/users/by/username/' . urlencode($username), $params);
-    }
-
-    /**
-     * Get the currently authenticated user.
-     *
-     * @param array<string, mixed> $params Optional query parameters
-     * @return array<string, mixed>
-     */
-    public function getCurrentUser(array $params = []): array
-    {
-        return $this->request('GET', '/users/me', $params);
-    }
-
-    // ── HTTP ──────────────────────────────────────────────
-
-    /**
-     * Make an API request and return the parsed JSON response.
-     *
-     * @param string $method HTTP method (GET, POST, PUT, DELETE)
-     * @param string $path API path relative to the base URL
-     * @param array<string, mixed> $data Query parameters or JSON body
-     * @return array<string, mixed>
-     *
-     * @throws \RuntimeException When the request fails
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $response = $this->rawRequest($method, $path, $data);
-
-        return $response->json() ?? [];
-    }
-
-    /**
-     * Make a raw HTTP request to the Twitter API.
-     *
-     * @param string $method HTTP method
-     * @param string $path API path
-     * @param array<string, mixed> $data Query parameters or JSON body
-     *
-     * @throws \RuntimeException When credentials are missing or the API returns an error
-     */
-    private function rawRequest(string $method, string $path, array $data = []): \Illuminate\Http\Client\Response
-    {
-        if (!$this->accessToken) {
-            throw new \RuntimeException('Twitter access token is not configured.');
+        if (($operation['runtime_mode'] ?? 'request_response') === 'stream') {
+            throw new \RuntimeException('This X endpoint is a streaming endpoint. It must be run by a host streaming runner, not as a single request-response tool call.');
         }
 
-        $url = $this->baseUrl . $path;
+        [$url, $query, $body] = $this->prepareRequest($operation, $args);
+        $method = strtoupper((string) ($operation['method'] ?? 'GET'));
+        $bodyMode = (string) ($operation['body_mode'] ?? 'json');
+
+        $http = Http::timeout(30);
+        $headers = $this->authHeaders($operation, $method, $url, $query, $body, $bodyMode);
+        if (!empty($headers)) {
+            $http = $http->withHeaders($headers);
+        }
+
+        if ($bodyMode === 'form') {
+            $http = $http->asForm();
+        } else {
+            $http = $http->acceptJson()->asJson();
+        }
+
+        $response = match ($method) {
+            'GET' => $http->get($url, $query),
+            'POST' => $http->post($this->urlWithQuery($url, $query), $body),
+            'PUT' => $http->put($this->urlWithQuery($url, $query), $body),
+            'PATCH' => $http->patch($this->urlWithQuery($url, $query), $body),
+            'DELETE' => $http->delete($this->urlWithQuery($url, $query), $body),
+            default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
+        };
+
+        if (!$response->successful()) {
+            $json = $response->json();
+            $error = is_array($json)
+                ? ($json['title'] ?? $json['detail'] ?? $json['error'] ?? json_encode($json))
+                : $response->body();
+
+            Log::error('X API error', [
+                'status' => $response->status(),
+                'operation' => $operation['id'] ?? null,
+                'error' => $error,
+            ]);
+
+            throw new \RuntimeException('X API error (' . $response->status() . '): ' . (string) $error);
+        }
+
+        $json = $response->json();
+
+        return is_array($json) ? $json : $response->body();
+    }
+
+    /**
+     * Test credentials with a lightweight endpoint.
+     *
+     * @return array{success: bool, message?: string, error?: string}
+     */
+    public function testConnection(): array
+    {
+        if (!$this->isConfigured()) {
+            return ['success' => false, 'error' => 'No X credentials are configured.'];
+        }
 
         try {
-            $http = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'Content-Type' => 'application/json',
-            ])->timeout(30);
+            $operation = $this->accessToken !== '' || $this->accessTokenSecret !== ''
+                ? [
+                    'id' => 'getUsersMe',
+                    'method' => 'GET',
+                    'path' => '/2/users/me',
+                    'parameters' => [],
+                    'body_mode' => 'json',
+                    'auth_modes' => ['oauth2_pkce', 'oauth1a_user_context'],
+                    'runtime_mode' => 'request_response',
+                ]
+                : [
+                    'id' => 'getUsersByUsername',
+                    'method' => 'GET',
+                    'path' => '/2/users/by/username/{username}',
+                    'parameters' => [
+                        ['name' => 'username', 'in' => 'path', 'required' => true],
+                    ],
+                    'body_mode' => 'json',
+                    'auth_modes' => ['bearer_token'],
+                    'runtime_mode' => 'request_response',
+                ];
+            $args = ($operation['id'] ?? '') === 'getUsersByUsername' ? ['username' => 'XDevelopers'] : [];
+            $result = $this->executeOperation($operation, $args);
+            $username = is_array($result) ? ($result['data']['username'] ?? 'XDevelopers') : 'unknown';
 
-            $response = match (strtoupper($method)) {
-                'GET' => $http->get($url, $data),
-                'POST' => $http->post($url, $data),
-                'PUT' => $http->put($url, $data),
-                'DELETE' => $http->delete($url, $data),
-                default => throw new \RuntimeException("Unsupported HTTP method: {$method}"),
-            };
+            return ['success' => true, 'message' => "Connected to X as @{$username}."];
+        } catch (\Throwable $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 
-            if (!$response->successful()) {
-                $contentType = $response->header('Content-Type');
-                $body = $response->body();
+    /**
+     * @param  array<string, mixed>  $operation
+     * @param  array<string, mixed>  $args
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, mixed>}
+     */
+    private function prepareRequest(array $operation, array $args): array
+    {
+        $path = (string) ($operation['path'] ?? '/');
+        $query = [];
+        $body = isset($args['body']) && is_array($args['body']) ? $args['body'] : [];
 
-                if (str_contains($contentType ?? '', 'text/html') || str_starts_with(trim($body), '<!DOCTYPE')) {
-                    Log::warning("Twitter API returned HTML for {$method} {$path}", [
-                        'status' => $response->status(),
-                    ]);
-                    throw new \RuntimeException("Twitter API endpoint not available (HTTP {$response->status()}). The {$path} endpoint may be unavailable or the URL may be incorrect.");
-                }
-
-                $error = $response->json('error') ?? $response->json('title') ?? $body;
-                Log::error("Twitter API error: {$method} {$path}", [
-                    'status' => $response->status(),
-                    'error' => $error,
-                ]);
-                throw new \RuntimeException("Twitter API error ({$response->status()}): " . (is_string($error) ? $error : json_encode($error)));
+        foreach ($operation['parameters'] ?? [] as $parameter) {
+            if (!is_array($parameter)) {
+                continue;
             }
 
-            return $response;
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            Log::error("Twitter API connection error: {$method} {$path}", [
-                'error' => $e->getMessage(),
-            ]);
-            throw new \RuntimeException("Failed to connect to Twitter API: {$e->getMessage()}");
+            $name = (string) ($parameter['name'] ?? '');
+            if ($name === '' || !array_key_exists($name, $args)) {
+                continue;
+            }
+
+            if (($parameter['in'] ?? '') === 'path') {
+                $path = str_replace('{' . $name . '}', rawurlencode((string) $args[$name]), $path);
+                continue;
+            }
+
+            if (($parameter['in'] ?? '') === 'query') {
+                $query[$name] = $this->normalizeQueryValue($args[$name], $parameter);
+            }
         }
+
+        return [$this->operationUrl($path), $query, $body];
+    }
+
+    /**
+     * @param  array<string, mixed>  $parameter
+     */
+    private function normalizeQueryValue(mixed $value, array $parameter): mixed
+    {
+        if (is_array($value) && (($parameter['explode'] ?? null) === false || ($parameter['style'] ?? null) !== 'deepObject')) {
+            return implode(',', array_map('strval', $value));
+        }
+
+        return $value;
+    }
+
+    private function operationUrl(string $path): string
+    {
+        if (str_ends_with($this->baseUrl, '/2') && str_starts_with($path, '/2/')) {
+            $path = substr($path, 2);
+        }
+
+        return $this->baseUrl . '/' . ltrim($path, '/');
+    }
+
+    /**
+     * @param  array<string, mixed>  $query
+     */
+    private function urlWithQuery(string $url, array $query): string
+    {
+        if (empty($query)) {
+            return $url;
+        }
+
+        return $url . (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
+    }
+
+    /**
+     * @param  array<string, mixed>  $operation
+     * @param  array<string, mixed>  $query
+     * @param  array<string, mixed>  $body
+     * @return array<string, string>
+     */
+    private function authHeaders(array $operation, string $method, string $url, array $query, array $body, string $bodyMode): array
+    {
+        $modes = $operation['auth_modes'] ?? [];
+
+        if (in_array('oauth1a_user_context', $modes, true) && $this->apiKey !== '' && $this->apiSecret !== '' && $this->accessToken !== '' && $this->accessTokenSecret !== '') {
+            return [
+                'Authorization' => OAuth1Signer::authorizationHeader(
+                    method: $method,
+                    url: $url,
+                    queryParams: $query,
+                    bodyParams: $bodyMode === 'form' ? $body : [],
+                    consumerKey: $this->apiKey,
+                    consumerSecret: $this->apiSecret,
+                    token: $this->accessToken,
+                    tokenSecret: $this->accessTokenSecret,
+                ),
+            ];
+        }
+
+        if (in_array('oauth2_pkce', $modes, true) && $this->accessToken !== '') {
+            return ['Authorization' => 'Bearer ' . $this->accessToken];
+        }
+
+        if (in_array('bearer_token', $modes, true) && $this->bearerToken !== '') {
+            return ['Authorization' => 'Bearer ' . $this->bearerToken];
+        }
+
+        throw new \RuntimeException('No configured credential matches this X operation. Required auth modes: ' . implode(', ', $modes));
     }
 }

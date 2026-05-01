@@ -43,6 +43,8 @@ abstract class GoogleDataManagerTool implements Tool
                 'destinations' => ['type' => 'array', 'required' => true, 'items' => ['type' => 'object'], 'description' => 'Destination objects for Google advertising products.'],
                 'events' => ['type' => 'array', 'required' => true, 'items' => ['type' => 'object'], 'description' => 'Event resources. eventTimestamp is required by the API.'],
                 'consent' => ['type' => 'object', 'description' => 'Request-level Consent object. User-level consent overrides this.'],
+                'encoding' => ['type' => 'string', 'description' => 'Encoding enum for user-data uploads.'],
+                'encryption_info' => ['type' => 'object', 'description' => 'EncryptionInfo object for encrypted uploads.'],
                 'validate_only' => ['type' => 'boolean', 'description' => 'Validate only when supported.'],
             ]),
             'ingest_audience_members', 'remove_audience_members' => $this->writeParameters([
@@ -116,7 +118,12 @@ abstract class GoogleDataManagerTool implements Tool
             'destinations' => $this->requiredArray($args, 'destinations'),
             'events' => $this->requiredArray($args, 'events'),
         ];
-        foreach (['consent' => 'consent', 'validate_only' => 'validateOnly'] as $arg => $field) {
+        foreach ([
+            'consent' => 'consent',
+            'validate_only' => 'validateOnly',
+            'encoding' => 'encoding',
+            'encryption_info' => 'encryptionInfo',
+        ] as $arg => $field) {
             if (array_key_exists($arg, $args)) {
                 $body[$field] = $arg === 'validate_only' ? (bool) $args[$arg] : $args[$arg];
             }

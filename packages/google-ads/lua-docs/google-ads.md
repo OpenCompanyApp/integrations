@@ -22,11 +22,11 @@ Official references:
 Required credentials:
 
 - `developer_token`: Google Ads API developer token.
-- `access_token`: OAuth access token with the `adwords` scope.
+- `access_token`: OAuth access token with the `adwords` scope, or a refresh-token credential set.
 
 Recommended credentials:
 
-- `refresh_token`: long-lived refresh token.
+- `refresh_token`: long-lived refresh token. For CLI-only setup, this can be used without a pre-seeded access token when `client_id` and `client_secret` are also configured.
 - `client_id` and `client_secret`: required if the integration should refresh tokens automatically.
 - `manager_customer_id`: MCC ID used as the `login-customer-id` header when operating through a manager account.
 - `default_customer_id`: client customer ID used when a tool call omits `customer_id`.
@@ -289,7 +289,7 @@ Creates account budget proposal operations for monthly invoicing accounts.
 
 `google_ads_create_batch_job`
 
-Creates a batch job and can append operations and run it.
+Creates a batch job and can append operations and run it. A single `addOperations` request is limited to 5,000 mutate operations. Do not pass `sequence_token` for the first append; use the previous `nextSequenceToken` only for later append calls.
 
 `google_ads_mutate`
 

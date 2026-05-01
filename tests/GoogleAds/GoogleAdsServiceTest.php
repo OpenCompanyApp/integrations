@@ -10,6 +10,7 @@ use OpenCompany\Integrations\GoogleAds\GoogleAdsService;
 use OpenCompany\Integrations\GoogleAds\GoogleAdsToolProvider;
 use OpenCompany\Integrations\GoogleAds\Support\GoogleAdsIdentifierHasher;
 use OpenCompany\Integrations\GoogleAds\Tools\GoogleAdsCreateSearchCampaign;
+use OpenCompany\Integrations\GoogleAds\Tools\GoogleAdsCreateBatchJob;
 use OpenCompany\Integrations\GoogleAds\Tools\GoogleAdsSearch;
 use PHPUnit\Framework\TestCase;
 
@@ -63,6 +64,35 @@ final class GoogleAdsServiceTest extends TestCase
         });
     }
 
+    public function test_refresh_token_only_cli_credentials_are_configured_and_refresh_before_request(): void
+    {
+        Http::fake([
+            'https://oauth2.googleapis.com/token' => Http::response([
+                'access_token' => 'fresh-token',
+                'expires_in' => 3600,
+            ], 200),
+            'https://googleads.googleapis.com/v24/customers:listAccessibleCustomers' => Http::response([
+                'resourceNames' => ['customers/1234567890'],
+            ], 200),
+        ]);
+
+        $service = new GoogleAdsService(
+            clientId: 'client-id',
+            clientSecret: 'client-secret',
+            refreshToken: 'refresh-token',
+            developerToken: 'developer-token',
+        );
+
+        self::assertTrue($service->isConfigured());
+        $result = $service->listAccessibleCustomers();
+
+        self::assertSame(['customers/1234567890'], $result['resourceNames']);
+        Http::assertSent(static function (Request $request): bool {
+            return $request->url() === 'https://googleads.googleapis.com/v24/customers:listAccessibleCustomers'
+                && $request->hasHeader('Authorization', 'Bearer fresh-token');
+        });
+    }
+
     public function test_live_campaign_creation_requires_confirmation(): void
     {
         $tool = new GoogleAdsCreateSearchCampaign(new GoogleAdsService(
@@ -77,6 +107,35 @@ final class GoogleAdsServiceTest extends TestCase
 
         self::assertFalse($result->succeeded());
         self::assertStringContainsString('confirm_execute=true is required', (string) $result->error);
+    }
+
+    public function test_batch_job_first_add_operations_omits_sequence_token(): void
+    {
+        Http::fake([
+            'https://googleads.googleapis.com/v24/customers/1234567890/batchJobs:mutate' => Http::response([
+                'results' => [['resourceName' => 'customers/1234567890/batchJobs/1']],
+            ], 200),
+            'https://googleads.googleapis.com/v24/customers/1234567890/batchJobs/1:addOperations' => Http::response([
+                'nextSequenceToken' => 'token-2',
+            ], 200),
+        ]);
+
+        $tool = new GoogleAdsCreateBatchJob(new GoogleAdsService(
+            accessToken: 'access-token',
+            developerToken: 'developer-token',
+            defaultCustomerId: '1234567890',
+        ));
+        $result = $tool->execute([
+            'confirm_execute' => true,
+            'operations' => [['campaignOperation' => ['create' => ['name' => 'Example']]]],
+        ]);
+
+        self::assertTrue($result->succeeded());
+        Http::assertSent(static function (Request $request): bool {
+            return $request->url() === 'https://googleads.googleapis.com/v24/customers/1234567890/batchJobs/1:addOperations'
+                && ! array_key_exists('sequenceToken', $request->data())
+                && count($request->data()['mutateOperations']) === 1;
+        });
     }
 
     public function test_customer_match_hashing_normalizes_identifiers(): void

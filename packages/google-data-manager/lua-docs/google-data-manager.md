@@ -16,9 +16,9 @@ Official references:
 
 ## Authentication
 
-Required:
+Required credential shape:
 
-- `access_token`: OAuth token with the `datamanager` scope.
+- `access_token`: OAuth token with the `datamanager` scope, or a refresh-token credential set.
 
 Recommended:
 
@@ -27,7 +27,7 @@ Recommended:
 - `client_secret`
 - `expires_at`
 
-CLI hosts such as KosmoKrator can run with manually generated refresh tokens. Web hosts should expose an OAuth redirect flow for self-service connection.
+CLI hosts such as KosmoKrator can run with manually generated refresh tokens and no pre-seeded access token when `client_id`, `client_secret`, and `refresh_token` are configured. Web hosts should expose an OAuth redirect flow for self-service connection.
 
 ## Safety model
 
@@ -39,9 +39,9 @@ Live ingestion and removal tools require `confirm_execute=true`. If an endpoint 
 
 Returns safe configuration metadata, scope, and CLI support status.
 
-`google_data_manager_ingest_events({ destinations, events, consent, confirm_execute })`
+`google_data_manager_ingest_events({ destinations, events, consent, encoding, encryption_info, confirm_execute })`
 
-Uploads conversion event resources.
+Uploads conversion event resources. Maximum 2,000 events per request.
 
 Example:
 

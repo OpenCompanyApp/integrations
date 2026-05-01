@@ -19,12 +19,14 @@ class GoogleAdsServiceProvider extends ServiceProvider
         $this->app->singleton(GoogleAdsService::class, function ($app) {
             $creds = $app->make(CredentialResolver::class);
 
+            $expiresAt = $creds->get('google_ads', 'expires_at');
+
             return new GoogleAdsService(
                 clientId: $creds->get('google_ads', 'client_id', ''),
                 clientSecret: $creds->get('google_ads', 'client_secret', ''),
                 accessToken: $creds->get('google_ads', 'access_token', ''),
                 refreshToken: $creds->get('google_ads', 'refresh_token', ''),
-                expiresAt: $creds->get('google_ads', 'expires_at'),
+                expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
                 developerToken: $creds->get('google_ads', 'developer_token', ''),
                 managerCustomerId: $creds->get('google_ads', 'manager_customer_id', ''),
                 defaultCustomerId: $creds->get('google_ads', 'default_customer_id', ''),

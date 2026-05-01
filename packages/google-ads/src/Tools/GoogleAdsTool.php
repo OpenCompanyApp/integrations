@@ -135,6 +135,7 @@ abstract class GoogleAdsTool implements Tool
             ]),
             'create_batch_job' => $this->writeParameters([
                 'operations' => ['type' => 'array', 'items' => ['type' => 'object'], 'description' => 'Batch job mutate operations to append.'],
+                'sequence_token' => ['type' => 'string', 'description' => 'Only set for subsequent addOperations calls; omit for the first addOperations request.'],
                 'run' => ['type' => 'boolean', 'default' => false, 'description' => 'Run the job after appending operations.'],
             ]),
             'mutate' => $this->writeParameters([
@@ -390,10 +391,19 @@ abstract class GoogleAdsTool implements Tool
             $result = ['create' => $create];
 
             if (! empty($args['operations']) && $resourceName !== '') {
-                $result['addOperations'] = $this->service->raw('POST', "/{$resourceName}:addOperations", [
-                    'sequenceToken' => '',
-                    'mutateOperations' => $this->requiredArray($args, 'operations'),
-                ], [], $this->customerId($args));
+                $operations = $this->requiredArray($args, 'operations');
+                if (count($operations) > 5000) {
+                    throw new \InvalidArgumentException('Google Ads batchJobs:addOperations accepts at most 5,000 mutateOperations per request.');
+                }
+
+                $body = [
+                    'mutateOperations' => $operations,
+                ];
+                if (! empty($args['sequence_token'])) {
+                    $body['sequenceToken'] = (string) $args['sequence_token'];
+                }
+
+                $result['addOperations'] = $this->service->raw('POST', "/{$resourceName}:addOperations", $body, [], $this->customerId($args));
             }
             if (($args['run'] ?? false) && $resourceName !== '') {
                 $result['run'] = $this->service->raw('POST', "/{$resourceName}:run", [], [], $this->customerId($args));

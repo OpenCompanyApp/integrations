@@ -136,7 +136,7 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
             ['key' => 'developer_token', 'type' => 'secret', 'label' => 'Developer Token', 'required' => true],
             ['key' => 'client_id', 'type' => 'string', 'label' => 'OAuth Client ID', 'required' => false],
             ['key' => 'client_secret', 'type' => 'secret', 'label' => 'OAuth Client Secret', 'required' => false],
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => false],
             ['key' => 'refresh_token', 'type' => 'secret', 'label' => 'Refresh Token', 'required' => false],
             ['key' => 'expires_at', 'type' => 'string', 'label' => 'Access Token Expiry Timestamp', 'required' => false],
             ['key' => 'manager_customer_id', 'type' => 'string', 'label' => 'Manager Customer ID', 'required' => false],
@@ -152,8 +152,11 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
      */
     public function testConnection(array $config): array
     {
-        if (empty($config['access_token']) || empty($config['developer_token'])) {
-            return ['success' => false, 'error' => 'Google Ads access_token and developer_token are required.'];
+        if (empty($config['developer_token'])) {
+            return ['success' => false, 'error' => 'Google Ads developer_token is required.'];
+        }
+        if (empty($config['access_token']) && (empty($config['refresh_token']) || empty($config['client_id']) || empty($config['client_secret']))) {
+            return ['success' => false, 'error' => 'Google Ads requires access_token, or client_id/client_secret/refresh_token for automatic CLI refresh.'];
         }
 
         $service = $this->serviceFromConfig($config);
@@ -174,7 +177,7 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             'developer_token' => 'required|string',
-            'access_token' => 'required|string',
+            'access_token' => 'nullable|string',
             'refresh_token' => 'nullable|string',
             'client_id' => 'nullable|string',
             'client_secret' => 'nullable|string',
@@ -237,7 +240,7 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
     {
         return [
             ['key' => 'developer_token', 'type' => 'secret', 'label' => 'Developer Token', 'required' => true],
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => false],
             ['key' => 'refresh_token', 'type' => 'secret', 'label' => 'Refresh Token', 'required' => false],
             ['key' => 'client_id', 'type' => 'string', 'label' => 'OAuth Client ID', 'required' => false],
             ['key' => 'client_secret', 'type' => 'secret', 'label' => 'OAuth Client Secret', 'required' => false],
@@ -271,12 +274,14 @@ class GoogleAdsToolProvider implements ToolProvider, ConfigurableIntegration, Ha
 
         $creds = app(CredentialResolver::class);
 
+        $expiresAt = $creds->get('google_ads', 'expires_at', null, $account);
+
         return new GoogleAdsService(
             clientId: $creds->get('google_ads', 'client_id', '', $account),
             clientSecret: $creds->get('google_ads', 'client_secret', '', $account),
             accessToken: $creds->get('google_ads', 'access_token', '', $account),
             refreshToken: $creds->get('google_ads', 'refresh_token', '', $account),
-            expiresAt: $creds->get('google_ads', 'expires_at', null, $account),
+            expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
             developerToken: $creds->get('google_ads', 'developer_token', '', $account),
             managerCustomerId: $creds->get('google_ads', 'manager_customer_id', '', $account),
             defaultCustomerId: $creds->get('google_ads', 'default_customer_id', '', $account),

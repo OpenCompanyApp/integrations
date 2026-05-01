@@ -49,7 +49,8 @@ class GoogleAdsService
 
     public function isConfigured(): bool
     {
-        return $this->accessToken !== '' && $this->developerToken !== '';
+        return $this->developerToken !== ''
+            && ($this->accessToken !== '' || ($this->refreshToken !== '' && $this->clientId !== '' && $this->clientSecret !== ''));
     }
 
     /**
@@ -533,11 +534,16 @@ class GoogleAdsService
 
     private function ensureValidToken(): void
     {
-        if ($this->accessToken === '') {
-            throw new \RuntimeException('Google Ads access token is not configured.');
-        }
         if ($this->developerToken === '') {
             throw new \RuntimeException('Google Ads developer token is not configured.');
+        }
+        if ($this->accessToken === '' && $this->refreshToken !== '' && $this->clientId !== '' && $this->clientSecret !== '') {
+            $this->refreshAccessToken();
+
+            return;
+        }
+        if ($this->accessToken === '') {
+            throw new \RuntimeException('Google Ads access token is not configured. Provide access_token, or client_id/client_secret/refresh_token for automatic CLI refresh.');
         }
         if ($this->expiresAt !== null && $this->expiresAt > time() + 60) {
             return;

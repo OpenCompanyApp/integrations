@@ -34,7 +34,7 @@ class GoogleDataManagerService
 
     public function isConfigured(): bool
     {
-        return $this->accessToken !== '';
+        return $this->accessToken !== '' || ($this->refreshToken !== '' && $this->clientId !== '' && $this->clientSecret !== '');
     }
 
     /**
@@ -61,6 +61,11 @@ class GoogleDataManagerService
      */
     public function ingestEvents(array $body): array
     {
+        $count = count($body['events'] ?? []);
+        if ($count > 2000) {
+            throw new \InvalidArgumentException('Google Data Manager allows at most 2,000 events per ingest request.');
+        }
+
         return $this->request('POST', '/events:ingest', $body);
     }
 
@@ -127,7 +132,8 @@ class GoogleDataManagerService
     {
         $this->ensureValidToken();
 
-        $url = self::BASE_URL . '/' . ltrim($path, '/');
+        $path = '/' . preg_replace('#^v1/#', '', ltrim($path, '/'));
+        $url = self::BASE_URL . $path;
         $http = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->accessToken,
             'Content-Type' => 'application/json',
@@ -162,8 +168,13 @@ class GoogleDataManagerService
 
     private function ensureValidToken(): void
     {
+        if ($this->accessToken === '' && $this->refreshToken !== '' && $this->clientId !== '' && $this->clientSecret !== '') {
+            $this->refreshAccessToken();
+
+            return;
+        }
         if ($this->accessToken === '') {
-            throw new \RuntimeException('Google Data Manager access token is not configured.');
+            throw new \RuntimeException('Google Data Manager access token is not configured. Provide access_token, or client_id/client_secret/refresh_token for automatic CLI refresh.');
         }
         if ($this->expiresAt !== null && $this->expiresAt > time() + 60) {
             return;

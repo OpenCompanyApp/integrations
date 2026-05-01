@@ -81,7 +81,7 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
         return [
             ['key' => 'client_id', 'type' => 'string', 'label' => 'OAuth Client ID', 'required' => false],
             ['key' => 'client_secret', 'type' => 'secret', 'label' => 'OAuth Client Secret', 'required' => false],
-            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
+            ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => false],
             ['key' => 'refresh_token', 'type' => 'secret', 'label' => 'Refresh Token', 'required' => false],
             ['key' => 'expires_at', 'type' => 'string', 'label' => 'Access Token Expiry Timestamp', 'required' => false],
         ];
@@ -93,8 +93,8 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
      */
     public function testConnection(array $config): array
     {
-        if (empty($config['access_token'])) {
-            return ['success' => false, 'error' => 'Google Data Manager access_token is required.'];
+        if (empty($config['access_token']) && (empty($config['refresh_token']) || empty($config['client_id']) || empty($config['client_secret']))) {
+            return ['success' => false, 'error' => 'Google Data Manager requires access_token, or client_id/client_secret/refresh_token for automatic CLI refresh.'];
         }
 
         $service = $this->serviceFromConfig($config);
@@ -111,7 +111,7 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
     public function validationRules(): array
     {
         return [
-            'access_token' => 'required|string',
+            'access_token' => 'nullable|string',
             'refresh_token' => 'nullable|string',
             'client_id' => 'nullable|string',
             'client_secret' => 'nullable|string',
@@ -165,12 +165,14 @@ class GoogleDataManagerToolProvider implements ToolProvider, ConfigurableIntegra
 
         $creds = app(CredentialResolver::class);
 
+        $expiresAt = $creds->get('google_data_manager', 'expires_at', null, $account);
+
         return new GoogleDataManagerService(
             clientId: $creds->get('google_data_manager', 'client_id', '', $account),
             clientSecret: $creds->get('google_data_manager', 'client_secret', '', $account),
             accessToken: $creds->get('google_data_manager', 'access_token', '', $account),
             refreshToken: $creds->get('google_data_manager', 'refresh_token', '', $account),
-            expiresAt: $creds->get('google_data_manager', 'expires_at', null, $account),
+            expiresAt: is_numeric($expiresAt) ? (int) $expiresAt : null,
         );
     }
 

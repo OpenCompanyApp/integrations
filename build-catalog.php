@@ -990,6 +990,10 @@ foreach ($providerFiles as $providerFile) {
         extractReturnArray($source, 'integrationMeta') ?? []
     );
 
+    if (($integrationMeta['catalog_visibility'] ?? 'public') === 'hidden') {
+        continue;
+    }
+
     $triggerDefs = [];
     if (sourceImplements($source, 'HasTriggers')) {
         $triggerDefs = extractReturnArray($source, 'triggers') ?? [];
@@ -1070,6 +1074,14 @@ foreach ($providerFiles as $providerFile) {
             }
         }
 
+        if (empty($toolDescription) && $providerToolDescription !== '') {
+            $toolDescription = $providerToolDescription;
+        }
+
+        if (empty($toolParameters) && is_array($toolMeta) && isset($toolMeta['parameters']) && is_array($toolMeta['parameters'])) {
+            $toolParameters = $toolMeta['parameters'];
+        }
+
         if ($actualToolSlug === '') {
             $actualToolSlug = is_string($toolSlug) ? normalizeRouteSlug($toolSlug) : normalizeRouteSlug($toolShortName);
         }
@@ -1089,6 +1101,15 @@ foreach ($providerFiles as $providerFile) {
             'parameter_count' => is_array($toolParameters) ? count($toolParameters) : 0,
             'source_available' => $toolSourceExists,
             'source_file' => $toolSourceExists ? 'packages/' . $pkgSlug . '/src/Tools/' . $toolShortName . '.php' : null,
+            'operation_id' => is_array($toolMeta) ? ($toolMeta['operation_id'] ?? null) : null,
+            'operation' => is_array($toolMeta) ? ($toolMeta['operation'] ?? null) : null,
+            'auth_modes' => is_array($toolMeta) ? ($toolMeta['auth_modes'] ?? []) : [],
+            'required_scopes' => is_array($toolMeta) ? ($toolMeta['required_scopes'] ?? []) : [],
+            'required_access_tier' => is_array($toolMeta) ? ($toolMeta['required_access_tier'] ?? null) : null,
+            'runtime_mode' => is_array($toolMeta) ? ($toolMeta['runtime_mode'] ?? 'request_response') : 'request_response',
+            'destructive' => is_array($toolMeta) ? (bool) ($toolMeta['destructive'] ?? false) : false,
+            'billing_sensitive' => is_array($toolMeta) ? (bool) ($toolMeta['billing_sensitive'] ?? false) : false,
+            'docs_url' => is_array($toolMeta) ? ($toolMeta['docs_url'] ?? null) : null,
         ];
         $totalTools++;
     }

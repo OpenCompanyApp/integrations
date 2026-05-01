@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-google-ads",
+    "description": "Google Ads integration for account discovery, reporting, campaign management, assets, audiences, conversions, billing, batch jobs, and governed raw API access.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "google", "google-ads", "advertising", "campaigns", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GoogleAds\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GoogleAds\\GoogleAdsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,30 @@
+{
+    "name": "opencompanyapp/integration-google-data-manager",
+    "description": "Google Data Manager integration for first-party conversion event and audience ingestion.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "OpenCompany",
+            "homepage": "https://github.com/OpenCompanyApp"
+        }
+    ],
+    "keywords": ["tools", "google", "data-manager", "advertising", "audiences", "conversions", "opencompany"],
+    "require": {
+        "php": "^8.2",
+        "opencompanyapp/integration-core": "^2.0 || @dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "OpenCompany\\Integrations\\GoogleDataManager\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OpenCompany\\Integrations\\GoogleDataManager\\GoogleDataManagerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

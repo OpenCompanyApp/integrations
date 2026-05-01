@@ -11,6 +11,8 @@ spl_autoload_register(static function (string $class): void {
     $prefixes = [
         'OpenCompany\\IntegrationCore\\' => __DIR__.'/../core/src/',
         'OpenCompany\\Integrations\\ClickUp\\' => __DIR__.'/../packages/clickup/src/',
+        'OpenCompany\\Integrations\\GoogleAds\\' => __DIR__.'/../packages/google-ads/src/',
+        'OpenCompany\\Integrations\\GoogleDataManager\\' => __DIR__.'/../packages/google-data-manager/src/',
         'OpenCompany\\Integrations\\Instantly\\' => __DIR__.'/../packages/instantly/src/',
         'OpenCompany\\Integrations\\Mailgun\\' => __DIR__.'/../packages/mailgun/src/',
         'OpenCompany\\Integrations\\Plane\\' => __DIR__.'/../packages/plane/src/',

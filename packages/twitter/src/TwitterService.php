@@ -5,8 +5,18 @@ namespace OpenCompany\Integrations\Twitter;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Deprecated HTTP client for the legacy Twitter namespace.
+ *
+ * The canonical integration is `packages/x`; this service remains only for
+ * compatibility with hosts that still instantiate legacy Twitter tools.
+ */
 class TwitterService
 {
+    /**
+     * @param  string  $accessToken  Legacy Twitter/X bearer or user-context token
+     * @param  string  $baseUrl  Legacy Twitter API base URL
+     */
     public function __construct(
         private string $accessToken = '',
         private string $baseUrl = 'https://api.twitter.com/2',

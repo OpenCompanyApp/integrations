@@ -26,8 +26,23 @@ class XCreateDirectMessagesConversation extends XGeneratedTool
                     'required' => true,
                 ],
                 'message' => [
-                    'type' => 'string',
+                    'type' => 'object',
                     'description' => '',
+                    'properties' => [
+                        'attachments' => [
+                            'type' => 'array',
+                            'description' => 'Attachments to a DM Event.',
+                            'items' => [
+                                'type' => 'object',
+                            ],
+                            'required' => false,
+                        ],
+                        'text' => [
+                            'type' => 'string',
+                            'description' => 'Text of the message.',
+                            'required' => false,
+                        ],
+                    ],
                     'required' => true,
                 ],
                 'participant_ids' => [

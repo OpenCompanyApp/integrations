@@ -118,8 +118,26 @@ class XCreateMediaMetadata extends XGeneratedTool
                             'required' => false,
                         ],
                         'geo_restrictions' => [
-                            'type' => 'string',
+                            'type' => 'object',
                             'description' => '',
+                            'properties' => [
+                                'blacklisted_country_codes' => [
+                                    'type' => 'array',
+                                    'description' => 'List of blacklisted country codes',
+                                    'items' => [
+                                        'type' => 'string',
+                                    ],
+                                    'required' => false,
+                                ],
+                                'whitelisted_country_codes' => [
+                                    'type' => 'array',
+                                    'description' => 'List of whitelisted country codes',
+                                    'items' => [
+                                        'type' => 'string',
+                                    ],
+                                    'required' => false,
+                                ],
+                            ],
                             'required' => false,
                         ],
                         'management_info' => [

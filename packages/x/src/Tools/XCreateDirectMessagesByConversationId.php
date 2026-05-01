@@ -21,6 +21,21 @@ class XCreateDirectMessagesByConversationId extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'attachments' => [
+                    'type' => 'array',
+                    'description' => 'Attachments to a DM Event.',
+                    'items' => [
+                        'type' => 'object',
+                    ],
+                    'required' => true,
+                ],
+                'text' => [
+                    'type' => 'string',
+                    'description' => 'Text of the message.',
+                    'required' => false,
+                ],
+            ],
         ],
     ];
 

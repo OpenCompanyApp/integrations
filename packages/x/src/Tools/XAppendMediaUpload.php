@@ -21,6 +21,18 @@ class XAppendMediaUpload extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'media' => [
+                    'type' => 'string',
+                    'description' => 'The file to upload.',
+                    'required' => true,
+                ],
+                'segment_index' => [
+                    'type' => 'string',
+                    'description' => 'An integer value representing the media upload segment.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 
@@ -38,7 +50,7 @@ class XAppendMediaUpload extends XGeneratedTool
             ],
         ],
         'has_body' => true,
-        'body_mode' => 'json',
+        'body_mode' => 'multipart',
         'auth_modes' => [
             'oauth2_pkce',
             'oauth1a_user_context',

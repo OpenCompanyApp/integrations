@@ -14,6 +14,14 @@ use OpenCompany\IntegrationCore\Support\OAuth1Signer;
  */
 class XService
 {
+    /**
+     * @param  string  $bearerToken  App-only bearer token for public read endpoints
+     * @param  string  $accessToken  OAuth 2.0 access token or OAuth 1.0a access token
+     * @param  string  $apiKey  OAuth 1.0a consumer key
+     * @param  string  $apiSecret  OAuth 1.0a consumer secret
+     * @param  string  $accessTokenSecret  OAuth 1.0a access token secret
+     * @param  string  $baseUrl  X API base URL
+     */
     public function __construct(
         private string $bearerToken = '',
         private string $accessToken = '',
@@ -60,6 +68,8 @@ class XService
 
         if ($bodyMode === 'form') {
             $http = $http->asForm();
+        } elseif ($bodyMode === 'multipart') {
+            $http = $http->asMultipart();
         } else {
             $http = $http->acceptJson()->asJson();
         }
@@ -105,7 +115,9 @@ class XService
         }
 
         try {
-            $operation = $this->accessToken !== '' || $this->accessTokenSecret !== ''
+            $hasCompleteOAuth1 = $this->apiKey !== '' && $this->apiSecret !== '' && $this->accessToken !== '' && $this->accessTokenSecret !== '';
+            $hasOAuth2 = $this->accessToken !== '' && $this->accessTokenSecret === '';
+            $operation = $hasCompleteOAuth1 || $hasOAuth2
                 ? [
                     'id' => 'getUsersMe',
                     'method' => 'GET',

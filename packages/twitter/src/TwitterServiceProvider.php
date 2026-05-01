@@ -4,8 +4,14 @@ namespace OpenCompany\Integrations\Twitter;
 
 use Illuminate\Support\ServiceProvider;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
-use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
+/**
+ * Registers legacy Twitter services without exposing duplicate tools.
+ *
+ * The canonical public integration is `x`. This provider keeps the old service
+ * binding available for direct legacy consumers but intentionally avoids
+ * registering `twitter` in the tool registry.
+ */
 class TwitterServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -22,9 +28,6 @@ class TwitterServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        if ($this->app->bound(ToolProviderRegistry::class)) {
-            $this->app->make(ToolProviderRegistry::class)
-                ->register(new TwitterToolProvider());
-        }
+        // Deprecated compatibility package: do not register duplicate tools.
     }
 }

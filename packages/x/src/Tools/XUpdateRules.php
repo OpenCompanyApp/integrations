@@ -26,6 +26,39 @@ class XUpdateRules extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'add' => [
+                    'type' => 'array',
+                    'description' => '',
+                    'items' => [
+                        'type' => 'object',
+                    ],
+                    'required' => false,
+                ],
+                'delete' => [
+                    'type' => 'object',
+                    'description' => 'IDs and values of all deleted user-specified stream filtering rules.',
+                    'properties' => [
+                        'ids' => [
+                            'type' => 'array',
+                            'description' => 'IDs of all deleted user-specified stream filtering rules.',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                            'required' => false,
+                        ],
+                        'values' => [
+                            'type' => 'array',
+                            'description' => 'Values of all deleted user-specified stream filtering rules.',
+                            'items' => [
+                                'type' => 'string',
+                            ],
+                            'required' => false,
+                        ],
+                    ],
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

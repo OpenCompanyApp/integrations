@@ -359,6 +359,26 @@ function readComposerJson(string $pkgDir): array
     ];
 }
 
+function expectedProviderFqcn(string $providerFile, string $pkgDir, array $composer): ?string
+{
+    $namespace = $composer['namespace'] ?? null;
+    if (!is_string($namespace) || $namespace === '') {
+        return null;
+    }
+
+    $srcPrefix = $pkgDir . '/src/';
+    if (!str_starts_with($providerFile, $srcPrefix)) {
+        return null;
+    }
+
+    $relative = substr($providerFile, strlen($srcPrefix), -4);
+    if ($relative === false || $relative === '') {
+        return null;
+    }
+
+    return rtrim($namespace, '\\') . '\\' . str_replace('/', '\\', $relative);
+}
+
 function readLuaDocs(string $pkgDir): string
 {
     $luaDir = $pkgDir . '/lua-docs';
@@ -1000,6 +1020,9 @@ foreach ($providerFiles as $providerFile) {
     }
 
     $composer = readComposerJson($pkgDir);
+    $providerFqcn = resolveFqcn($source);
+    $expectedProviderFqcn = expectedProviderFqcn($providerFile, $pkgDir, $composer);
+    $providerFqcnMatchesPsr4 = $expectedProviderFqcn === null || $providerFqcn === $expectedProviderFqcn;
     $luaDocs = readLuaDocs($pkgDir);
     $readme = readReadme($pkgDir);
 
@@ -1239,6 +1262,8 @@ foreach ($providerFiles as $providerFile) {
             'requires' => $composer['require'] ?? [],
             'replaces' => $composer['replace'] ?? [],
             'type' => $composer['type'] ?? null,
+            'provider_fqcn' => $providerFqcn,
+            'expected_provider_fqcn' => $expectedProviderFqcn,
         ],
         'seo' => [
             'canonical_slug' => normalizeRouteSlug($appName),
@@ -1298,6 +1323,7 @@ foreach ($providerFiles as $providerFile) {
             'has_config_schema' => !empty($configSchema),
             'missing_tool_files' => $missingToolFiles,
             'missing_tool_file_count' => count($missingToolFiles),
+            'provider_fqcn_matches_psr4' => $providerFqcnMatchesPsr4,
         ],
         'related_integrations' => [],
         'lua_docs' => $luaDocs !== '' ? $luaDocs : null,

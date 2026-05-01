@@ -169,8 +169,19 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getAccountActivitySubscriptionCount',
                 'operation' => [
+                    'id' => 'getAccountActivitySubscriptionCount',
                     'method' => 'GET',
                     'path' => '/2/account_activity/subscriptions/count',
+                    'parameters' => [
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Account Activity',
                     ],
@@ -201,8 +212,31 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'validateAccountActivitySubscription',
                 'operation' => [
+                    'id' => 'validateAccountActivitySubscription',
                     'method' => 'GET',
                     'path' => '/2/account_activity/webhooks/{webhook_id}/subscriptions/all',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Account Activity',
                     ],
@@ -243,8 +277,31 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createAccountActivitySubscription',
                 'operation' => [
+                    'id' => 'createAccountActivitySubscription',
                     'method' => 'POST',
                     'path' => '/2/account_activity/webhooks/{webhook_id}/subscriptions/all',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Account Activity',
                     ],
@@ -280,8 +337,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getAccountActivitySubscriptions',
                 'operation' => [
+                    'id' => 'getAccountActivitySubscriptions',
                     'method' => 'GET',
                     'path' => '/2/account_activity/webhooks/{webhook_id}/subscriptions/all/list',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Account Activity',
                     ],
@@ -317,8 +392,33 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteAccountActivitySubscription',
                 'operation' => [
+                    'id' => 'deleteAccountActivitySubscription',
                     'method' => 'DELETE',
                     'path' => '/2/account_activity/webhooks/{webhook_id}/subscriptions/{user_id}/all',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Account Activity',
                     ],
@@ -359,8 +459,40 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'activityStream',
                 'operation' => [
+                    'id' => 'activityStream',
                     'method' => 'GET',
                     'path' => '/2/activity/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Activity',
                         'Stream',
@@ -395,8 +527,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteActivitySubscriptionsByIds',
                 'operation' => [
+                    'id' => 'deleteActivitySubscriptionsByIds',
                     'method' => 'DELETE',
                     'path' => '/2/activity/subscriptions',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Activity',
                     ],
@@ -432,8 +582,36 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getActivitySubscriptions',
                 'operation' => [
+                    'id' => 'getActivitySubscriptions',
                     'method' => 'GET',
                     'path' => '/2/activity/subscriptions',
+                    'parameters' => [
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Activity',
                     ],
@@ -533,8 +711,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createActivitySubscription',
                 'operation' => [
+                    'id' => 'createActivitySubscription',
                     'method' => 'POST',
                     'path' => '/2/activity/subscriptions',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Activity',
                         'Stream',
@@ -570,8 +763,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteActivitySubscription',
                 'operation' => [
+                    'id' => 'deleteActivitySubscription',
                     'method' => 'DELETE',
                     'path' => '/2/activity/subscriptions/{subscription_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'subscription_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Activity',
                     ],
@@ -619,8 +830,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'updateActivitySubscription',
                 'operation' => [
+                    'id' => 'updateActivitySubscription',
                     'method' => 'PUT',
                     'path' => '/2/activity/subscriptions/{subscription_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'subscription_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Activity',
                     ],
@@ -680,8 +909,57 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getChatConversations',
                 'operation' => [
+                    'id' => 'getChatConversations',
                     'method' => 'GET',
                     'path' => '/2/chat/conversations',
+                    'parameters' => [
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'chat_conversation.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -784,8 +1062,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createChatConversation',
                 'operation' => [
+                    'id' => 'createChatConversation',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/group',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -815,8 +1108,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'initializeChatGroup',
                 'operation' => [
+                    'id' => 'initializeChatGroup',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/group/initialize',
+                    'parameters' => [
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -867,8 +1173,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getChatConversation',
                 'operation' => [
+                    'id' => 'getChatConversation',
                     'method' => 'GET',
                     'path' => '/2/chat/conversations/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'chat_message_event.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -936,8 +1285,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'initializeChatConversationKeys',
                 'operation' => [
+                    'id' => 'initializeChatConversationKeys',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/{id}/keys',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1018,8 +1389,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'addChatGroupMembers',
                 'operation' => [
+                    'id' => 'addChatGroupMembers',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/{id}/members',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1081,8 +1474,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'sendChatMessage',
                 'operation' => [
+                    'id' => 'sendChatMessage',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/{id}/messages',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1129,8 +1544,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'markChatConversationRead',
                 'operation' => [
+                    'id' => 'markChatConversationRead',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/{id}/read',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1165,8 +1602,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'sendChatTypingIndicator',
                 'operation' => [
+                    'id' => 'sendChatTypingIndicator',
                     'method' => 'POST',
                     'path' => '/2/chat/conversations/{id}/typing',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1213,8 +1672,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'chatMediaUploadInitialize',
                 'operation' => [
+                    'id' => 'chatMediaUploadInitialize',
                     'method' => 'POST',
                     'path' => '/2/chat/media/upload/initialize',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1248,12 +1720,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'conversation_id' => [
+                                'type' => 'string',
+                                'description' => 'XChat conversation identifier for the upload.',
+                                'required' => true,
+                            ],
+                            'media' => [
+                                'type' => 'string',
+                                'description' => 'The file to upload.',
+                                'required' => true,
+                            ],
+                            'media_hash_key' => [
+                                'type' => 'string',
+                                'description' => 'Media hash key returned from initialize.',
+                                'required' => true,
+                            ],
+                            'segment_index' => [
+                                'type' => 'string',
+                                'description' => 'An integer value representing the media upload segment.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'chatMediaUploadAppend',
                 'operation' => [
+                    'id' => 'chatMediaUploadAppend',
                     'method' => 'POST',
                     'path' => '/2/chat/media/upload/{id}/append',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'multipart',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1318,8 +1832,28 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'chatMediaUploadFinalize',
                 'operation' => [
+                    'id' => 'chatMediaUploadFinalize',
                     'method' => 'POST',
                     'path' => '/2/chat/media/upload/{id}/finalize',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1357,8 +1891,35 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'chatMediaDownload',
                 'operation' => [
+                    'id' => 'chatMediaDownload',
                     'method' => 'GET',
                     'path' => '/2/chat/media/{id}/{media_hash_key}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'media_hash_key',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -1414,8 +1975,57 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchCommunities',
                 'operation' => [
+                    'id' => 'searchCommunities',
                     'method' => 'GET',
                     'path' => '/2/communities/search',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'next_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'community.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Communities',
                     ],
@@ -1457,8 +2067,38 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getCommunitiesById',
                 'operation' => [
+                    'id' => 'getCommunitiesById',
                     'method' => 'GET',
                     'path' => '/2/communities/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'community.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Communities',
                     ],
@@ -1517,8 +2157,40 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getComplianceJobs',
                 'operation' => [
+                    'id' => 'getComplianceJobs',
                     'method' => 'GET',
                     'path' => '/2/compliance/jobs',
+                    'parameters' => [
+                        [
+                            'name' => 'type',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'status',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'compliance_job.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'async_job',
                     'tags' => [
                         'Compliance',
                     ],
@@ -1570,8 +2242,19 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createComplianceJobs',
                 'operation' => [
+                    'id' => 'createComplianceJobs',
                     'method' => 'POST',
                     'path' => '/2/compliance/jobs',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'async_job',
                     'tags' => [
                         'Compliance',
                     ],
@@ -1610,8 +2293,33 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getComplianceJobsById',
                 'operation' => [
+                    'id' => 'getComplianceJobsById',
                     'method' => 'GET',
                     'path' => '/2/compliance/jobs/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'compliance_job.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'async_job',
                     'tags' => [
                         'Compliance',
                     ],
@@ -1652,8 +2360,19 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteConnectionsByUuids',
                 'operation' => [
+                    'id' => 'deleteConnectionsByUuids',
                     'method' => 'DELETE',
                     'path' => '/2/connections',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Connections',
                     ],
@@ -1715,8 +2434,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getConnectionHistory',
                 'operation' => [
+                    'id' => 'getConnectionHistory',
                     'method' => 'GET',
                     'path' => '/2/connections',
+                    'parameters' => [
+                        [
+                            'name' => 'status',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'endpoints',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'connection.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Connections',
                     ],
@@ -1742,8 +2507,19 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteAllConnections',
                 'operation' => [
+                    'id' => 'deleteAllConnections',
                     'method' => 'DELETE',
                     'path' => '/2/connections/all',
+                    'parameters' => [
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Connections',
                     ],
@@ -1790,8 +2566,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteConnectionsByEndpoint',
                 'operation' => [
+                    'id' => 'deleteConnectionsByEndpoint',
                     'method' => 'DELETE',
                     'path' => '/2/connections/{endpoint_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'endpoint_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Connections',
                     ],
@@ -1828,8 +2622,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                                 'required' => true,
                             ],
                             'message' => [
-                                'type' => 'string',
+                                'type' => 'object',
                                 'description' => '',
+                                'properties' => [
+                                    'attachments' => [
+                                        'type' => 'array',
+                                        'description' => 'Attachments to a DM Event.',
+                                        'items' => [
+                                            'type' => 'object',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'text' => [
+                                        'type' => 'string',
+                                        'description' => 'Text of the message.',
+                                        'required' => false,
+                                    ],
+                                ],
                                 'required' => true,
                             ],
                             'participant_ids' => [
@@ -1845,8 +2654,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createDirectMessagesConversation',
                 'operation' => [
+                    'id' => 'createDirectMessagesConversation',
                     'method' => 'POST',
                     'path' => '/2/dm_conversations',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -1891,8 +2715,41 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'dmConversationsMediaDownload',
                 'operation' => [
+                    'id' => 'dmConversationsMediaDownload',
                     'method' => 'GET',
                     'path' => '/2/dm_conversations/media/{dm_id}/{media_id}/{resource_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'dm_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'media_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'resource_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -1982,8 +2839,86 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getDirectMessagesEventsByParticipantId',
                 'operation' => [
+                    'id' => 'getDirectMessagesEventsByParticipantId',
                     'method' => 'GET',
                     'path' => '/2/dm_conversations/with/{participant_id}/dm_events',
+                    'parameters' => [
+                        [
+                            'name' => 'participant_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'event_types',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'dm_event.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2019,12 +2954,49 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'attachments' => [
+                                'type' => 'array',
+                                'description' => 'Attachments to a DM Event.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => true,
+                            ],
+                            'text' => [
+                                'type' => 'string',
+                                'description' => 'Text of the message.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createDirectMessagesByParticipantId',
                 'operation' => [
+                    'id' => 'createDirectMessagesByParticipantId',
                     'method' => 'POST',
                     'path' => '/2/dm_conversations/with/{participant_id}/messages',
+                    'parameters' => [
+                        [
+                            'name' => 'participant_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2060,12 +3032,49 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'attachments' => [
+                                'type' => 'array',
+                                'description' => 'Attachments to a DM Event.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => true,
+                            ],
+                            'text' => [
+                                'type' => 'string',
+                                'description' => 'Text of the message.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createDirectMessagesByConversationId',
                 'operation' => [
+                    'id' => 'createDirectMessagesByConversationId',
                     'method' => 'POST',
                     'path' => '/2/dm_conversations/{dm_conversation_id}/messages',
+                    'parameters' => [
+                        [
+                            'name' => 'dm_conversation_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2158,8 +3167,86 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getDirectMessagesEventsByConversationId',
                 'operation' => [
+                    'id' => 'getDirectMessagesEventsByConversationId',
                     'method' => 'GET',
                     'path' => '/2/dm_conversations/{id}/dm_events',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'event_types',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'dm_event.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2247,8 +3334,79 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getDirectMessagesEvents',
                 'operation' => [
+                    'id' => 'getDirectMessagesEvents',
                     'method' => 'GET',
                     'path' => '/2/dm_events',
+                    'parameters' => [
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'event_types',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'dm_event.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2283,8 +3441,29 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteDirectMessagesEvents',
                 'operation' => [
+                    'id' => 'deleteDirectMessagesEvents',
                     'method' => 'DELETE',
                     'path' => '/2/dm_events/{event_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'event_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'dm.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2358,8 +3537,65 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getDirectMessagesEventsById',
                 'operation' => [
+                    'id' => 'getDirectMessagesEventsById',
                     'method' => 'GET',
                     'path' => '/2/dm_events/{event_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'event_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'dm_event.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Direct Messages',
                     ],
@@ -2406,8 +3642,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'evaluateCommunityNotes',
                 'operation' => [
+                    'id' => 'evaluateCommunityNotes',
                     'method' => 'POST',
                     'path' => '/2/evaluate_note',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Community Notes',
                     ],
@@ -2470,8 +3719,49 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getInsights28Hr',
                 'operation' => [
+                    'id' => 'getInsights28Hr',
                     'method' => 'GET',
                     'path' => '/2/insights/28hr',
+                    'parameters' => [
+                        [
+                            'name' => 'tweet_ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'granularity',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'requested_metrics',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'engagement.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -2544,8 +3834,63 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getInsightsHistorical',
                 'operation' => [
+                    'id' => 'getInsightsHistorical',
                     'method' => 'GET',
                     'path' => '/2/insights/historical',
+                    'parameters' => [
+                        [
+                            'name' => 'tweet_ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'granularity',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'requested_metrics',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'engagement.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -2588,8 +3933,40 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamLikesCompliance',
                 'operation' => [
+                    'id' => 'streamLikesCompliance',
                     'method' => 'GET',
                     'path' => '/2/likes/compliance/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Compliance',
@@ -2676,8 +4053,82 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamLikesFirehose',
                 'operation' => [
+                    'id' => 'streamLikesFirehose',
                     'method' => 'GET',
                     'path' => '/2/likes/firehose/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'like_with_tweet_author.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Likes',
@@ -2764,8 +4215,82 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamLikesSample10',
                 'operation' => [
+                    'id' => 'streamLikesSample10',
                     'method' => 'GET',
                     'path' => '/2/likes/sample10/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'like_with_tweet_author.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Likes',
@@ -2814,8 +4339,24 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createLists',
                 'operation' => [
+                    'id' => 'createLists',
                     'method' => 'POST',
                     'path' => '/2/lists',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                     ],
@@ -2851,8 +4392,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteLists',
                 'operation' => [
+                    'id' => 'deleteLists',
                     'method' => 'DELETE',
                     'path' => '/2/lists/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                     ],
@@ -2911,8 +4474,52 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getListsById',
                 'operation' => [
+                    'id' => 'getListsById',
                     'method' => 'GET',
                     'path' => '/2/lists/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                     ],
@@ -2970,8 +4577,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'updateLists',
                 'operation' => [
+                    'id' => 'updateLists',
                     'method' => 'PUT',
                     'path' => '/2/lists/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                     ],
@@ -3040,8 +4669,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getListsFollowers',
                 'operation' => [
+                    'id' => 'getListsFollowers',
                     'method' => 'GET',
                     'path' => '/2/lists/{id}/followers',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                         'Users',
@@ -3112,8 +4799,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getListsMembers',
                 'operation' => [
+                    'id' => 'getListsMembers',
                     'method' => 'GET',
                     'path' => '/2/lists/{id}/members',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                         'Users',
@@ -3162,8 +4907,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'addListsMember',
                 'operation' => [
+                    'id' => 'addListsMember',
                     'method' => 'POST',
                     'path' => '/2/lists/{id}/members',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                     ],
@@ -3203,8 +4970,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'removeListsMemberByUserId',
                 'operation' => [
+                    'id' => 'removeListsMemberByUserId',
                     'method' => 'DELETE',
                     'path' => '/2/lists/{id}/members/{user_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                     ],
@@ -3297,8 +5093,87 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getListsPosts',
                 'operation' => [
+                    'id' => 'getListsPosts',
                     'method' => 'GET',
                     'path' => '/2/lists/{id}/tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Lists',
                         'Tweets',
@@ -3346,8 +5221,36 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getMediaByMediaKeys',
                 'operation' => [
+                    'id' => 'getMediaByMediaKeys',
                     'method' => 'GET',
                     'path' => '/2/media',
+                    'parameters' => [
+                        [
+                            'name' => 'media_keys',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3412,8 +5315,56 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getMediaAnalytics',
                 'operation' => [
+                    'id' => 'getMediaAnalytics',
                     'method' => 'GET',
                     'path' => '/2/media/analytics',
+                    'parameters' => [
+                        [
+                            'name' => 'media_keys',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'granularity',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'media_analytics.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3544,8 +5495,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                                         'required' => false,
                                     ],
                                     'geo_restrictions' => [
-                                        'type' => 'string',
+                                        'type' => 'object',
                                         'description' => '',
+                                        'properties' => [
+                                            'blacklisted_country_codes' => [
+                                                'type' => 'array',
+                                                'description' => 'List of blacklisted country codes',
+                                                'items' => [
+                                                    'type' => 'string',
+                                                ],
+                                                'required' => false,
+                                            ],
+                                            'whitelisted_country_codes' => [
+                                                'type' => 'array',
+                                                'description' => 'List of whitelisted country codes',
+                                                'items' => [
+                                                    'type' => 'string',
+                                                ],
+                                                'required' => false,
+                                            ],
+                                        ],
                                         'required' => false,
                                     ],
                                     'management_info' => [
@@ -3656,8 +5625,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createMediaMetadata',
                 'operation' => [
+                    'id' => 'createMediaMetadata',
                     'method' => 'POST',
                     'path' => '/2/media/metadata',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3711,8 +5693,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteMediaSubtitles',
                 'operation' => [
+                    'id' => 'deleteMediaSubtitles',
                     'method' => 'DELETE',
                     'path' => '/2/media/subtitles',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3783,8 +5778,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createMediaSubtitles',
                 'operation' => [
+                    'id' => 'createMediaSubtitles',
                     'method' => 'POST',
                     'path' => '/2/media/subtitles',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3825,8 +5833,35 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getMediaUploadStatus',
                 'operation' => [
+                    'id' => 'getMediaUploadStatus',
                     'method' => 'GET',
                     'path' => '/2/media/upload',
+                    'parameters' => [
+                        [
+                            'name' => 'media_id',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'command',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3866,7 +5901,7 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             ],
                             'media' => [
                                 'type' => 'string',
-                                'description' => '',
+                                'description' => 'The file to upload.',
                                 'required' => true,
                             ],
                             'media_category' => [
@@ -3904,8 +5939,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'mediaUpload',
                 'operation' => [
+                    'id' => 'mediaUpload',
                     'method' => 'POST',
                     'path' => '/2/media/upload',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'multipart',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -3995,8 +6043,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'initializeMediaUpload',
                 'operation' => [
+                    'id' => 'initializeMediaUpload',
                     'method' => 'POST',
                     'path' => '/2/media/upload/initialize',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -4030,12 +6091,44 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'media' => [
+                                'type' => 'string',
+                                'description' => 'The file to upload.',
+                                'required' => true,
+                            ],
+                            'segment_index' => [
+                                'type' => 'string',
+                                'description' => 'An integer value representing the media upload segment.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'appendMediaUpload',
                 'operation' => [
+                    'id' => 'appendMediaUpload',
                     'method' => 'POST',
                     'path' => '/2/media/upload/{id}/append',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'multipart',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -4068,8 +6161,28 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'finalizeMediaUpload',
                 'operation' => [
+                    'id' => 'finalizeMediaUpload',
                     'method' => 'POST',
                     'path' => '/2/media/upload/{id}/finalize',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'media.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -4110,8 +6223,36 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getMediaByMediaKey',
                 'operation' => [
+                    'id' => 'getMediaByMediaKey',
                     'method' => 'GET',
                     'path' => '/2/media/{media_key}',
+                    'parameters' => [
+                        [
+                            'name' => 'media_key',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Media',
                     ],
@@ -4163,8 +6304,50 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchNews',
                 'operation' => [
+                    'id' => 'searchNews',
                     'method' => 'GET',
                     'path' => '/2/news/search',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_age_hours',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'news.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'News',
                     ],
@@ -4206,8 +6389,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getNews',
                 'operation' => [
+                    'id' => 'getNews',
                     'method' => 'GET',
                     'path' => '/2/news/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'news.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'News',
                     ],
@@ -4293,8 +6505,21 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createCommunityNotes',
                 'operation' => [
+                    'id' => 'createCommunityNotes',
                     'method' => 'POST',
                     'path' => '/2/notes',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Community Notes',
                     ],
@@ -4345,8 +6570,49 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchCommunityNotesWritten',
                 'operation' => [
+                    'id' => 'searchCommunityNotesWritten',
                     'method' => 'GET',
                     'path' => '/2/notes/search/notes_written',
+                    'parameters' => [
+                        [
+                            'name' => 'test_mode',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'note.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Community Notes',
                     ],
@@ -4442,8 +6708,91 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchEligiblePosts',
                 'operation' => [
+                    'id' => 'searchEligiblePosts',
                     'method' => 'GET',
                     'path' => '/2/notes/search/posts_eligible_for_notes',
+                    'parameters' => [
+                        [
+                            'name' => 'test_mode',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'post_selection',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Community Notes',
                     ],
@@ -4476,8 +6825,28 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteCommunityNotes',
                 'operation' => [
+                    'id' => 'deleteCommunityNotes',
                     'method' => 'DELETE',
                     'path' => '/2/notes/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.write',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Community Notes',
                     ],
@@ -4505,8 +6874,18 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getOpenApiSpec',
                 'operation' => [
+                    'id' => 'getOpenApiSpec',
                     'method' => 'GET',
                     'path' => '/2/openapi.json',
+                    'parameters' => [
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'General',
                     ],
@@ -4571,8 +6950,58 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getSpacesByIds',
                 'operation' => [
+                    'id' => 'getSpacesByIds',
                     'method' => 'GET',
                     'path' => '/2/spaces',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'space.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'topic.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'space.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Spaces',
                     ],
@@ -4642,8 +7071,58 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getSpacesByCreatorIds',
                 'operation' => [
+                    'id' => 'getSpacesByCreatorIds',
                     'method' => 'GET',
                     'path' => '/2/spaces/by/creator_ids',
+                    'parameters' => [
+                        [
+                            'name' => 'user_ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'space.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'topic.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'space.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Spaces',
                     ],
@@ -4725,8 +7204,72 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchSpaces',
                 'operation' => [
+                    'id' => 'searchSpaces',
                     'method' => 'GET',
                     'path' => '/2/spaces/search',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'state',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'space.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'topic.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'space.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Spaces',
                     ],
@@ -4793,8 +7336,58 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getSpacesById',
                 'operation' => [
+                    'id' => 'getSpacesById',
                     'method' => 'GET',
                     'path' => '/2/spaces/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'space.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'topic.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'space.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Spaces',
                     ],
@@ -4863,8 +7456,64 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getSpacesBuyers',
                 'operation' => [
+                    'id' => 'getSpacesBuyers',
                     'method' => 'GET',
                     'path' => '/2/spaces/{id}/buyers',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'space.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Spaces',
                         'Tweets',
@@ -4952,8 +7601,79 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getSpacesPosts',
                 'operation' => [
+                    'id' => 'getSpacesPosts',
                     'method' => 'GET',
                     'path' => '/2/spaces/{id}/tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'space.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Spaces',
                         'Tweets',
@@ -5002,8 +7722,40 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getTrendsByWoeid',
                 'operation' => [
+                    'id' => 'getTrendsByWoeid',
                     'method' => 'GET',
                     'path' => '/2/trends/by/woeid/{woeid}',
+                    'parameters' => [
+                        [
+                            'name' => 'woeid',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_trends',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'trend.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Trends',
                     ],
@@ -5085,8 +7837,72 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsByIds',
                 'operation' => [
+                    'id' => 'getPostsByIds',
                     'method' => 'GET',
                     'path' => '/2/tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -5360,8 +8176,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createPosts',
                 'operation' => [
+                    'id' => 'createPosts',
                     'method' => 'POST',
                     'path' => '/2/tweets',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'tweet.write',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -5428,8 +8259,57 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsAnalytics',
                 'operation' => [
+                    'id' => 'getPostsAnalytics',
                     'method' => 'GET',
                     'path' => '/2/tweets/analytics',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'granularity',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'analytics.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -5478,8 +8358,47 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsCompliance',
                 'operation' => [
+                    'id' => 'streamPostsCompliance',
                     'method' => 'GET',
                     'path' => '/2/tweets/compliance/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Compliance',
@@ -5559,8 +8478,82 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsCountsAll',
                 'operation' => [
+                    'id' => 'getPostsCountsAll',
                     'method' => 'GET',
                     'path' => '/2/tweets/counts/all',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'next_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'granularity',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'search_count.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -5639,8 +8632,82 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsCountsRecent',
                 'operation' => [
+                    'id' => 'getPostsCountsRecent',
                     'method' => 'GET',
                     'path' => '/2/tweets/counts/recent',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'next_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'granularity',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'search_count.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -5734,8 +8801,89 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsFirehose',
                 'operation' => [
+                    'id' => 'streamPostsFirehose',
                     'method' => 'GET',
                     'path' => '/2/tweets/firehose/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -5830,8 +8978,89 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsFirehoseEn',
                 'operation' => [
+                    'id' => 'streamPostsFirehoseEn',
                     'method' => 'GET',
                     'path' => '/2/tweets/firehose/stream/lang/en',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -5926,8 +9155,89 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsFirehoseJa',
                 'operation' => [
+                    'id' => 'streamPostsFirehoseJa',
                     'method' => 'GET',
                     'path' => '/2/tweets/firehose/stream/lang/ja',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6022,8 +9332,89 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsFirehoseKo',
                 'operation' => [
+                    'id' => 'streamPostsFirehoseKo',
                     'method' => 'GET',
                     'path' => '/2/tweets/firehose/stream/lang/ko',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6118,8 +9509,89 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsFirehosePt',
                 'operation' => [
+                    'id' => 'streamPostsFirehosePt',
                     'method' => 'GET',
                     'path' => '/2/tweets/firehose/stream/lang/pt',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6161,8 +9633,40 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamLabelsCompliance',
                 'operation' => [
+                    'id' => 'streamLabelsCompliance',
                     'method' => 'GET',
                     'path' => '/2/tweets/label/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Compliance',
@@ -6242,8 +9746,68 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsSample',
                 'operation' => [
+                    'id' => 'streamPostsSample',
                     'method' => 'GET',
                     'path' => '/2/tweets/sample/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6338,8 +9902,89 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPostsSample10',
                 'operation' => [
+                    'id' => 'streamPostsSample10',
                     'method' => 'GET',
                     'path' => '/2/tweets/sample10/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6463,8 +10108,124 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchPostsAll',
                 'operation' => [
+                    'id' => 'searchPostsAll',
                     'method' => 'GET',
                     'path' => '/2/tweets/search/all',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'next_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'sort_order',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -6587,8 +10348,128 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchPostsRecent',
                 'operation' => [
+                    'id' => 'searchPostsRecent',
                     'method' => 'GET',
                     'path' => '/2/tweets/search/recent',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'next_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'sort_order',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -6681,8 +10562,82 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamPosts',
                 'operation' => [
+                    'id' => 'streamPosts',
                     'method' => 'GET',
                     'path' => '/2/tweets/search/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6727,8 +10682,40 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getRules',
                 'operation' => [
+                    'id' => 'getRules',
                     'method' => 'GET',
                     'path' => '/2/tweets/search/stream/rules',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6766,12 +10753,70 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'add' => [
+                                'type' => 'array',
+                                'description' => '',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => false,
+                            ],
+                            'delete' => [
+                                'type' => 'object',
+                                'description' => 'IDs and values of all deleted user-specified stream filtering rules.',
+                                'properties' => [
+                                    'ids' => [
+                                        'type' => 'array',
+                                        'description' => 'IDs of all deleted user-specified stream filtering rules.',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'values' => [
+                                        'type' => 'array',
+                                        'description' => 'Values of all deleted user-specified stream filtering rules.',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'updateRules',
                 'operation' => [
+                    'id' => 'updateRules',
                     'method' => 'POST',
                     'path' => '/2/tweets/search/stream/rules',
+                    'parameters' => [
+                        [
+                            'name' => 'dry_run',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'delete_all',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6806,8 +10851,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getRuleCounts',
                 'operation' => [
+                    'id' => 'getRuleCounts',
                     'method' => 'GET',
                     'path' => '/2/tweets/search/stream/rules/counts',
+                    'parameters' => [
+                        [
+                            'name' => 'rules_count.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Stream',
                         'Tweets',
@@ -6834,8 +10897,19 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getWebhooksStreamLinks',
                 'operation' => [
+                    'id' => 'getWebhooksStreamLinks',
                     'method' => 'GET',
                     'path' => '/2/tweets/search/webhooks',
+                    'parameters' => [
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                         'Stream',
@@ -6867,8 +10941,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteWebhooksStreamLink',
                 'operation' => [
+                    'id' => 'deleteWebhooksStreamLink',
                     'method' => 'DELETE',
                     'path' => '/2/tweets/search/webhooks/{webhook_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                         'Stream',
@@ -6930,8 +11022,68 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createWebhooksStreamLink',
                 'operation' => [
+                    'id' => 'createWebhooksStreamLink',
                     'method' => 'POST',
                     'path' => '/2/tweets/search/webhooks/{webhook_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                         'Stream',
@@ -6963,8 +11115,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deletePosts',
                 'operation' => [
+                    'id' => 'deletePosts',
                     'method' => 'DELETE',
                     'path' => '/2/tweets/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'tweet.write',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -7047,8 +11221,72 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsById',
                 'operation' => [
+                    'id' => 'getPostsById',
                     'method' => 'GET',
                     'path' => '/2/tweets/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -7117,8 +11355,65 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsLikingUsers',
                 'operation' => [
+                    'id' => 'getPostsLikingUsers',
                     'method' => 'GET',
                     'path' => '/2/tweets/{id}/liking_users',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'like.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                         'Users',
@@ -7220,8 +11515,93 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsQuotedPosts',
                 'operation' => [
+                    'id' => 'getPostsQuotedPosts',
                     'method' => 'GET',
                     'path' => '/2/tweets/{id}/quote_tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'exclude',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -7290,8 +11670,65 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsRepostedBy',
                 'operation' => [
+                    'id' => 'getPostsRepostedBy',
                     'method' => 'GET',
                     'path' => '/2/tweets/{id}/retweeted_by',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                         'Users',
@@ -7385,8 +11822,86 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getPostsReposts',
                 'operation' => [
+                    'id' => 'getPostsReposts',
                     'method' => 'GET',
                     'path' => '/2/tweets/{id}/retweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -7433,8 +11948,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'hidePostsReply',
                 'operation' => [
+                    'id' => 'hidePostsReply',
                     'method' => 'PUT',
                     'path' => '/2/tweets/{tweet_id}/hidden',
+                    'parameters' => [
+                        [
+                            'name' => 'tweet_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.moderate.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Tweets',
                     ],
@@ -7477,8 +12014,33 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsage',
                 'operation' => [
+                    'id' => 'getUsage',
                     'method' => 'GET',
                     'path' => '/2/usage/tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'days',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'usage.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Usage',
                     ],
@@ -7536,8 +12098,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersByIds',
                 'operation' => [
+                    'id' => 'getUsersByIds',
                     'method' => 'GET',
                     'path' => '/2/users',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -7599,8 +12204,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersByUsernames',
                 'operation' => [
+                    'id' => 'getUsersByUsernames',
                     'method' => 'GET',
                     'path' => '/2/users/by',
+                    'parameters' => [
+                        [
+                            'name' => 'usernames',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -7659,8 +12307,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersByUsername',
                 'operation' => [
+                    'id' => 'getUsersByUsername',
                     'method' => 'GET',
                     'path' => '/2/users/by/username/{username}',
+                    'parameters' => [
+                        [
+                            'name' => 'username',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -7710,8 +12401,47 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'streamUsersCompliance',
                 'operation' => [
+                    'id' => 'streamUsersCompliance',
                     'method' => 'GET',
                     'path' => '/2/users/compliance/stream',
+                    'parameters' => [
+                        [
+                            'name' => 'backfill_minutes',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'partition',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'stream',
                     'tags' => [
                         'Stream',
                         'Compliance',
@@ -7762,8 +12492,43 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersMe',
                 'operation' => [
+                    'id' => 'getUsersMe',
                     'method' => 'GET',
                     'path' => '/2/users/me',
+                    'parameters' => [
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -7800,8 +12565,29 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getTrendsPersonalizedTrends',
                 'operation' => [
+                    'id' => 'getTrendsPersonalizedTrends',
                     'method' => 'GET',
                     'path' => '/2/users/personalized_trends',
+                    'parameters' => [
+                        [
+                            'name' => 'personalized_trend.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Trends',
                     ],
@@ -7846,8 +12632,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersPublicKeys',
                 'operation' => [
+                    'id' => 'getUsersPublicKeys',
                     'method' => 'GET',
                     'path' => '/2/users/public_keys',
+                    'parameters' => [
+                        [
+                            'name' => 'ids',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'public_key.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Chat',
@@ -7936,8 +12751,78 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersRepostsOfMe',
                 'operation' => [
+                    'id' => 'getUsersRepostsOfMe',
                     'method' => 'GET',
                     'path' => '/2/users/reposts_of_me',
+                    'parameters' => [
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'timeline.read',
+                        'tweet.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8005,8 +12890,64 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'searchUsers',
                 'operation' => [
+                    'id' => 'searchUsers',
                     'method' => 'GET',
                     'path' => '/2/users/search',
+                    'parameters' => [
+                        [
+                            'name' => 'query',
+                            'in' => 'query',
+                            'required' => true,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'next_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8064,8 +13005,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersById',
                 'operation' => [
+                    'id' => 'getUsersById',
                     'method' => 'GET',
                     'path' => '/2/users/{id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8134,8 +13118,65 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersAffiliates',
                 'operation' => [
+                    'id' => 'getUsersAffiliates',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/affiliates',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8204,8 +13245,65 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersBlocking',
                 'operation' => [
+                    'id' => 'getUsersBlocking',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/blocking',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'block.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8298,8 +13396,85 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersBookmarks',
                 'operation' => [
+                    'id' => 'getUsersBookmarks',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/bookmarks',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'bookmark.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Bookmarks',
@@ -8346,8 +13521,29 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createUsersBookmark',
                 'operation' => [
+                    'id' => 'createUsersBookmark',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/bookmarks',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'bookmark.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Bookmarks',
@@ -8392,8 +13588,42 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersBookmarkFolders',
                 'operation' => [
+                    'id' => 'getUsersBookmarkFolders',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/bookmarks/folders',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'bookmark.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Bookmarks',
@@ -8432,8 +13662,36 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersBookmarksByFolderId',
                 'operation' => [
+                    'id' => 'getUsersBookmarksByFolderId',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/bookmarks/folders/{folder_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'folder_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'bookmark.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Bookmarks',
@@ -8473,8 +13731,36 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteUsersBookmark',
                 'operation' => [
+                    'id' => 'deleteUsersBookmark',
                     'method' => 'DELETE',
                     'path' => '/2/users/{id}/bookmarks/{tweet_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                    ],
+                    'required_scopes' => [
+                        'bookmark.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Bookmarks',
@@ -8509,8 +13795,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'blockUsersDms',
                 'operation' => [
+                    'id' => 'blockUsersDms',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/dm/block',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8545,8 +13853,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unblockUsersDms',
                 'operation' => [
+                    'id' => 'unblockUsersDms',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/dm/unblock',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8615,8 +13945,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersFollowedLists',
                 'operation' => [
+                    'id' => 'getUsersFollowedLists',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/followed_lists',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -8665,8 +14053,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'followList',
                 'operation' => [
+                    'id' => 'followList',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/followed_lists',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -8707,8 +14117,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unfollowList',
                 'operation' => [
+                    'id' => 'unfollowList',
                     'method' => 'DELETE',
                     'path' => '/2/users/{id}/followed_lists/{list_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -8778,8 +14217,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersFollowers',
                 'operation' => [
+                    'id' => 'getUsersFollowers',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/followers',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'follows.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8849,8 +14346,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersFollowing',
                 'operation' => [
+                    'id' => 'getUsersFollowing',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/following',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'follows.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8898,8 +14453,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'followUser',
                 'operation' => [
+                    'id' => 'followUser',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/following',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'follows.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -8992,8 +14569,86 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersLikedPosts',
                 'operation' => [
+                    'id' => 'getUsersLikedPosts',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/liked_tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'like.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -9041,8 +14696,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'likePost',
                 'operation' => [
+                    'id' => 'likePost',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/likes',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'like.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -9083,8 +14760,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unlikePost',
                 'operation' => [
+                    'id' => 'unlikePost',
                     'method' => 'DELETE',
                     'path' => '/2/users/{id}/likes/{tweet_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'like.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -9154,8 +14860,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersListMemberships',
                 'operation' => [
+                    'id' => 'getUsersListMemberships',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/list_memberships',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -9270,8 +15034,114 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersMentions',
                 'operation' => [
+                    'id' => 'getUsersMentions',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/mentions',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -9341,8 +15211,65 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersMuting',
                 'operation' => [
+                    'id' => 'getUsersMuting',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/muting',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'mute.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -9389,8 +15316,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'muteUser',
                 'operation' => [
+                    'id' => 'muteUser',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/muting',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'mute.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -9459,8 +15408,66 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersOwnedLists',
                 'operation' => [
+                    'id' => 'getUsersOwnedLists',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/owned_lists',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -9521,8 +15528,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersPinnedLists',
                 'operation' => [
+                    'id' => 'getUsersPinnedLists',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/pinned_lists',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -9570,8 +15620,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'pinList',
                 'operation' => [
+                    'id' => 'pinList',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/pinned_lists',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -9612,8 +15684,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unpinList',
                 'operation' => [
+                    'id' => 'unpinList',
                     'method' => 'DELETE',
                     'path' => '/2/users/{id}/pinned_lists/{list_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'list_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'list.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Lists',
@@ -9657,8 +15758,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersPublicKey',
                 'operation' => [
+                    'id' => 'getUsersPublicKey',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/public_keys',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'public_key.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.read',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Chat',
@@ -9748,8 +15878,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'addUserPublicKey',
                 'operation' => [
+                    'id' => 'addUserPublicKey',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/public_keys',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'dm.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Chat',
                     ],
@@ -9796,8 +15948,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'repostPost',
                 'operation' => [
+                    'id' => 'repostPost',
                     'method' => 'POST',
                     'path' => '/2/users/{id}/retweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'tweet.write',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -9838,8 +16012,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unrepostPost',
                 'operation' => [
+                    'id' => 'unrepostPost',
                     'method' => 'DELETE',
                     'path' => '/2/users/{id}/retweets/{source_tweet_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'source_tweet_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'tweet.write',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -9961,8 +16164,120 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersTimeline',
                 'operation' => [
+                    'id' => 'getUsersTimeline',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/timelines/reverse_chronological',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'exclude',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -10083,8 +16398,121 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getUsersPosts',
                 'operation' => [
+                    'id' => 'getUsersPosts',
                     'method' => 'GET',
                     'path' => '/2/users/{id}/tweets',
+                    'parameters' => [
+                        [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'since_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'until_id',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'max_results',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'pagination_token',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'exclude',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'start_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'end_time',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'tweet.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'expansions',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'media.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'poll.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'user.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                        [
+                            'name' => 'place.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                         'Tweets',
@@ -10125,8 +16553,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unfollowUser',
                 'operation' => [
+                    'id' => 'unfollowUser',
                     'method' => 'DELETE',
                     'path' => '/2/users/{source_user_id}/following/{target_user_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'source_user_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'target_user_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'follows.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -10166,8 +16623,37 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'unmuteUser',
                 'operation' => [
+                    'id' => 'unmuteUser',
                     'method' => 'DELETE',
                     'path' => '/2/users/{source_user_id}/muting/{target_user_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'source_user_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                        [
+                            'name' => 'target_user_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'oauth2_pkce',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                        'mute.write',
+                        'tweet.read',
+                        'users.read',
+                    ],
+                    'runtime_mode' => 'request_response',
                     'tags' => [
                         'Users',
                     ],
@@ -10205,8 +16691,26 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'getWebhooks',
                 'operation' => [
+                    'id' => 'getWebhooks',
                     'method' => 'GET',
                     'path' => '/2/webhooks',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_config.fields',
+                            'in' => 'query',
+                            'required' => false,
+                            'style' => 'form',
+                            'explode' => false,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                     ],
@@ -10244,8 +16748,20 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createWebhooks',
                 'operation' => [
+                    'id' => 'createWebhooks',
                     'method' => 'POST',
                     'path' => '/2/webhooks',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                     ],
@@ -10294,8 +16810,19 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'createWebhookReplayJob',
                 'operation' => [
+                    'id' => 'createWebhookReplayJob',
                     'method' => 'POST',
                     'path' => '/2/webhooks/replay',
+                    'parameters' => [
+                    ],
+                    'has_body' => true,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                     ],
@@ -10326,8 +16853,27 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'deleteWebhooks',
                 'operation' => [
+                    'id' => 'deleteWebhooks',
                     'method' => 'DELETE',
                     'path' => '/2/webhooks/{webhook_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                     ],
@@ -10359,8 +16905,27 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 ],
                 'operation_id' => 'validateWebhooks',
                 'operation' => [
+                    'id' => 'validateWebhooks',
                     'method' => 'PUT',
                     'path' => '/2/webhooks/{webhook_id}',
+                    'parameters' => [
+                        [
+                            'name' => 'webhook_id',
+                            'in' => 'path',
+                            'required' => true,
+                            'style' => 'simple',
+                            'explode' => null,
+                        ],
+                    ],
+                    'has_body' => false,
+                    'body_mode' => 'json',
+                    'auth_modes' => [
+                        'bearer_token',
+                        'oauth1a_user_context',
+                    ],
+                    'required_scopes' => [
+                    ],
+                    'runtime_mode' => 'webhook_subscription',
                     'tags' => [
                         'Webhooks',
                     ],

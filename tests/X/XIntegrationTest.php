@@ -33,6 +33,12 @@ final class XIntegrationTest extends TestCase
         self::assertCount(190, (new XAdsToolProvider)->tools());
     }
 
+    public function test_generated_provider_classes_are_autoloadable(): void
+    {
+        self::assertTrue(class_exists(XToolProvider::class));
+        self::assertTrue(class_exists(XAdsToolProvider::class));
+    }
+
     public function test_x_generated_tool_maps_path_and_bearer_auth(): void
     {
         Http::fake([

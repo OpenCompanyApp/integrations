@@ -14,6 +14,15 @@ use OpenCompany\IntegrationCore\Support\OAuth1Signer;
  */
 class XAdsService
 {
+    /**
+     * @param  string  $apiKey  OAuth 1.0a consumer key
+     * @param  string  $apiSecret  OAuth 1.0a consumer secret
+     * @param  string  $accessToken  OAuth 1.0a access token
+     * @param  string  $accessTokenSecret  OAuth 1.0a access token secret
+     * @param  string  $accountId  Optional default X Ads account ID
+     * @param  string  $apiVersion  X Ads API version path segment
+     * @param  string  $baseUrl  X Ads API base URL
+     */
     public function __construct(
         private string $apiKey = '',
         private string $apiSecret = '',

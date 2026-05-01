@@ -1074,8 +1074,8 @@ Each tool carries `auth_modes`, `required_scopes`, and `runtime_mode` metadata i
 ## Examples
 
 ```lua
-local me = app.integrations.x.x_find_my_user({})
-local user = app.integrations.x.x_find_user_by_username({ username = "XDevelopers" })
+local me = app.integrations.x.x_get_users_me({})
+local user = app.integrations.x.x_get_users_by_username({ username = "XDevelopers" })
 ```
 
 For multi-account hosts:
@@ -1863,7 +1863,7 @@ X Ads API access must be approved by X. Tools are marked with `required_access_t
 
 ```lua
 local accounts = app.integrations.x_ads.x_ads_get_accounts({})
-local campaigns = app.integrations.x_ads.x_ads_get_accounts_campaigns({
+local campaigns = app.integrations.x_ads.x_ads_get_accounts_account_id_campaigns({
   account_id = "account-id",
   count = "25"
 })

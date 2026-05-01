@@ -14,6 +14,12 @@ use OpenCompany\Integrations\Twitter\Tools\TwitterListUsers;
 use OpenCompany\Integrations\Twitter\Tools\TwitterSearchTweets;
 
 use OpenCompany\IntegrationCore\Contracts\HasIntegrationCapabilities;
+
+/**
+ * Deprecated compatibility provider for the legacy Twitter namespace.
+ *
+ * New catalog and SEO output should use the canonical `x` integration.
+ */
 class TwitterToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegrationCapabilities
 {
 
@@ -94,6 +100,10 @@ class TwitterToolProvider implements ToolProvider, ConfigurableIntegration, HasI
             'category' => 'social',
             'badge' => 'verified',
             'docs_url' => 'https://developer.twitter.com/en/docs/twitter-api',
+            'catalog_visibility' => 'hidden',
+            'canonical_slug' => 'x',
+            'deprecated' => true,
+            'replacement' => 'x',
         ];
     }    public function configSchema(): array
     {

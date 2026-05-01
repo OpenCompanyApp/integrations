@@ -16,6 +16,7 @@
     "replace": {
         "opencompanyapp/ai-tool-twitter": "self.version"
     },
+    "abandoned": "opencompanyapp/integration-x",
     "autoload": {
         "psr-4": {
             "OpenCompany\\Integrations\\Twitter\\": "src/"

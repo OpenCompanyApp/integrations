@@ -21,6 +21,18 @@ class XUpdateActivitySubscription extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'tag' => [
+                    'type' => 'string',
+                    'description' => '',
+                    'required' => false,
+                ],
+                'webhook_id' => [
+                    'type' => 'string',
+                    'description' => 'The unique identifier of this webhook config.',
+                    'required' => false,
+                ],
+            ],
         ],
     ];
 

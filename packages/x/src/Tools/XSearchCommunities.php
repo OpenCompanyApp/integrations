@@ -32,6 +32,14 @@ class XSearchCommunities extends XGeneratedTool
             'required' => false,
             'description' => 'This parameter is used to get the next \'page\' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified.',
         ],
+        'community.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Community fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -66,6 +74,13 @@ class XSearchCommunities extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'community.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

@@ -32,6 +32,14 @@ class XGetComplianceJobs extends XGeneratedTool
                 'complete',
             ],
         ],
+        'compliance_job.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of ComplianceJob fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -52,6 +60,13 @@ class XGetComplianceJobs extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'compliance_job.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

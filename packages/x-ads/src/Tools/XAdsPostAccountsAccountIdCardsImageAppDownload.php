@@ -29,17 +29,17 @@ class XAdsPostAccountsAccountIdCardsImageAppDownload extends XAdsGeneratedTool
         ],
         'ipad_app_id' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'iphone_app_id' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'googleplay_app_id' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'app_cta' => [
@@ -64,7 +64,7 @@ class XAdsPostAccountsAccountIdCardsImageAppDownload extends XAdsGeneratedTool
         ],
         'media_key' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
     ];
@@ -105,21 +105,21 @@ class XAdsPostAccountsAccountIdCardsImageAppDownload extends XAdsGeneratedTool
             [
                 'name' => 'ipad_app_id',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'iphone_app_id',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'googleplay_app_id',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
@@ -154,7 +154,7 @@ class XAdsPostAccountsAccountIdCardsImageAppDownload extends XAdsGeneratedTool
             [
                 'name' => 'media_key',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

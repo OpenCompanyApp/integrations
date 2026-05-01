@@ -20,6 +20,38 @@ class XGetSpacesByIds extends XGeneratedTool
                 'type' => 'string',
             ],
         ],
+        'space.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Space fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'expansions' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of fields to expand.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'user.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of User fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'topic.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Topic fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -33,6 +65,34 @@ class XGetSpacesByIds extends XGeneratedTool
                 'required' => true,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'space.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'expansions',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'user.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'topic.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

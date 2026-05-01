@@ -21,6 +21,34 @@ class XInitializeChatConversationKeys extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'action_signatures' => [
+                    'type' => 'array',
+                    'description' => 'Cryptographic signatures for the key initialization action.',
+                    'items' => [
+                        'type' => 'object',
+                    ],
+                    'required' => false,
+                ],
+                'base64_encoded_key_rotation' => [
+                    'type' => 'string',
+                    'description' => 'Base64-encoded key rotation payload for ratchet tree key management.',
+                    'required' => false,
+                ],
+                'conversation_key_version' => [
+                    'type' => 'string',
+                    'description' => 'Version of the conversation encryption key (typically a timestamp in milliseconds).',
+                    'required' => true,
+                ],
+                'conversation_participant_keys' => [
+                    'type' => 'array',
+                    'description' => 'The conversation key encrypted for each participant using their public key.',
+                    'items' => [
+                        'type' => 'object',
+                    ],
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

@@ -20,6 +20,14 @@ class XGetUsersPublicKeys extends XGeneratedTool
                 'type' => 'string',
             ],
         ],
+        'public_key.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of PublicKey fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -31,6 +39,13 @@ class XGetUsersPublicKeys extends XGeneratedTool
                 'name' => 'ids',
                 'in' => 'query',
                 'required' => true,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'public_key.fields',
+                'in' => 'query',
+                'required' => false,
                 'style' => 'form',
                 'explode' => false,
             ],

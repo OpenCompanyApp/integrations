@@ -12,6 +12,14 @@ class XGetTrendsPersonalizedTrends extends XGeneratedTool
     protected const DESCRIPTION = 'Get personalized Trends';
 
     protected const PARAMETERS = [
+        'personalized_trend.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of PersonalizedTrend fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -19,6 +27,13 @@ class XGetTrendsPersonalizedTrends extends XGeneratedTool
         'method' => 'GET',
         'path' => '/2/users/personalized_trends',
         'parameters' => [
+            [
+                'name' => 'personalized_trend.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
         ],
         'has_body' => false,
         'body_mode' => 'json',

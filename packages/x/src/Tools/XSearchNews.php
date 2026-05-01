@@ -27,6 +27,14 @@ class XSearchNews extends XGeneratedTool
             'required' => false,
             'description' => 'The maximum age of the News story to search for.',
         ],
+        'news.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of News fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -54,6 +62,13 @@ class XSearchNews extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'news.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

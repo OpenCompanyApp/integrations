@@ -34,7 +34,7 @@ class XAdsPostAccountsAccountIdCardsWebsite extends XAdsGeneratedTool
         ],
         'media_key' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
     ];
@@ -82,7 +82,7 @@ class XAdsPostAccountsAccountIdCardsWebsite extends XAdsGeneratedTool
             [
                 'name' => 'media_key',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

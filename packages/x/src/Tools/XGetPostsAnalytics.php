@@ -41,6 +41,14 @@ class XGetPostsAnalytics extends XGeneratedTool
                 'total',
             ],
         ],
+        'analytics.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Analytics fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -75,6 +83,13 @@ class XGetPostsAnalytics extends XGeneratedTool
                 'required' => true,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'analytics.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

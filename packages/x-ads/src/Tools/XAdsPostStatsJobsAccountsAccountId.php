@@ -54,12 +54,12 @@ class XAdsPostStatsJobsAccountsAccountId extends XAdsGeneratedTool
         ],
         'country' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'platform' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'segmentation_type' => [
@@ -140,14 +140,14 @@ class XAdsPostStatsJobsAccountsAccountId extends XAdsGeneratedTool
             [
                 'name' => 'country',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'platform',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

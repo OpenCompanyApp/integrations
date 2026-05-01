@@ -27,6 +27,14 @@ class XGetChatConversation extends XGeneratedTool
             'required' => false,
             'description' => 'Token for pagination to retrieve the next page of results.',
         ],
+        'chat_message_event.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of ChatMessageEvent fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -54,6 +62,13 @@ class XGetChatConversation extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'chat_message_event.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

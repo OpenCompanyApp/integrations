@@ -34,17 +34,17 @@ class XAdsPostAccountsAccountIdCardsVideoAppDownload extends XAdsGeneratedTool
         ],
         'ipad_app_id' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'iphone_app_id' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'googleplay_app_id' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'app_cta' => [
@@ -117,21 +117,21 @@ class XAdsPostAccountsAccountIdCardsVideoAppDownload extends XAdsGeneratedTool
             [
                 'name' => 'ipad_app_id',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'iphone_app_id',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'googleplay_app_id',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

@@ -17,6 +17,14 @@ class XGetMediaByMediaKey extends XGeneratedTool
             'required' => true,
             'description' => 'A single Media Key.',
         ],
+        'media.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Media fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -30,6 +38,13 @@ class XGetMediaByMediaKey extends XGeneratedTool
                 'required' => true,
                 'style' => 'simple',
                 'explode' => null,
+            ],
+            [
+                'name' => 'media.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

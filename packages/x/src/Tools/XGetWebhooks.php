@@ -12,6 +12,14 @@ class XGetWebhooks extends XGeneratedTool
     protected const DESCRIPTION = 'Get webhook';
 
     protected const PARAMETERS = [
+        'webhook_config.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of WebhookConfig fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -19,6 +27,13 @@ class XGetWebhooks extends XGeneratedTool
         'method' => 'GET',
         'path' => '/2/webhooks',
         'parameters' => [
+            [
+                'name' => 'webhook_config.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
         ],
         'has_body' => false,
         'body_mode' => 'json',

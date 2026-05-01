@@ -167,6 +167,110 @@ function parameterSchema(array $parameter): array
     return $out;
 }
 
+function resolveOpenApiRef(array $document, mixed $value): mixed
+{
+    if (!is_array($value) || !isset($value['$ref']) || !is_string($value['$ref'])) {
+        return $value;
+    }
+
+    $path = $value['$ref'];
+    if (!str_starts_with($path, '#/')) {
+        return $value;
+    }
+
+    $current = $document;
+    foreach (explode('/', substr($path, 2)) as $part) {
+        $part = str_replace(['~1', '~0'], ['/', '~'], $part);
+        if (!is_array($current) || !array_key_exists($part, $current)) {
+            return $value;
+        }
+
+        $current = $current[$part];
+    }
+
+    return is_array($current) ? array_replace_recursive($current, array_diff_key($value, ['$ref' => true])) : $current;
+}
+
+function resolveOpenApiSchema(array $document, array $schema, int $depth = 0): array
+{
+    if ($depth > 6) {
+        return $schema;
+    }
+
+    $schema = resolveOpenApiRef($document, $schema);
+    if (!is_array($schema)) {
+        return [];
+    }
+
+    foreach (['allOf', 'anyOf', 'oneOf'] as $combinator) {
+        if (!isset($schema[$combinator]) || !is_array($schema[$combinator])) {
+            continue;
+        }
+
+        $merged = [];
+        foreach ($schema[$combinator] as $part) {
+            $resolved = is_array($part) ? resolveOpenApiSchema($document, $part, $depth + 1) : [];
+            $merged = array_replace_recursive($merged, $resolved);
+            if (isset($resolved['required']) && is_array($resolved['required'])) {
+                $merged['required'] = array_values(array_unique(array_merge($merged['required'] ?? [], $resolved['required'])));
+            }
+        }
+
+        $schema = array_replace_recursive($merged, array_diff_key($schema, [$combinator => true]));
+    }
+
+    foreach (['items', 'additionalProperties'] as $key) {
+        if (isset($schema[$key]) && is_array($schema[$key])) {
+            $schema[$key] = resolveOpenApiSchema($document, $schema[$key], $depth + 1);
+        }
+    }
+
+    if (isset($schema['properties']) && is_array($schema['properties'])) {
+        foreach ($schema['properties'] as $property => $propertySchema) {
+            if (is_array($propertySchema)) {
+                $schema['properties'][$property] = resolveOpenApiSchema($document, $propertySchema, $depth + 1);
+            }
+        }
+    }
+
+    return $schema;
+}
+
+function toolSchemaFromOpenApiSchema(array $document, array $schema, array $required = []): array
+{
+    $schema = resolveOpenApiSchema($document, $schema);
+    $out = [
+        'type' => schemaType($schema),
+        'description' => trim((string) ($schema['description'] ?? '')),
+    ];
+
+    if (isset($schema['enum']) && is_array($schema['enum'])) {
+        $out['enum'] = array_values(array_filter($schema['enum'], 'is_scalar'));
+    }
+
+    if (($out['type'] ?? '') === 'array') {
+        $out['items'] = ['type' => schemaType(is_array($schema['items'] ?? null) ? $schema['items'] : [])];
+    }
+
+    if (($out['type'] ?? '') === 'object' && isset($schema['properties']) && is_array($schema['properties'])) {
+        $properties = [];
+        foreach ($schema['properties'] as $property => $propertySchema) {
+            if (!is_array($propertySchema)) {
+                continue;
+            }
+
+            $properties[$property] = toolSchemaFromOpenApiSchema($document, $propertySchema);
+            $properties[$property]['required'] = in_array($property, $required, true);
+        }
+
+        if (!empty($properties)) {
+            $out['properties'] = $properties;
+        }
+    }
+
+    return $out;
+}
+
 function securityModes(array $operation): array
 {
     $modes = [];
@@ -340,6 +444,7 @@ function generateXPackage(string $root, array $openapi): int
             $parameters = [];
             $operationParameters = [];
             foreach ($operation['parameters'] ?? [] as $parameter) {
+                $parameter = resolveOpenApiRef($openapi, $parameter);
                 if (!is_array($parameter) || !isset($parameter['name'], $parameter['in'])) {
                     continue;
                 }
@@ -355,11 +460,35 @@ function generateXPackage(string $root, array $openapi): int
             }
 
             if (isset($operation['requestBody'])) {
+                $requestBody = resolveOpenApiRef($openapi, $operation['requestBody']);
+                $bodySchema = [];
+                $bodyMode = 'json';
+                if (is_array($requestBody)) {
+                    $content = is_array($requestBody['content'] ?? null) ? $requestBody['content'] : [];
+                    if (isset($content['multipart/form-data']['schema'])) {
+                        $bodyMode = 'multipart';
+                        $bodySchema = $content['multipart/form-data']['schema'];
+                    } elseif (isset($content['application/x-www-form-urlencoded']['schema'])) {
+                        $bodyMode = 'form';
+                        $bodySchema = $content['application/x-www-form-urlencoded']['schema'];
+                    } else {
+                        $bodySchema = $content['application/json']['schema'] ?? [];
+                    }
+                    $bodySchema = is_array($bodySchema) ? resolveOpenApiSchema($openapi, $bodySchema) : [];
+                }
+
                 $parameters['body'] = [
                     'type' => 'object',
-                    'required' => (bool) ($operation['requestBody']['required'] ?? false),
+                    'required' => (bool) ($requestBody['required'] ?? false),
                     'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
                 ];
+                if (!empty($bodySchema['properties']) && is_array($bodySchema['properties'])) {
+                    $parameters['body']['properties'] = toolSchemaFromOpenApiSchema(
+                        $openapi,
+                        $bodySchema,
+                        is_array($bodySchema['required'] ?? null) ? $bodySchema['required'] : [],
+                    )['properties'] ?? [];
+                }
             }
 
             $tags = array_values(array_filter($operation['tags'] ?? [], 'is_string'));
@@ -396,7 +525,7 @@ function generateXPackage(string $root, array $openapi): int
                     'path' => (string) $path,
                     'parameters' => $operationParameters,
                     'has_body' => isset($operation['requestBody']),
-                    'body_mode' => 'json',
+                    'body_mode' => isset($operation['requestBody']) ? ($bodyMode ?? 'json') : 'json',
                     'auth_modes' => securityModes($operation),
                     'required_scopes' => securityScopes($operation),
                     'runtime_mode' => $runtimeMode,
@@ -1200,7 +1329,9 @@ function generateXAdsPackage(string $root, array $collection): int
             }
             $key = (string) $query['key'];
             $description = strtolower((string) ($query['description'] ?? ''));
-            $required = str_contains($description, 'required') && !str_contains($description, 'optional');
+            $required = str_contains($description, 'required')
+                && !str_contains($description, 'optional')
+                && !str_contains($description, 'sometimes required');
             $parameters[$key] = [
                 'type' => 'string',
                 'required' => $required,
@@ -1356,7 +1487,7 @@ class XAdsService
         private string $accessToken = '',
         private string $accessTokenSecret = '',
         private string $accountId = '',
-        private string $apiVersion = '11',
+        private string $apiVersion = '12',
         private string $baseUrl = 'https://ads-api.x.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');
@@ -1554,7 +1685,7 @@ class XAdsServiceProvider extends ServiceProvider
                 accessToken: $creds->get('x_ads', 'access_token', ''),
                 accessTokenSecret: $creds->get('x_ads', 'access_token_secret', ''),
                 accountId: $creds->get('x_ads', 'account_id', ''),
-                apiVersion: $creds->get('x_ads', 'api_version', '11'),
+                apiVersion: $creds->get('x_ads', 'api_version', '12'),
                 baseUrl: $creds->get('x_ads', 'base_url', 'https://ads-api.x.com'),
             );
         });
@@ -1573,7 +1704,7 @@ PHP);
     writeFileChecked("{$pkg}/src/XAdsToolProvider.php", <<<PHP
 <?php
 
-namespace OpenCompany\Integrations\XAds;
+namespace OpenCompany\\Integrations\\XAds;
 
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
@@ -1697,7 +1828,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             accessToken: (string) (\$config['access_token'] ?? ''),
             accessTokenSecret: (string) (\$config['access_token_secret'] ?? ''),
             accountId: (string) (\$config['account_id'] ?? ''),
-            apiVersion: (string) (\$config['api_version'] ?? '11'),
+            apiVersion: (string) (\$config['api_version'] ?? '12'),
             baseUrl: (string) (\$config['base_url'] ?? 'https://ads-api.x.com'),
         );
 
@@ -1735,7 +1866,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
             ['key' => 'access_token_secret', 'type' => 'secret', 'label' => 'Access Token Secret', 'required' => true],
             ['key' => 'account_id', 'type' => 'string', 'label' => 'Default Ads Account ID', 'required' => false],
-            ['key' => 'api_version', 'type' => 'string', 'label' => 'Ads API Version', 'required' => false, 'default' => '11'],
+            ['key' => 'api_version', 'type' => 'string', 'label' => 'Ads API Version', 'required' => false, 'default' => '12'],
             ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://ads-api.x.com'],
         ];
     }
@@ -1774,7 +1905,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 accessToken: \$creds->get('x_ads', 'access_token', '', \$account),
                 accessTokenSecret: \$creds->get('x_ads', 'access_token_secret', '', \$account),
                 accountId: \$creds->get('x_ads', 'account_id', '', \$account),
-                apiVersion: \$creds->get('x_ads', 'api_version', '11', \$account),
+                apiVersion: \$creds->get('x_ads', 'api_version', '12', \$account),
                 baseUrl: \$creds->get('x_ads', 'base_url', 'https://ads-api.x.com', \$account),
             );
         }
@@ -1833,7 +1964,7 @@ X Ads API requests use OAuth 1.0a user-context signing. Configure:
 - `access_token`
 - `access_token_secret`
 - optional `account_id`
-- optional `api_version` (default `11`)
+- optional `api_version` (default `12`)
 - optional `base_url` (default `https://ads-api.x.com`)
 MD);
 

@@ -20,7 +20,7 @@ class XAdsService
         private string $accessToken = '',
         private string $accessTokenSecret = '',
         private string $accountId = '',
-        private string $apiVersion = '11',
+        private string $apiVersion = '12',
         private string $baseUrl = 'https://ads-api.x.com',
     ) {
         $this->baseUrl = rtrim($this->baseUrl, '/');

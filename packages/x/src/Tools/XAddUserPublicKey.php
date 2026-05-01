@@ -21,6 +21,55 @@ class XAddUserPublicKey extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'generate_version' => [
+                    'type' => 'boolean',
+                    'description' => 'When true, the server generates a new version.',
+                    'required' => false,
+                ],
+                'public_key' => [
+                    'type' => 'object',
+                    'description' => 'Public key registration payload.',
+                    'properties' => [
+                        'identity_public_key_signature' => [
+                            'type' => 'string',
+                            'description' => 'Signature over the identity public key.',
+                            'required' => false,
+                        ],
+                        'public_key' => [
+                            'type' => 'string',
+                            'description' => 'Identity public key (base64 encoded).',
+                            'required' => false,
+                        ],
+                        'public_key_fingerprint' => [
+                            'type' => 'string',
+                            'description' => 'Fingerprint of the identity public key.',
+                            'required' => false,
+                        ],
+                        'registration_method' => [
+                            'type' => 'string',
+                            'description' => 'Registration method for the public key.',
+                            'required' => false,
+                        ],
+                        'signing_public_key' => [
+                            'type' => 'string',
+                            'description' => 'Signing public key (base64 encoded).',
+                            'required' => false,
+                        ],
+                        'signing_public_key_signature' => [
+                            'type' => 'string',
+                            'description' => 'Signature over the signing public key.',
+                            'required' => false,
+                        ],
+                    ],
+                    'required' => true,
+                ],
+                'version' => [
+                    'type' => 'string',
+                    'description' => 'Public key version.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

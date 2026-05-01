@@ -44,17 +44,17 @@ class XAdsPostAccountsAccountIdCardsVideoConversation extends XAdsGeneratedTool
         ],
         'title' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'second_cta' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'second_cta_tweet' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'unlocked_image_media_key' => [
@@ -79,7 +79,7 @@ class XAdsPostAccountsAccountIdCardsVideoConversation extends XAdsGeneratedTool
         ],
         'third_cta_tweet' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'fourth_cta' => [
@@ -89,7 +89,7 @@ class XAdsPostAccountsAccountIdCardsVideoConversation extends XAdsGeneratedTool
         ],
         'fourth_cta_tweet' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'thank_you_url' => [
@@ -156,21 +156,21 @@ class XAdsPostAccountsAccountIdCardsVideoConversation extends XAdsGeneratedTool
             [
                 'name' => 'title',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'second_cta',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'second_cta_tweet',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
@@ -205,7 +205,7 @@ class XAdsPostAccountsAccountIdCardsVideoConversation extends XAdsGeneratedTool
             [
                 'name' => 'third_cta_tweet',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
@@ -219,7 +219,7 @@ class XAdsPostAccountsAccountIdCardsVideoConversation extends XAdsGeneratedTool
             [
                 'name' => 'fourth_cta_tweet',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

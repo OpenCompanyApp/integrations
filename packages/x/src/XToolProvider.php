@@ -463,6 +463,72 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'event_type' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'enum' => [
+                                    'profile.update.bio',
+                                    'profile.update.profile_picture',
+                                    'profile.update.banner_picture',
+                                    'profile.update.screenname',
+                                    'profile.update.geo',
+                                    'profile.update.url',
+                                    'profile.update.verified_badge',
+                                    'profile.update.affiliate_badge',
+                                    'profile.update.handle',
+                                    'news.new',
+                                    'follow.follow',
+                                    'follow.unfollow',
+                                    'spaces.start',
+                                    'spaces.end',
+                                    'chat.received',
+                                    'chat.sent',
+                                    'chat.conversation_join',
+                                    'dm.sent',
+                                    'dm.received',
+                                    'dm.indicate_typing',
+                                    'dm.read',
+                                ],
+                                'required' => true,
+                            ],
+                            'filter' => [
+                                'type' => 'object',
+                                'description' => 'An XAA subscription filter.',
+                                'properties' => [
+                                    'direction' => [
+                                        'type' => 'string',
+                                        'description' => 'Optional direction filter for directional events.',
+                                        'enum' => [
+                                            'inbound',
+                                            'outbound',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'keyword' => [
+                                        'type' => 'string',
+                                        'description' => 'A keyword to filter on.',
+                                        'required' => false,
+                                    ],
+                                    'user_id' => [
+                                        'type' => 'string',
+                                        'description' => 'Unique identifier of this User. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => true,
+                            ],
+                            'tag' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                            'webhook_id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this webhook config.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createActivitySubscription',
@@ -537,6 +603,18 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'tag' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                            'webhook_id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this webhook config.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'updateActivitySubscription',
@@ -575,6 +653,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'Token for pagination to retrieve the next page of results.',
                     ],
+                    'chat_conversation.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of ChatConversation fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getChatConversations',
                 'operation' => [
@@ -609,6 +711,75 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'action_signatures' => [
+                                'type' => 'array',
+                                'description' => 'Cryptographic signatures for the create action.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => false,
+                            ],
+                            'base64_encoded_key_rotation' => [
+                                'type' => 'string',
+                                'description' => 'Base64-encoded key rotation payload.',
+                                'required' => false,
+                            ],
+                            'conversation_id' => [
+                                'type' => 'string',
+                                'description' => 'Client-generated conversation ID.',
+                                'required' => true,
+                            ],
+                            'conversation_key_version' => [
+                                'type' => 'string',
+                                'description' => 'Version of the conversation encryption key.',
+                                'required' => true,
+                            ],
+                            'conversation_participant_keys' => [
+                                'type' => 'array',
+                                'description' => 'Encrypted conversation keys for each participant.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => true,
+                            ],
+                            'group_admins' => [
+                                'type' => 'array',
+                                'description' => 'User IDs of group admins. Defaults to the creator if omitted.',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => false,
+                            ],
+                            'group_avatar_url' => [
+                                'type' => 'string',
+                                'description' => 'URL of the avatar image for the group conversation.',
+                                'required' => false,
+                            ],
+                            'group_description' => [
+                                'type' => 'string',
+                                'description' => 'Description for the group conversation.',
+                                'required' => false,
+                            ],
+                            'group_members' => [
+                                'type' => 'array',
+                                'description' => 'User IDs of group members to include in the conversation.',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => true,
+                            ],
+                            'group_name' => [
+                                'type' => 'string',
+                                'description' => 'Display name for the group conversation.',
+                                'required' => false,
+                            ],
+                            'ttl_msec' => [
+                                'type' => 'string',
+                                'description' => 'Message time-to-live in milliseconds. Messages expire after this duration.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createChatConversation',
@@ -685,6 +856,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'Token for pagination to retrieve the next page of results.',
                     ],
+                    'chat_message_event.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of ChatMessageEvent fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getChatConversation',
                 'operation' => [
@@ -725,6 +904,34 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'action_signatures' => [
+                                'type' => 'array',
+                                'description' => 'Cryptographic signatures for the key initialization action.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => false,
+                            ],
+                            'base64_encoded_key_rotation' => [
+                                'type' => 'string',
+                                'description' => 'Base64-encoded key rotation payload for ratchet tree key management.',
+                                'required' => false,
+                            ],
+                            'conversation_key_version' => [
+                                'type' => 'string',
+                                'description' => 'Version of the conversation encryption key (typically a timestamp in milliseconds).',
+                                'required' => true,
+                            ],
+                            'conversation_participant_keys' => [
+                                'type' => 'array',
+                                'description' => 'The conversation key encrypted for each participant using their public key.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'initializeChatConversationKeys',
@@ -766,6 +973,47 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'action_signatures' => [
+                                'type' => 'array',
+                                'description' => 'Cryptographic signatures for the add-members action.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => false,
+                            ],
+                            'conversation_key_version' => [
+                                'type' => 'string',
+                                'description' => 'Version of the new rotated conversation key.',
+                                'required' => false,
+                            ],
+                            'conversation_participant_keys' => [
+                                'type' => 'array',
+                                'description' => 'Encrypted conversation keys for each new participant after key rotation.',
+                                'items' => [
+                                    'type' => 'object',
+                                ],
+                                'required' => false,
+                            ],
+                            'encrypted_avatar_url' => [
+                                'type' => 'string',
+                                'description' => 'Re-encrypted group avatar URL with new conversation key.',
+                                'required' => false,
+                            ],
+                            'encrypted_title' => [
+                                'type' => 'string',
+                                'description' => 'Re-encrypted group title with new conversation key.',
+                                'required' => false,
+                            ],
+                            'user_ids' => [
+                                'type' => 'array',
+                                'description' => 'List of user IDs to add to the group conversation.',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'addChatGroupMembers',
@@ -807,6 +1055,28 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'conversation_token' => [
+                                'type' => 'string',
+                                'description' => 'Optional conversation token.',
+                                'required' => false,
+                            ],
+                            'encoded_message_create_event' => [
+                                'type' => 'string',
+                                'description' => 'Base64-encoded Thrift MessageCreateEvent containing encrypted message contents.',
+                                'required' => true,
+                            ],
+                            'encoded_message_event_signature' => [
+                                'type' => 'string',
+                                'description' => 'Base64-encoded Thrift MessageEventSignature for message verification.',
+                                'required' => false,
+                            ],
+                            'message_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier for this message.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'sendChatMessage',
@@ -848,6 +1118,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'seen_until_sequence_id' => [
+                                'type' => 'string',
+                                'description' => 'The sequence ID of the last message to mark as read up to.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'markChatConversationRead',
@@ -920,6 +1197,18 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'conversation_id' => [
+                                'type' => 'string',
+                                'description' => 'XChat conversation identifier for the upload.',
+                                'required' => false,
+                            ],
+                            'total_bytes' => [
+                                'type' => 'integer',
+                                'description' => 'Total size of the media upload in bytes.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'chatMediaUploadInitialize',
@@ -998,6 +1287,33 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'conversation_id' => [
+                                'type' => 'string',
+                                'description' => 'XChat conversation identifier for the upload.',
+                                'required' => false,
+                            ],
+                            'media_hash_key' => [
+                                'type' => 'string',
+                                'description' => 'Media hash key returned from initialize.',
+                                'required' => false,
+                            ],
+                            'message_id' => [
+                                'type' => 'string',
+                                'description' => 'Optional message identifier associated with the upload.',
+                                'required' => false,
+                            ],
+                            'num_parts' => [
+                                'type' => 'string',
+                                'description' => 'Total number of uploaded parts as a numeric string.',
+                                'required' => false,
+                            ],
+                            'ttl_msec' => [
+                                'type' => 'string',
+                                'description' => 'Optional TTL for the media in milliseconds.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'chatMediaUploadFinalize',
@@ -1087,6 +1403,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified.',
                     ],
+                    'community.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Community fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'searchCommunities',
                 'operation' => [
@@ -1121,6 +1445,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => true,
                         'description' => 'The ID of the Community.',
+                    ],
+                    'community.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Community fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getCommunitiesById',
@@ -1174,6 +1506,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'complete',
                         ],
                     ],
+                    'compliance_job.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of ComplianceJob fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getComplianceJobs',
                 'operation' => [
@@ -1205,6 +1545,27 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'name' => [
+                                'type' => 'string',
+                                'description' => 'User-provided name for a compliance job.',
+                                'required' => false,
+                            ],
+                            'resumable' => [
+                                'type' => 'boolean',
+                                'description' => 'If true, this endpoint will return a pre-signed URL with resumable uploads enabled.',
+                                'required' => false,
+                            ],
+                            'type' => [
+                                'type' => 'string',
+                                'description' => 'Type of compliance job to list.',
+                                'enum' => [
+                                    'tweets',
+                                    'users',
+                                ],
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createComplianceJobs',
@@ -1238,6 +1599,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => true,
                         'description' => 'The ID of the Compliance Job to retrieve.',
                     ],
+                    'compliance_job.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of ComplianceJob fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getComplianceJobsById',
                 'operation' => [
@@ -1269,6 +1638,16 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'uuids' => [
+                                'type' => 'array',
+                                'description' => 'Array of connection UUIDs to terminate',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'deleteConnectionsByUuids',
@@ -1324,6 +1703,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'Token for paginating through results. Use the value from \'next_token\' in the previous response.',
+                    ],
+                    'connection.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Connection fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getConnectionHistory',
@@ -1431,6 +1818,29 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'conversation_type' => [
+                                'type' => 'string',
+                                'description' => 'The conversation type that is being created.',
+                                'enum' => [
+                                    'Group',
+                                ],
+                                'required' => true,
+                            ],
+                            'message' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => true,
+                            ],
+                            'participant_ids' => [
+                                'type' => 'array',
+                                'description' => 'Participants for the DM Conversation.',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createDirectMessagesConversation',
@@ -1525,6 +1935,46 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => false,
                         'description' => 'The set of event_types to include in the results.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'dm_event.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of DmEvent fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -1665,6 +2115,46 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'type' => 'string',
                         ],
                     ],
+                    'dm_event.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of DmEvent fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getDirectMessagesEventsByConversationId',
                 'operation' => [
@@ -1710,6 +2200,46 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => false,
                         'description' => 'The set of event_types to include in the results.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'dm_event.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of DmEvent fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -1785,6 +2315,46 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => true,
                         'description' => 'dm event id.',
                     ],
+                    'dm_event.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of DmEvent fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getDirectMessagesEventsById',
                 'operation' => [
@@ -1820,6 +2390,18 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'note_text' => [
+                                'type' => 'string',
+                                'description' => 'Text for the community note.',
+                                'required' => true,
+                            ],
+                            'post_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'evaluateCommunityNotes',
@@ -1873,6 +2455,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'request metrics for historical request.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'engagement.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Engagement fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -1939,6 +2529,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'request metrics for historical request.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'engagement.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Engagement fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -2035,6 +2633,46 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
                     ],
+                    'like_with_tweet_author.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of LikeWithTweetAuthor fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'streamLikesFirehose',
                 'operation' => [
@@ -2083,6 +2721,46 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
                     ],
+                    'like_with_tweet_author.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of LikeWithTweetAuthor fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'streamLikesSample10',
                 'operation' => [
@@ -2115,6 +2793,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'description' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                            'name' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => true,
+                            ],
+                            'private' => [
+                                'type' => 'boolean',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createLists',
@@ -2189,6 +2884,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => true,
                         'description' => 'The ID of the List.',
                     ],
+                    'list.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of List fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getListsById',
                 'operation' => [
@@ -2230,6 +2949,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'description' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                            'name' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                            'private' => [
+                                'type' => 'boolean',
+                                'description' => '',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'updateLists',
@@ -2276,6 +3012,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getListsFollowers',
@@ -2325,6 +3085,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getListsMembers',
                 'operation' => [
@@ -2367,6 +3151,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'user_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this User. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'addListsMember',
@@ -2455,6 +3246,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getListsPosts',
                 'operation' => [
@@ -2492,6 +3331,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'A comma separated list of Media Keys. Up to 100 are allowed in a single request.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -2554,6 +3401,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'total',
                         ],
                     ],
+                    'media_analytics.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of MediaAnalytics fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getMediaAnalytics',
                 'operation' => [
@@ -2587,6 +3442,216 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this Media.',
+                                'required' => true,
+                            ],
+                            'metadata' => [
+                                'type' => 'object',
+                                'description' => '',
+                                'properties' => [
+                                    'allow_download_status' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'allow_download' => [
+                                                'type' => 'boolean',
+                                                'description' => '',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'alt_text' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'text' => [
+                                                'type' => 'string',
+                                                'description' => 'Description of media ( <= 1000 characters )',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'audience_policy' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'creator_subscriptions' => [
+                                                'type' => 'array',
+                                                'description' => '',
+                                                'items' => [
+                                                    'type' => 'string',
+                                                ],
+                                                'required' => false,
+                                            ],
+                                            'x_subscriptions' => [
+                                                'type' => 'array',
+                                                'description' => '',
+                                                'items' => [
+                                                    'type' => 'string',
+                                                ],
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'content_expiration' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'timestamp_sec' => [
+                                                'type' => 'number',
+                                                'description' => 'Expiration time for content as a Unix timestamp in seconds',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'domain_restrictions' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'whitelist' => [
+                                                'type' => 'array',
+                                                'description' => 'List of whitelisted domains',
+                                                'items' => [
+                                                    'type' => 'string',
+                                                ],
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'found_media_origin' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'id' => [
+                                                'type' => 'string',
+                                                'description' => 'Unique Identifier of media within provider ( <= 24 characters ))',
+                                                'required' => false,
+                                            ],
+                                            'provider' => [
+                                                'type' => 'string',
+                                                'description' => 'The media provider (e.g., \'giphy\') that sourced the media ( <= 8 Characters )',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'geo_restrictions' => [
+                                        'type' => 'string',
+                                        'description' => '',
+                                        'required' => false,
+                                    ],
+                                    'management_info' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'managed' => [
+                                                'type' => 'boolean',
+                                                'description' => 'Indicates if the media is managed by Media Studio',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'preview_image' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'media_key' => [
+                                                'type' => 'object',
+                                                'description' => '',
+                                                'properties' => [
+                                                    'media' => [
+                                                        'type' => 'string',
+                                                        'description' => 'The unique identifier of this Media.',
+                                                        'required' => false,
+                                                    ],
+                                                    'media_category' => [
+                                                        'type' => 'string',
+                                                        'description' => 'The media category of media',
+                                                        'enum' => [
+                                                            'TweetImage',
+                                                        ],
+                                                        'required' => false,
+                                                    ],
+                                                ],
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'sensitive_media_warning' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'adult_content' => [
+                                                'type' => 'boolean',
+                                                'description' => 'Indicates if the content contains adult material',
+                                                'required' => false,
+                                            ],
+                                            'graphic_violence' => [
+                                                'type' => 'boolean',
+                                                'description' => 'Indicates if the content depicts graphic violence',
+                                                'required' => false,
+                                            ],
+                                            'other' => [
+                                                'type' => 'boolean',
+                                                'description' => 'Indicates if the content has other sensitive characteristics',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'shared_info' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'shared' => [
+                                                'type' => 'boolean',
+                                                'description' => 'Indicates if the media is shared in direct messages',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'sticker_info' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'stickers' => [
+                                                'type' => 'array',
+                                                'description' => 'Stickers list must not be empty and should not exceed 25',
+                                                'items' => [
+                                                    'type' => 'object',
+                                                ],
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'upload_source' => [
+                                        'type' => 'object',
+                                        'description' => '',
+                                        'properties' => [
+                                            'upload_source' => [
+                                                'type' => 'string',
+                                                'description' => 'Records the source (e.g., app, device) from which the media was uploaded',
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createMediaMetadata',
@@ -2621,6 +3686,27 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this Media.',
+                                'required' => false,
+                            ],
+                            'language_code' => [
+                                'type' => 'string',
+                                'description' => 'The language code should be a BCP47 code (e.g. \'EN", "SP")',
+                                'required' => false,
+                            ],
+                            'media_category' => [
+                                'type' => 'string',
+                                'description' => 'The media category of uploaded media to which subtitles should be added/deleted',
+                                'enum' => [
+                                    'AmplifyVideo',
+                                    'TweetVideo',
+                                ],
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'deleteMediaSubtitles',
@@ -2655,6 +3741,44 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this Media.',
+                                'required' => false,
+                            ],
+                            'media_category' => [
+                                'type' => 'string',
+                                'description' => 'The media category of uploaded media to which subtitles should be added/deleted',
+                                'enum' => [
+                                    'AmplifyVideo',
+                                    'TweetVideo',
+                                ],
+                                'required' => false,
+                            ],
+                            'subtitles' => [
+                                'type' => 'object',
+                                'description' => '',
+                                'properties' => [
+                                    'display_name' => [
+                                        'type' => 'string',
+                                        'description' => 'Language name in a human readable form',
+                                        'required' => false,
+                                    ],
+                                    'id' => [
+                                        'type' => 'string',
+                                        'description' => 'The unique identifier of this Media.',
+                                        'required' => false,
+                                    ],
+                                    'language_code' => [
+                                        'type' => 'string',
+                                        'description' => 'The language code should be a BCP47 code (e.g. \'EN", "SP")',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createMediaSubtitles',
@@ -2731,6 +3855,51 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'additional_owners' => [
+                                'type' => 'array',
+                                'description' => '',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => false,
+                            ],
+                            'media' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => true,
+                            ],
+                            'media_category' => [
+                                'type' => 'string',
+                                'description' => 'A string enum value which identifies a media use-case. This identifier is used to enforce use-case specific constraints (e.g. file size) and enable advanced features.',
+                                'enum' => [
+                                    'tweet_image',
+                                    'dm_image',
+                                    'subtitles',
+                                ],
+                                'required' => true,
+                            ],
+                            'media_type' => [
+                                'type' => 'string',
+                                'description' => 'The type of image or subtitle.',
+                                'enum' => [
+                                    'text/srt',
+                                    'text/vtt',
+                                    'image/jpeg',
+                                    'image/bmp',
+                                    'image/png',
+                                    'image/webp',
+                                    'image/pjpeg',
+                                    'image/tiff',
+                                ],
+                                'required' => false,
+                            ],
+                            'shared' => [
+                                'type' => 'boolean',
+                                'description' => 'Whether this media is shared or not.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'mediaUpload',
@@ -2765,6 +3934,63 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'additional_owners' => [
+                                'type' => 'array',
+                                'description' => '',
+                                'items' => [
+                                    'type' => 'string',
+                                ],
+                                'required' => false,
+                            ],
+                            'media_category' => [
+                                'type' => 'string',
+                                'description' => 'A string enum value which identifies a media use-case. This identifier is used to enforce use-case specific constraints (e.g. file size, video duration) and enable advanced features.',
+                                'enum' => [
+                                    'amplify_video',
+                                    'tweet_gif',
+                                    'tweet_image',
+                                    'tweet_video',
+                                    'dm_gif',
+                                    'dm_image',
+                                    'dm_video',
+                                    'subtitles',
+                                ],
+                                'required' => false,
+                            ],
+                            'media_type' => [
+                                'type' => 'string',
+                                'description' => 'The type of media.',
+                                'enum' => [
+                                    'video/mp4',
+                                    'video/webm',
+                                    'video/mp2t',
+                                    'video/quicktime',
+                                    'text/srt',
+                                    'text/vtt',
+                                    'image/jpeg',
+                                    'image/gif',
+                                    'image/bmp',
+                                    'image/png',
+                                    'image/webp',
+                                    'image/pjpeg',
+                                    'image/tiff',
+                                    'model/gltf-binary',
+                                    'model/vnd.usdz+zip',
+                                ],
+                                'required' => false,
+                            ],
+                            'shared' => [
+                                'type' => 'boolean',
+                                'description' => 'Whether this media is shared or not.',
+                                'required' => false,
+                            ],
+                            'total_bytes' => [
+                                'type' => 'integer',
+                                'description' => 'The total size of the media upload in bytes.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'initializeMediaUpload',
@@ -2873,6 +4099,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => true,
                         'description' => 'A single Media Key.',
                     ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getMediaByMediaKey',
                 'operation' => [
@@ -2918,6 +4152,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'The maximum age of the News story to search for.',
                     ],
+                    'news.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of News fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'searchNews',
                 'operation' => [
@@ -2952,6 +4194,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => true,
                         'description' => 'The ID of the news story.',
+                    ],
+                    'news.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of News fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getNews',
@@ -2988,6 +4238,57 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'info' => [
+                                'type' => 'object',
+                                'description' => 'A X Community Note is a note on a Post.',
+                                'properties' => [
+                                    'classification' => [
+                                        'type' => 'string',
+                                        'description' => 'Community Note classification type.',
+                                        'enum' => [
+                                            'misinformed_or_potentially_misleading',
+                                            'not_misleading',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'is_media_note' => [
+                                        'type' => 'boolean',
+                                        'description' => 'Whether the note is a media note.',
+                                        'required' => false,
+                                    ],
+                                    'misleading_tags' => [
+                                        'type' => 'array',
+                                        'description' => '',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'text' => [
+                                        'type' => 'string',
+                                        'description' => 'The text summary in the Community Note.',
+                                        'required' => false,
+                                    ],
+                                    'trustworthy_sources' => [
+                                        'type' => 'boolean',
+                                        'description' => 'Whether the note provided trustworthy links.',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => true,
+                            ],
+                            'post_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                            'test_mode' => [
+                                'type' => 'boolean',
+                                'description' => 'If true, the note being submitted is only for testing the capability of the bot, and won\'t be publicly visible. If false, the note being submitted will be a new proposed note on the product.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createCommunityNotes',
@@ -3032,6 +4333,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'integer',
                         'required' => false,
                         'description' => 'Max results to return.',
+                    ],
+                    'note.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Note fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'searchCommunityNotesWritten',
@@ -3081,6 +4390,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'The selection of posts to return. Valid values are \'feed_size: [small|large|xl|xxl], feed_lang: [en|es|...|all]\'. Default (if not specified) is \'feed_size: small, feed_lang: en\'. Only top AI writers have access to large, xl, and xxl size feeds.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'searchEligiblePosts',
@@ -3179,6 +4536,38 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'type' => 'string',
                         ],
                     ],
+                    'space.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Space fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'topic.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Topic fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getSpacesByIds',
                 'operation' => [
@@ -3214,6 +4603,38 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'The IDs of Users to search through.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'space.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Space fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'topic.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Topic fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -3269,6 +4690,38 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'The number of results to return.',
                     ],
+                    'space.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Space fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'topic.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Topic fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'searchSpaces',
                 'operation' => [
@@ -3304,6 +4757,38 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => true,
                         'description' => 'The ID of the Space to be retrieved.',
+                    ],
+                    'space.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Space fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'topic.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Topic fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getSpacesById',
@@ -3351,6 +4836,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'The maximum number of results.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getSpacesBuyers',
                 'operation' => [
@@ -3391,6 +4900,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'integer',
                         'required' => false,
                         'description' => 'The number of Posts to fetch from the provided space. If not provided, the value will default to the maximum of 100.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getSpacesPosts',
@@ -3434,6 +4991,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'The maximum number of results.',
                     ],
+                    'trend.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Trend fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getTrendsByWoeid',
                 'operation' => [
@@ -3465,6 +5030,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'A comma separated list of Post IDs. Up to 100 are allowed in a single request.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -3504,6 +5117,245 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'card_uri' => [
+                                'type' => 'string',
+                                'description' => 'Card Uri Parameter. This is mutually exclusive from Quote Tweet Id, Poll, Media, and Direct Message Deep Link.',
+                                'required' => false,
+                            ],
+                            'community_id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this Community.',
+                                'required' => false,
+                            ],
+                            'direct_message_deep_link' => [
+                                'type' => 'string',
+                                'description' => 'Link to take the conversation from the public timeline to a private Direct Message.',
+                                'required' => false,
+                            ],
+                            'edit_options' => [
+                                'type' => 'object',
+                                'description' => 'Options for editing an existing Post. When provided, this request will edit the specified Post instead of creating a new one.',
+                                'properties' => [
+                                    'previous_post_id' => [
+                                        'type' => 'string',
+                                        'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                            'for_super_followers_only' => [
+                                'type' => 'boolean',
+                                'description' => 'Exclusive Tweet for super followers.',
+                                'required' => false,
+                            ],
+                            'geo' => [
+                                'type' => 'object',
+                                'description' => 'Place ID being attached to the Tweet for geo location.',
+                                'properties' => [
+                                    'place_id' => [
+                                        'type' => 'string',
+                                        'description' => '',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                            'made_with_ai' => [
+                                'type' => 'boolean',
+                                'description' => 'Whether this Post contains AI-generated media. When true, the Post will be labeled accordingly.',
+                                'required' => false,
+                            ],
+                            'media' => [
+                                'type' => 'object',
+                                'description' => 'Media information being attached to created Tweet. This is mutually exclusive from Quote Tweet Id, Poll, and Card URI.',
+                                'properties' => [
+                                    'call_to_actions' => [
+                                        'type' => 'object',
+                                        'description' => 'Call-to-action button rendered on the media entity. Exactly one variant should be set.',
+                                        'properties' => [
+                                            'app_install' => [
+                                                'type' => 'object',
+                                                'description' => 'App Install CTA. At least one store id should be provided.',
+                                                'properties' => [
+                                                    'app_store_id' => [
+                                                        'type' => 'string',
+                                                        'description' => 'Apple App Store iPhone app id.',
+                                                        'required' => false,
+                                                    ],
+                                                    'ipad_app_store_id' => [
+                                                        'type' => 'string',
+                                                        'description' => 'Apple App Store iPad app id.',
+                                                        'required' => false,
+                                                    ],
+                                                    'play_store_id' => [
+                                                        'type' => 'string',
+                                                        'description' => 'Google Play Store app id.',
+                                                        'required' => false,
+                                                    ],
+                                                ],
+                                                'required' => false,
+                                            ],
+                                            'visit_site' => [
+                                                'type' => 'object',
+                                                'description' => 'Visit Site CTA.',
+                                                'properties' => [
+                                                    'url' => [
+                                                        'type' => 'string',
+                                                        'description' => 'HTTPS URL the CTA links to.',
+                                                        'required' => false,
+                                                    ],
+                                                ],
+                                                'required' => false,
+                                            ],
+                                            'watch_now' => [
+                                                'type' => 'object',
+                                                'description' => 'Watch Now CTA.',
+                                                'properties' => [
+                                                    'url' => [
+                                                        'type' => 'string',
+                                                        'description' => 'HTTPS URL the CTA links to.',
+                                                        'required' => false,
+                                                    ],
+                                                ],
+                                                'required' => false,
+                                            ],
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'description' => [
+                                        'type' => 'string',
+                                        'description' => 'Description for the media. Rendered on the Post card for video and Amplify content.',
+                                        'required' => false,
+                                    ],
+                                    'embeddable' => [
+                                        'type' => 'boolean',
+                                        'description' => 'When true, the media\'s asset URLs do not expire and external syndicated playback is allowed.',
+                                        'required' => false,
+                                    ],
+                                    'media_ids' => [
+                                        'type' => 'array',
+                                        'description' => 'A list of Media Ids to be attached to a created Tweet.',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'preview_media_id' => [
+                                        'type' => 'string',
+                                        'description' => 'The unique identifier of this Media.',
+                                        'required' => false,
+                                    ],
+                                    'tagged_user_ids' => [
+                                        'type' => 'array',
+                                        'description' => 'A list of User Ids to be tagged in the media for created Tweet.',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'title' => [
+                                        'type' => 'string',
+                                        'description' => 'Title for the media. Rendered on the Post card for video and Amplify content.',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                            'nullcast' => [
+                                'type' => 'boolean',
+                                'description' => 'Nullcasted (promoted-only) Posts do not appear in the public timeline and are not served to followers.',
+                                'required' => false,
+                            ],
+                            'paid_partnership' => [
+                                'type' => 'boolean',
+                                'description' => 'Whether this Post is a paid partnership. When true, the Post will be labeled as a paid promotion.',
+                                'required' => false,
+                            ],
+                            'poll' => [
+                                'type' => 'object',
+                                'description' => 'Poll options for a Tweet with a poll. This is mutually exclusive from Media, Quote Tweet Id, and Card URI.',
+                                'properties' => [
+                                    'duration_minutes' => [
+                                        'type' => 'integer',
+                                        'description' => 'Duration of the poll in minutes.',
+                                        'required' => false,
+                                    ],
+                                    'options' => [
+                                        'type' => 'array',
+                                        'description' => '',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'reply_settings' => [
+                                        'type' => 'string',
+                                        'description' => 'Settings to indicate who can reply to the Tweet.',
+                                        'enum' => [
+                                            'following',
+                                            'mentionedUsers',
+                                            'subscribers',
+                                            'verified',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                            'quote_tweet_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => false,
+                            ],
+                            'reply' => [
+                                'type' => 'object',
+                                'description' => 'Tweet information of the Tweet being replied to.',
+                                'properties' => [
+                                    'auto_populate_reply_metadata' => [
+                                        'type' => 'boolean',
+                                        'description' => 'If set to true, reply metadata will be automatically populated.',
+                                        'required' => false,
+                                    ],
+                                    'exclude_reply_user_ids' => [
+                                        'type' => 'array',
+                                        'description' => 'A list of User Ids to be excluded from the reply Tweet.',
+                                        'items' => [
+                                            'type' => 'string',
+                                        ],
+                                        'required' => false,
+                                    ],
+                                    'in_reply_to_tweet_id' => [
+                                        'type' => 'string',
+                                        'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => false,
+                            ],
+                            'reply_settings' => [
+                                'type' => 'string',
+                                'description' => 'Settings to indicate who can reply to the Tweet.',
+                                'enum' => [
+                                    'following',
+                                    'mentionedUsers',
+                                    'subscribers',
+                                    'verified',
+                                ],
+                                'required' => false,
+                            ],
+                            'share_with_followers' => [
+                                'type' => 'boolean',
+                                'description' => 'Share community post with followers too.',
+                                'required' => false,
+                            ],
+                            'text' => [
+                                'type' => 'string',
+                                'description' => 'The content of the Tweet.',
+                                'required' => false,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createPosts',
@@ -3563,6 +5415,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'daily',
                             'weekly',
                             'total',
+                        ],
+                    ],
+                    'analytics.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Analytics fields to display.',
+                        'items' => [
+                            'type' => 'string',
                         ],
                     ],
                 ],
@@ -3688,6 +5548,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'day',
                         ],
                     ],
+                    'search_count.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of SearchCount fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getPostsCountsAll',
                 'operation' => [
@@ -3760,6 +5628,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'day',
                         ],
                     ],
+                    'search_count.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of SearchCount fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getPostsCountsRecent',
                 'operation' => [
@@ -3806,6 +5682,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'streamPostsFirehose',
@@ -3855,6 +5779,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'streamPostsFirehoseEn',
                 'operation' => [
@@ -3902,6 +5874,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'streamPostsFirehoseJa',
@@ -3951,6 +5971,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'streamPostsFirehoseKo',
                 'operation' => [
@@ -3998,6 +6066,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'streamPostsFirehosePt',
@@ -4075,6 +6191,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'The number of minutes of backfill requested.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'streamPostsSample',
                 'operation' => [
@@ -4122,6 +6286,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'streamPostsSample10',
@@ -4200,6 +6412,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'relevancy',
                         ],
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'searchPostsAll',
                 'operation' => [
@@ -4276,6 +6536,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'relevancy',
                         ],
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'searchPostsRecent',
                 'operation' => [
@@ -4321,6 +6629,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'streamPosts',
@@ -4439,6 +6795,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 'description' => 'Get stream rule counts',
                 'icon' => 'simple-icons:x',
                 'parameters' => [
+                    'rules_count.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of RulesCount fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getRuleCounts',
                 'operation' => [
@@ -4632,6 +6996,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => true,
                         'description' => 'A single Post ID.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getPostsById',
                 'operation' => [
@@ -4677,6 +7089,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getPostsLikingUsers',
@@ -4733,6 +7169,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'type' => 'string',
                         ],
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getPostsQuotedPosts',
                 'operation' => [
@@ -4778,6 +7262,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getPostsRepostedBy',
@@ -4826,6 +7334,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getPostsReposts',
                 'operation' => [
@@ -4866,6 +7422,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'hidden' => [
+                                'type' => 'boolean',
+                                'description' => '',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'hidePostsReply',
@@ -4903,6 +7466,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'The number of days for which you need usage for.',
                     ],
+                    'usage.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Usage fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsage',
                 'operation' => [
@@ -4934,6 +7505,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'A list of User IDs, comma-separated. You can specify up to 100 IDs.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -4977,6 +7572,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                             'type' => 'string',
                         ],
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersByUsernames',
                 'operation' => [
@@ -5012,6 +7631,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => true,
                         'description' => 'A username.',
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getUsersByUsername',
@@ -5092,6 +7735,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 'description' => 'Get my User',
                 'icon' => 'simple-icons:x',
                 'parameters' => [
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersMe',
                 'operation' => [
@@ -5122,6 +7789,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 'description' => 'Get personalized Trends',
                 'icon' => 'simple-icons:x',
                 'parameters' => [
+                    'personalized_trend.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of PersonalizedTrend fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getTrendsPersonalizedTrends',
                 'operation' => [
@@ -5156,6 +7831,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'array',
                         'required' => true,
                         'description' => 'A list of User IDs, comma-separated. You can specify up to 100 IDs.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'public_key.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of PublicKey fields to display.',
                         'items' => [
                             'type' => 'string',
                         ],
@@ -5202,6 +7885,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersRepostsOfMe',
                 'operation' => [
@@ -5247,6 +7978,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results. The value used with the parameter is pulled directly from the response provided by the API, and should not be modified.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'searchUsers',
                 'operation' => [
@@ -5281,6 +8036,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => true,
                         'description' => 'The ID of the User to lookup.',
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getUsersById',
@@ -5328,6 +8107,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersAffiliates',
                 'operation' => [
@@ -5373,6 +8176,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getUsersBlocking',
@@ -5420,6 +8247,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersBookmarks',
                 'operation' => [
@@ -5460,6 +8335,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'tweet_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createUsersBookmark',
@@ -5706,6 +8588,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'list.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of List fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersFollowedLists',
                 'operation' => [
@@ -5748,6 +8654,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'list_id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this List.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'followList',
@@ -5838,6 +8751,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersFollowers',
                 'operation' => [
@@ -5885,6 +8822,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersFollowing',
                 'operation' => [
@@ -5926,6 +8887,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'target_user_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this User. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'followUser',
@@ -5973,6 +8941,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersLikedPosts',
                 'operation' => [
@@ -6014,6 +9030,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'tweet_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'likePost',
@@ -6104,6 +9127,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'list.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of List fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersListMemberships',
                 'operation' => [
@@ -6172,6 +9219,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. The until_id parameter takes precedence if it is also specified.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersMentions',
                 'operation' => [
@@ -6219,6 +9314,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get the next \'page\' of results.',
                     ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersMuting',
                 'operation' => [
@@ -6259,6 +9378,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'target_user_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this User. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'muteUser',
@@ -6306,6 +9432,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'This parameter is used to get a specified \'page\' of results.',
                     ],
+                    'list.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of List fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersOwnedLists',
                 'operation' => [
@@ -6343,6 +9493,30 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => true,
                         'description' => 'The ID of the authenticated source User for whom to return results.',
+                    ],
+                    'list.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of List fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getUsersPinnedLists',
@@ -6385,6 +9559,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'list_id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this List.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'pinList',
@@ -6465,6 +9646,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => true,
                         'description' => 'The ID of the User to lookup.',
                     ],
+                    'public_key.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of PublicKey fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersPublicKey',
                 'operation' => [
@@ -6506,6 +9695,55 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => true,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'generate_version' => [
+                                'type' => 'boolean',
+                                'description' => 'When true, the server generates a new version.',
+                                'required' => false,
+                            ],
+                            'public_key' => [
+                                'type' => 'object',
+                                'description' => 'Public key registration payload.',
+                                'properties' => [
+                                    'identity_public_key_signature' => [
+                                        'type' => 'string',
+                                        'description' => 'Signature over the identity public key.',
+                                        'required' => false,
+                                    ],
+                                    'public_key' => [
+                                        'type' => 'string',
+                                        'description' => 'Identity public key (base64 encoded).',
+                                        'required' => false,
+                                    ],
+                                    'public_key_fingerprint' => [
+                                        'type' => 'string',
+                                        'description' => 'Fingerprint of the identity public key.',
+                                        'required' => false,
+                                    ],
+                                    'registration_method' => [
+                                        'type' => 'string',
+                                        'description' => 'Registration method for the public key.',
+                                        'required' => false,
+                                    ],
+                                    'signing_public_key' => [
+                                        'type' => 'string',
+                                        'description' => 'Signing public key (base64 encoded).',
+                                        'required' => false,
+                                    ],
+                                    'signing_public_key_signature' => [
+                                        'type' => 'string',
+                                        'description' => 'Signature over the signing public key.',
+                                        'required' => false,
+                                    ],
+                                ],
+                                'required' => true,
+                            ],
+                            'version' => [
+                                'type' => 'string',
+                                'description' => 'Public key version.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'addUserPublicKey',
@@ -6547,6 +9785,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'tweet_id' => [
+                                'type' => 'string',
+                                'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'repostPost',
@@ -6665,6 +9910,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. The until_id parameter takes precedence if it is also specified.',
                     ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getUsersTimeline',
                 'operation' => [
@@ -6738,6 +10031,54 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'string',
                         'required' => false,
                         'description' => 'YYYY-MM-DDTHH:mm:ssZ. The latest UTC timestamp to which the Posts will be provided. The until_id parameter takes precedence if it is also specified.',
+                    ],
+                    'tweet.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Tweet fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'expansions' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of fields to expand.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'media.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Media fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'poll.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Poll fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'user.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of User fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
+                    'place.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of Place fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ],
                 'operation_id' => 'getUsersPosts',
@@ -6853,6 +10194,14 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                 'description' => 'Get webhook',
                 'icon' => 'simple-icons:x',
                 'parameters' => [
+                    'webhook_config.fields' => [
+                        'type' => 'array',
+                        'required' => false,
+                        'description' => 'A comma separated list of WebhookConfig fields to display.',
+                        'items' => [
+                            'type' => 'string',
+                        ],
+                    ],
                 ],
                 'operation_id' => 'getWebhooks',
                 'operation' => [
@@ -6884,6 +10233,13 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'url' => [
+                                'type' => 'string',
+                                'description' => '',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createWebhooks',
@@ -6917,6 +10273,23 @@ class XToolProvider implements ToolProvider, ConfigurableIntegration, HasIntegra
                         'type' => 'object',
                         'required' => false,
                         'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+                        'properties' => [
+                            'from_date' => [
+                                'type' => 'string',
+                                'description' => 'The oldest (starting) UTC timestamp (inclusive) from which events will be provided, in yyyymmddhhmm format.',
+                                'required' => true,
+                            ],
+                            'to_date' => [
+                                'type' => 'string',
+                                'description' => 'The oldest (starting) UTC timestamp (inclusive) from which events will be provided, in yyyymmddhhmm format.',
+                                'required' => true,
+                            ],
+                            'webhook_id' => [
+                                'type' => 'string',
+                                'description' => 'The unique identifier of this webhook config.',
+                                'required' => true,
+                            ],
+                        ],
                     ],
                 ],
                 'operation_id' => 'createWebhookReplayJob',

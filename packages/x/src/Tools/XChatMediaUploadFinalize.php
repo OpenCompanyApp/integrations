@@ -21,6 +21,33 @@ class XChatMediaUploadFinalize extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'conversation_id' => [
+                    'type' => 'string',
+                    'description' => 'XChat conversation identifier for the upload.',
+                    'required' => false,
+                ],
+                'media_hash_key' => [
+                    'type' => 'string',
+                    'description' => 'Media hash key returned from initialize.',
+                    'required' => false,
+                ],
+                'message_id' => [
+                    'type' => 'string',
+                    'description' => 'Optional message identifier associated with the upload.',
+                    'required' => false,
+                ],
+                'num_parts' => [
+                    'type' => 'string',
+                    'description' => 'Total number of uploaded parts as a numeric string.',
+                    'required' => false,
+                ],
+                'ttl_msec' => [
+                    'type' => 'string',
+                    'description' => 'Optional TTL for the media in milliseconds.',
+                    'required' => false,
+                ],
+            ],
         ],
     ];
 

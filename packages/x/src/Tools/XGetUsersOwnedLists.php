@@ -27,6 +27,30 @@ class XGetUsersOwnedLists extends XGeneratedTool
             'required' => false,
             'description' => 'This parameter is used to get a specified \'page\' of results.',
         ],
+        'list.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of List fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'expansions' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of fields to expand.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'user.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of User fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -54,6 +78,27 @@ class XGetUsersOwnedLists extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'list.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'expansions',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'user.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

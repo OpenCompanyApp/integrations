@@ -40,6 +40,14 @@ class XGetConnectionHistory extends XGeneratedTool
             'required' => false,
             'description' => 'Token for paginating through results. Use the value from \'next_token\' in the previous response.',
         ],
+        'connection.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Connection fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -74,6 +82,13 @@ class XGetConnectionHistory extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'connection.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

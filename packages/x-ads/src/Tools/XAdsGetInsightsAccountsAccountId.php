@@ -24,12 +24,12 @@ class XAdsGetInsightsAccountsAccountId extends XAdsGeneratedTool
         ],
         'audience_value' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'interaction_type' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
     ];
@@ -63,14 +63,14 @@ class XAdsGetInsightsAccountsAccountId extends XAdsGeneratedTool
             [
                 'name' => 'audience_value',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],
             [
                 'name' => 'interaction_type',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

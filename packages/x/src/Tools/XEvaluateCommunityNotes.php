@@ -16,6 +16,18 @@ class XEvaluateCommunityNotes extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'note_text' => [
+                    'type' => 'string',
+                    'description' => 'Text for the community note.',
+                    'required' => true,
+                ],
+                'post_id' => [
+                    'type' => 'string',
+                    'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

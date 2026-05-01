@@ -19,7 +19,7 @@ class XAdsPostAccountsAccountIdMediaLibrary extends XAdsGeneratedTool
         ],
         'media_key' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'description' => [
@@ -71,7 +71,7 @@ class XAdsPostAccountsAccountIdMediaLibrary extends XAdsGeneratedTool
             [
                 'name' => 'media_key',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

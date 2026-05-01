@@ -21,6 +21,13 @@ class XMarkChatConversationRead extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'seen_until_sequence_id' => [
+                    'type' => 'string',
+                    'description' => 'The sequence ID of the last message to mark as read up to.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

@@ -16,6 +16,18 @@ class XChatMediaUploadInitialize extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'conversation_id' => [
+                    'type' => 'string',
+                    'description' => 'XChat conversation identifier for the upload.',
+                    'required' => false,
+                ],
+                'total_bytes' => [
+                    'type' => 'integer',
+                    'description' => 'Total size of the media upload in bytes.',
+                    'required' => false,
+                ],
+            ],
         ],
     ];
 

@@ -16,6 +16,27 @@ class XCreateComplianceJobs extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'name' => [
+                    'type' => 'string',
+                    'description' => 'User-provided name for a compliance job.',
+                    'required' => false,
+                ],
+                'resumable' => [
+                    'type' => 'boolean',
+                    'description' => 'If true, this endpoint will return a pre-signed URL with resumable uploads enabled.',
+                    'required' => false,
+                ],
+                'type' => [
+                    'type' => 'string',
+                    'description' => 'Type of compliance job to list.',
+                    'enum' => [
+                        'tweets',
+                        'users',
+                    ],
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

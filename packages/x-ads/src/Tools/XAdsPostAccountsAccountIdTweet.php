@@ -24,7 +24,7 @@ class XAdsPostAccountsAccountIdTweet extends XAdsGeneratedTool
         ],
         'text' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'card_uri' => [
@@ -103,7 +103,7 @@ class XAdsPostAccountsAccountIdTweet extends XAdsGeneratedTool
             [
                 'name' => 'text',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

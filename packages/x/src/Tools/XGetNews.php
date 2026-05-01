@@ -17,6 +17,14 @@ class XGetNews extends XGeneratedTool
             'required' => true,
             'description' => 'The ID of the news story.',
         ],
+        'news.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of News fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -30,6 +38,13 @@ class XGetNews extends XGeneratedTool
                 'required' => true,
                 'style' => 'simple',
                 'explode' => null,
+            ],
+            [
+                'name' => 'news.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

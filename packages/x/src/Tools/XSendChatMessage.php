@@ -21,6 +21,28 @@ class XSendChatMessage extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'conversation_token' => [
+                    'type' => 'string',
+                    'description' => 'Optional conversation token.',
+                    'required' => false,
+                ],
+                'encoded_message_create_event' => [
+                    'type' => 'string',
+                    'description' => 'Base64-encoded Thrift MessageCreateEvent containing encrypted message contents.',
+                    'required' => true,
+                ],
+                'encoded_message_event_signature' => [
+                    'type' => 'string',
+                    'description' => 'Base64-encoded Thrift MessageEventSignature for message verification.',
+                    'required' => false,
+                ],
+                'message_id' => [
+                    'type' => 'string',
+                    'description' => 'Unique identifier for this message.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

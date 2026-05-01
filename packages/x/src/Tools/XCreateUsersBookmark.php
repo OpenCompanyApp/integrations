@@ -21,6 +21,13 @@ class XCreateUsersBookmark extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'tweet_id' => [
+                    'type' => 'string',
+                    'description' => 'Unique identifier of this Tweet. This is returned as a string in order to avoid complications with languages and tools that cannot handle large integers.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

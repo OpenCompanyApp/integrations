@@ -21,6 +21,13 @@ class XHidePostsReply extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'hidden' => [
+                    'type' => 'boolean',
+                    'description' => '',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

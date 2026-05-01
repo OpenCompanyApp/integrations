@@ -17,6 +17,14 @@ class XGetUsage extends XGeneratedTool
             'required' => false,
             'description' => 'The number of days for which you need usage for.',
         ],
+        'usage.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Usage fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -30,6 +38,13 @@ class XGetUsage extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'usage.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

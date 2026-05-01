@@ -39,6 +39,14 @@ class XGetInsights28Hr extends XGeneratedTool
                 'type' => 'string',
             ],
         ],
+        'engagement.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Engagement fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -66,6 +74,13 @@ class XGetInsights28Hr extends XGeneratedTool
                 'required' => true,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'engagement.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

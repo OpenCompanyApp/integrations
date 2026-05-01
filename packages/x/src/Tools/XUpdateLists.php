@@ -21,6 +21,23 @@ class XUpdateLists extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'description' => [
+                    'type' => 'string',
+                    'description' => '',
+                    'required' => false,
+                ],
+                'name' => [
+                    'type' => 'string',
+                    'description' => '',
+                    'required' => false,
+                ],
+                'private' => [
+                    'type' => 'boolean',
+                    'description' => '',
+                    'required' => false,
+                ],
+            ],
         ],
     ];
 

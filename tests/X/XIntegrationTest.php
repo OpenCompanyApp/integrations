@@ -77,7 +77,7 @@ final class XIntegrationTest extends TestCase
     public function test_x_ads_generated_tool_signs_oauth1_request(): void
     {
         Http::fake([
-            'https://ads-api.x.com/11/accounts*' => Http::response(['data' => []], 200),
+            'https://ads-api.x.com/12/accounts*' => Http::response(['data' => []], 200),
         ]);
 
         $tool = new XAdsGetAccounts(new XAdsService(
@@ -94,7 +94,7 @@ final class XIntegrationTest extends TestCase
             $authorization = $request->header('Authorization')[0] ?? '';
 
             return $request->method() === 'GET'
-                && $request->url() === 'https://ads-api.x.com/11/accounts'
+                && $request->url() === 'https://ads-api.x.com/12/accounts'
                 && str_starts_with($authorization, 'OAuth ')
                 && str_contains($authorization, 'oauth_consumer_key="key"')
                 && str_contains($authorization, 'oauth_token="token"')

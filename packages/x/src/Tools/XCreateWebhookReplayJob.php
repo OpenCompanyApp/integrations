@@ -16,6 +16,23 @@ class XCreateWebhookReplayJob extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'from_date' => [
+                    'type' => 'string',
+                    'description' => 'The oldest (starting) UTC timestamp (inclusive) from which events will be provided, in yyyymmddhhmm format.',
+                    'required' => true,
+                ],
+                'to_date' => [
+                    'type' => 'string',
+                    'description' => 'The oldest (starting) UTC timestamp (inclusive) from which events will be provided, in yyyymmddhhmm format.',
+                    'required' => true,
+                ],
+                'webhook_id' => [
+                    'type' => 'string',
+                    'description' => 'The unique identifier of this webhook config.',
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

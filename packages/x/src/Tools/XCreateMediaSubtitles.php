@@ -16,6 +16,44 @@ class XCreateMediaSubtitles extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'description' => 'The unique identifier of this Media.',
+                    'required' => false,
+                ],
+                'media_category' => [
+                    'type' => 'string',
+                    'description' => 'The media category of uploaded media to which subtitles should be added/deleted',
+                    'enum' => [
+                        'AmplifyVideo',
+                        'TweetVideo',
+                    ],
+                    'required' => false,
+                ],
+                'subtitles' => [
+                    'type' => 'object',
+                    'description' => '',
+                    'properties' => [
+                        'display_name' => [
+                            'type' => 'string',
+                            'description' => 'Language name in a human readable form',
+                            'required' => false,
+                        ],
+                        'id' => [
+                            'type' => 'string',
+                            'description' => 'The unique identifier of this Media.',
+                            'required' => false,
+                        ],
+                        'language_code' => [
+                            'type' => 'string',
+                            'description' => 'The language code should be a BCP47 code (e.g. \'EN", "SP")',
+                            'required' => false,
+                        ],
+                    ],
+                    'required' => false,
+                ],
+            ],
         ],
     ];
 

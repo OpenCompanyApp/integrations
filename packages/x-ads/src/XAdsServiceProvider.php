@@ -25,7 +25,7 @@ class XAdsServiceProvider extends ServiceProvider
                 accessToken: $creds->get('x_ads', 'access_token', ''),
                 accessTokenSecret: $creds->get('x_ads', 'access_token_secret', ''),
                 accountId: $creds->get('x_ads', 'account_id', ''),
-                apiVersion: $creds->get('x_ads', 'api_version', '11'),
+                apiVersion: $creds->get('x_ads', 'api_version', '12'),
                 baseUrl: $creds->get('x_ads', 'base_url', 'https://ads-api.x.com'),
             );
         });

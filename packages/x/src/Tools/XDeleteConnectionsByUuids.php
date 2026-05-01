@@ -16,6 +16,16 @@ class XDeleteConnectionsByUuids extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'uuids' => [
+                    'type' => 'array',
+                    'description' => 'Array of connection UUIDs to terminate',
+                    'items' => [
+                        'type' => 'string',
+                    ],
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

@@ -13,5 +13,5 @@ X Ads API requests use OAuth 1.0a user-context signing. Configure:
 - `access_token`
 - `access_token_secret`
 - optional `account_id`
-- optional `api_version` (default `11`)
+- optional `api_version` (default `12`)
 - optional `base_url` (default `https://ads-api.x.com`)

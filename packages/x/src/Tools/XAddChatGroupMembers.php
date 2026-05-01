@@ -21,6 +21,47 @@ class XAddChatGroupMembers extends XGeneratedTool
             'type' => 'object',
             'required' => true,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'action_signatures' => [
+                    'type' => 'array',
+                    'description' => 'Cryptographic signatures for the add-members action.',
+                    'items' => [
+                        'type' => 'object',
+                    ],
+                    'required' => false,
+                ],
+                'conversation_key_version' => [
+                    'type' => 'string',
+                    'description' => 'Version of the new rotated conversation key.',
+                    'required' => false,
+                ],
+                'conversation_participant_keys' => [
+                    'type' => 'array',
+                    'description' => 'Encrypted conversation keys for each new participant after key rotation.',
+                    'items' => [
+                        'type' => 'object',
+                    ],
+                    'required' => false,
+                ],
+                'encrypted_avatar_url' => [
+                    'type' => 'string',
+                    'description' => 'Re-encrypted group avatar URL with new conversation key.',
+                    'required' => false,
+                ],
+                'encrypted_title' => [
+                    'type' => 'string',
+                    'description' => 'Re-encrypted group title with new conversation key.',
+                    'required' => false,
+                ],
+                'user_ids' => [
+                    'type' => 'array',
+                    'description' => 'List of user IDs to add to the group conversation.',
+                    'items' => [
+                        'type' => 'string',
+                    ],
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

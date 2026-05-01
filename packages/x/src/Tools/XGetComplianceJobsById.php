@@ -17,6 +17,14 @@ class XGetComplianceJobsById extends XGeneratedTool
             'required' => true,
             'description' => 'The ID of the Compliance Job to retrieve.',
         ],
+        'compliance_job.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of ComplianceJob fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -30,6 +38,13 @@ class XGetComplianceJobsById extends XGeneratedTool
                 'required' => true,
                 'style' => 'simple',
                 'explode' => null,
+            ],
+            [
+                'name' => 'compliance_job.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

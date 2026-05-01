@@ -12,6 +12,30 @@ class XGetUsersMe extends XGeneratedTool
     protected const DESCRIPTION = 'Get my User';
 
     protected const PARAMETERS = [
+        'user.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of User fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'expansions' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of fields to expand.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
+        'tweet.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Tweet fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -19,6 +43,27 @@ class XGetUsersMe extends XGeneratedTool
         'method' => 'GET',
         'path' => '/2/users/me',
         'parameters' => [
+            [
+                'name' => 'user.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'expansions',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
+            [
+                'name' => 'tweet.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
+            ],
         ],
         'has_body' => false,
         'body_mode' => 'json',

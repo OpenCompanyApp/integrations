@@ -27,6 +27,14 @@ class XSearchCommunityNotesWritten extends XGeneratedTool
             'required' => false,
             'description' => 'Max results to return.',
         ],
+        'note.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Note fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -54,6 +62,13 @@ class XSearchCommunityNotesWritten extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'note.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

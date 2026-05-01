@@ -57,6 +57,14 @@ class XGetPostsCountsAll extends XGeneratedTool
                 'day',
             ],
         ],
+        'search_count.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of SearchCount fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -119,6 +127,13 @@ class XGetPostsCountsAll extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'search_count.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

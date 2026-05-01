@@ -16,6 +16,29 @@ class XCreateDirectMessagesConversation extends XGeneratedTool
             'type' => 'object',
             'required' => false,
             'description' => 'Request body for this X API operation. Use the shape documented by the official operation schema.',
+            'properties' => [
+                'conversation_type' => [
+                    'type' => 'string',
+                    'description' => 'The conversation type that is being created.',
+                    'enum' => [
+                        'Group',
+                    ],
+                    'required' => true,
+                ],
+                'message' => [
+                    'type' => 'string',
+                    'description' => '',
+                    'required' => true,
+                ],
+                'participant_ids' => [
+                    'type' => 'array',
+                    'description' => 'Participants for the DM Conversation.',
+                    'items' => [
+                        'type' => 'string',
+                    ],
+                    'required' => true,
+                ],
+            ],
         ],
     ];
 

@@ -22,6 +22,14 @@ class XGetTrendsByWoeid extends XGeneratedTool
             'required' => false,
             'description' => 'The maximum number of results.',
         ],
+        'trend.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of Trend fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -42,6 +50,13 @@ class XGetTrendsByWoeid extends XGeneratedTool
                 'required' => false,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'trend.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

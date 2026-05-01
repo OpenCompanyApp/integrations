@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenCompany\Integrations­s;
+namespace OpenCompany\Integrations\XAds;
 
 use OpenCompany\IntegrationCore\Contracts\ConfigurableIntegration;
 use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
@@ -124,7 +124,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             accessToken: (string) ($config['access_token'] ?? ''),
             accessTokenSecret: (string) ($config['access_token_secret'] ?? ''),
             accountId: (string) ($config['account_id'] ?? ''),
-            apiVersion: (string) ($config['api_version'] ?? '11'),
+            apiVersion: (string) ($config['api_version'] ?? '12'),
             baseUrl: (string) ($config['base_url'] ?? 'https://ads-api.x.com'),
         );
 
@@ -309,12 +309,12 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'country' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'platform' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'segmentation_type' => [
@@ -628,12 +628,12 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'audience_value' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'interaction_type' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                 ],
@@ -1094,22 +1094,22 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'boolean_operator' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'lookback_window' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'segments' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'tailored_audience_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'frequency' => [
@@ -2167,7 +2167,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'end_time' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'credit_limit_local_micro' => [
@@ -2491,22 +2491,22 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'advertiser_domain' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'bid_amount_local_micro' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'categories' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'primary_web_event_tag' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'advertiser_user_id' => [
@@ -5507,7 +5507,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'text' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'card_uri' => [
@@ -5679,7 +5679,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'text' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'card_uri' => [
@@ -5953,7 +5953,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'text' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'card_uri' => [
@@ -6233,7 +6233,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'media_key' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                 ],
@@ -6728,17 +6728,17 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'ipad_app_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'iphone_app_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'googleplay_app_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'app_cta' => [
@@ -6763,7 +6763,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'media_key' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                 ],
@@ -7048,22 +7048,22 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'media_key' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'second_cta' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'second_cta_tweet' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'title' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'unlocked_image_media_key' => [
@@ -7078,7 +7078,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'third_cta_tweet' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'fourth_cta' => [
@@ -7088,7 +7088,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'fourth_cta_tweet' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'thank_you_url' => [
@@ -7398,7 +7398,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'media_key' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'second_cta' => [
@@ -7713,17 +7713,17 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'ipad_app_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'iphone_app_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'googleplay_app_id' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'app_cta' => [
@@ -8043,17 +8043,17 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'title' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'second_cta' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'second_cta_tweet' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'unlocked_image_media_key' => [
@@ -8078,7 +8078,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'third_cta_tweet' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'fourth_cta' => [
@@ -8088,7 +8088,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'fourth_cta_tweet' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'thank_you_url' => [
@@ -8693,7 +8693,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                     ],
                     'media_key' => [
                         'type' => 'string',
-                        'required' => true,
+                        'required' => false,
                         'description' => 'sometimes required',
                     ],
                     'description' => [
@@ -10338,7 +10338,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
             ['key' => 'access_token', 'type' => 'secret', 'label' => 'Access Token', 'required' => true],
             ['key' => 'access_token_secret', 'type' => 'secret', 'label' => 'Access Token Secret', 'required' => true],
             ['key' => 'account_id', 'type' => 'string', 'label' => 'Default Ads Account ID', 'required' => false],
-            ['key' => 'api_version', 'type' => 'string', 'label' => 'Ads API Version', 'required' => false, 'default' => '11'],
+            ['key' => 'api_version', 'type' => 'string', 'label' => 'Ads API Version', 'required' => false, 'default' => '12'],
             ['key' => 'base_url', 'type' => 'url', 'label' => 'API Base URL', 'required' => false, 'default' => 'https://ads-api.x.com'],
         ];
     }
@@ -10377,7 +10377,7 @@ class XAdsToolProvider implements ToolProvider, ConfigurableIntegration, HasInte
                 accessToken: $creds->get('x_ads', 'access_token', '', $account),
                 accessTokenSecret: $creds->get('x_ads', 'access_token_secret', '', $account),
                 accountId: $creds->get('x_ads', 'account_id', '', $account),
-                apiVersion: $creds->get('x_ads', 'api_version', '11', $account),
+                apiVersion: $creds->get('x_ads', 'api_version', '12', $account),
                 baseUrl: $creds->get('x_ads', 'base_url', 'https://ads-api.x.com', $account),
             );
         }

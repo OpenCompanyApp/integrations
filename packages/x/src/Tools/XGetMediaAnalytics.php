@@ -40,6 +40,14 @@ class XGetMediaAnalytics extends XGeneratedTool
                 'total',
             ],
         ],
+        'media_analytics.fields' => [
+            'type' => 'array',
+            'required' => false,
+            'description' => 'A comma separated list of MediaAnalytics fields to display.',
+            'items' => [
+                'type' => 'string',
+            ],
+        ],
     ];
 
     protected const OPERATION = [
@@ -74,6 +82,13 @@ class XGetMediaAnalytics extends XGeneratedTool
                 'required' => true,
                 'style' => 'form',
                 'explode' => null,
+            ],
+            [
+                'name' => 'media_analytics.fields',
+                'in' => 'query',
+                'required' => false,
+                'style' => 'form',
+                'explode' => false,
             ],
         ],
         'has_body' => false,

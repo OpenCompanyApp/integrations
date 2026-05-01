@@ -34,7 +34,7 @@ class XAdsPostAccountsAccountIdFundingInstruments extends XAdsGeneratedTool
         ],
         'end_time' => [
             'type' => 'string',
-            'required' => true,
+            'required' => false,
             'description' => 'sometimes required',
         ],
         'credit_limit_local_micro' => [
@@ -92,7 +92,7 @@ class XAdsPostAccountsAccountIdFundingInstruments extends XAdsGeneratedTool
             [
                 'name' => 'end_time',
                 'in' => 'query',
-                'required' => true,
+                'required' => false,
                 'style' => null,
                 'explode' => null,
             ],

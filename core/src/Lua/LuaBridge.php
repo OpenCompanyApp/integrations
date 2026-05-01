@@ -47,12 +47,12 @@ class LuaBridge
                 foreach ($this->functionMap as $functionPath => $_toolSlug) {
                     if (str_starts_with($functionPath, $namespacePrefix . '.')) {
                         $functionParts = explode('.', $functionPath);
-                        $available[] = end($functionParts);
+                        $available[(string) end($functionParts)] = true;
                     }
                 }
 
                 if ($available !== []) {
-                    $message .= '. Did you mean: ' . implode(', ', $available);
+                    $message .= '. Did you mean: ' . implode(', ', array_keys($available));
                 }
             }
 
